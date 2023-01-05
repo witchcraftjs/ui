@@ -33,43 +33,34 @@ const classes = computed(() => ({
 .group {
 	--groupPadding: var(--paddingXS);
 	display: flex;
+
+	@include flex(1, 1);
+
 	&.vertical {
 		flex-direction: column;
 	}
+
 	padding: var(--groupPadding);
 	@include border();
 	@include border-invisible;
+
 	&.border {
-		@include border($color:var(--borderNormalSoft));
+		@include border($color: var(--borderNormalSoft));
 	}
+
 	display: flex;
-	&.horizontal {
-		> ::v-deep(*) {
-			margin-left: var(--groupPadding);
-			&:first-child {
-				margin-left: 0;
-			}
-		}
+	gap: var(--groupPadding);
+
+	::v-deep(.group) {
+		padding: 0;
+		border: none;
 	}
-	&.vertical {
-		& > ::v-deep(*) {
-			margin-top: var(--groupPadding);
-			&:first-child {
-				margin-top: 0;
-			}
-		}
-		& > ::v-deep(.group) {
-			margin-left: calc(-1 * var(--groupPadding) - var(--borderWidth));
-			margin-right: calc(-1 * var(--groupPadding) - var(--borderWidth));
-		}
-		& > ::v-deep(.group:last-of-type) {
-			margin-bottom: calc(-1 * var(--groupPadding) - var(--borderWidth));
-		}
-	}
+
 	::v-deep(.border) {
 		&:hover {
 			box-shadow: none;
 		}
+
 		&:not(:active) {
 			box-shadow: none;
 		}

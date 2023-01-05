@@ -50,28 +50,24 @@ const TemplateNested = args => ({
 	template: `
 		<test-wrapper :outline="args.outline">
 			<lib-group v-bind="args" :class="'test'">
-				<lib-input labelType="none"></lib-input>
-				<lib-button label="Ok"></lib-button>
+				<lib-group v-bind="{...args, vertical: !args.vertical}" :class="'test'" >
+					<lib-group v-bind="{...args, vertical: args.vertical}" :class="'test'" >
+						<lib-input labelType="none"></lib-input>
+						<lib-button label="Ok"></lib-button>
+					</lib-group>
+					<lib-group v-bind="{...args, vertical: args.vertical}" :class="'test'" >
+						<lib-input labelType="none"></lib-input>
+						<lib-button label="Ok"></lib-button>
+					</lib-group>
+				</lib-group>
 				<lib-group v-bind="{...args, vertical: !args.vertical}" :class="'test'" >
 					<lib-input labelType="none"></lib-input>
 					<lib-button label="Ok"></lib-button>
 				</lib-group>
-					<lib-group v-bind="args" :class="'test'">
-						<lib-input labelType="none"></lib-input>
-						<lib-button label="Ok"></lib-button>
-						<lib-group v-bind="{...args, vertical: !args.vertical}" :class="'test'" >
-							<lib-input labelType="none"></lib-input>
-							<lib-button label="Ok"></lib-button>
-						</lib-group>
-						<lib-group v-bind="{...args, vertical: !args.vertical}" :class="'test'" >
-							<lib-input labelType="none"></lib-input>
-							<lib-button label="Ok"></lib-button>
-						</lib-group>
-					</lib-group>
 			</lib-group>
 		</test-wrapper>
-	`,
-})
+				`,
+			})
 
 export const NestedTODO = TemplateNested.bind({})
 NestedTODO.args = { vertical: false }
