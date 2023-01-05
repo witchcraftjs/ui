@@ -1,0 +1,135 @@
+{
+	"name": "@alanscodelog/vue-components",
+	"version": "0.0.0",
+	"main": "./dist/main.lib.cjs",
+	"module": "./dist/main.lib.js",
+	"type": "module",
+	"exports": {
+		".": { "types": "./dist/main.lib.d.ts", "import": "./dist/main.lib.js", "require": "./dist/main.lib.cjs" },
+		"./*": { "types": "./dist/*/index.d.ts", "import": "./dist/*/index.js", "require": "./dist/*/index.cjs" },
+		"./styles.css": { "import": "./dist/style.css", "require": "./dist/style.css" },
+		"./mixins.scss": { "import": "./src/assets/mixins.css", "require": "./src/assets/mixins.css" },
+		"./nuxt": { "import": "./nuxt.js" }
+	},
+	"scripts": {
+		"build": "vite build",
+		"build:dev": "vite build --mode development",
+		"build:watch": "vite build --watch --mode production",
+		"build:types": "vue-tsc -p tsconfig.types.json && npm run build:types:fix",
+		"build:types:fix": "tsc-alias -p tsconfig.types.json --debug",
+
+		"storybook": "storybook dev -p 6006",
+		"storybook:clear-cache": "storybook dev -p 6006 --no-manager-cache",
+		"build:storybook": "storybook build -o docs/storybook",
+
+		"lint:eslint": "eslint \"{src,tests}/**/*.{cjs,js,ts,vue}\" \"*.{cjs,js,ts}\" --max-warnings=0 --report-unused-disable-directives",
+		"lint:types": "vue-tsc --noEmit --pretty",
+		"lint:commits": "commitlint --from $(git rev-list HEAD --not --remotes | tail -1)^ --to HEAD --verbose",
+		"lint:imports": "madge --circular --extensions ts ./src",
+		"lint": "npm run lint:types && npm run lint:eslint",
+
+		"prepare": "husky install && npm run build",
+		"gen:exports": "indexit update --ignore **.d.ts **.stories.js **.vue -o '${path}.js'"
+	},
+	"peerDependencies": {
+		"@fortawesome/fontawesome-svg-core": "latest",
+		"@fortawesome/free-brands-svg-icons": "6.2.1",
+		"@fortawesome/free-regular-svg-icons": "^6.2.1",
+		"@fortawesome/free-solid-svg-icons": "^6.2.1",
+		"vue": "^3.2.45"
+	},
+	"peerDependenciesMeta": {
+		"@fortawesome/free-solid-svg-icons": { "optional": true },
+		"@fortawesome/free-regular-svg-icons": { "optional": true },
+		"@fortawesome/free-brands-svg-icons": { "optional": true }
+	},
+	"dependencies": {
+		"@alanscodelog/utils": "^4.0.0-beta.4",
+		"@babel/plugin-transform-runtime": "^7.19.6",
+		"@babel/runtime": "^7.20.7",
+		"@fortawesome/vue-fontawesome": "latest-3",
+		"@nuxt/kit": "^3.0.0",
+		"@rollup/plugin-babel": "^6.0.3",
+		"focus-trap": "^7.2.0",
+		"focus-trap-vue": "^4.0.1"
+	},
+	"devDependencies": {
+		"@alanscodelog/commitlint-config": "^2.0.0",
+		"@alanscodelog/eslint-config": "^4.0.0",
+		"@alanscodelog/semantic-release-config": "^2.0.1",
+		"@alanscodelog/tsconfigs": "^3.1.3",
+		"@babel/core": "^7.20.7",
+		"@babel/preset-env": "^7.20.2",
+		"@fortawesome/fontawesome-svg-core": "^6.2.1",
+		"@fortawesome/free-regular-svg-icons": "^6.2.1",
+		"@fortawesome/free-solid-svg-icons": "^6.2.1",
+		"@fortawesome/vue-fontawesome": "^2.0.9",
+		"@nuxt/kit": "3.0.0",
+		"@rollup/plugin-babel": "^6.0.3",
+		"@rollup/plugin-node-resolve": "^15.0.1",
+		"@storybook/addon-a11y": "7.0.0-beta.14",
+		"@storybook/addon-actions": "7.0.0-beta.14",
+		"@storybook/addon-essentials": "7.0.0-beta.14",
+		"@storybook/addon-links": "7.0.0-beta.14",
+		"@storybook/builder-vite": "7.0.0-beta.14",
+		"@storybook/vue3": "7.0.0-beta.14",
+		"@storybook/vue3-vite": "7.0.0-beta.14",
+		"@types/node": "^18.11.18",
+		"@types/react": "file:stub",
+		"@typescript-eslint/eslint-plugin": "^5.47.1",
+		"@typescript-eslint/parser": "^5.47.1",
+		"@vitejs/plugin-vue": "^4.0.0",
+		"@vue/eslint-config-typescript": "^11.0.2",
+		"@vue/runtime-core": "^3.2.45",
+		"babel-loader": "^9.1.0",
+		"commitlint": "^17.3.0",
+		"eslint": "^8.31.0",
+		"eslint-import-resolver-typescript": "^3.5.2",
+		"eslint-plugin-import": "^2.26.0",
+		"eslint-plugin-jsdoc": "^39.6.3",
+		"eslint-plugin-simple-import-sort": "^8.0.0",
+		"eslint-plugin-storybook": "^0.6.8",
+		"eslint-plugin-vue": "^9.8.0",
+		"fast-glob": "^3.2.12",
+		"focus-trap": "^7.2.0",
+		"focus-trap-vue": "^4.0.1",
+		"husky": "^8.0.2",
+		"indexit": "2.0.1",
+		"madge": "^5.0.1",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
+		"sass": "^1.57.1",
+		"semantic-release": "^19.0.5",
+		"storybook": "7.0.0-beta.14",
+		"tsc-alias": "^1.8.2",
+		"typescript": "^4.9.4",
+		"vite": "^4.0.3",
+		"vite-plugin-dts": "^1.7.1",
+		"vue": "^3.2.45",
+		"vue-eslint-parser": "^9.1.0",
+		"vue-loader": "^17.0.1",
+		"vue-tsc": "^1.0.19"
+	},
+	"author": "Alan <alanscodelog@gmail.com>",
+	"repository": "https://github.com/alanscodelog/vue-components",
+	"license": "MIT",
+	"files": [
+		"src",
+		"dist"
+	],
+	"release": { "extends": [ "@alanscodelog/semantic-release-config" ] },
+	"commitlint": { "extends": [ "@alanscodelog" ] },
+	"engines": { "node": ">=14.0.0" },
+	"@comments": {
+	"scripts": {
+		"lint:commits": "Lints all unpushed commits in the active branch.",
+		"lint:imports": "This is limited to ts files, but still useful.",
+		"prepare": "Needed so that if we pull the package from git it will get built and installed properly.",
+		"actions:debug": "For debugging github build action locally with nektos/act. Requires act and docker. Note: Cache will never work locally because of https://github.com/nektos/act/issues/285"
+		}
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"private": true
+}

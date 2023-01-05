@@ -1,0 +1,26 @@
+{
+	// ./node_modules/@alanscodelog/tsconfigs/tsconfig.json
+	// https://github.com/AlansCodeLog/tsconfigs
+	"extends": "@alanscodelog/tsconfigs",
+	"compilerOptions": {
+		"outDir": "dist",
+		"baseUrl": "src",
+		"paths": {},
+		"types": [ "node" ],
+		"lib": [ "dom", "esnext" ] // dom needed for browser utils
+	},
+	"include": [
+		"src/**/*.ts",
+		"src/**/*.stories.js",
+		"src/**/*.d.ts",
+		"src/**/*.vue",
+		// so eslint doesn't bother us, we don't build with tsc anyways, and to emit types, there's tsconfig.types.json
+		"*.ts",
+		"*.cjs",
+		".*.cjs",
+		"*.js"
+	],
+	"tsc-alias": {
+		"resolveFullPaths": true // for esm compatibility
+	}
+}
