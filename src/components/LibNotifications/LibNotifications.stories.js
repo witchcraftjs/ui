@@ -32,16 +32,45 @@ const Template = args => ({
 		const withTitle = ref(true)
 		const disableTimeout = ref(false)
 
-		const notify = () => {
+		const notifyRequiresAction = () => {
 			count++
 			handler.notify({
 				title: withTitle.value ? `Notification(${count})` : undefined,
-				message: `This is a notification. Pick an option:`,
+				message: `This is a notification that requires action. Pick an option:`,
 				requiresAction: true,
+				options: ["Ok", "Default Answer", "Cancel"],
+				default: "Default Answer",
+			})
+		}
+		const notifyWithDangerousOption = () => {
+			count++
+			handler.notify({
+				title: withTitle.value ? `Notification(${count})` : undefined,
+				message: `This is a notification that has a dangerous option. Pick an option:`,
 				options: ["Ok", "Default Answer", "Dangerous Option", "Cancel"],
 				default: "Default Answer",
 				dangerous: ["Dangerous Option"],
-				cancellable: true,
+			})
+		}
+		const notifyNonCancellable = () => {
+			count++
+			handler.notify({
+				title: withTitle.value ? `Notification(${count})` : undefined,
+				message: `This is a non-cancellable notification. Pick an option:`,
+				options: ["Ok", "Default Answer"],
+				default: "Default Answer",
+				cancellable: false,
+			})
+		}
+		const notifyNonCancellableRequiresAction = () => {
+			count++
+			handler.notify({
+				title: withTitle.value ? `Notification(${count})` : undefined,
+				message: `This is a non-cancellable notification. Pick an option:`,
+				requiresAction: true,
+				options: ["Ok", "Default Answer"],
+				default: "Default Answer",
+				cancellable: false,
 			})
 		}
 		const notifyTimeoutable = () => {
@@ -49,13 +78,15 @@ const Template = args => ({
 			handler.notify({
 				title: withTitle.value ? `Notification(${count})` : undefined,
 				message: `This is a notification. No action required.`,
-				cancellable: true,
 				timeout: disableTimeout.value ? false : 2000,
 			})
 		}
 		return {
-			notify,
+			notifyRequiresAction,
 			notifyTimeoutable,
+			notifyNonCancellable,
+			notifyWithDangerousOption,
+			notifyNonCancellableRequiresAction,
 			handler,
 			withTitle,
 			disableTimeout,
@@ -69,8 +100,11 @@ const Template = args => ({
 	// <lib-debug>{{args.handler}}</lib-debug>
 	template: `
 	<test-wrapper :outline="args.outline">
-		<lib-button :label="'Notify'" @click="notify()"></lib-button>
 		<lib-button :label="'Notify Timeoutable'" @click="notifyTimeoutable()"></lib-button>
+		<lib-button :label="'Notify RequiresAction'" @click="notifyRequiresAction()"></lib-button>
+		<lib-button :label="'Notify Non-Cancellable that RequiresAction'" @click="notifyNonCancellableRequiresAction()"></lib-button>
+		<lib-button :label="'Notify With Dangerous Option'" @click="notifyWithDangerousOption()"></lib-button>
+		<lib-button :label="'Notify Non-Cancellable'" @click="notifyNonCancellable()"></lib-button>
 		<input type="checkbox" v-model="withTitle"/> With Title
 		<input type="checkbox" v-model="disableTimeout"/> Disable Timeout
 			<lib-notifications :handler="handler" />

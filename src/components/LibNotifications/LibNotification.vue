@@ -105,19 +105,22 @@ defineExpose({
 
 	& :deep(.group) {
 		--groupPadding: var(--paddingM);
-		@include flex-row(true, center, center);
+		padding: 0;
+		@include flex-row(wrap, center, center);
 	}
 
 	@include border();
-	margin: var(--paddingM);
 	@include focusable();
 	// @include flex-col(nowrap, null, center);
 	@include flex-row(nowrap);
 	position:relative;
+	gap: var(--paddingM);
+	margin: var(--paddingM);
 }
 
 .upper {
-	// @include flex(1,0,100%);
+	margin: var(--paddingM);
+	gap: var(--paddingM);
 	@include flex-col(wrap);
 }
 
@@ -125,25 +128,25 @@ defineExpose({
 	@include flex(1, 1);
 	@include flex-col(wrap);
 	align-items: center;
-	margin-right: calc((var(--paddingXS) + 2px) * 2 + 1em);
+	margin-right: calc((var(--paddingXS) + 2px) + 1em);
 	// margin-left: var(--paddingXS);
 	margin-top: var(--paddingM);
+	gap: var(--paddingM);
 	// order:1;
-}
-
-.message {
-	@include flex(1, 1);
-	padding: var(--paddingM) 0 0 var(--paddingM);
-}
-
-.code {
-	@include flex(1, 0);
-	padding: var(--paddingM) 0 0 var(--paddingM);
-	font-size: var(--fontSizeSmall);
 }
 
 .title {
 	font-weight: bold;
+}
+
+.message,
+.title {
+	@include flex(1, 1);
+}
+
+.code {
+	@include flex(1, 0);
+	font-size: var(--fontSizeSmall);
 }
 
 .actions {

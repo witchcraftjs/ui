@@ -41,9 +41,16 @@ export class NotificationHandler<
 				`)
 		}
 		if (entry.cancellable) {
-			if (!entry.options.includes(entry.cancellable)) {
+			if (typeof entry.cancellable === "string" && !entry.options.includes(entry.cancellable)) {
 				throw new Error(
 					crop`Entry options does not include cancellable option "${entry.cancellable}":
+						${indent(pretty(entry), 6)}
+					`)
+			}
+		} else {
+			if (entry.options.includes("Cancel")) {
+				throw new Error(
+					crop`You specified that the entry should not be cancellable, but the options include the "Cancel" option:
 						${indent(pretty(entry), 6)}
 					`)
 			}
@@ -73,8 +80,8 @@ export class NotificationHandler<
 			requiresAction: false,
 			options: ["Ok", "Cancel"],
 			default: "Ok",
+			cancellable: rawEntry.cancellable,
 			...rawEntry,
-			cancellable: rawEntry.cancellable ? "Cancel" : rawEntry.cancellable,
 			dangerous: rawEntry.dangerous ?? [],
 			timeout: rawEntry.timeout === true
 				? this.timeout
@@ -83,8 +90,12 @@ export class NotificationHandler<
 				: undefined,
 		} as TEntry
 
+		if (rawEntry.cancellable === true || (rawEntry.cancellable === undefined && entry.options?.includes("Cancel"))) {
+			entry.cancellable = "Cancel" as any
+		}
 
 		this._checkEntry(entry)
+
 		castType<TEntry>(entry)
 		this.id++
 		entry.id = this.id
@@ -95,7 +106,7 @@ export class NotificationHandler<
 
 		if (entry.timeout !== undefined) {
 			setTimeout(() => {
-				entry.resolve(entry?.cancellable === true ? "Cancel" : entry.cancellable)
+				entry.resolve(entry.cancellable)
 			}, entry.timeout)
 		}
 		this.queue.push(entry)
@@ -118,8 +129,7 @@ export class NotificationHandler<
 			this.queue.splice(this.queue.indexOf(entry), 1)
 			return res
 		}) as NotificationPromise
-	}
-	static resolveToDefault(notification: NotificationEntry): void {
+	}	static resolveToDefault(notification: NotificationEntry): void {
 		notification.resolve(notification.default)
 	}
 	static dismiss(notification: NotificationEntry): void {
@@ -171,7 +181,7 @@ export type RawNotificationEntry<
 
 export type NotificationEntry<
 	TRawEntry extends RawNotificationEntry<any, any> = RawNotificationEntry<any, any>,
-> = MakeRequired<TRawEntry, "options" | "requiresAction" | "default" | "dangerous"> & {
+> = Omit<MakeRequired<TRawEntry, "options" | "requiresAction" | "default" | "dangerous">, "cancellable"> & {
 	promise: NotificationPromise
 	resolve: AnyFunction
 	cancellable?: string

@@ -23,7 +23,7 @@
 				:notification="notification"
 				v-for="(notification, i) of notifications"
 				:key="notification.id"
-				:ref="(el: any) => i==0 ? lastNotificationComp = el as any :''"
+				:ref="(el: any) => i == 0 ? lastNotificationComp = el as any : ''"
 			/>
 		</TransitionGroup>
 	</div>
@@ -87,7 +87,7 @@ const notificationListener = (entry: NotificationEntry, type: "added" | "resolve
 		if (entry.requiresAction) {
 			topNotifications.value.push(entry)
 			// eslint-disable-next-line @typescript-eslint/no-floating-promises
-			entry.promise.then(() => { removeIfIn(topNotifications.value, entry)})
+			entry.promise.then(() => { removeIfIn(topNotifications.value, entry) })
 		} else {
 			notifications.value.splice(0, 0, entry)
 			// eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -105,24 +105,24 @@ onBeforeUnmount(() => {
 
 <style lang="scss" scoped>
 .top-notification-veil {
-	position:absolute;
-	@include pos(0,0,0,0);
+	position: absolute;
+	@include pos(0, 0, 0, 0);
 	background: var(--opacity5);
 	display: flex;
 	@include flex-row(nowrap, center, center)
 }
 
 .notifications {
-	position:absolute;
+	position: absolute;
 	z-index: 1000;
-	@include pos(0,0,0,null);
+	@include pos(0, 0, 0, null);
 	width: 300px;
 	pointer-events: none;
 	/* for animations */
-	overflow:hidden;
-	& > * {
-		pointer-events:all;
+	overflow: hidden;
+
+	&>* {
+		pointer-events: all;
 	}
 }
-
 </style>
