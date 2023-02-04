@@ -1,5 +1,5 @@
 import { castType } from "@alanscodelog/utils"
-import { computed, WritableComputedRef } from "vue"
+import { computed, type WritableComputedRef } from "vue"
 
 /**
  * Creates a ref that will emit the correct `update` event for the prop when it's set. This makes it possible to set vModeled props just like any other reference.

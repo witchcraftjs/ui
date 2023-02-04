@@ -95,7 +95,7 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { computed, PropType, watch } from "vue"
+import { computed, type PropType, watch } from "vue"
 
 /**
  * Pagination component.

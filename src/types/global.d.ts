@@ -2,7 +2,7 @@
 /// <reference types="vite/client" />
 
 declare module "*.vue" {
-	import { DefineComponent } from "vue"
+	import { type DefineComponent } from "vue"
 
 
 	const component: DefineComponent<{}, {}, any>
@@ -10,7 +10,7 @@ declare module "*.vue" {
 }
 
 
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
+import { type FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
 
 
 declare module "@vue/runtime-core" {

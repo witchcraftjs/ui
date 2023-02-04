@@ -37,11 +37,11 @@ export default {
 <script setup lang="ts">
 import { removeIfIn } from "@alanscodelog/utils"
 import { FocusTrap } from "focus-trap-vue"
-import { computed, nextTick, onBeforeUnmount, PropType, Ref, ref, watch } from "vue"
+import { computed, nextTick, onBeforeUnmount, type PropType, type Ref, ref, watch } from "vue"
 
 import LibNotification from "./LibNotification.vue"
 
-import { NotificationEntry, NotificationHandler } from "../../helpers/NotificationHandler.js"
+import { type NotificationEntry, NotificationHandler } from "../../helpers/NotificationHandler.js"
 
 
 // const emit = defineEmits<(e: "copy", val: NotificationEntry) => void>()

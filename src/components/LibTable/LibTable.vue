@@ -10,7 +10,7 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { computed, PropType } from "vue"
+import { computed, type PropType } from "vue"
 
 import { resizableTable as vResizableTable } from "../../directives/resizableTable.js"
 import type { ResizableTableDirectiveOptions } from "../../types.js"

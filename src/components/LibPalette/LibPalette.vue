@@ -8,7 +8,7 @@
 				<div
 					:title="getHsl(hue, i)"
 					class="swatch"
-					:style="`background: ${getHsl(hue,i)};`"
+					:style="`background: ${getHsl(hue, i)};`"
 					v-for="i in config.steps"
 					:key="i"
 				/>
@@ -22,7 +22,7 @@
 					:key="i"
 				>
 					<!-- {{`--c${name.charAt(0).toUpperCase() + name.slice(1)}${i}: ${getHSL(hue,i)};\n`}} -->
-					{{ `c${name.charAt(0).toUpperCase() + name.slice(1)}${i}: "${getHsl(hue,i)}",\n` }}
+					{{ `c${name.charAt(0).toUpperCase() + name.slice(1)}${i}: "${getHsl(hue, i)}",\n` }}
 				</template>
 			</template>
 			}
@@ -38,7 +38,7 @@ export default {
 </script>
 
 <script setup lang="ts">
-import { computed, PropType } from "vue"
+import { computed, type PropType } from "vue"
 
 import LibDebug from "../LibDebug/LibDebug.vue"
 
@@ -148,8 +148,8 @@ const getLum = (step: number): number => calculateVariant(props.config.luminance
 
 const getHsl = (hue: number, step: number): string =>
 	hue >= 0
-	? `hsl(${getHue(hue, step - 1)}, ${getSat(step - 1)}%, ${getLum(step - 1)}%)`
-	: `hsl(${getHue(hue, step - 1)}, 0%, ${getLum(step - 1)}%)` // gray
+		? `hsl(${getHue(hue, step - 1)}, ${getSat(step - 1)}%, ${getLum(step - 1)}%)`
+		: `hsl(${getHue(hue, step - 1)}, 0%, ${getLum(step - 1)}%)` // gray
 
 
 const swatchWidth = computed(() => (100) / props.config.steps)
@@ -163,6 +163,7 @@ const swatchWidth = computed(() => (100) / props.config.steps)
 	padding: var(--paddingM);
 	background: v-bind(background);
 }
+
 .row {
 	@include flex(1, 0, 100%);
 	@include flex-row(wrap, space-between, center);
@@ -170,14 +171,15 @@ const swatchWidth = computed(() => (100) / props.config.steps)
 
 .name {
 	@include flex(1, 0, 100%);
-	color:white;
+	color: white;
 	mix-blend-mode: difference;
 }
+
 .swatches {
 	@include flex(1, 0, 100%);
 	@include flex-row(nowrap, space-between, center);
 	border-radius: 5px;
-	overflow:hidden;
+	overflow: hidden;
 }
 
 .swatch {

@@ -14,7 +14,7 @@ export default {
 <script setup lang="ts">
 import type { IconParams } from "@fortawesome/fontawesome-svg-core"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
-import { computed, PropType } from "vue"
+import { computed, type PropType } from "vue"
 
 
 const props = defineProps({

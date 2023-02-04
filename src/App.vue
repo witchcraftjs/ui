@@ -21,8 +21,8 @@ const args = ref({
 <template>
 	<test-wrapper>
 		<lib-debug :value="args"/>
-		<lib-input v-bind="{...args}" v-model="args.modelValue" v-model:values="args.values">
-			<template #item="{item}">
+		<lib-input v-bind="{ ...args }" v-model="args.modelValue" v-model:values="args.values">
+			<template #item="{ item }">
 				{{ item }}
 			</template>
 		</lib-input>

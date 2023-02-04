@@ -18,7 +18,7 @@ export default {
 </script>
 <script setup  lang="ts">
 import { castType, isBlank } from "@alanscodelog/utils"
-import { computed, getCurrentInstance, onMounted, PropType, Ref, ref } from "vue"
+import { computed, getCurrentInstance, onMounted, type PropType, type Ref, ref } from "vue"
 
 
 const emits = defineEmits<(e: "click", _payload: MouseEvent | PointerEvent) => void>()

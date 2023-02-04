@@ -130,7 +130,7 @@ export default {
 <script setup lang="ts">
 
 import { keys } from "@alanscodelog/utils"
-import { computed, getCurrentInstance, onBeforeUnmount, PropType, ref, useAttrs, useSlots, watch, watchPostEffect } from "vue"
+import { computed, getCurrentInstance, onBeforeUnmount, type PropType, ref, useAttrs, useSlots, watch, watchPostEffect } from "vue"
 
 import { detectFlex } from "../../directives/detectFlex.js"
 import { vModel } from "../../helpers/vModel.js"

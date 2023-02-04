@@ -63,10 +63,10 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { computed, PropType, ref } from "vue"
+import { computed, type PropType, ref } from "vue"
 
 import { copy } from "../../helpers/copy.js"
-import { NotificationEntry, NotificationHandler } from "../../helpers/NotificationHandler.js"
+import { type NotificationEntry, NotificationHandler } from "../../helpers/NotificationHandler.js"
 import fa from "../fa/Fa.vue"
 import LibButton from "../LibButton/LibButton.vue"
 import LibGroup from "../LibGroup/LibGroup.vue"

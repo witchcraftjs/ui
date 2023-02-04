@@ -6,7 +6,7 @@ import fs from "fs"
 import { builtinModules } from "module"
 // import Previewer from 'vite-plugin-vue-component-preview';
 import path from "path"
-import { defineConfig, PluginOption } from "vite"
+import { defineConfig, type PluginOption } from "vite"
 
 import packageJson from "./package.json"
 

@@ -6,7 +6,7 @@
 	</div>
 </template>
 <script lang="ts">
-import { PropType, useSlots } from "vue"
+import { type PropType, useSlots } from "vue"
 
 import fa from "../fa/Fa.vue"
 import LibButton from "../LibButton/LibButton.vue"

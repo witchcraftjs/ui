@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/parameter-properties */
 import { keys } from "@alanscodelog/utils"
-import { computed, Ref, ref, watch } from "vue"
+import { computed, type Ref, ref, watch } from "vue"
 
 import { setGlobalCssVars } from "./globalCssVars.js"
 

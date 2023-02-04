@@ -4,7 +4,7 @@ export default {
 }
 </script>
 <script setup lang="ts">
-import { computed, PropType, ref } from "vue"
+import { computed, type PropType, ref } from "vue"
 
 import { theme } from "./helpers/index.js"
 import { setupAccesibilityOutline } from "./mixins/index.js"
@@ -31,7 +31,7 @@ const classes = computed(() => ({
 		tabindex="-1"
 		ref="el"
 	>
-		<div class="outline-indicator">{{ classes.outline ? "Outline Enabled" :"Outline Disabled" }}</div>
+		<div class="outline-indicator">{{ classes.outline ? "Outline Enabled" : "Outline Disabled" }}</div>
 		<slot/>
 	</div>
 </template>
@@ -40,14 +40,16 @@ const classes = computed(() => ({
 body {
 	margin: 0;
 }
+
 #main {
 	padding: 50px;
 	background: var(--bg);
 }
+
 .outline-indicator {
 	position: fixed;
-	top:0;
-	right:0;
+	top: 0;
+	right: 0;
 	margin: 10px;
 }
 </style>
