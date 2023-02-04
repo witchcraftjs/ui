@@ -10,17 +10,14 @@
 		"lib": [ "dom", "esnext" ] // dom needed for browser utils
 	},
 	"include": [
-		"src/**/*.ts",
-		"src/**/*.stories.js",
-		"src/**/*.d.ts",
-		"src/**/*.vue",
+		"**/*.ts",
+		"**/*.stories.js",
+		"**/*.d.ts",
+		"**/*.vue",
 		// so eslint doesn't bother us, we don't build with tsc anyways, and to emit types, there's tsconfig.types.json
 		"*.ts",
 		"*.cjs",
 		".*.cjs",
 		"*.js"
 	],
-	"tsc-alias": {
-		"resolveFullPaths": true // for esm compatibility
-	}
 }

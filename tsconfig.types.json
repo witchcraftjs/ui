@@ -14,11 +14,15 @@
 		"removeComments": false
 	},
 	"exclude": [
+		"dist/**/*",
 		"src/App.vue",
 		"src/main.ts",
 		"src/TestWrapper.vue",
 		"*.ts",
 		"*.cjs",
 		"*.js"
-	]
+	],
+	"tsc-alias": {
+		"resolveFullPaths": true // for esm compatibility
+	}
 }
