@@ -1,4 +1,7 @@
 ### 🚧 WORK IN PROGRESS 🚧
+![Docs](https://github.com/alanscodelog/vue-components/workflows/Docs/badge.svg)
+![Build](https://github.com/alanscodelog/vue-components/workflows/Build/badge.svg)
+[![Release](https://github.com/alanscodelog/vue-components/workflows/Release/badge.svg)](https://www.npmjs.com/package/@alanscodelog/vue-components)
 
 Custom vue component library.
 
