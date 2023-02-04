@@ -19,11 +19,9 @@ module.exports = {
 	parser: "vue-eslint-parser",
 	parserOptions: {
 		parser: "@typescript-eslint/parser",
-		ecmaVersion: 2020,
-		sourceType: "module",
-		project: path.resolve("./tsconfig.json"),
-		tsconfigRootDir: path.resolve("./"),
-		// debugLevel: true
+		project: "tsconfig.json",
+		extraFileExtensions: ['.vue'], //fixes eslint not linting vue files
+		// debugLevel: true,
 	},
 	rules: {
 	},
