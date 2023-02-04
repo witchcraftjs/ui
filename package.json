@@ -22,6 +22,9 @@
 		"storybook:clear-cache": "storybook dev -p 6006 --no-manager-cache",
 		"build:storybook": "storybook build -o docs/storybook",
 
+		"doc":"pnpm run build:storybook",
+		"doc:dev":"pnpm run storybook",
+
 		"lint:eslint": "eslint \"{src,tests}/**/*.{cjs,js,ts,vue}\" \"*.{cjs,js,ts}\" --max-warnings=0 --report-unused-disable-directives",
 		"lint:types": "vue-tsc --noEmit --pretty",
 		"lint:commits": "commitlint --from $(git rev-list HEAD --not --remotes | tail -1)^ --to HEAD --verbose",
