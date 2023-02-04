@@ -171,3 +171,15 @@
 		flex: 1 1 auto;
 	}
 }
+
+@mixin media_lt($amount) {
+	@media (max-width: $amount) {
+		@content;
+	}
+}
+
+@mixin media_gt($amount) {
+	@media (min-width: $amount) {
+		@content;
+	}
+}
