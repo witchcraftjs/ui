@@ -5,11 +5,27 @@
 	"module": "./dist/main.lib.js",
 	"type": "module",
 	"exports": {
-		".": { "types": "./dist/main.lib.d.ts", "import": "./dist/main.lib.js", "require": "./dist/main.lib.cjs" },
-		"./*": { "types": "./dist/*/index.d.ts", "import": "./dist/*/index.js", "require": "./dist/*/index.cjs" },
-		"./styles.css": { "import": "./dist/style.css", "require": "./dist/style.css" },
-		"./mixins.scss": { "import": "./src/assets/mixins.css", "require": "./src/assets/mixins.css" },
-		"./nuxt": { "import": "./nuxt.js" }
+		".": {
+			"types": "./dist/main.lib.d.ts",
+			"import": "./dist/main.lib.js",
+			"require": "./dist/main.lib.cjs"
+		},
+		"./*": {
+			"types": "./dist/*/index.d.ts",
+			"import": "./dist/*/index.js",
+			"require": "./dist/*/index.cjs"
+		},
+		"./styles.css": {
+			"import": "./dist/style.css",
+			"require": "./dist/style.css"
+		},
+		"./mixins.scss": {
+			"import": "./src/assets/mixins.css",
+			"require": "./src/assets/mixins.css"
+		},
+		"./nuxt": {
+			"import": "./nuxt.js"
+		}
 	},
 	"scripts": {
 		"build": "vite build",
@@ -17,21 +33,18 @@
 		"build:watch": "vite build --watch --mode production",
 		"build:types": "vue-tsc -p tsconfig.types.json && npm run build:types:fix",
 		"build:types:fix": "tsc-alias -p tsconfig.types.json --debug",
-
 		"storybook": "storybook dev -p 6006",
 		"storybook:clear-cache": "storybook dev -p 6006 --no-manager-cache",
 		"build:storybook": "storybook build -o docs/storybook",
-
-		"doc":"pnpm run build:storybook",
-		"doc:dev":"pnpm run storybook",
-
+		"doc": "pnpm run build:storybook",
+		"doc:dev": "pnpm run storybook",
 		"lint:eslint": "eslint \"{src,tests}/**/*.{cjs,js,ts,vue}\" \"*.{cjs,js,ts}\" --max-warnings=0 --report-unused-disable-directives",
 		"lint:types": "vue-tsc --noEmit --pretty",
 		"lint:commits": "commitlint --from $(git rev-list HEAD --not --remotes | tail -1)^ --to HEAD --verbose",
 		"lint:imports": "madge --circular --extensions ts ./src",
 		"lint": "npm run lint:types && npm run lint:eslint",
-
 		"prepare": "husky install && npm run build",
+		"actions:debug": "act -r -v -j build-only",
 		"gen:exports": "indexit update --ignore **.d.ts **.stories.js **.vue -o '${path}.js'"
 	},
 	"peerDependencies": {
@@ -42,9 +55,15 @@
 		"vue": "^3.2.45"
 	},
 	"peerDependenciesMeta": {
-		"@fortawesome/free-solid-svg-icons": { "optional": true },
-		"@fortawesome/free-regular-svg-icons": { "optional": true },
-		"@fortawesome/free-brands-svg-icons": { "optional": true }
+		"@fortawesome/free-solid-svg-icons": {
+			"optional": true
+		},
+		"@fortawesome/free-regular-svg-icons": {
+			"optional": true
+		},
+		"@fortawesome/free-brands-svg-icons": {
+			"optional": true
+		}
 	},
 	"dependencies": {
 		"@alanscodelog/utils": "^4.0.0-beta.4",
@@ -118,17 +137,28 @@
 	"license": "MIT",
 	"files": [
 		"src",
-		"dist"
+		"dist",
+		"nuxt.js"
 	],
-	"release": { "extends": [ "@alanscodelog/semantic-release-config" ] },
-	"commitlint": { "extends": [ "@alanscodelog" ] },
-	"engines": { "node": ">=14.0.0" },
+	"release": {
+		"extends": [
+			"@alanscodelog/semantic-release-config"
+		]
+	},
+	"commitlint": {
+		"extends": [
+			"@alanscodelog"
+		]
+	},
+	"engines": {
+		"node": ">=14.0.0"
+	},
 	"@comments": {
-	"scripts": {
-		"lint:commits": "Lints all unpushed commits in the active branch.",
-		"lint:imports": "This is limited to ts files, but still useful.",
-		"prepare": "Needed so that if we pull the package from git it will get built and installed properly.",
-		"actions:debug": "For debugging github build action locally with nektos/act. Requires act and docker. Note: Cache will never work locally because of https://github.com/nektos/act/issues/285"
+		"scripts": {
+			"lint:commits": "Lints all unpushed commits in the active branch.",
+			"lint:imports": "This is limited to ts files, but still useful.",
+			"prepare": "Needed so that if we pull the package from git it will get built and installed properly.",
+			"actions:debug": "For debugging github build action locally with nektos/act. Requires act and docker. Note: Cache will never work locally because of https://github.com/nektos/act/issues/285"
 		}
 	},
 	"publishConfig": {
