@@ -1,117 +1,152 @@
 <template>
-	<nav :class="classes"
+	<nav class="pages
+		flex flex-wrap items-center justify-center gap-2
+	"
 		role="navigation"
 		aria-label="Pagination Navigation"
-		aria-role="navigation"
 	>
-		<div v-if="prevLink.i > 0 && prevLink.i !== currentLink.i" class="page">
-			<slot name="link"
-				:i="prevLink.i"
+		<slot v-if="prevLink.i > 0 && prevLink.i !== currentLink.i"
+			name="link"
+			:i="prevLink.i"
+			:href="prevLink.href"
+			:text="'Prev'"
+			:aria-label="`Go to previous page. Page ${prevLink.i}`"
+			:class="pageClasses"
+		>
+			<a
+				:class="pageClasses"
 				:href="prevLink.href"
-				:text="'Prev'"
-				:arial-label="`Go to previous page. Page ${prevLink.i}`"
+				:aria-label="`Go to previous page. Page ${prevLink.i}`"
 			>
-				<a :href="prevLink.href" :arial-label="`Go to previous page. Page ${prevLink.i}`">Prev</a>
-			</slot>
-		</div>
-		<div class="spacer"/>
-		<div v-if="firstLink.i !== currentLink.i" class="page page-limit">
-			<slot name="link"
-				:i="0"
-				:href="firstLink.href"
-				:text="firstLink.i"
-				:aria_label="`Go to page ${firstLink.i}`"
-			>
-				{{ firstLink.href }}
-				<a :href="firstLink.href" :aria_label="`Go to page ${firstLink.i}`">{{ firstLink.i }}</a>
-			</slot>
-		</div>
+				Prevdsfadsf
+			</a>
+		</slot>
+		<div class="flex-1"/>
+		<slot name="link"
+			:i="0"
+			:href="firstLink.href"
+			:text="firstLink.i"
+			:aria-label="`Go to page ${firstLink.i}`"
+			:class="pageClasses"
+		>
+			{{ firstLink.href }}
+			<a :class="pageClasses" :href="firstLink.href" :aria-label="`Go to page ${firstLink.i}`">{{ firstLink.i }}</a>
+		</slot>
 		<div v-if="prevLink.i - extraPages > firstLink.i" class="page-fill">
 			...
 		</div>
-		<div class="page page-extra" v-for="entry in extraPagesPrev" :key="entry.i">
+		<template
+			v-for="entry in extraPagesPrev"
+			:key="entry.i"
+		>
 			<slot name="link"
+				:class="pageClasses"
 				:i="entry.i"
 				:href="entry.href"
-				:aria_label="`Go to page ${entry.i}`"
+				:aria-label="`Go to page ${entry.i}`"
 			>
-				<a :href="entry.href" :aria_label="`Go to page ${entry.i}`">{{ entry.i }}</a>
+				<a :class="pageClasses" :href="entry.href" :aria-label="`Go to page ${entry.i}`">{{ entry.i }}</a>
 			</slot>
-		</div>
-		<div v-if="currentLink.i >= firstLink.i && currentLink.i <= lastLink.i" class="page page-current">
-			<slot name="current"
-				:i="currentLink.i"
-				:aria_label="`Current page ${currentLink.i}`"
-				:aria_current="true"
+		</template>
+		<slot name="current"
+			:class="currentPageClasses"
+			tabindex="0"
+			:i="currentLink.i"
+			:aria-label="`Current page ${currentLink.i}`"
+			:aria_current="true"
+		>
+			<div class="a"
+				tabindex="0"
+				:class="currentPageClasses"
+				:aria-label="`Current page ${currentLink.i}`"
+				aria-current="true"
+				@click="$event.preventDefault()"
 			>
-				<div class="a"
-					:aria_label="`Current page ${currentLink.i}`"
-					aria-current="true"
-					@click="$event.preventDefault()"
-				>
-					{{ currentLink.i }}
-				</div>
-			</slot>
-		</div>
-		<div class="page page-extra" v-for="entry in extraPagesNext" :key="entry.i">
+				{{ currentLink.i }}
+			</div>
+		</slot>
+		<template
+			v-for="entry in extraPagesNext"
+			:key="entry.i"
+		>
 			<slot name="link"
+				:class="pageClasses"
 				:i="entry.i"
 				:href="entry.href"
-				:aria_label="`Go to page ${entry.i}`"
+				:aria-label="`Go to page ${entry.i}`"
 			>
-				<a :href="entry.href" :aria_label="`Go to page ${entry.i}`">{{ entry.i }}</a>
+				<a :class="pageClasses" :href="entry.href" :aria-label="`Go to page ${entry.i}`">{{ entry.i }}</a>
 			</slot>
-		</div>
+		</template>
 		<div v-if="nextLink.i + extraPages < total" class="page-fill" aria-hidden="true">
 			...
 		</div>
-		<div v-if="lastLink.i !== currentLink.i" class="page">
-			<slot name="link"
-				:i="lastLink.i"
-				:href="lastLink.href"
-				:text="total"
-				:aria_label="`Go to page ${lastLink.i}`"
-			>
-				<a :href="lastLink.href" :aria_label="`Go to page ${lastLink.i}`">{{ total }}</a>
-			</slot>
-		</div>
-		<div class="spacer"/>
-		<div v-if="nextLink.i <= total && nextLink.i !== currentLink.i" class="page page-limit">
-			<slot name="link"
-				:i="nextLink.i"
-				:href="nextLink.href"
-				:text="'Next'"
-				:aria_label="`Go to next page. Page ${nextLink.i}`"
-			>
-				<a :href="nextLink.href" :arial-label="`Go to next page. Page ${nextLink.i}`">Next</a>
-			</slot>
-		</div>
+		<slot v-if="lastLink.i !== currentLink.i"
+			name="link"
+			:class="pageClasses"
+			:i="lastLink.i"
+			:href="lastLink.href"
+			:text="total"
+			:aria-label="`Go to page ${lastLink.i}`"
+		>
+			<a :class="pageClasses" :href="lastLink.href" :aria-label="`Go to page ${lastLink.i}`">{{ total }}</a>
+		</slot>
+		<div class="flex-1"/>
+		<slot
+			v-if="nextLink.i <= total && nextLink.i !== currentLink.i"
+			:class="pageClasses"
+			name="link"
+			:i="nextLink.i"
+			:href="nextLink.href"
+			:text="'Next'"
+			:aria-label="`Go to next page. Page ${nextLink.i}`"
+		>
+			<a :class="pageClasses" :href="nextLink.href" :aria-label="`Go to next page. Page ${nextLink.i}`">Next</a>
+		</slot>
 	</nav>
 </template>
-<script lang="ts">
-export default {
-	name: "lib-pagination",
-	inheritAttrs: false,
-}
-</script>
 <script setup lang="ts">
 import { computed, type PropType, watch } from "vue"
 
+
+const commonClasses = `
+	block
+	focus-outline
+	border-b-2
+	border-transparent
+	transition-all
+	outlined:rounded
+`
+const pageClasses = `
+	${commonClasses}
+	focus-outline
+	hover:text-accent-600
+	hover:border-b-accent-500
+	hover:scale-125
+`
+
+const currentPageClasses = `
+	${commonClasses}
+	border-b-accent-500
+	scale-125
+`
+defineOptions({
+	name: "lib-pagination",
+	inheritAttrs: false,
+})
 /**
  * Pagination component.
  *
  * Can be passed a slot like so to use a custom link element (like NuxtLink):
  * ```vue
  * <template #link="{ href, i, text, ariaLabel, ariaCurrent}">
- * 	<NuxtLink :to="href" :aria_label="ariaLabel" :aria-current="ariaCurrent ?? false">{{ text ?? i }}</NuxtLink>
+ * 	<NuxtLink :to="href" :aria-label="ariaLabel" :aria-current="ariaCurrent ?? false">{{ text ?? i }}</NuxtLink>
  * </template>
  * ```
  */
 const props = defineProps({
 	/** The total number of pages. */
 	total: { type: Number as PropType<number>, required: true },
-	/** Whether to add a border around the links, default false. */
-	border: { type: Boolean as PropType<boolean>, required: false, default: false },
 	/** The number of the current page. It must be valid, between 0 - total or the component will throw an error. */
 	current: { type: Number as PropType<number>, required: true },
 	/** The base route/link path for the page. Should end with a forward slash `/`. */
@@ -138,10 +173,6 @@ const props = defineProps({
 	extraPages: { type: Number as PropType<number>, required: false, default: 3 },
 })
 
-const classes = computed(() => ({
-	border: props.border,
-	pages: true,
-}))
 
 const currentLink = computed(() => props.customRoute(props.route, props.current))
 const currentIsInvalid = computed(() => currentLink.value.i < 0 || currentLink.value.i > props.total)
@@ -178,75 +209,5 @@ const extraPagesNext = computed(() => [...Array(props.extraPages + 1)].map((_, i
 	return props.customRoute(props.route, num)
 }).filter(entry => entry !== undefined).slice(0, props.extraPages) as HrefInfo[])
 
-
 </script>
 
-<style lang="scss" scoped>
-@include spacer;
-
-.pages {
-	display: flex;
-	@include flex-row(wrap, center, center);
-}
-
-
-.page,
-.page-fill {
-	// :deep(a), :deep(.a) {
-	@include border($color: var(--opacity0));
-	padding: var(--paddingS);
-
-	.border & {
-		@include border-radius;
-		background: var(--bgNormal);
-		border-color: var(--borderNormalSoft);
-
-		&:hover,
-		.outline &:focus-within {
-			border-color: var(--borderFocused);
-		}
-	}
-
-	padding: var(--paddingS);
-	margin: 0 var(--paddingXS);
-
-	&:first-of-type {
-		margin-left: 0;
-	}
-
-	&:last-of-type {
-		margin-right: 0;
-	}
-}
-
-.page {
-
-	&:hover,
-	.outline &:focus-within {
-		border-bottom-color: var(--borderFocused);
-	}
-}
-
-
-.page-current {
-
-	// :deep(.a) {
-	.pages:not(.border) & {
-		@include border($side: "bottom");
-		border-bottom-color: var(--borderNormal);
-		border-radius: 0;
-	}
-
-	color: var(--textNormal);
-
-	.border & {
-
-		&:hover,
-		.outline &:focus-within {
-			border-color: var(--borderDisabled);
-		}
-	}
-
-	// }
-}
-</style>

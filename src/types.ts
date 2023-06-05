@@ -1,9 +1,12 @@
-export type ResizableTableDirectiveOptions = {
+import { type Ref } from "vue"
+
+
+export type Options = {
 	/**
 	 * Defaults to true.
 	 *
 	 * ### true
-	 * The directive will shrink/expand the columns when the table is resized and will use percentage widths on the table cells. This disables resizing of the last column.
+	 * The directive will shrink/expand the columns when the table is resized and will use percentage widths on the table cells. This disables resizing of the last column (from the right handle).
 	 *
 	 * Additionally because of the way `table-layout:fixed` works, a min-width cannot be set on the elements via css, so instead, if the table shrinks past `opts.margin * col #`, `min-width` is set on the table until it's resized larger.
 	 *
@@ -30,4 +33,16 @@ export type ResizableTableDirectiveOptions = {
 	 * Note that element styles set are not removed.
 	 */
 	enabled: boolean
+	/** The number of columns. It will be assumed the first colCount elements are the initial widths of the table columns. */
+	colCount: number
+	/**
+	 * A ref that gets filled in with the element width string values by the directive.
+	 *
+	 * It can then be used as needed by the component.
+	 */
+	widths: Ref<string[]>
+	/** The selector to use for the cells. "tr > td" by default. */
+	selector: string
 }
+export type ResizeCallback = (rect: DOMRectReadOnly, el: Element) => void
+

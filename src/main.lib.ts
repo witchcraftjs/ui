@@ -1,4 +1,4 @@
-import "./assets/global.scss"
+import "./assets/style.css"
 
 import type { App, Plugin } from "vue"
 
@@ -6,8 +6,8 @@ import type { App, Plugin } from "vue"
 export * as components from "./components/index.js"
 export * as helpers from "./helpers/index.js"
 export * as mixins from "./mixins/index.js"
+export * as directives from "./directives/index.js"
 
-// eslint-disable-next-line import/no-namespace
 import * as components from "./components/index.js"
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -36,6 +36,3 @@ export type GlobalComponentTypes = {
 	[key in keyof Components]: Components[key]
 }
 
-declare module "@vue/runtime-core" {
-	export interface GlobalComponents extends GlobalComponentTypes { }
-}

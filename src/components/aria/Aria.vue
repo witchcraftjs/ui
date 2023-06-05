@@ -1,5 +1,5 @@
 <template>
-	<div tabindex="0" :aria-label="value"/>
+	<div tabindex="0">{{ value }}</div>
 </template>
 
 <script lang="ts">

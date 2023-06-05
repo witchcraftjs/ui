@@ -1,60 +1,51 @@
-import { run } from "@alanscodelog/utils/node"
-import { babel } from "@rollup/plugin-babel"
 import vue from "@vitejs/plugin-vue"
 import glob from "fast-glob"
 import fs from "fs"
 import { builtinModules } from "module"
 // import Previewer from 'vite-plugin-vue-component-preview';
 import path from "path"
-import { defineConfig, type PluginOption } from "vite"
+import { defineConfig } from "vite"
+import dts from "vite-plugin-dts"
 
 import packageJson from "./package.json"
+// @ts-expect-error .
+import postcss from "./postcss.config.js"
 
 
-const typesPlugin = (): PluginOption => ({
-	name: "typesPlugin",
-	// eslint-disable-next-line no-console
-	writeBundle: async () => run("npm run build:types").catch(e => console.log(e)).then(() => undefined),
-})
+// const typesPlugin = (): PluginOption => ({
+// 	name: "typesPlugin",
+// 	// eslint-disable-next-line no-console
+// 	writeBundle: async () => run("npm run build:types").catch(e => console.log(e)).then(() => undefined),
+// })
 const folders = fs.readdirSync("src", { withFileTypes: true })
-	.filter(file => file.isDirectory() || ["types"].includes(file.name))
+	.filter(file => file.isDirectory() && !["types", "types.ts", "bin"].includes(file.name))
 	.map(file => file.name)
 const fileEntries = glob.sync(path.resolve(__dirname, `src/{${folders.join((","))}}/*.{ts, vue}`))
 
 // return
 // https://vitejs.dev/config/
-export default ({ mode }: { mode: string }) => defineConfig({
+export default async ({ mode }: { mode: string }) => defineConfig({
 	plugins: [
-		babel({
-			babelHelpers: "runtime",
-			extensions: [".js", ".mjs", "ts"],
-			presets: [
-				["@babel/preset-env", {
-					modules: false,
-					useBuiltIns: false, // we do not want polyfills, only transforms of any modern syntax
-					debug: true,
-				}],
-			],
-			plugins: ["@babel/plugin-transform-runtime"],
+		// legacy(),
+		// typesPlugin(),
+		vue({
+			script: {
+				defineModel: true,
+			},
 		}),
-		typesPlugin(),
-		// @ts-expect-error ???
-		vue(),
+		dts({
+			entryRoot: "src",
+		}),
 	],
 	build: {
 		emptyOutDir: true,
 		outDir: "dist",
 		lib: {
 			entry: [
-				"src/assets/global.scss",
 				"src/main.lib.ts",
 				...fileEntries,
 			],
-			formats: ["es", "cjs"],
-			fileName: (format, entryName) => {
-				const suffix = format === "es" ? "js" : "cjs"
-				return `${entryName}.${suffix}`
-			},
+			formats: ["es"],
 		},
 		rollupOptions: {
 			external: [...builtinModules, ...Object.keys((packageJson as any).dependencies ?? {}), ...Object.keys((packageJson as any).peerDependencies ?? {}), /@babel\/runtime/],
@@ -72,13 +63,7 @@ export default ({ mode }: { mode: string }) => defineConfig({
 		minify: false,
 	},
 	css: {
-		preprocessorOptions: {
-			scss: {
-				additionalData: `
-					@import "src/assets/mixins.scss";
-				`,
-			},
-		},
+		postcss,
 	},
 	resolve: {
 		alias: {

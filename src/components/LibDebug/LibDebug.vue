@@ -1,7 +1,23 @@
 <template>
-	<div class="lib-debug">
-		<LibButton @click="copy()"><fa :icon="'regular copy'"/></LibButton>
-		<pre v-if="value">{{ getStringValue(value) }}</pre>
+	<div class="lib-debug
+		flex
+		flex-col
+		rounded
+		border
+		border-red-500
+		p-2
+	"
+	>
+		<div class="flex justify-between">
+			<span class="font-bold">Debug</span>
+			<LibButton class="w-min-content" @click="copy()"><fa :icon="'regular copy'"/></LibButton>
+		</div>
+		<pre v-if="value"
+			:class="`
+		[tab-size:${tab}]
+		w-full`
+			"
+		>{{ getStringValue(value) }}</pre>
 		<pre v-if="value === undefined"><slot/></pre>
 	</div>
 </template>
@@ -62,15 +78,3 @@ const copy = (): void => {
 }
 </script>
 
-<style lang="scss" scoped>
-.lib-debug {
-	border: 1px solid red;
-}
-
-pre {
-	border: 1px solid red;
-	tab-size: v-bind("tab");
-	color: var(--textNormal);
-	// mix-blend-mode: difference;
-}
-</style>

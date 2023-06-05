@@ -75,7 +75,7 @@ export class NotificationHandler<
 				`)
 		}
 	}
-	async notify(rawEntry: TRawEntry): NotificationPromise<TRawEntry["options"][number]> {
+	protected _createEntry<TNotifyEntry extends RawNotificationEntry<any, any>>(rawEntry: TNotifyEntry): TEntry {
 		const entry: Partial<TEntry> & Omit<TEntry, "promise" | "resolve"> = {
 			requiresAction: false,
 			options: ["Ok", "Cancel"],
@@ -90,6 +90,7 @@ export class NotificationHandler<
 				: undefined,
 		} as TEntry
 
+
 		if (rawEntry.cancellable === true || (rawEntry.cancellable === undefined && entry.options?.includes("Cancel"))) {
 			entry.cancellable = "Cancel" as any
 		}
@@ -99,7 +100,13 @@ export class NotificationHandler<
 		castType<TEntry>(entry)
 		this.id++
 		entry.id = this.id
-
+		return entry
+	}
+	async notify<TNotifyEntry extends RawNotificationEntry<any, any>>(rawEntry: TNotifyEntry):
+	NotificationPromise<TNotifyEntry["options"][number] extends string
+			? TNotifyEntry["options"][number]
+			: "Ok" | "Cancel"> {
+		const entry = this._createEntry(rawEntry)
 		entry.promise = new Promise(_resolve => {
 			entry.resolve = _resolve
 		}) as NotificationPromise
@@ -128,7 +135,7 @@ export class NotificationHandler<
 			}
 			this.queue.splice(this.queue.indexOf(entry), 1)
 			return res
-		}) as NotificationPromise
+		}) satisfies NotificationPromise as any
 	}	static resolveToDefault(notification: NotificationEntry): void {
 		notification.resolve(notification.default)
 	}
@@ -194,3 +201,4 @@ export type NotificationListener<TEntry extends NotificationEntry<any>> = (notif
 
 
 export type NotificationStringifier<T extends NotificationEntry<any>> = (notification: T) => string
+

@@ -1,89 +1,106 @@
 <template>
 	<div
-		:class="classes"
+		:class="twMerge(`notification
+			max-w-700px
+			bg-neutral-50
+			border
+			border-neutral-400
+			rounded
+			focus-outline
+			flex-flex-col
+			gap-2
+			p-2 m-2
+		`,
+			notification.requiresAction && `
+		`,
+			($attrs as any).class)"
+		v-bind="{...$attrs, class:undefined}"
 		tabindex="0"
 		ref="notificationEl"
 		@keydown.enter.self="NotificationHandler.resolveToDefault(notification)"
 	>
-		<div class="upper">
+		<div class="header flex-reverse flex justify-between">
 			<div
-				class="message-container"
-				@keydown.enter.self="NotificationHandler.resolveToDefault(notification)"
+				v-if="notification.title"
+				tabindex="0"
+				class=" title
+				focus-outline flex
+				rounded
+				font-bold
+				"
 			>
-				<div
-					v-if="notification.title"
-					class="title"
-				>
-					{{ notification.title }}
-				</div>
-				<div
-					class="message"
-				>
-					{{ notification.message }}
-				</div>
-				<div
-					v-if="notification.code"
-					class="code"
-				>
-					Code: {{ notification.code }}
-				</div>
+				{{ notification.title }}
 			</div>
-			<lib-group v-if="notification.options" class="options" :border="false">
+			<div class="actions flex">
+				<LibButton
+					:border="false"
+					class="copy text-neutral-700"
+					@click="copy(handler ? handler.stringify(notification) : JSON.stringify(notification))"
+				>
+					<fa :icon="'regular copy'"/>
+				</LibButton>
+				<lib-button
+					v-if="notification.cancellable"
+					:border="false"
+					@click="NotificationHandler.dismiss(notification)"
+				>
+					<fa :icon="'solid times'"/>
+				</lib-button>
+			</div>
+		</div>
+		<div class="message" tabindex="0">
+			{{ notification.message }}
+		</div>
+		<div class="bottom flex items-end justify-between">
+			<div v-if="notification.code" class="code text-xs text-neutral-700">
+				Code: {{ notification.code }}
+			</div>
+			<div class="flex-1 py-1"/>
+			<div v-if="notification.options"
+				:border="false"
+				class="options
+				flex flex-wrap justify-end
+				gap-2
+			"
+			>
 				<lib-button
 					:label="option"
-					:color="getColor(notification, option)"
-					v-for="option in notification.options"
+					:class="buttonColors[i] == 'secondary' && 'p-0'"
+					:border="buttonColors[i] !== 'secondary'"
+					:color="buttonColors[i]"
+					v-for="option, i in notification.options"
 					:key="option"
 					@click="notification.resolve(option)"
 				/>
-			</lib-group>
-		</div>
-		<div class="actions">
-			<lib-button
-				v-if="notification.cancellable"
-				:border="false"
-				@click="NotificationHandler.dismiss(notification)"
-			>
-				<fa :icon="'solid times'"/>
-			</lib-button>
-			<LibButton
-				:border="false"
-				class="copy"
-				@click="copy(handler.stringify(notification))"
-			>
-				<fa :icon="'regular copy'"/>
-			</LibButton>
+			</div>
 		</div>
 	</div>
 </template>
-<script lang="ts">
-export default {
-	name: "lib-notification",
-	inheritAttrs: false,
-}
-</script>
 <script setup lang="ts">
-import { computed, type PropType, ref } from "vue"
+import { computed, type PropType, ref, useAttrs } from "vue"
 
 import { copy } from "../../helpers/copy.js"
 import { type NotificationEntry, NotificationHandler } from "../../helpers/NotificationHandler.js"
+import { twMerge } from "../../helpers/twMerge.js"
 import fa from "../fa/Fa.vue"
 import LibButton from "../LibButton/LibButton.vue"
-import LibGroup from "../LibGroup/LibGroup.vue"
 
 
-defineProps({
+defineOptions({
+	name: "lib-notification",
+	inheritAttrs: false,
+})
+
+const $attrs = useAttrs()
+
+const props = defineProps({
 	notification: { type: Object as PropType<NotificationEntry>, required: true },
 	handler: { type: Object as PropType<NotificationHandler>, required: true },
 })
 
-
-const classes = computed(() => ({
-	notification: true,
-}))
-
-
-const getColor = (notification: NotificationEntry, option: string): "red" | "green" | "blue" | "orange" | "yellow" | false => notification.default === option ? "green" : notification.dangerous.includes(option) ? "red" : false
+const getColor = (notification: NotificationEntry, option: string): "ok" | "primary" | "danger" | "secondary" => notification.default === option ? "primary" : notification.dangerous.includes(option) ? "danger" : "secondary"
+/* Todo make this more flexible? */
+const buttonColors = computed(() => props.notification.options.map((option: any /* what ??? */) => getColor(props.notification, option)))
 
 const notificationEl = ref<null | HTMLElement>(null)
 
@@ -96,79 +113,3 @@ defineExpose({
 
 </script>
 
-<style lang="scss" scoped>
-.notification {
-	max-width: 700px;
-	background: var(--bgNormal);
-	// padding: var(--paddingM);
-	border-radius: var(--borderRadius);
-
-	& :deep(.group) {
-		--groupPadding: var(--paddingM);
-		padding: 0;
-		@include flex-row(wrap, center, center);
-	}
-
-	@include border();
-	@include focusable();
-	// @include flex-col(nowrap, null, center);
-	@include flex-row(nowrap);
-	position:relative;
-	gap: var(--paddingM);
-	margin: var(--paddingM);
-}
-
-.upper {
-	margin: var(--paddingM);
-	gap: var(--paddingM);
-	@include flex-col(wrap);
-}
-
-.message-container {
-	@include flex(1, 1);
-	@include flex-col(wrap);
-	align-items: center;
-	margin-right: calc((var(--paddingXS) + 2px) + 1em);
-	// margin-left: var(--paddingXS);
-	margin-top: var(--paddingM);
-	gap: var(--paddingM);
-	// order:1;
-}
-
-.title {
-	font-weight: bold;
-}
-
-.message,
-.title {
-	@include flex(1, 1);
-}
-
-.code {
-	@include flex(1, 0);
-	font-size: var(--fontSizeSmall);
-}
-
-.actions {
-	// @include flex(0,0);
-	position: absolute;
-	top: 0;
-	right: 0;
-	@include flex-col(nowrap, center, flex-start);
-}
-
-// .options {
-// 	// @include flex(1, 0, 100%);
-// 	order:2;
-// }
-
-// .cancel {
-// 	order:0;
-// 	// @include flex(1, 0, 100%);
-// 	@include flex-row(wrap, flex-end, center);
-// }
-
-// .copy {
-// 	align-self: flex-end;
-// }
-</style>

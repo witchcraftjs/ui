@@ -6,3 +6,7 @@ worktree*/**/*
 docs
 coverage
 dist
+
+src/assets/variables.scss
+**/*.wip.*
+test.css

@@ -1,0 +1,6 @@
+{ // for tsnode because volar can't handle nodenext
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"moduleResolution": "nodenext"
+	}
+}

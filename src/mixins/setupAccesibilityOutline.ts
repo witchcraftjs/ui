@@ -28,19 +28,19 @@ import { onBeforeUnmount, onMounted, type Ref, ref, watch } from "vue"
  *
  * In the root app component. Note it requires the element have a tabindex.
  * ```html
- * 	<div id="main" :class="classes" ref="el" tabindex="-1"></div>
+ * 	<div id="app" :class="classes" ref="el" tabindex="-1"></div>
  * ```
  *
  * In style of any subcomponents we can now target `:focus` only when the user is navigating with the keyboard.
  *
- * ```scss
- * button {
- * 	.outline &:focus {
- * 		....
- * 	}
+ * ```css
+ * .outline button:focus {
+ * 	....
  * }
  * ```
+ *
  */
+// TODO tailwind example/plugin?
 export function setupAccesibilityOutline(
 	target: Ref<HTMLElement | null>,
 	enable: Ref<boolean> = ref(true),

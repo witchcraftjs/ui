@@ -16,21 +16,6 @@ Custom vue component library.
 
 ## Usage with Vite
 
-```ts
-	css: {
-		preprocessorOptions: {
-			scss: {
-				// import scss mixins into every scss file
-				// note: requires exact (illegal) path to work
-				// without it there are errors and i think we run into https://github.com/nuxt/vite/issues/71
-				additionalData: `
-					@import "node_modules/@alanscodelog/vue-components/src/assets/mixins.scss";
-				`,
-			},
-		},
-	},
-```
-
 In `main.ts` or where vue is mounted:
 
 ```ts
@@ -56,6 +41,37 @@ createApp(App)
 
 ```
 
+
+<!-- TODO test -->
+You should also be able to use tailwind directly instead of importing the styles.
+
+The package provides a plugin `@alanscodelog/vue-components/tailwind/plugin.js` that can be used with tailwind. It should then be configured similar to the library's config.
+
+```ts
+import { createTailwindPlugin } from "metamorphosis/tailwind"
+import {libraryPlugin} from "@alanscodelog/vue-components/tailwind/plugin.js"
+import {themePluginOpts} from "@alanscodelog/vue-components/tailwind/themePluginOpts.js"
+const config = {
+	darkMode: "class",
+	plugins: [
+		// integration with my theme library
+		// alternatively provide the colors warning/ok/danger/accent (neutral is also used, but that is already provided by tailwind)
+		createTailwindPlugin(theme, themePluginOpts),
+		libraryPlugin,
+	],
+} satisfies Config
+
+export default config
+
+```
+
+You will need to import `@alanscodelog/vue-components/utilities.css` and optionally `@alanscodelog/vue-components/base.css` in your css file.
+
+Utilities contains required utilities.
+
+Base just contains some basic styles for vue's animations.
+
+
 ## Getting Globally Registered Component Types
 
 To get global typings, in a global declaration file (e.g. global.d.ts) do:
@@ -77,20 +93,5 @@ Everything can just be done from the config. Nuxt will automatically import the 
 	modules: [
 		["@alanscodelog/vue-components/nuxt"],
 	]
-	vite: {
-		//.. same options as above
-		css: {
-			preprocessorOptions: {
-				scss: {
-					// import scss mixins into every scss file
-					// note: requires exact (illegal) path to work
-					// without it there are errors and i think we run into https://github.com/nuxt/vite/issues/71
-					additionalData: `
-						@import "node_modules/@alanscodelog/vue-components/src/assets/mixins.scss";
-					`,
-				},
-			},
-		},
-	}
 
 ```

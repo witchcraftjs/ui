@@ -1,10 +1,17 @@
 import { castType, last, throttle } from "@alanscodelog/utils"
 import type { Directive } from "vue"
 
+import { globalResizeObserver } from "../globalResizeObserver.js"
+import type { ResizeCallback } from "../types.js"
+
+
+const observer = globalResizeObserver
+const lastCondition = Symbol("lastConditition")
+const dir = Symbol("dir")
 /**
  * Directive for detecting flex wrap on element. It will bind a resize-observer to the element to detect when it's children have wrapped and add a .wrapped class when they are.
  *
- * The directive throttles the observer by 50ms by default and ignored children elements with the `.detect-flex-ignore` selector, both are configurable when you register the directive.
+ * The directive throttles the observer callback by 50ms by default and ignored children elements with the `.detect-flex-ignore` selector, both are configurable when you register the directive.
  * ```ts
  * // in main.ts
  * app.directive("detect-flex", detectFlex())
@@ -31,85 +38,70 @@ import type { Directive } from "vue"
  *
  * By default it detects row wrapping, pass `vertical:true` for column wrapping.
  *
- * None of the above options can be reactive (yet), if they change nothing will change.
- *
  * If you only want the listener attached sometimes you can pass `{condition:yourCondition}`, this option is reactive.
  */
 // const addClass = (el: HTMLElement) => () => el.classList.add("wrapped")
 // const removeClass = (el: HTMLElement) => () => el.classList.remove("wrapped")
+
 export const detectFlex = (throttleTime: number = 50, ignoreSelector = ".detect-flex-ignore"): Directive => {
-	function createObserver(vertical: boolean): ResizeObserver {
+	const callback: ResizeCallback = (_rect, el) => {
+		const vertical = (el as any)[dir] as boolean
 		const pos = vertical ? "x" : "y"
 		const dimension = vertical ? "width" : "height"
-		const flexWrapDetector = (elements: ResizeObserverEntry[]): void => {
-			for (const el of elements) {
-				const t = el.target
-				castType<HTMLElement>(t)
 
-				const filteredChildren = Array.from(t.children).filter(child => !child.matches(ignoreSelector))
-				const firstChild = filteredChildren[0]
-				const lastChild = last(filteredChildren)
+		castType<HTMLElement>(el)
 
-				if (firstChild === undefined || firstChild === lastChild) {
-					// eslint-disable-next-line no-console
-					console.warn("detect-flex directive detected there are less than two child elements.")
-					// eslint-disable-next-line no-console
-					console.warn(t)
-					t.classList.remove("wrapped")
-					return
-				}
+		const filteredChildren = Array.from(el.children).filter(child => !child.matches(ignoreSelector))
+		const firstChild = filteredChildren[0]
+		const lastChild = last(filteredChildren)
 
-				const firstRect = firstChild.getBoundingClientRect()
-				const lastRect = lastChild.getBoundingClientRect()
-
-
-				// should work even if the flex items are different heights
-				// only exceptions i think are if the element aligns itself below another element somehow
-				// rounded to nearest 10th since getBoundingClientRect can have rounding errors
-				if (Math.round(10 * (firstRect[pos] + firstRect[dimension] - lastRect[pos])) * 10 <= 0) {
-					t.classList.add("wrapped")
-				} else {
-					t.classList.remove("wrapped")
-				}
-			}
+		if (firstChild === undefined || firstChild === lastChild) {
+			// eslint-disable-next-line no-console
+			console.warn("detect-flex directive detected there are less than two child elements.")
+			// eslint-disable-next-line no-console
+			console.warn(el)
+			el.classList.remove("wrapped")
+			return
 		}
-		const throttledDetector = throttle(flexWrapDetector, throttleTime)
-		// let throttledDetector = flexWrapDetector
-		const ro = new ResizeObserver(throttledDetector)
-		return ro
+
+		const firstRect = firstChild.getBoundingClientRect()
+		const lastRect = lastChild.getBoundingClientRect()
+
+
+		// should work even if the flex items are different heights
+		// only exceptions i think are if the element aligns itself below another element somehow
+		// rounded to nearest 10th since getBoundingClientRect can have rounding errors
+		if (Math.round(10 * (firstRect[pos] + firstRect[dimension] - lastRect[pos])) * 10 <= 0) {
+			el.classList.add("wrapped")
+		} else {
+			el.classList.remove("wrapped")
+		}
 	}
 
-	const verticalDetector = createObserver(true)
-	const horizontalDetector = createObserver(false)
-	let lastCondition = false
+	const throttledCallback = throttle(callback, throttleTime)
 
 	return {
 		mounted(el: HTMLElement, { value: { condition = true, vertical = false } = {} }: DetectFlexOptions) {
+			(el as any)[dir] = vertical
 			if (condition) {
-				lastCondition = condition
-				vertical
-				? verticalDetector.observe(el)
-				: horizontalDetector.observe(el)
+				(el as any)[lastCondition] = condition
+				observer.observe(el, throttledCallback)
 			}
 		},
 		updated(el: HTMLElement, { value: { condition = true, vertical = false } = {} }: DetectFlexOptions) {
-			if (condition !== lastCondition) {
-				lastCondition = condition
+			(el as any)[dir] = vertical
+			if (condition !== (el as any)[lastCondition]) {
+				(el as any)[lastCondition] = condition
 				if (condition) {
-					vertical
-						? verticalDetector.observe(el)
-						: horizontalDetector.observe(el)
+					observer.observe(el, throttledCallback)
 				} else {
-						vertical
-						? verticalDetector.unobserve(el)
-						: horizontalDetector.unobserve(el)
+					observer.unobserve(el, throttledCallback)
 				}
 			}
 		},
 		unmounted(el: HTMLElement, { value: { vertical = false } = {} }: DetectFlexOptions) {
-			vertical
-				? verticalDetector.unobserve(el)
-				: horizontalDetector.unobserve(el)
+			(el as any)[dir] = vertical
+			observer.unobserve(el, throttledCallback)
 		},
 	}
 }

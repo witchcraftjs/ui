@@ -20,7 +20,8 @@
 		"src/TestWrapper.vue",
 		"*.ts",
 		"*.cjs",
-		"*.js"
+		"*.js",
+		"**/*.stories.ts"
 	],
 	"tsc-alias": {
 		"resolveFullPaths": true // for esm compatibility

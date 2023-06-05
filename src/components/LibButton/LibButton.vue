@@ -1,142 +1,131 @@
 <template>
 	<button
 		:id="id"
-		:class="classes"
+		:class="!unstyle && twMerge(`
+			button
+			flex
+			cursor-pointer
+			items-center
+			justify-center
+			rounded
+			px-1
+			hover:cursor-pointer
+			focus-outline
+			disabled:shadow-none
+			disabled:text-neutral-500
+			disabled:cursor-default
+			text-neutral-950
+			hover:text-accent-700
+			`,
+			!color && `active:text-neutral-800` /* todo for colors */,
+			border && `
+				shadow-sm
+				shadow-neutral-950/50
+				hover:shadow-md
+				hover:shadow-neutral-950/30
+				hover:border-neutral-600
+				active:shadow-inner
+				border
+				border-neutral-500
+				disabled:border-neutral-200
+				disabled:bg-neutral-50
+			`,
+			!border && color === `primary` && `
+				font-bold
+				hover:text-accent-50
+			`,
+			color === `ok` && ` text-ok-600 hover:text-ok-500`,
+			color === `warning` && ` text-warning-500 hover:text-warning-300`,
+			color === `danger` && ` text-danger-500 hover:text-danger-300 `,
+			color === `secondary` && ` text-accent-700 hover:text-accent-500`,
+			color === `primary` && ` text-accent-700 hover:text-accent-500`,
+			border && color === `ok` && `
+				text-ok-950
+				hover:text-ok-800
+				bg-ok-400
+				border-ok-700
+				hover:border-ok-600
+				`,
+			border && color === `warning` && `
+				text-warning-950
+				hover:text-warning-800
+				bg-warning-300
+				border-warning-700
+				hover:border-warning-600
+				`,
+			border && color === `danger` && `
+				text-danger-950
+				hover:text-danger-800
+				bg-danger-300
+				border-danger-700
+				hover:border-danger-600
+				`,
+			border && color === `secondary` && `
+				text-accent-800
+				hover:text-accent-700
+				border-accent-700
+				hover:border-accent-600
+				bg-neutral-50
+			`,
+			border && color === `primary` && `
+				text-white
+				hover:text-white
+				bg-accent-600
+				hover:bg-accent-500
+				border-accent-700
+				hover:border-accent-600
+			`,
+			$attrs.class as any
+		)"
+		:type="$attrs.type ?? 'submit'"
+		:tabindex="0"
 		:disabled="disabled"
-		type="button"
-		ref="el"
-		@click="click($event)"
+		:data-border="border"
+		:data-color="color"
+		:aria-disabled="disabled"
+		:aria-labelledby="label ?`label-${id}` : undefined"
+		v-bind="{...$attrs, class:undefined, ...listeners}"
 	>
-		<span class="label"><slot/>{{ label }}</span>
+		<label
+			:id="`label-${id}`"
+			class="label pointer-events-none flex items-center justify-center"
+		>
+			<span v-if="$slots.default"
+				class="slot peer flex w-full items-center"
+			>
+				<slot/>
+			</span>
+			<span v-if="!isBlank(label)" class=" peer-[.slot]:pl-2">
+				{{ label }}
+			</span>
+		</label>
 	</button>
 </template>
-<script lang="ts">
-
-export default {
-	name: "lib-button",
-}
-</script>
 <script setup  lang="ts">
-import { castType, isBlank } from "@alanscodelog/utils"
-import { computed, getCurrentInstance, onMounted, type PropType, type Ref, ref } from "vue"
+import { isBlank, keys, pick } from "@alanscodelog/utils"
+import { computed, type PropType, useAttrs } from "vue"
+
+import { twMerge } from "../../helpers/twMerge.js"
+import { baseInteractiveProps, fallthroughEventProps, labelProp, linkableByIdProps } from "../shared/props.js"
 
 
-const emits = defineEmits<(e: "click", _payload: MouseEvent | PointerEvent) => void>()
-/* eslint-enable @typescript-eslint/unified-signatures */
+const $attrs = useAttrs()
+
+defineOptions({
+	name: "lib-button",
+})
 
 const props = defineProps({
-	/** The id for the input. Uses vue's uid (`getCurrentInstance().uid`) if none provided. */
-	id: { type: String as PropType<string>, required: false, default: () => getCurrentInstance()!.uid.toString() },
-	/** The label for the button. */
-	label: { type: String as PropType<string>, required: false, default: () => "" },
-	disabled: { type: Boolean as PropType<boolean>, required: false, default: false },
-	border: { type: Boolean as PropType<boolean>, required: false, default: true },
-	autofocus: { type: Boolean as PropType<boolean>, required: false, default: false },
-	color: { type: [String, Boolean] as PropType<"red" | "green" | "blue" | "orange" | "yellow" | false>, required: false, default: false },
+	...linkableByIdProps(),
+	...labelProp,
+	...baseInteractiveProps,
+	...fallthroughEventProps,
+	readonly: undefined as any,
+	color: { type: [String, Boolean] as PropType<"warning" | "ok" | "danger" | "primary" | "secondary" | false>, required: false, default: false },
+	unstyle: { type: Boolean, required: false, default: false },
 })
 
-const click = (e: MouseEvent | PointerEvent): void => {
-	emits("click", e)
-}
-
-const el = ref<null | HTMLElement>(null)
-
-const classes = computed(() => ({
-	button: true,
-	border: props.border,
-	// label: isBlank(props.label) ? "" : "blank",
-	blank: isBlank(props.label),
-	[`color-${props.color}`]: !!props.color,
-}))
-
-onMounted(() => {
-	if (props.autofocus) {
-		castType<Ref<HTMLElement>>(el)
-		el?.value.focus()
-	}
-})
+const listeners = computed(() => pick(props, keys(fallthroughEventProps) as any) as any)
 
 </script>
 
-<style lang="scss" scoped>
-button {
-	display: flex;
-	align-items: center;
-	padding: var(--paddingXS) calc(var(--paddingXS) + 2px);
-	@include border;
-	@include border-radius;
-	/* use an invisible border when borderless so that they all occupy the same height anyways */
-	border-color: var(--opacity0);
-	color: var(--textNormal);
-	@include colors("&", true, true);
-	user-select: none;
-
-	.label {
-		display: flex;
-		align-items: center;
-	}
-
-	&:not(.blank) :slotted(.icon) {
-		margin-right: calc(var(--paddingS) + 1px);
-	}
-
-	&.border {
-		@include colors("&", true, true);
-		@include box-shadow;
-		background: var(--bgNormal);
-		border-color: var(--borderNormal);
-	}
-
-	&:not(:active, :hover) {
-		.outline &:focus {
-			color: var(--textFocused);
-
-			&.border {
-				border-color: var(--borderFocused);
-				// background: var(--bgFocused);
-				@include box-shadow($color: var(--shadowFocused));
-			}
-		}
-	}
-
-	&:not(:disabled):hover {
-		cursor: pointer;
-		color: var(--textHover);
-		@include text-shadow($color: var(--textShadowHover));
-
-		&.border {
-			@include box-shadow($color: var(--shadowHover));
-			border-color: var(--borderHover);
-		}
-	}
-
-	&:not(:disabled):active {
-		color: var(--textActive);
-		@include no-text-shadow;
-
-		&.border {
-			@include box-shadow($color: var(--shadowActive), $spread: calc(var(--shadowWidth) + 1px), $inset: true);
-			border-color: var(--borderActive);
-		}
-	}
-
-	&:disabled {
-		color: var(--textDisabled);
-		box-shadow: none;
-		@include no-text-shadow;
-
-		&.border {
-			border-color: var(--borderDisabled);
-			background: var(--bgDisabled);
-		}
-	}
-}
-
-.large {
-	font-size: var(--fontSizeLarge);
-}
-
-.small {
-	font-size: var(--fontSizeSmall);
-}
-</style>
