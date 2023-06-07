@@ -86,25 +86,27 @@
 				</div>
 			</slot>
 			<slot name="values">
-				<!-- @vue-expected-skip -->
-				<lib-multi-values
-					v-if="values && values.length > 0"
-					:class="twMerge(`
+				<template v-if="values && values.length > 0">
+					<!-- @vue-expected-error -->
+					<!-- @vue-expect-error todo #awaiting release-->
+					<lib-multi-values
+						:class="twMerge(`
 							grow-[9000]
 							justify-space-between
 							py-1
 						`,
-						!$slots.right && `
+							!$slots.right && `
 							-mr-1
 						`
-					)"
-					:label="label"
-					:border="border"
-					:disabled="disabled"
-					:readonly="readonly"
-					:values="values"
-					@update:values="values = $event"
-				/>
+						)"
+						:label="label"
+						:border="border"
+						:disabled="disabled"
+						:readonly="readonly"
+						:values="values"
+						@update:values="values = $event"
+					/>
+				</template>
 			</slot>
 			<slot name="right" v-bind="slotProps"/>
 

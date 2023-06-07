@@ -116,7 +116,12 @@
 			<div class="color-controls flex w-full items-center gap-2">
 				<slot name="input">
 					<!-- @vue-expected-error -->
-					<lib-input :aria-label="label" :model-value="localColorString" @input="parseInput"/>
+					<!-- @vue-expect-error todo #awaiting release-->
+					<lib-input
+						:aria-label="label"
+						:model-value="localColorString"
+						@input="parseInput"
+					/>
 					<lib-button aria-label="'copy'" @click="copy()"><fa :icon="'regular copy'"/></lib-button>
 				</slot>
 			</div>
