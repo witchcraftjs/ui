@@ -10,6 +10,15 @@ export const plugin = tailwindPlugin(({
 	matchUtilities,
 	theme,
 }) => {
+	addUtilities(
+		Object.fromEntries(
+			[".", ".min-", ".max-"]
+				.map(prefix => (
+					[`${prefix}h-screen`, { [`${prefix.slice(1)}height`]: ["100vh /* fallback */", "100dvh"]}]
+				)
+				)
+		)
+	)
 	addVariant("outlined", [`:merge(.group).outlined &:focus`, `&:focus-visible`])
 	addVariant("outlined-within", [`:merge(.group).outlined &:focus-within`])
 	addUtilities({

@@ -86,7 +86,7 @@ export default {
 
 ```
 
-If you need to setup the config completely from scratch the package provides a plugin `@alanscodelog/vue-components/tailwind/plugin.js` that sets up a few utility classes. It also requires setting up the theming library. The options it uses are exported for easy re-use.
+If you need to setup the config completely from scratch the package provides a plugin `@alanscodelog/vue-components/tailwind/plugin.js` that sets up a few utility classes\*. It also requires setting up the theming library. The options it uses are exported for easy re-use.
 
 ```ts
 import { createTailwindPlugin } from "metamorphosis/tailwind"
@@ -110,6 +110,8 @@ const config = {
 export default config
 
 ```
+
+\* Note that it overrides the h-screen utility to use dvh units by default, with vh as a fallback.
 
 You will need to import `@alanscodelog/vue-components/utilities.css` and optionally `@alanscodelog/vue-components/base.css` in your css file.
 

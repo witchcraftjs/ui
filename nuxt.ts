@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/typedef */
+
 import { type DeepPartial } from "@alanscodelog/utils"
 import { defineNuxtModule } from "@nuxt/kit"
 import { type Config } from "tailwindcss"
@@ -29,7 +31,6 @@ export default defineNuxtModule({
 						.map(([key, value]) => [`rgb(var(${key}) / <alpha-value>)`, `rgb(${value})`]),
 				),
 			}
-			return twConfig
 		})
 	},
 })
