@@ -10,20 +10,22 @@
 			"import": "./dist/main.lib.js"
 		},
 		"./*": {
-			"import": "./dist/*/index.js"
-		},
-		"./styles.css": {
-			"import": "./dist/style.css"
+			"import": "./dist/*"
 		},
 		"./base.css": {
 			"import": "./src/assets/base.css"
+		},
+		"./style.css": {
+			"import": "./dist/style.css"
 		},
 		"./utilities.css": {
 			"import": "./src/assets/utilities.css"
 		},
 		"./nuxt": {
-			"import": "./nuxt.js"
-		}
+			"import": "./nuxt.ts"
+		},
+		"./tailwind-vscode.config.ts": "./tailwind-vscode.config.ts",
+		"./tailwind.config.ts": "./tailwind.config.ts"
 	},
 	"scripts": {
 		"build": "vite build",

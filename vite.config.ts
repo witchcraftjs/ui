@@ -12,11 +12,6 @@ import packageJson from "./package.json"
 import postcss from "./postcss.config.js"
 
 
-// const typesPlugin = (): PluginOption => ({
-// 	name: "typesPlugin",
-// 	// eslint-disable-next-line no-console
-// 	writeBundle: async () => run("npm run build:types").catch(e => console.log(e)).then(() => undefined),
-// })
 const folders = fs.readdirSync("src", { withFileTypes: true })
 	.filter(file => file.isDirectory() && !["types", "types.ts", "bin"].includes(file.name))
 	.map(file => file.name)
@@ -26,8 +21,6 @@ const fileEntries = glob.sync(path.resolve(__dirname, `src/{${folders.join((",")
 // https://vitejs.dev/config/
 export default async ({ mode }: { mode: string }) => defineConfig({
 	plugins: [
-		// legacy(),
-		// typesPlugin(),
 		vue({
 			script: {
 				defineModel: true,
@@ -43,6 +36,9 @@ export default async ({ mode }: { mode: string }) => defineConfig({
 		lib: {
 			entry: [
 				"src/main.lib.ts",
+				"src/theme.ts",
+				"src/types.ts",
+				"src/globalResizeObserver.ts",
 				...fileEntries,
 			],
 			formats: ["es"],
