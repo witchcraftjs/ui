@@ -40,7 +40,17 @@ createApp(App)
 	.use(MyLibPlugin) //use plugin
 
 ```
+In the vite config, vue will require the experimental useModel:
 
+```
+	plugins: [
+		vue({
+			script: {
+				defineModel: true,
+			},
+		}),
+	],
+```
 
 <!-- TODO test -->
 You should also be able to use tailwind directly instead of importing the styles.
@@ -92,6 +102,13 @@ Everything can just be done from the config. Nuxt will automatically import the 
 	],
 	modules: [
 		["@alanscodelog/vue-components/nuxt"],
-	]
+	],
+	vite: {
+		vue: {
+			script: {
+				defineModel: true,
+			},
+		}
+	}
 
 ```
