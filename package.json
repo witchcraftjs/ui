@@ -139,7 +139,9 @@
 	"files": [
 		"src",
 		"dist",
-		"nuxt.js"
+		"nuxt.js",
+		"tailwind.config.ts",
+		"tailwind-vscode.config.ts"
 	],
 	"release": {
 		"extends": [
