@@ -52,7 +52,8 @@
 		"@fortawesome/free-brands-svg-icons": "^6.4.0",
 		"@fortawesome/free-regular-svg-icons": "^6.4.0",
 		"@fortawesome/free-solid-svg-icons": "^6.4.0",
-		"vue": "^3.2.47"
+		"vue": "^3.2.47",
+		"@nuxtjs/tailwindcss": "^6.7.0"
 	},
 	"peerDependenciesMeta": {
 		"@fortawesome/free-solid-svg-icons": {
@@ -63,15 +64,18 @@
 		},
 		"@fortawesome/free-brands-svg-icons": {
 			"optional": true
+		},
+		"@nuxtjs/tailwindcss" : {
+			"optional": true
 		}
 	},
 	"dependencies": {
 		"@alanscodelog/utils": "^4.0.0-beta.4",
 		"@fortawesome/vue-fontawesome": "^3.0.3",
+		"colord": "^2.9.3",
 		"colorjs.io": "^0.4.3",
 		"metamorphosis": "github:alanscodelog/metamorphosis",
-		"tailwind-merge": "^1.12.0",
-		"colord": "^2.9.3"
+		"tailwind-merge": "^1.12.0"
 	},
 	"devDependencies": {
 		"@alanscodelog/commitlint-config": "^2.0.0",
@@ -83,6 +87,7 @@
 		"@fortawesome/free-solid-svg-icons": "^6.4.0",
 		"@fortawesome/vue-fontawesome": "^3.0.3",
 		"@nuxt/kit": "^3.5.1",
+		"@nuxtjs/tailwindcss": "^6.7.0",
 		"@rollup/plugin-node-resolve": "^15.0.2",
 		"@storybook/addon-a11y": "7.0.13",
 		"@storybook/addon-actions": "7.0.13",
@@ -141,7 +146,7 @@
 	"files": [
 		"src",
 		"dist",
-		"nuxt.js",
+		"nuxt.ts",
 		"tailwind.config.ts",
 		"tailwind-vscode.config.ts"
 	],

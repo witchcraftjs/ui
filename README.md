@@ -7,14 +7,28 @@ Custom vue component library.
 
 # [Storybook](https://alanscodelog.github.io/vue-components/storybook)
 
-# Development
+# Usage with Nuxt
 
-`src/main.ts` is a playground for testing things and will work with the `dev` script which will serve a vite server in dev mode.
+Everything can just be done from the config. Nuxt will automatically import the component types. The module also automatically registers it's tailwind config and provides the necessary colors to the tailwind theme viewer for use with `@nuxtjs/tailwindcss`, be sure to install it as a peer dependency.
 
-`scr/main.lib.ts` is the actual library export which is used when vite builds in production mode.
+```ts
+	modules: [
+		[
+			"@alanscodelog/vue-components/nuxt",
+			"@nuxtjs/tailwindcss",
+		],
+	],
+	vite: {
+		vue: {
+			script: {
+				defineModel: true,
+			},
+		}
+	}
 
+```
 
-## Usage with Vite
+# Usage with Vite
 
 In `main.ts` or where vue is mounted:
 
@@ -51,24 +65,46 @@ In the vite config, vue will require the experimental useModel:
 		}),
 	],
 ```
+## Setting up Tailwind
 
-<!-- TODO test -->
 You should also be able to use tailwind directly instead of importing the styles.
 
-The package provides a plugin `@alanscodelog/vue-components/tailwind/plugin.js` that can be used with tailwind. It should then be configured similar to the library's config.
+You can use the exported config and merge it with your own if needed.
+
+```ts
+import componentsconfig from "@alanscodelog/vue-components/tailwind.config.ts"
+import { theme } from "./lib/general/theme.js"
+
+export default {
+	...componentsConfig,
+	// ... your config
+	plugins: [
+		// ...your plugins
+		...componentsConfig.plugins
+	]
+}
+
+```
+
+If you need to setup the config completely from scratch the package provides a plugin `@alanscodelog/vue-components/tailwind/plugin.js` that sets up a few utility classes. It also requires setting up the theming library. The options it uses are exported for easy re-use.
 
 ```ts
 import { createTailwindPlugin } from "metamorphosis/tailwind"
-import {libraryPlugin} from "@alanscodelog/vue-components/tailwind/plugin.js"
-import {themePluginOpts} from "@alanscodelog/vue-components/tailwind/themePluginOpts.js"
+// you can also use your own metamorphosis theme so long as the necessary colors are provided ( warning/ok/danger/accent, neutral is also used, but that is already provided by tailwind )
+import { theme } from "@alanscodelog/vue-components/theme.js"
+import { libraryPlugin } from "@alanscodelog/vue-components/tailwind/plugin.js"
+import { themePluginOpts } from "@alanscodelog/vue-components/tailwind/themePluginOpts.js"
+import componentsconfig from "@alanscodelog/vue-components/tailwind.config.ts"
+
 const config = {
 	darkMode: "class",
 	plugins: [
 		// integration with my theme library
-		// alternatively provide the colors warning/ok/danger/accent (neutral is also used, but that is already provided by tailwind)
 		createTailwindPlugin(theme, themePluginOpts),
 		libraryPlugin,
+		// .... your plugins
 	],
+	// ... your opts
 } satisfies Config
 
 export default config
@@ -77,10 +113,17 @@ export default config
 
 You will need to import `@alanscodelog/vue-components/utilities.css` and optionally `@alanscodelog/vue-components/base.css` in your css file.
 
+```css
+@import "@alanscodelog/vue-components/base.css";
+@import "@alanscodelog/vue-components/utilities.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
 Utilities contains required utilities.
 
 Base just contains some basic styles for vue's animations.
-
 
 ## Getting Globally Registered Component Types
 
@@ -91,24 +134,10 @@ declare module "@vue/runtime-core" {
 	export interface GlobalComponents extends GlobalComponentTypes { }
 }
 ```
-## Usage with Nuxt
 
-Everything can just be done from the config. Nuxt will automatically import the component types.
 
-```ts
-	css: [
-		// required to get the component styles working
-		"@alanscodelog/vue-components/styles.css",
-	],
-	modules: [
-		["@alanscodelog/vue-components/nuxt"],
-	],
-	vite: {
-		vue: {
-			script: {
-				defineModel: true,
-			},
-		}
-	}
+# Development
 
-```
+`src/main.ts` is a playground for testing things and will work with the `dev` script which will serve a vite server in dev mode.
+
+`scr/main.lib.ts` is the actual library export which is used when vite builds in production mode.
