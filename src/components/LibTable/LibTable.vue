@@ -90,6 +90,7 @@ export default {
 import { keys, type MakeRequired } from "@alanscodelog/utils"
 import { computed, type PropType, ref } from "vue"
 
+import { resizableCols as vResizableCols } from "../../directives/resizableCols.js"
 import { twMerge } from "../../helpers/twMerge.js"
 import type { Options } from "../../types.js"
 

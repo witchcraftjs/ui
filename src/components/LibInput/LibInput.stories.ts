@@ -248,7 +248,7 @@ export const InputSlotReplacement: Story = {
 						:recorder="recorder"
 						v-model:recording="recording"
 						v-model="modelValue"
-						@recorder:click.prevent="recording = !recording"
+						@recorder:click="recording = !recording"
 						@recorder:blur="recordingValue = modelValue; recording = false"
 					/>
 				</template>

@@ -93,7 +93,7 @@
 				:style="`left: calc(${localColor.percent.a}% - var(--slider-size)/2)`"
 			/>
 		</div>
-		<div class="color-group flex w-full gap-2">
+		<div class="color-group flex w-full flex-1 gap-2">
 			<div class=" color-wrapper
 				bg-transparency-squares
 				relative
@@ -113,7 +113,7 @@
 					:style="`background:${localColorString}`"
 				/>
 			</div>
-			<div class="color-controls flex w-full items-center gap-2">
+			<div class="color-controls flex flex-1 items-center gap-2">
 				<slot name="input">
 					<!-- @vue-expected-error -->
 					<!-- @vue-expect-error todo #awaiting release-->

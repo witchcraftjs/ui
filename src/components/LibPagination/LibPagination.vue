@@ -17,12 +17,11 @@
 				:class="pageClasses"
 				:href="prevLink.href"
 				:aria-label="`Go to previous page. Page ${prevLink.i}`"
-			>
-				Prevdsfadsf
-			</a>
+			/>
 		</slot>
 		<div class="flex-1"/>
-		<slot name="link"
+		<slot v-if="firstLink.i !== currentLink.i"
+			name="link"
 			:i="0"
 			:href="firstLink.href"
 			:text="firstLink.i"

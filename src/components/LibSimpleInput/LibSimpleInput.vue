@@ -23,6 +23,7 @@
 			`,
 			type === `text` && `
 				min-w-[10ch]
+				w-full
 			`,
 			type === `number` && `
 				w-12

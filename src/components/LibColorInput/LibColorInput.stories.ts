@@ -19,7 +19,6 @@ type Story = StoryObj<typeof LibColorInput>
 
 
 export const Primary: Story = {
-	// @ts-expect-error todo
 	render: args => ({
 		components,
 		setup: () => {

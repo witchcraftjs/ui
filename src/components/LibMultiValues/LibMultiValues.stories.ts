@@ -33,7 +33,7 @@ export const Primary: Story = {
 			const inputValue = ref("B")
 			const multiValueEl = ref<typeof LibMultiValues | null>(null)
 			const onKeydownEnter = (e: KeyboardEvent): void => {
-				if (e.key === "Enter") multiValueEl.value?.add(inputValue.value)
+				if (e.key === "Enter") (args.values).push(inputValue.value)
 			}
 			return ({
 				args,
