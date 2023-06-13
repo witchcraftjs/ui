@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/typedef */
 
 import { type DeepPartial } from "@alanscodelog/utils"
-import { defineNuxtModule } from "@nuxt/kit"
+import { createResolver, defineNuxtModule } from "@nuxt/kit"
 import { type Config } from "tailwindcss"
 import { fileURLToPath } from "url"
 
@@ -14,12 +14,14 @@ export default defineNuxtModule({
 		name: "@alanscodelog/vue-components",
 	},
 	setup(_opts, nuxt) {
+		const { resolve } = createResolver(import.meta.url)
 		nuxt.hook("components:dirs", dirs => {
 			dirs.push({
 				path: fileURLToPath(new URL("./src/components/", import.meta.url)),
 				prefix: "",
 			})
 		})
+
 		nuxt.hook("tailwindcss:config" as any, (twConfig: DeepPartial<Config>) => {
 			twConfig.plugins = [...(twConfig.plugins ?? []), ...config.plugins]
 			twConfig.darkMode = "class"
@@ -31,6 +33,8 @@ export default defineNuxtModule({
 						.map(([key, value]) => [`rgb(var(${key}) / <alpha-value>)`, `rgb(${value})`]),
 				),
 			}
+			twConfig.content ??= []
+			twConfig.content.push(resolve("./src/**/*.vue"))
 		})
 	},
 })

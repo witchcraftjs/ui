@@ -24,7 +24,7 @@
 		"./nuxt": {
 			"import": "./nuxt.ts"
 		},
-		"./tailwind-vscode.config.ts": "./tailwind-vscode.config.ts",
+		"./tailwind-colors.config.ts": "./tailwind-colors.config.ts",
 		"./tailwind.config.ts": "./tailwind.config.ts"
 	},
 	"scripts": {
@@ -65,7 +65,7 @@
 		"@fortawesome/free-brands-svg-icons": {
 			"optional": true
 		},
-		"@nuxtjs/tailwindcss" : {
+		"@nuxtjs/tailwindcss": {
 			"optional": true
 		}
 	},
@@ -148,7 +148,7 @@
 		"dist",
 		"nuxt.ts",
 		"tailwind.config.ts",
-		"tailwind-vscode.config.ts"
+		"tailwind-colors.config.ts"
 	],
 	"release": {
 		"extends": [
