@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/vue3"
 
 
 const meta: Meta<{}> = {
-	title: "Reset",
+	title: "Other/Reset",
 	args: {
 
 	},

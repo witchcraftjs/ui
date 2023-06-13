@@ -9,6 +9,7 @@
 				px-1
 				focus-outline
 				min-w-[2rem]
+				dark:bg-neutral-800
 				placeholder:text-neutral-400
 				placeholder:focus:text-accent-300
 				read-only:bg-neutral-50
@@ -20,6 +21,7 @@
 				disabled:cursor-unset
 				disabled:bg-neutral-50
 				disabled:text-neutral-400
+
 			`,
 			type === `text` && `
 				min-w-[10ch]

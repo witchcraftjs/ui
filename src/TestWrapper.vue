@@ -10,6 +10,7 @@ import { cssObjectToString } from "metamorphosis/utils"
 defineOptions({ name: "test-wrapper" })
 const props = defineProps({
 	outline: { type: Boolean as PropType<boolean>, required: false, default: () => false },
+	forceOutline: { type: Boolean as PropType<boolean>, required: false, default: () => false },
 })
 
 const el = ref<HTMLElement | null>(null)
@@ -17,7 +18,7 @@ const styleEl = ref<HTMLElement | null>(null)
 
 const autoOutline = setupAccesibilityOutline(el).outline
 
-const showOutline = computed(() => props.outline && autoOutline)
+const showOutline = computed(() => (props.outline && autoOutline.value) || props.forceOutline)
 
 /**
  * Not using the suggested attach method because we're writing the css
@@ -41,8 +42,9 @@ onBeforeUnmount(() => {
 	accessible from the storybook preview decorator. See theme callback
 	above. -->
 	<component :is="'style'" ref="styleEl"/>
+	{{ props.outline }}
 	<div id="app"
-		:class="showOutline ? 'group outlined' : ''"
+		:class="showOutline ? 'group outlined outlined-visible' : '[&_*]:outline-none'"
 		class="
 			p-10
 			dark:bg-black
@@ -56,8 +58,3 @@ onBeforeUnmount(() => {
 	</div>
 </template>
 
-<style lang="css">
-#app:not(.group.outlined) * {
-	outline:none;
-}
-</style>

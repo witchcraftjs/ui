@@ -9,48 +9,48 @@ import { fas } from "@fortawesome/free-solid-svg-icons"
 library.add(fas, far)
 
 export const parameters:Parameters = {
-  actions: { argTypesRegex: "^on[A-Z].*" },
-  controls: {
-    controls: { expanded: true },
-  },
-  layout: "fullscreen",
-  backgrounds: {
-    default: 'default',
-    values: [
-      {
-        name: 'light',
-        value: 'var(--cGray0)',
-      },
-      {
-        name: 'dark',
-        value: 'var(--cGray10)',
-      },
-      {
-        name: "default",
-        value: 'var(--cBg)',
-      },
-    ],
-  },
+	actions: { argTypesRegex: "^on[A-Z].*" },
+	controls: {
+		controls: { expanded: true },
+	},
+	layout: "fullscreen",
+	backgrounds: {
+		default: 'default',
+		values: [
+			{
+				name: 'light',
+				value: 'var(--cGray0)',
+			},
+			{
+				name: 'dark',
+				value: 'var(--cGray10)',
+			},
+			{
+				name: "default",
+				value: 'var(--cBg)',
+			},
+		],
+	},
 }
 
 
 
 const preview: Preview = {
-  globalTypes: {
-    darkMode: {
-      // defaultValue: true, // Enable dark mode by default on all stories
-    },
-  },
-  decorators: [(story, { args }) => ({
-    directives: {extractRootEl},
+	globalTypes: {
+		darkMode: {
+			// defaultValue: true, // Enable dark mode by default on all stories
+		},
+	},
+	decorators: [(story, { args }) => ({
+		directives: {extractRootEl},
 		components: { TestWrapper, story },
 		setup: () => ({ args }),
 		template: `
-			<test-wrapper :outline="args.outline"><story/></test-wrapper>
-    `,
-  })],
-  args: {
-    outline:false,
-  }
+<test-wrapper :outline="args.outline"><story/></test-wrapper>
+`,
+	})],
+	args: {
+		outline:true,
+	}
 };
 export default preview;

@@ -19,7 +19,8 @@ export const plugin = tailwindPlugin(({
 				)
 		)
 	)
-	addVariant("outlined", [`:merge(.group).outlined &:focus`, `&:focus-visible`])
+	addVariant("outlined", [`:merge(.group).outlined &:focus-visible`, `:merge(.group).outlined-visible &:focus-visible`])
+	addVariant("outlined-focus", [`:merge(.group).outlined &:focus`])
 	addVariant("outlined-within", [`:merge(.group).outlined &:focus-within`])
 	addUtilities({
 		".scrollbar-hide": {
