@@ -31,6 +31,9 @@
 						before:inset-0
 						before:bg-transparency-squares
 						before:z-[-1]
+						border
+						border-neutral-950
+						dark:border-neutral-500
 					`"
 					:style="`background:${stringColor}`"
 				/>

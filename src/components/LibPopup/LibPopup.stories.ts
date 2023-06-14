@@ -80,7 +80,7 @@ export const Primary: Story = {
 					<lib-button :style="buttonStyle" @click="value = !value" v-extract-root-el="extractEl">Toggle Popup</lib-button>
 				</template>
 				<template #popup="{position, extractEl}">
-					<lib-debug v-extract-root-el="extractEl" class="bg-white">
+					<lib-debug v-extract-root-el="extractEl" class="bg-bg dark:bg-fg">
 						{{ position }}
 					</lib-debug>
 				</template>

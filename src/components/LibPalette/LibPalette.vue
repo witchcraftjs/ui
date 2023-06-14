@@ -3,7 +3,7 @@
 		<div class="container mx-auto ">
 			<div class="grid grid-cols-11 gap-2 gap-y-10 px-10">
 				<template v-for="color, i in colors" :key="color">
-					<div :class="`h-10 ${color} rounded flex items-center justify-center text-black dark:text-white`">{{ [5, 16, 27, 38, 49].includes(i) ? 'Text':'' }}</div>
+					<div :class="`h-10 ${color} rounded flex items-center justify-center text-fg dark:text-bg`">{{ [5, 16, 27, 38, 49].includes(i) ? 'Text':'' }}</div>
 				</template>
 			</div>
 			<!-- <div class="flex flex-col">
@@ -45,7 +45,7 @@ const props = defineProps({
 	theme: { type: Object as PropType<Theme>, required: true },
 })
 
-
-const colors = keys(props.theme.css).filter(key => key.startsWith("--color")).map(key => key.replace("--color-", "bg-"))
+const exclude = ["--color-bg", "--color-fg"]
+const colors = keys(props.theme.css).filter(key => key.startsWith("--color") && !exclude.includes(key)).map(key => key.replace("--color-", "bg-"))
 
 </script>

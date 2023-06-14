@@ -8,7 +8,8 @@
 			[--bg:rgb(var(--contrast-light))]
 			max-w-[300px]
 			flex flex-col items-center justify-center
-			bg-neutral-50
+			bg-bg
+			dark:bg-fg
 			gap-3
 			p-3
 		`,
@@ -109,6 +110,7 @@
 					w-full rounded-full
 					border-2
 					border-neutral-600
+					dark:border-neutral-300
 				"
 					:style="`background:${localColorString}`"
 				/>
@@ -175,6 +177,10 @@ const handleClasses = `
 	rounded-full
 	absolute
 	cursor-pointer
+	outline-none
+	focus:border-accent-500
+	active:border-accent-500
+	hover:border-accent-500
 `
 
 
@@ -339,7 +345,7 @@ const moveHandle = (e: { clientX: number, clientY: number }, type: string) => {
 const slider = {
 	keydown: (e: KeyboardEvent, type: Types) => {
 		castType<HTMLElement | undefined>(e.target)
-		if (e.target?.getBoundingClientRect) {
+		if (e.target?.getBoundingClientRect && ["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(e.key)) {
 			e.preventDefault()
 			const { x, y, width, height } = e.target.getBoundingClientRect()
 			let xDiff = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0

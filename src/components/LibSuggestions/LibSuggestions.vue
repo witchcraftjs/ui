@@ -4,7 +4,8 @@
 		:id="`suggestions-${id}`"
 		class="
 			suggestions
-			bg-white
+			bg-bg
+			dark:bg-fg
 		"
 		:data-open="isOpen"
 		role="listbox"
@@ -20,7 +21,7 @@
 					user-select-none
 					cursor-pointer
 				`,
-				index=== activeSuggestion && `bg-accent-200`
+				index=== activeSuggestion && `bg-accent-200 dark:bg-accent-800`
 			)"
 			:aria-selected="index === activeSuggestion ? true : false"
 			:aria-label="item"

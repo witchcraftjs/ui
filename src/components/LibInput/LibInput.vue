@@ -27,6 +27,7 @@
 			</lib-label>
 		</slot>
 		<slot name="outer-left"/>
+		<!-- These are mostly copies of the classes on LibSimpleInput except made to work with disabled/readonly/etc manually since a div cannot have these states. -->
 		<div
 			:data-border="border"
 			:data-invalid="!valid"
@@ -35,35 +36,41 @@
 			:data-is-open="isOpen"
 			v-bind="{...innerWrapperAttrs, class:undefined}"
 			:class="twMerge(`wrapper
-						relative
-						flex
-						flex-1
-						basis-[max-content]
-						gap-2
-						flex-wrap
-						rounded
-					`,
+					relative
+					flex
+					flex-1
+					basis-[max-content]
+					gap-2
+					flex-wrap
+					rounded
+				`,
 				border && `
-						border
-						border-neutral-500
-						disabled:border-neutral-400
-						outlined-within:border-accent-500`,
+					bg-bg
+					dark:bg-fg
+					border
+					border-neutral-500
+					outlined-within:border-accent-500
+				`,
 				isOpen && `rounded-b-none`,
 				!valid && `
-						placeholder:text-danger-700
-						border-danger-700
-						text-red-800
-						`,
+					border-danger-700
+					outlined:!ring-danger-700
+					text-danger-800
+					dark:text-danger-400
+					dark:border-danger-600
+					`,
 				readonly && `
-						bg-neutral-50
-						text-neutral-800
-						placeholder:select-none
-						placeholder:text-opacity-0
-						focus:placeholder:text-opacity-0`,
+					bg-neutral-50
+					text-neutral-800
+					dark:bg-neutral-950
+					dark:text-neutral-200
+					`,
 				disabled && `
-						placeholder:text-nuetral-400
-						bg-neutral-50
-						text-neutral-400`,
+					bg-neutral-50
+					text-neutral-400
+					dark:border-neutral-600
+					border-neutral-400
+				`,
 				($slots.left || $slots.right) && `px-2`,
 				innerWrapperAttrs.class
 			)"

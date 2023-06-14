@@ -24,6 +24,8 @@
 		border && `
 			[&_thead_td]:bg-neutral-200
 			[&_td]:border-neutral-500
+			dark:[&_thead_td]:bg-neutral-800
+			dark:[&_td]:border-neutral-500
 			[&_td.first-row]:border-t
 			[&_td.last-row]:border-b
 			[&_td.last-col]:border-r

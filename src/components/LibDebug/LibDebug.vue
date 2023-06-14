@@ -6,6 +6,8 @@
 		border
 		border-red-500
 		p-2
+		text-fg
+		dark:text-bg
 	"
 	>
 		<div class="flex justify-between">

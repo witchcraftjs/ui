@@ -22,29 +22,32 @@
 		<div
 			:data-border="border"
 			:class="twMerge(`
-				value_wrapper
-				flex-basis-0
-				min-w-2
-				group:focus:text-accent-500
-				flex
-				max-w-fit
-				flex-1
-				items-center
-				gap-0.5
-				overflow-hidden
-				px-1
-				text-xs
-				leading-none
-				focus:text-accent-500`,
+					value_wrapper
+					flex-basis-0
+					min-w-2
+					flex
+					max-w-fit
+					flex-1
+					items-center
+					gap-0.5
+					overflow-hidden
+					px-1
+					text-xs
+					leading-none`,
+				!(disabled || readonly) && `
+					group-focus:text-accent-500
+					focus:text-accent-500`,
 				border && `
-				rounded
-				border-neutral-400
-				border
-				focus:border-accent-400
+					rounded
+					border-neutral-400
+					border
+					focus:border-accent-400
 				`,
 				border && (disabled || readonly) && `
-				border-neutral-200
-				focus:border-neutral-200
+					border-neutral-200
+					focus:border-neutral-200
+					dark:border-neutral-800
+					dark:focus:border-neutral-800
 				`)
 			"
 			:tabindex="canEdit ? 0 : undefined"
@@ -57,6 +60,7 @@
 				class="!p-0 text-sm !leading-none"
 				:aria-label="`Remove ${value}`"
 				:border="false"
+				:disabled="disabled || readonly"
 				@click="removeVal(value)"
 			>
 				<fa :icon="'solid times'"/>

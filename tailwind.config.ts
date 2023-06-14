@@ -28,5 +28,6 @@ const config = {
 	],
 } satisfies Config
 
+console.log(createTailwindPlugin(theme, themePluginOpts).config.theme)
 export default config
 

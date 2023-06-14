@@ -11,7 +11,8 @@
 					focus-outline-no-offset
 					m-0
 					p-[0.4em]
-					bg-neutral-50
+					bg-bg
+					dark:bg-fg
 					appearance-none
 					border
 					border-accent-600
@@ -23,7 +24,8 @@
 					checked:after:w-full
 					checked:after:h-full
 					checked:after:border-2
-					checked:after:border-white
+					checked:after:border-bg
+					dark:checked:after:border-fg
 					checked:after:rounded
 					checked:after:top-0
 					checked:after:left-0

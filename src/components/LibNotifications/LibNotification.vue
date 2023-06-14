@@ -3,6 +3,7 @@
 		:class="twMerge(`notification
 			max-w-700px
 			bg-neutral-50
+			dark:bg-neutral-950
 			border
 			border-neutral-400
 			rounded

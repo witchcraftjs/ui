@@ -60,3 +60,16 @@ export const BorderlessDisabled: Story = {
 		disabled: true,
 	},
 }
+export const WithDivInside: Story = {
+	render: (args: any) => ({
+		components,
+		setup: () => ({ args }),
+		template: `
+		<div class="flex gap-4 justify-center">
+			<lib-button v-bind="{...args}">
+				<div>Div inside button still has a pointer cursor.</div>
+			</lib-button>
+		</div>
+		`,
+	}),
+}

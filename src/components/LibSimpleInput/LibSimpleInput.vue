@@ -9,7 +9,7 @@
 				px-1
 				focus-outline
 				min-w-[2rem]
-				dark:bg-neutral-800
+				bg-bg
 				placeholder:text-neutral-400
 				placeholder:focus:text-accent-300
 				read-only:bg-neutral-50
@@ -21,7 +21,12 @@
 				disabled:cursor-unset
 				disabled:bg-neutral-50
 				disabled:text-neutral-400
-
+				dark:bg-fg
+				dark:read-only:bg-neutral-950
+				dark:read-only:text-neutral-200
+				dark:disabled:placeholder:text-nuetral-600
+				dark:disabled:bg-neutral-950
+				dark:disabled:text-neutral-500
 			`,
 			type === `text` && `
 				min-w-[10ch]
@@ -35,14 +40,18 @@
 			border && `
 				border
 				border-neutral-500
-				disabled:border-neutral-400
 				focus:border-accent-500
+				disabled:border-neutral-400
+				dark:disabled:border-neutral-600
 			`,
 			!valid && `
 				placeholder:text-danger-700
-				data-border:border-danger-700
+				border-danger-700
 				outlined:!ring-danger-700
 				text-danger-800
+				dark:text-danger-400
+				dark:placeholder:text-danger-700
+				dark:border-danger-600
 			`,
 			$attrs.class as any
 		)"
