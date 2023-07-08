@@ -20,8 +20,6 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof LibInput> // & StoryObj<typeof extraArgs>
 
-/**
- */
 export const Primary: Story = {
 	render: args => ({
 		components: { ...components, LibInput },

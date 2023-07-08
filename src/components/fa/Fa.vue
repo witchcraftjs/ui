@@ -1,16 +1,16 @@
 <template>
-	<!-- content forces the div height to be the same as if the div had real text with a zero width space, this way we can still use a flexbox instead of doing inline-block -->
-	<div :class="twMerge(`icon
+<!-- content forces the div height to be the same as if the div had real text with a zero width space, this way we can still use a flexbox instead of doing inline-block -->
+<div :class="twMerge(`icon
 		inline-block
 		`, ($attrs as any).class)"
-		v-bind="{...$attrs, class:undefined}"
-	>
-		<FontAwesomeIcon
-			:icon="name"
-			v-bind="$attrs"
-			fixed-width
-		/>
-	</div>
+	v-bind="{...$attrs, class:undefined}"
+>
+	<FontAwesomeIcon
+		:icon="name"
+		v-bind="$attrs"
+		fixed-width
+	/>
+</div>
 </template>
 
 <script lang="ts">

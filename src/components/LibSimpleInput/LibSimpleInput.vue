@@ -1,7 +1,7 @@
 <template>
-	<input
-		:id="id"
-		:class="twMerge(`
+<input
+	:id="id"
+	:class="twMerge(`
 				input
 				flex-1
 				grow-[999999]
@@ -9,7 +9,7 @@
 				px-1
 				focus-outline
 				min-w-[2rem]
-				bg-bg
+				bg-inherit
 				placeholder:text-neutral-400
 				placeholder:focus:text-accent-300
 				read-only:bg-neutral-50
@@ -21,30 +21,29 @@
 				disabled:cursor-unset
 				disabled:bg-neutral-50
 				disabled:text-neutral-400
-				dark:bg-fg
 				dark:read-only:bg-neutral-950
 				dark:read-only:text-neutral-200
 				dark:disabled:placeholder:text-nuetral-600
 				dark:disabled:bg-neutral-950
 				dark:disabled:text-neutral-500
 			`,
-			type === `text` && `
+		type === `text` && `
 				min-w-[10ch]
 				w-full
 			`,
-			type === `number` && `
+		type === `number` && `
 				w-12
 				placeholder:text-transparent
 				appearance-none
 			`,
-			border && `
+		border && `
 				border
 				border-neutral-500
 				focus:border-accent-500
 				disabled:border-neutral-400
 				dark:disabled:border-neutral-600
 			`,
-			!valid && `
+		!valid && `
 				placeholder:text-danger-700
 				border-danger-700
 				outlined:!ring-danger-700
@@ -53,19 +52,19 @@
 				dark:placeholder:text-danger-700
 				dark:border-danger-600
 			`,
-			$attrs.class as any
-		)"
-		:data-border="border"
-		:data-invalid="!valid"
-		:type="type"
-		:placeholder="placeholder"
-		:disabled="disabled"
-		:readonly="readonly"
-		ref="inputEl"
-		v-model="modelValue"
-		v-bind="{...$attrs, class:undefined, ...listeners, ...ariaLabel}"
-		@keydown.enter="emits('submit', modelValue)"
-	>
+		$attrs.class as any
+	)"
+	:data-border="border"
+	:data-invalid="!valid"
+	:type="type"
+	:placeholder="placeholder"
+	:disabled="disabled"
+	:readonly="readonly"
+	ref="inputEl"
+	v-model="modelValue"
+	v-bind="{...$attrs, class:undefined, ...listeners, ...ariaLabel}"
+	@keydown.enter="emits('submit', modelValue)"
+>
 </template>
 <script lang="ts" generic="T">
 </script>

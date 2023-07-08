@@ -1,11 +1,11 @@
 <template>
-	<!--
+<!--
 	We use a custom element for the recorder so we don't have to deal with the input event.
 	contenteditable=false is because of storybook, it's shortcuts interfere when not using real input elements
 	-->
-	<div
-		:id="id"
-		:class="twMerge(`recorder
+<div
+	:id="id"
+	:class="twMerge(`recorder
 			flex items-center
 			gap-2
 			px-2
@@ -13,33 +13,33 @@
 			focus-outline-no-offset
 			rounded
 		`,
-			border &&`
+		border &&`
 			border border-neutral-500
 			focus:border-accent-500
 		`,
 
-			(disabled || readonly) && `
+		(disabled || readonly) && `
 			text-neutral-400
 		`,
-			(disabled || readonly) && border && `
+		(disabled || readonly) && border && `
 			bg-neutral-50
 			border-neutral-400
 		`
-			, ($attrs as any).class)"
-		:aria-disabled="disabled"
-		:aria-readonly="readonly"
-		:tabindex="disabled ? -1 : 0"
-		:title="recording ? recordingTitle : tempValue"
-		contenteditable="false"
-		ref="recorderEl"
-		v-bind="{...ariaLabel, ...$attrs, class:undefined}"
-		@blur="handleBlurRecorder($event)"
-		@click="handleClickRecorder($event)"
-		@keydown.space.prevent="handleClickRecorder($event)"
-	>
-		<!-- :aria-description="recording ? recordingTitle : ''" -->
-		<div
-			:class="twMerge(`recorder-indicator
+		, ($attrs as any).class)"
+	:aria-disabled="disabled"
+	:aria-readonly="readonly"
+	:tabindex="disabled ? -1 : 0"
+	:title="recording ? recordingTitle : tempValue"
+	contenteditable="false"
+	ref="recorderEl"
+	v-bind="{...ariaLabel, ...$attrs, class:undefined}"
+	@blur="handleBlurRecorder($event)"
+	@click="handleClickRecorder($event)"
+	@keydown.space.prevent="handleClickRecorder($event)"
+>
+	<!-- :aria-description="recording ? recordingTitle : ''" -->
+	<div
+		:class="twMerge(`recorder-indicator
 				inline-block
 				bg-red-700
 				rounded-full
@@ -48,20 +48,20 @@
 				shrink-0
 				hover:bg-red-500
 			`,
-				recording && `
-				animate-[animation-blink_1s_infinite]
+			recording && `
+				animate-[blink_1s_infinite]
 				bg-red-500
 			`,
-				(disabled || readonly) && `
+			(disabled || readonly) && `
 				bg-neutral-500
 			`
-			)"
-			ref="recorderIndicatorEl"
-		/>
-		<div class="recorder-value truncate after:content-vertical-holder">
-			{{ recording ? recordingValue : tempValue }}
-		</div>
+		)"
+		ref="recorderIndicatorEl"
+	/>
+	<div class="recorder-value before:content-vertical-holder truncate">
+		{{ recording ? recordingValue : tempValue }}
 	</div>
+</div>
 </template>
 <script setup lang="ts">
 import { keys } from "@alanscodelog/utils"

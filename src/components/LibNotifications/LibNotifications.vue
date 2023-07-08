@@ -1,8 +1,8 @@
 <template>
-	<TransitionGroup name="list"
-		tag="div"
-		:class="twMerge(`notifications
-			absolute
+<TransitionGroup name="list"
+	tag="div"
+	:class="twMerge(`notifications
+			fixed
 			z-50
 			inset-y-0 right-0
 			w-1/3
@@ -10,44 +10,44 @@
 			pointer-events-none
 			overflow-hidden
 		`, ($attrs as any).class)"
-		v-bind="{ ...$attrs, class: undefined }"
-	>
-		<lib-notification
-			class="pointer-events-auto"
-			:handler="handler"
-			tabindex="0"
-			:notification="notification"
-			v-for="notification of notifications"
-			:key="notification.id"
-		/>
-	</TransitionGroup>
-	<Transition>
-		<div v-show="topNotifications.length > 0">AAAAAAAA</div>
-	</Transition>
-	<Transition>
-		<dialog
-			v-show="topNotifications.length > 0"
-			:id="id"
-			class="modal
+	v-bind="{ ...$attrs, class: undefined }"
+>
+	<lib-notification
+		class="pointer-events-auto"
+		:handler="handler"
+		tabindex="0"
+		:notification="notification"
+		v-for="notification of notifications"
+		:key="notification.id"
+	/>
+</TransitionGroup>
+<Transition>
+	<div v-show="topNotifications.length > 0">AAAAAAAA</div>
+</Transition>
+<Transition>
+	<dialog
+		v-show="topNotifications.length > 0"
+		:id="id"
+		class="modal
 			bg-transparent
 			p-0
 			backdrop:bg-black/50
 			backdrop:p-5
 		"
-			ref="dialogEl"
-			@click.self.prevent="NotificationHandler.dismiss(topNotifications[0])"
-		>
-			<form>
-				<lib-notification
-					v-if="topNotifications.length > 0"
-					:handler="handler"
-					class="top-notification"
-					:notification="topNotifications[0]"
-					ref="topNotificationComp"
-				/>
-			</form>
-		</dialog>
-	</Transition>
+		ref="dialogEl"
+		@click.self.prevent="NotificationHandler.dismiss(topNotifications[0])"
+	>
+		<form>
+			<lib-notification
+				v-if="topNotifications.length > 0"
+				:handler="handler"
+				class="top-notification"
+				:notification="topNotifications[0]"
+				ref="topNotificationComp"
+			/>
+		</form>
+	</dialog>
+</Transition>
 </template>
 <script setup lang="ts">
 import { removeIfIn } from "@alanscodelog/utils"

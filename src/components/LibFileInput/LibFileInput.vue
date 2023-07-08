@@ -1,80 +1,99 @@
 <template>
-	<div class="file-input
-			relative flex w-full flex-col items-center
-			justify-center
-			gap-2
-			rounded-xl
-			border-2
-			border-dashed
-			border-accent-500/80
-			p-2
-		"
-		@input="(inputFile as any)"
+<div :class="twMerge(
+		`file-input justify-center border-2 border-dashed border-accent-500/80`,
+		compact && `rounded`,
+		!compact && `flex w-full flex-col items-center gap-2 rounded-xl  p-2 `
+	)"
+	@input="(inputFile as any)"
+>
+	<div :class="twMerge(
+		`relative justify-center`,
+		compact && `flex gap-2`,
+		!compact && `input-wrapper
+				flex flex-col items-center
+			`
+	)"
 	>
-		<div class="input-wrapper
-			flex flex-col items-center justify-center gap-2
-		"
+		<label
+			:for="id"
+			:class="twMerge(
+				`pointer-events-none flex gap-1 items-center whitespace-nowrap`
+			)"
 		>
-			<div v-if="multiple || files.length === 0" class="no-files">
+			<slot v-if="compact || multiple || files.length === 0" name="icon">
 				<fa icon="solid arrow-up-from-bracket"/>
+			</slot>
+			<slot name="label">
+				{{
+					(compact ? 'Choose File' : 'Drag & Drop File') +
+						(multiple ? 's' :'')
+				}}
+			</slot>
+			<span v-if="compact">{{ ` (${files.length})` }}</span>
+		</label>
+		<label v-if="!compact" class="flex flex-col items-center text-sm">
+			<slot name="formats">Accepted Formats: </slot>
+			<div class="">
+				{{ formats.join(", ") }}
 			</div>
-			<label :for="id" class="pointer-events-none flex flex-col items-center whitespace-nowrap">
-				<slot name="label">Drag & Drop File{{ multiple ? 's' :'' }}</slot>
-			</label>
-			<label class="flex flex-col items-center text-sm">
-				<slot name="formats">Accepted Formats: </slot>
-				<div class="">
-					{{ formats.join(", ") }}
-				</div>
-			</label>
-			<input
-				:id="id"
-				class="
+		</label>
+		<input
+			:id="id"
+			class="
 					absolute
 					inset-0
 					z-0
 					cursor-pointer
+					text-[0]
 					opacity-0
 				"
-				type="file"
-				:accept="formats.join(', ')"
-				:multiple="multiple"
-				ref="el"
-				@input="(inputFile as any)"
-			>
-		</div>
-		<div v-if="files.length > 0"
-			:class="twMerge(`previews
+			type="file"
+			:accept="formats.join(', ')"
+			:multiple="multiple"
+			ref="el"
+			@input="(inputFile as any)"
+		>
+	</div>
+	<div v-if="!compact && files.length > 0"
+		:class="twMerge(`previews
 			flex items-stretch justify-center gap-2 flex-wrap
 			`,
-				multiple && `
+			multiple && `
 				w-full
 			`)"
-		>
-			<div class="preview
+	>
+		<div class="flex-1"/>
+		<div class="preview
 				z-1
 				relative
+				flex
+				min-w-0
+				max-w-[150px]
 				flex-initial
-				flex-col
+				flex-wrap
 				items-center
-				justify-center
-				gap-2
-				rounded
-				border border-neutral-400 px-2 shadow-sm shadow-neutral-800/20
+				gap-2 rounded border border-neutral-400
+				shadow-sm
+				shadow-neutral-800/20
 			"
-				v-for="entry of files"
-				:key="entry.file.name"
-			>
-				<lib-button class="p-0"
+			v-for="entry of files"
+			:key="entry.file.name"
+		>
+			<div class="flex flex-initial basis-full justify-start">
+				<lib-button
 					:border="false"
 					:aria-label="`Remove file ${entry.file.name}`"
 					@click="removeFile(entry)"
 				>
 					<fa icon="solid times"/>
 				</lib-button>
+			</div>
+
+			<div class="flex flex-initial basis-full justify-center">
 				<div v-if="entry.isImg"
 					class="image
-					bg-transparency-squares flex h-[80px] flex-wrap items-center
+					bg-transparency-squares flex
+					h-[80px]   flex-wrap items-center
 					justify-center
 				"
 				>
@@ -82,15 +101,19 @@
 				</div>
 				<div v-if="!entry.isImg"
 					class="no-image
-						flex h-[80px] flex-wrap items-center justify-center
+					flex h-[80px]
+						flex-1 basis-full flex-wrap items-center justify-center
 					"
 				>
 					<fa icon="regular file" class="text-4xl opacity-50"/>
 				</div>
-				<div class="filename rounded p-1 text-sm">{{ entry.file.name }}</div>
 			</div>
+			<div class="filename min-w-0 flex-1 basis-0 truncate break-all rounded p-1 text-sm" :title="entry.file.name">{{ entry.file.name }}</div>
 		</div>
+
+		<div class="flex-1"/>
 	</div>
+</div>
 </template>
 <script lang="ts">
  
@@ -124,8 +147,9 @@ const props = defineProps({
 	...linkableByIdProps(),
 	// ...baseInteractiveProps,
 	// modelValue: { type: Array as PropType<Entry[]>, required: false },
-	multiple: { type: Boolean as PropType<boolean>, required: false, default: false },
+	multiple: { type: Boolean, required: false, default: false },
 	formats: { type: Array as PropType<string[]>, required: false, default: () => [".jpeg", ".png", ".jpg", ".stl"]},
+	compact: { type: Boolean, required: false, default: false },
 })
 
 const getSrc = (file: File) => {

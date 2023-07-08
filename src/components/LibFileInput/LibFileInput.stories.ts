@@ -34,3 +34,11 @@ export const MultipleFile: Story = {
 	},
 }
 
+export const Compact: Story = {
+	...SingleFile,
+	args: {
+		...SingleFile.args,
+		compact: true,
+	},
+}
+

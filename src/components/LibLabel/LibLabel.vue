@@ -1,27 +1,27 @@
 <template>
-	<label
-		:id="`label-${id}`"
-		:class="!unstyled && twMerge(`
+<label
+	:id="`label-${id}`"
+	:class="!unstyled && twMerge(`
 			pr-2
 			border
 			border-transparent
 		`,
-			type === 'top' && `
+		type === 'top' && `
 			w-full
 			pr-0
 			text-sm
 		`,
-			!valid && `text-danger-700`
-		)
-		"
-		:data-top="type === 'top'"
-		:disabled="disabled"
-		:readonly="readonly"
-		:data-invalid="!valid"
-		:for="id"
-	>
-		<slot/>
-	</label>
+		!valid && `text-danger-700`
+	)
+	"
+	:data-top="type === 'top'"
+	:disabled="disabled"
+	:readonly="readonly"
+	:data-invalid="!valid"
+	:for="id"
+>
+	<slot/>
+</label>
 </template>
 <script setup  lang="ts">
 import { type PropType } from "vue"

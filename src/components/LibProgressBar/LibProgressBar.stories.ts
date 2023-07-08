@@ -11,6 +11,7 @@ const meta: Meta<typeof LibProgressBar> = {
 	component: LibProgressBar,
 	args: {
 		label: "Label",
+		// @ts-expect-error .
 		_timeout: 1000,
 		_add: 10,
 		_start: 50,
@@ -25,7 +26,7 @@ export const Primary: Story = {
 	render: args => ({
 		components,
 		setup: () => {
-			const progress = ref(args._start)
+			const progress = ref(args._start as number)
 			if (args.progress) {
 				progress.value = args.progress
 			} else {
@@ -33,7 +34,7 @@ export const Primary: Story = {
 					if (progress.value >= 100) {
 						progress.value = 0
 					} else {
-						progress.value += args._add
+						progress.value += args._add as number
 					}
 				}, args._timeout)
 				onUnmounted(() => {

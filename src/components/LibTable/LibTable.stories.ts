@@ -19,7 +19,7 @@ export const Primary: Story = {
 		setup: () => ({ args }),
 		template: `
 			<test-wrapper :outline="args.outline">
-				<div class="overflow-x-scroll scrollbar-hide">
+				<div class="overflow-x-scroll scrollbar-hidden">
 					<lib-table
 						v-bind="args"
 					>

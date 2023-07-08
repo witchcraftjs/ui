@@ -1,108 +1,108 @@
 <template>
-	<nav class="pages
+<nav class="pages
 		flex flex-wrap items-center justify-center gap-2
 	"
-		role="navigation"
-		aria-label="Pagination Navigation"
+	role="navigation"
+	aria-label="Pagination Navigation"
+>
+	<slot v-if="prevLink.i > 0 && prevLink.i !== currentLink.i"
+		name="link"
+		:i="prevLink.i"
+		:href="prevLink.href"
+		:text="'Prev'"
+		:aria-label="`Go to previous page. Page ${prevLink.i}`"
+		:class="pageClasses"
 	>
-		<slot v-if="prevLink.i > 0 && prevLink.i !== currentLink.i"
-			name="link"
-			:i="prevLink.i"
+		<a
+			:class="pageClasses"
 			:href="prevLink.href"
-			:text="'Prev'"
 			:aria-label="`Go to previous page. Page ${prevLink.i}`"
+		/>
+	</slot>
+	<div class="flex-1"/>
+	<slot v-if="firstLink.i !== currentLink.i"
+		name="link"
+		:i="0"
+		:href="firstLink.href"
+		:text="firstLink.i"
+		:aria-label="`Go to page ${firstLink.i}`"
+		:class="pageClasses"
+	>
+		{{ firstLink.href }}
+		<a :class="pageClasses" :href="firstLink.href" :aria-label="`Go to page ${firstLink.i}`">{{ firstLink.i }}</a>
+	</slot>
+	<div v-if="prevLink.i - extraPages > firstLink.i" class="page-fill">
+		...
+	</div>
+	<template
+		v-for="entry in extraPagesPrev"
+		:key="entry.i"
+	>
+		<slot name="link"
 			:class="pageClasses"
+			:i="entry.i"
+			:href="entry.href"
+			:aria-label="`Go to page ${entry.i}`"
 		>
-			<a
-				:class="pageClasses"
-				:href="prevLink.href"
-				:aria-label="`Go to previous page. Page ${prevLink.i}`"
-			/>
+			<a :class="pageClasses" :href="entry.href" :aria-label="`Go to page ${entry.i}`">{{ entry.i }}</a>
 		</slot>
-		<div class="flex-1"/>
-		<slot v-if="firstLink.i !== currentLink.i"
-			name="link"
-			:i="0"
-			:href="firstLink.href"
-			:text="firstLink.i"
-			:aria-label="`Go to page ${firstLink.i}`"
-			:class="pageClasses"
-		>
-			{{ firstLink.href }}
-			<a :class="pageClasses" :href="firstLink.href" :aria-label="`Go to page ${firstLink.i}`">{{ firstLink.i }}</a>
-		</slot>
-		<div v-if="prevLink.i - extraPages > firstLink.i" class="page-fill">
-			...
-		</div>
-		<template
-			v-for="entry in extraPagesPrev"
-			:key="entry.i"
-		>
-			<slot name="link"
-				:class="pageClasses"
-				:i="entry.i"
-				:href="entry.href"
-				:aria-label="`Go to page ${entry.i}`"
-			>
-				<a :class="pageClasses" :href="entry.href" :aria-label="`Go to page ${entry.i}`">{{ entry.i }}</a>
-			</slot>
-		</template>
-		<slot name="current"
-			:class="currentPageClasses"
+	</template>
+	<slot name="current"
+		:class="currentPageClasses"
+		tabindex="0"
+		:i="currentLink.i"
+		:aria-label="`Current page ${currentLink.i}`"
+		:aria_current="true"
+	>
+		<div class="a"
 			tabindex="0"
-			:i="currentLink.i"
+			:class="currentPageClasses"
 			:aria-label="`Current page ${currentLink.i}`"
-			:aria_current="true"
+			aria-current="true"
+			@click="$event.preventDefault()"
 		>
-			<div class="a"
-				tabindex="0"
-				:class="currentPageClasses"
-				:aria-label="`Current page ${currentLink.i}`"
-				aria-current="true"
-				@click="$event.preventDefault()"
-			>
-				{{ currentLink.i }}
-			</div>
-		</slot>
-		<template
-			v-for="entry in extraPagesNext"
-			:key="entry.i"
-		>
-			<slot name="link"
-				:class="pageClasses"
-				:i="entry.i"
-				:href="entry.href"
-				:aria-label="`Go to page ${entry.i}`"
-			>
-				<a :class="pageClasses" :href="entry.href" :aria-label="`Go to page ${entry.i}`">{{ entry.i }}</a>
-			</slot>
-		</template>
-		<div v-if="nextLink.i + extraPages < total" class="page-fill" aria-hidden="true">
-			...
+			{{ currentLink.i }}
 		</div>
-		<slot v-if="lastLink.i !== currentLink.i"
-			name="link"
+	</slot>
+	<template
+		v-for="entry in extraPagesNext"
+		:key="entry.i"
+	>
+		<slot name="link"
 			:class="pageClasses"
-			:i="lastLink.i"
-			:href="lastLink.href"
-			:text="total"
-			:aria-label="`Go to page ${lastLink.i}`"
+			:i="entry.i"
+			:href="entry.href"
+			:aria-label="`Go to page ${entry.i}`"
 		>
-			<a :class="pageClasses" :href="lastLink.href" :aria-label="`Go to page ${lastLink.i}`">{{ total }}</a>
+			<a :class="pageClasses" :href="entry.href" :aria-label="`Go to page ${entry.i}`">{{ entry.i }}</a>
 		</slot>
-		<div class="flex-1"/>
-		<slot
-			v-if="nextLink.i <= total && nextLink.i !== currentLink.i"
-			:class="pageClasses"
-			name="link"
-			:i="nextLink.i"
-			:href="nextLink.href"
-			:text="'Next'"
-			:aria-label="`Go to next page. Page ${nextLink.i}`"
-		>
-			<a :class="pageClasses" :href="nextLink.href" :aria-label="`Go to next page. Page ${nextLink.i}`">Next</a>
-		</slot>
-	</nav>
+	</template>
+	<div v-if="nextLink.i + extraPages < total" class="page-fill" aria-hidden="true">
+		...
+	</div>
+	<slot v-if="lastLink.i !== currentLink.i"
+		name="link"
+		:class="pageClasses"
+		:i="lastLink.i"
+		:href="lastLink.href"
+		:text="total"
+		:aria-label="`Go to page ${lastLink.i}`"
+	>
+		<a :class="pageClasses" :href="lastLink.href" :aria-label="`Go to page ${lastLink.i}`">{{ total }}</a>
+	</slot>
+	<div class="flex-1"/>
+	<slot
+		v-if="nextLink.i <= total && nextLink.i !== currentLink.i"
+		:class="pageClasses"
+		name="link"
+		:i="nextLink.i"
+		:href="nextLink.href"
+		:text="'Next'"
+		:aria-label="`Go to next page. Page ${nextLink.i}`"
+	>
+		<a :class="pageClasses" :href="nextLink.href" :aria-label="`Go to next page. Page ${nextLink.i}`">Next</a>
+	</slot>
+</nav>
 </template>
 <script setup lang="ts">
 import { computed, type PropType, watch } from "vue"

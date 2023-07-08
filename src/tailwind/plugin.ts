@@ -4,18 +4,17 @@ import flatten from "tailwindcss/lib/util/flattenColorPalette.js"
 import tailwindPlugin from "tailwindcss/plugin.js"
 
 
-export const plugin = tailwindPlugin(({
+export const plugin: ReturnType<typeof tailwindPlugin> = tailwindPlugin(({
 	addVariant,
 	addUtilities,
 	matchUtilities,
-	addComponents,
 	theme,
 }) => {
 	addUtilities(
 		Object.fromEntries(
 			[".", ".min-", ".max-"]
 				.map(prefix => (
-					[`${prefix}h-screen`, { [`${prefix.slice(1)}height`]: ["100vh /* fallback */", "100dvh"] }]
+					[`${prefix}h-screen`, { [`${prefix.slice(1)}height`]: ["100vh /* fallback */", "100dvh"]}]
 				)
 				)
 		)
@@ -79,8 +78,8 @@ export const plugin = tailwindPlugin(({
 	/**
 	 * Created diagonal lines such as for loading bars.
 	 * Note that the width must be a percent value.
-
-	* Size can be controlled with background-size.
+	 *
+	 * Size can be controlled with background-size.
 	 * bg-bars-gradient
 	 * bars-fg-bg
 	 * bars-bg-accent-500
@@ -106,7 +105,7 @@ export const plugin = tailwindPlugin(({
 				var(--bars-bg-color) var(--bars-3-pos),
 				var(--bars-fg-color) var(--bars-3-pos),
 				var(--bars-fg-color) 
-				)`
+				)`,
 		},
 	})
 	matchUtilities({

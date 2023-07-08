@@ -1,11 +1,11 @@
 <template>
-	<div :class="twMerge(`
+<div :class="twMerge(`
 
 	`, ($attrs as any).class)"
-		v-bind="{...$attrs, class:undefined}"
-	>
-		<slot/>
-	</div>
+	v-bind="{...$attrs, class:undefined}"
+>
+	<slot/>
+</div>
 </template>
 <script setup  lang="ts">
 /* eslint-disable @typescript-eslint/no-unused-vars */

@@ -38,23 +38,23 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-	<!-- Workaround to create global style component for tests that is
+<!-- Workaround to create global style component for tests that is
 	accessible from the storybook preview decorator. See theme callback
 	above. -->
-	<component :is="'style'" ref="styleEl"/>
-	{{ props.outline }}
-	<div id="app"
-		:class="showOutline ? 'group outlined outlined-visible' : '[&_*]:outline-none'"
-		class="
+<component :is="'style'" ref="styleEl"/>
+{{ props.outline }}
+<div id="app"
+	:class="showOutline ? 'group outlined outlined-visible' : '[&_*]:outline-none'"
+	class="
 			p-10
-			dark:bg-black
+			dark:bg-neutral-900
 			dark:text-white
 		"
-		tabindex="-1"
-		ref="el"
-	>
-		<div class="outline-indicator absolute right-0 top-0 m-1">{{ showOutline ? "Outline Enabled" : "Outline Disabled" }}</div>
-		<slot/>
-	</div>
+	tabindex="-1"
+	ref="el"
+>
+	<div class="outline-indicator absolute right-0 top-0 m-1">{{ showOutline ? "Outline Enabled" : "Outline Disabled" }}</div>
+	<slot/>
+</div>
 </template>
 

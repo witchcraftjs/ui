@@ -1,6 +1,6 @@
 <template>
-	<div aria-label="color picker"
-		:class="twMerge(`color-picker
+<div aria-label="color picker"
+	:class="twMerge(`color-picker
 			[--slider-size:var(--spacing-4)]
 			[--contrast-dark:var(--color-neutral-100)]
 			[--contrast-light:var(--color-neutral-800)]
@@ -13,17 +13,17 @@
 			gap-3
 			p-3
 		`,
-			invertColors && `
+		invertColors && `
 			[--fg:rgb(var(--contrast-light))]
 			[--bg:rgb(var(--contrast-dark))]
 		`,
-			border &&`
+		border &&`
 			border rounded border-neutral-600
 		`
-		)"
-	>
-		<div
-			:class="`picker
+	)"
+>
+	<div
+		:class="`picker
 			no-touch-action
 			w-full
 			aspect-square
@@ -32,70 +32,70 @@
 			rounded
 			focus:border-accent-500
 		`"
-			@pointerdown="slider.pointerdown($event, 'picker')"
-			@pointerleave="slider.pointerleave($event)"
-		>
-			<canvas ref="pickerEl"/>
-			<div
-				aria-live="assertive"
-				:aria-description="ariaDescription"
-				:class="`
+		@pointerdown="slider.pointerdown($event, 'picker')"
+		@pointerleave="slider.pointerleave($event)"
+	>
+		<canvas ref="pickerEl"/>
+		<div
+			aria-live="assertive"
+			:aria-description="ariaDescription"
+			:class="`
 					handle ${handleClasses}
 					border-[var(--fg)]
 					hover:shadow-black
 					active:shadow-black
 				`"
-				tabindex="0"
-				:style="`
+			tabindex="0"
+			:style="`
 					left: calc(${localColor.percent.s}% - var(--slider-size)/2);
 					top: calc(${localColor.percent.v}% - var(--slider-size)/2);
 					background: ${localColorStringOpaque};
 				`"
-				@keydown="slider.keydown($event, 'picker')"
-			>
-				<aria :value="`saturation: ${localColor.percent.s}, value: ${localColor.percent.s}`"/>
-			</div>
-		</div>
-		<div
-			:class="`hue-slider ${sliderClasses}`"
-			@pointerdown="slider.pointerdown($event, 'hue')"
+			@keydown="slider.keydown($event, 'picker')"
 		>
-			<canvas ref="hueSliderEl"/>
-			<div
-				role="slider"
-				:aria-valuenow="`${localColor.percent.h}`"
-				:aria-valuemin="0"
-				:aria-valuemax="100"
-				aria-label="hue slider"
-				:aria-description="ariaDescription"
-				tabindex="0"
-				:class="`handle ${handleClasses} bg-neutral-50`"
-				:style="`left: calc(${localColor.percent.h}% - var(--slider-size)/2)`"
-				@keydown="slider.keydown($event, 'hue')"
-			/>
+			<aria :value="`saturation: ${localColor.percent.s}, value: ${localColor.percent.s}`"/>
 		</div>
+	</div>
+	<div
+		:class="`hue-slider ${sliderClasses}`"
+		@pointerdown="slider.pointerdown($event, 'hue')"
+	>
+		<canvas ref="hueSliderEl"/>
 		<div
-			v-if="allowAlpha"
+			role="slider"
+			:aria-valuenow="`${localColor.percent.h}`"
+			:aria-valuemin="0"
+			:aria-valuemax="100"
+			aria-label="hue slider"
+			:aria-description="ariaDescription"
+			tabindex="0"
+			:class="`handle ${handleClasses} bg-neutral-50`"
+			:style="`left: calc(${localColor.percent.h}% - var(--slider-size)/2)`"
+			@keydown="slider.keydown($event, 'hue')"
+		/>
+	</div>
+	<div
+		v-if="allowAlpha"
 
-			:class="`alpha-slider ${sliderClasses}`"
-			@keydown="slider.keydown($event, 'alpha')"
-			@pointerdown="slider.pointerdown($event, 'alpha')"
-		>
-			<canvas class="bg-transparency-squares" ref="alphaSliderEl"/>
-			<div
-				role="slider"
-				aria-label="alpha slider"
-				:aria-valuenow="`${localColor.percent.h}`"
-				:aria-valuemin="0"
-				:aria-valuemax="100"
-				:aria-description="ariaDescription"
-				tabindex="0"
-				:class="`handle ${handleClasses} bg-neutral-50`"
-				:style="`left: calc(${localColor.percent.a}% - var(--slider-size)/2)`"
-			/>
-		</div>
-		<div class="color-group flex w-full flex-1 gap-2">
-			<div class=" color-wrapper
+		:class="`alpha-slider ${sliderClasses}`"
+		@keydown="slider.keydown($event, 'alpha')"
+		@pointerdown="slider.pointerdown($event, 'alpha')"
+	>
+		<canvas class="bg-transparency-squares" ref="alphaSliderEl"/>
+		<div
+			role="slider"
+			aria-label="alpha slider"
+			:aria-valuenow="`${localColor.percent.h}`"
+			:aria-valuemin="0"
+			:aria-valuemax="100"
+			:aria-description="ariaDescription"
+			tabindex="0"
+			:class="`handle ${handleClasses} bg-neutral-50`"
+			:style="`left: calc(${localColor.percent.a}% - var(--slider-size)/2)`"
+		/>
+	</div>
+	<div class="color-group flex w-full flex-1 gap-2">
+		<div class=" color-wrapper
 				bg-transparency-squares
 				relative
 				aspect-square
@@ -103,47 +103,40 @@
 				rounded-full
 				shadow-sm
 			"
-			>
-				<!-- <input class="color-input" :value="localColorString" @input="parseInput"> -->
-				<div class="color
+		>
+			<!-- <input class="color-input" :value="localColorString" @input="parseInput"> -->
+			<div class="color
 					h-full
 					w-full rounded-full
 					border-2
 					border-neutral-600
 					dark:border-neutral-300
 				"
-					:style="`background:${localColorString}`"
-				/>
-			</div>
-			<div class="color-controls flex flex-1 items-center gap-2">
-				<slot name="input">
-					<!-- @vue-expected-error -->
-					<!-- @vue-expect-error todo #awaiting release-->
-					<lib-input
-						:aria-label="label"
-						:model-value="localColorString"
-						@input="parseInput"
-					/>
-					<lib-button aria-label="'copy'" @click="copy()"><fa :icon="'regular copy'"/></lib-button>
-				</slot>
-			</div>
-			<!-- <lib-button @click="emits('update:modelValue', localColor.val)">Save</lib-button> -->
+				:style="`background:${localColorString}`"
+			/>
 		</div>
-		<slot name="buttons">
-			<div class="save-cancel-group flex w-full items-center justify-center gap-2">
-				<lib-button @click="save()">Save</lib-button>
-				<lib-button @click="emits('cancel')">Cancel</lib-button>
-			</div>
-		</slot>
+		<div class="color-controls flex flex-1 items-center gap-2">
+			<slot name="input">
+				<!-- @vue-expected-error -->
+				<!-- @vue-expect-error todo #awaiting release-->
+				<lib-input
+					:aria-label="label"
+					:model-value="localColorString"
+					@input="parseInput"
+				/>
+				<lib-button aria-label="'copy'" @click="copy()"><fa :icon="'regular copy'"/></lib-button>
+			</slot>
+		</div>
+		<!-- <lib-button @click="emits('update:modelValue', localColor.val)">Save</lib-button> -->
 	</div>
+	<slot name="buttons">
+		<div class="save-cancel-group flex w-full items-center justify-center gap-2">
+			<lib-button @click="save()">Save</lib-button>
+			<lib-button @click="emits('cancel')">Cancel</lib-button>
+		</div>
+	</slot>
+</div>
 </template>
-
-<script lang="ts">
-
-export default {
-	name: "lib-color-picker",
-}
-</script>
 
 <script setup lang="ts">
 import { castType, isArray } from "@alanscodelog/utils"
@@ -158,6 +151,10 @@ import LibButton from "../LibButton/LibButton.vue"
 import LibInput from "../LibInput/LibInput.vue"
 import { labelProp } from "../shared/props.js"
 
+
+defineOptions({
+	name: "lib-color-picker",
+})
 
 const sliderClasses = `
 	slider
@@ -246,14 +243,6 @@ const localColorStringOpaque = computed(() =>
 	colord({ ...localColor.val, a: 1 }).toRgbString(),
 )
 
-const parseInput = (e: Event): void => {
-	const val = (e.target as HTMLInputElement)?.value
-	if (val) {
-		const color = colord(val)
-		if (!color.isValid()) return
-		update(color.toHsv())
-	}
-}
 
 const copy = (): void => {
 	if (navigator.clipboard) {
@@ -407,6 +396,15 @@ const update = (_: HsvaColor, { updatePosition = true, updateValue = true }: { u
 	}
 	if (updateValue) {
 		localColor.val = { ..._, a: props.allowAlpha ? _.a : 1 }
+	}
+}
+
+const parseInput = (e: Event): void => {
+	const val = (e.target as HTMLInputElement)?.value
+	if (val) {
+		const color = colord(val)
+		if (!color.isValid()) return
+		update(color.toHsv())
 	}
 }
 

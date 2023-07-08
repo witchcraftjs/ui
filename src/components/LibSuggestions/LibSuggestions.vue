@@ -1,42 +1,42 @@
 <template>
-	<div
-		v-if="isOpen"
-		:id="`suggestions-${id}`"
-		class="
+<div
+	v-if="isOpen"
+	:id="`suggestions-${id}`"
+	class="
 			suggestions
 			bg-bg
 			dark:bg-fg
 		"
-		:data-open="isOpen"
-		role="listbox"
-		ref="el"
-		v-bind="$attrs"
-	>
-		<!-- Click event is just in case, it should not really be triggered. We can do click selections via the blur handler. -->
-		<div :id="`suggestion-${id}-${index}`"
-			role="option"
-			:data-is-active-suggestions="index === activeSuggestion"
-			:class="twMerge(`
+	:data-open="isOpen"
+	role="listbox"
+	ref="el"
+	v-bind="$attrs"
+>
+	<!-- Click event is just in case, it should not really be triggered. We can do click selections via the blur handler. -->
+	<div :id="`suggestion-${id}-${index}`"
+		role="option"
+		:data-is-active-suggestions="index === activeSuggestion"
+		:class="twMerge(`
 					px-1
 					user-select-none
 					cursor-pointer
 				`,
-				index=== activeSuggestion && `bg-accent-200 dark:bg-accent-800`
-			)"
-			:aria-selected="index === activeSuggestion ? true : false"
-			:aria-label="item"
-			v-for="(item, index) in fullSuggestionsList"
-			:key="item"
-			@mouseover="activeSuggestion = index"
-			@mousedown="activeSuggestion = index; mousedown = true;"
-			@mouseup="activeSuggestion = index; mousedown = true;"
-			@click="setSelected()"
-		>
-			<slot name="item" :item="item" :index="index">
-				{{ item }}
-			</slot>
-		</div>
+			index=== activeSuggestion && `bg-accent-200 dark:bg-accent-800`
+		)"
+		:aria-selected="index === activeSuggestion ? true : false"
+		:aria-label="item"
+		v-for="(item, index) in fullSuggestionsList"
+		:key="item"
+		@mouseover="activeSuggestion = index"
+		@mousedown="activeSuggestion = index; mousedown = true;"
+		@mouseup="activeSuggestion = index; mousedown = true;"
+		@click="setSelected()"
+	>
+		<slot name="item" :item="item" :index="index">
+			{{ item }}
+		</slot>
 	</div>
+</div>
 </template>
 <script setup lang="ts" generic="T extends string | object">
 

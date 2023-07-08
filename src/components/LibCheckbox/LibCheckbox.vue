@@ -1,13 +1,13 @@
 <template>
-	<div
-		class="flex items-center gap-1"
-		ref="el"
-	>
-		<slot name="left"/>
-		<label class="flex items-center gap-1" :for="id">
-			<input
-				:id="id"
-				:class="!unstyle && twMerge(`
+<div
+	class="flex items-center gap-1"
+	ref="el"
+>
+	<slot name="left"/>
+	<label class="flex items-center gap-1" :for="id">
+		<input
+			:id="id"
+			:class="!unstyle && twMerge(`
 					focus-outline-no-offset
 					m-0
 					p-[0.4em]
@@ -33,15 +33,15 @@
 					disabled:border-neutral-500
 					disabled:checked:after:bg-neutral-700
 				`, $attrs.class as any)"
-				type="checkbox"
-				:disabled="disabled"
-				ref="inputEl"
-				v-model="value"
-				v-bind="{...$attrs, class: undefined, ...listeners}"
-			>
-			<slot/> {{ label }}
-		</label>
-	</div>
+			type="checkbox"
+			:disabled="disabled"
+			ref="inputEl"
+			v-model="value"
+			v-bind="{...$attrs, class: undefined, ...listeners}"
+		>
+		<slot/> {{ label }}
+	</label>
+</div>
 </template>
 <script setup  lang="ts">
 /* eslint-disable @typescript-eslint/no-unused-vars */

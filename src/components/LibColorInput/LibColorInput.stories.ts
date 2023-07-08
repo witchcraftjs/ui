@@ -43,6 +43,16 @@ export const Primary: Story = {
 				@update:modelValue="handleChange"
 			>
  			</lib-color-Input>
+			Stretched:
+			<div class="flex-1 flex">
+				<lib-color-Input
+					class="flex-1"
+					:allowAlpha="args.allowAlpha"
+					:modelValue="args.color.value"
+					@update:modelValue="handleChange"
+				>
+				</lib-color-Input>
+			</div>
 		`,
 	}),
 }

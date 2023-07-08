@@ -1,8 +1,8 @@
 <template>
-	<Transition>
-		<div v-if="!hide"
-			:id="id"
-			:class="twMerge(`
+<Transition>
+	<div v-if="!hide"
+		:id="id"
+		:class="twMerge(`
 			w-[200px]
 			whitespace-nowrap
 			overflow-x-scroll
@@ -41,36 +41,36 @@
 			after:opacity-0
 			before:opacity-0
 			`, ($attrs as any).class)"
-			max="100"
-			:value="progress"
-			:title="label"
-			v-bind="{...$attrs, class:undefined}"
-			:style="`--progress: ${clampVal(progress, clamp[0] ?? 0, clamp[1] ?? 100)}%;`"
-		>
-			<div class="label-wrapper relative flex-1">
-				<span class="before:content-vertical-holder"/>
-				<Transition>
-					<slot>
-						<label v-if="!psuedoHide"
-							:for="id"
-							class="
-							absolute
-							inset-0 flex  justify-center
+		max="100"
+		:value="progress"
+		:title="label"
+		v-bind="{...$attrs, class:undefined}"
+		:style="`--progress: ${clampVal(progress, clamp[0] ?? 0, clamp[1] ?? 100)}%;`"
+	>
+		<div class="label-wrapper relative flex-1">
+			<span class="before:content-vertical-holder"/>
+			<Transition>
+				<slot>
+					<label v-if="!psuedoHide"
+						:for="id"
+						class="
 							text-bg
+							absolute inset-0  flex
+							justify-center
 						"
-						>
-							<div class="truncate">
-								{{ label ?? "" }}
-							</div>
-						</label>
-					</slot>
-				</Transition>
+					>
+						<div class="truncate">
+							{{ label ?? "" }}
+						</div>
+					</label>
+				</slot>
+			</Transition>
 
-				<Transition>
-					<slot>
-						<label
-							v-if="!psuedoHide"
-							class="
+			<Transition>
+				<slot>
+					<label
+						v-if="!psuedoHide"
+						class="
 							contrast-label
 							pointer-events-none
 							absolute
@@ -80,16 +80,16 @@
 							[clip-path:inset(0_0_0_var(--progress))]
 							dark:hidden
 						"
-						>
-							<div class="truncate">
-								{{ label ?? "" }}
-							</div>
-						</label>
-					</slot>
-				</Transition>
-			</div>
+					>
+						<div class="truncate">
+							{{ label ?? "" }}
+						</div>
+					</label>
+				</slot>
+			</Transition>
 		</div>
-	</Transition>
+	</div>
+</Transition>
 </template>
 <script setup  lang="ts">
 /* eslint-disable @typescript-eslint/no-unused-vars */

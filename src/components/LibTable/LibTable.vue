@@ -1,11 +1,11 @@
 <template>
-	<!-- Assumes no scrollbars on children -->
-	<table :class="twMerge(`table
+<!-- Assumes no scrollbars on children -->
+<table :class="twMerge(`table
 		table-fixed
 		border-separate
 		border-spacing-0
 		overflow-x-scroll
-		scrollbar-hide
+		scrollbar-hidden
 		[&_.grip]:w-[5px]
 		relative
 		w-full
@@ -16,12 +16,12 @@
 		[&.resizable-cols-error]:cursor-not-allowed
 		[&.resizable-cols-error]:user-select-none
 		`,
-		cellBorder && `
+	cellBorder && `
 			[&_td]:border-neutral-500
 			[&_td:not(.last-row)]:border-b
 			[&_td:not(.first-col)]:border-l
 		`,
-		border && `
+	border && `
 			[&_thead_td]:bg-neutral-200
 			[&_td]:border-neutral-500
 			dark:[&_thead_td]:bg-neutral-800
@@ -31,56 +31,56 @@
 			[&_td.last-col]:border-r
 			[&_td.first-col]:border-l
 		`,
-		rounded &&`
+	rounded &&`
 			[&_td.br]:rounded-br
 			[&_td.bl]:rounded-bl
 			[&_td.tr]:rounded-tr
 			[&_td.tl]:rounded-tl
 		`
-		, ($attrs as any).class)"
-		v-resizable-cols="resizableOptions"
-	>
-		<thead v-if="header">
-			<tr>
-				<template v-for="col,i of cols" :key="col">
-					<slot :name="`header-${col.toString()}`"
-						:class="[
-							extraClasses[`-1-${i}`],
+	, ($attrs as any).class)"
+	v-resizable-cols="resizableOptions"
+>
+	<thead v-if="header">
+		<tr>
+			<template v-for="col,i of cols" :key="col">
+				<slot :name="`header-${col.toString()}`"
+					:class="[
+						extraClasses[`-1-${i}`],
+						'cell',
+						(colInfo as any)[col]?.resizable === false
+							? 'no-resize'
+							: ''
+					].join(' ')"
+				>
+					<td :class="[
+							extraClasses[`-1-${i}`] ,
 							'cell',
 							(colInfo as any)[col]?.resizable === false
 								? 'no-resize'
 								: ''
 						].join(' ')"
+						:style="` width:${widths.length > 0 ? widths[i] : ``}; `"
 					>
-						<td :class="[
-								extraClasses[`-1-${i}`] ,
-								'cell',
-								(colInfo as any)[col]?.resizable === false
-									? 'no-resize'
-									: ''
-							].join(' ')"
-							:style="` width:${widths.length > 0 ? widths[i] : ``}; `"
-						>
-							{{ (colInfo as any)[col]?.name ?? col }}
+						{{ (colInfo as any)[col]?.name ?? col }}
+					</td>
+				</slot>
+			</template>
+		</tr>
+	</thead>
+	<tbody>
+		<template v-for="item, i of values" :key="item[itemKey]">
+			<tr>
+				<template v-for="col, j of cols" :key="item[itemKey as keyof typeof item] + col.toString()">
+					<slot :name="col" :prop="item[col]" :class="extraClasses[`${i}-${j}`] + ' cell'">
+						<td :class="extraClasses[`${i}-${j}`] + ' cell'">
+							{{ item[col] }}
 						</td>
 					</slot>
 				</template>
 			</tr>
-		</thead>
-		<tbody>
-			<template v-for="item, i of values" :key="item[itemKey]">
-				<tr>
-					<template v-for="col, j of cols" :key="item[itemKey as keyof typeof item] + col.toString()">
-						<slot :name="col" :prop="item[col]" :class="extraClasses[`${i}-${j}`] + ' cell'">
-							<td :class="extraClasses[`${i}-${j}`] + ' cell'">
-								{{ item[col] }}
-							</td>
-						</slot>
-					</template>
-				</tr>
-			</template>
-		</tbody>
-	</table>
+		</template>
+	</tbody>
+</table>
 </template>
 
 <script lang="ts">

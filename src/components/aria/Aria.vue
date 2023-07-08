@@ -1,5 +1,5 @@
 <template>
-	<div tabindex="0">{{ value }}</div>
+<div tabindex="0">{{ value }}</div>
 </template>
 
 

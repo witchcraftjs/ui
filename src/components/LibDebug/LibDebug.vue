@@ -1,27 +1,27 @@
 <template>
-	<div class="lib-debug
+<div class="lib-debug
+		text-fg
+		dark:text-bg
 		flex
 		flex-col
 		rounded
 		border
 		border-red-500
 		p-2
-		text-fg
-		dark:text-bg
 	"
-	>
-		<div class="flex justify-between">
-			<span class="font-bold">Debug</span>
-			<LibButton class="w-min-content" @click="copy()"><fa :icon="'regular copy'"/></LibButton>
-		</div>
-		<pre v-if="value"
-			:class="`
+>
+	<div class="flex justify-between">
+		<span class="font-bold">Debug</span>
+		<LibButton class="w-min-content" @click="copy()"><fa :icon="'regular copy'"/></LibButton>
+	</div>
+	<pre v-if="value"
+		:class="`
 		[tab-size:${tab}]
 		w-full`
-			"
-		>{{ getStringValue(value) }}</pre>
-		<pre v-if="value === undefined"><slot/></pre>
-	</div>
+		"
+	>{{ getStringValue(value) }}</pre>
+	<pre v-if="value === undefined"><slot/></pre>
+</div>
 </template>
 <script lang="ts">
 import { type PropType, useSlots } from "vue"

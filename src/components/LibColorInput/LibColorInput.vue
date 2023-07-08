@@ -1,24 +1,25 @@
 <template>
-	<lib-popup
-		v-model="showPopup"
-	>
-		<template #button="{extractEl}">
-			<lib-button
-				:id="'color'"
-				class="flex flex-nowrap"
-				:aria-label="stringColor"
-				:title="stringColor"
-				v-extract-root-el="extractEl"
-				@click="togglePopup"
-			>
-				<span class="color-label
+<lib-popup
+	v-model="showPopup"
+>
+	<template #button="{extractEl}">
+		<lib-button
+			:id="id"
+			class="flex flex-nowrap"
+			:aria-label="stringColor"
+			:title="stringColor"
+			v-bind="$attrs"
+			v-extract-root-el="extractEl"
+			@click="togglePopup"
+		>
+			<span class="color-label
 					whitespace-nowrap
 					pr-2
 				"
-				>
-					<slot>Pick Color</slot>
-				</span>
-				<div :class="`color-swatch
+			>
+				<slot>Pick Color</slot>
+			</span>
+			<div :class="`color-swatch
 						rounded-sm
 						px-1
 						flex-1
@@ -31,48 +32,43 @@
 						before:inset-0
 						before:bg-transparency-squares
 						before:z-[-1]
-						border
-						border-neutral-950
-						dark:border-neutral-500
 					`"
-					:style="`background:${stringColor}`"
-				/>
-			</lib-button>
-		</template>
-		<template #popup="{extractEl}">
-			<lib-color-picker v-if="showPopup"
-				:allow-alpha="allowAlpha"
-				v-model="tempValue"
-				v-extract-root-el="extractEl"
-				@save="emits('update:modelValue', tempValue); showPopup = false"
-				@cancel="showPopup = false"
+				:style="`background:${stringColor}`"
 			/>
-		</template>
-	</lib-popup>
+		</lib-button>
+	</template>
+	<template #popup="{extractEl}">
+		<lib-color-picker v-if="showPopup"
+			:id="id"
+			:allow-alpha="allowAlpha"
+			v-model="tempValue"
+			v-extract-root-el="extractEl"
+			@save="emits('update:modelValue', tempValue); showPopup = false"
+			@cancel="showPopup = false"
+		/>
+	</template>
+</lib-popup>
 	<!-- </div> -->
 </template>
 
-<script lang="ts">
-
-export default {
-	name: "lib-color-input",
-}
-</script>
-
 <script setup lang="ts">
 import { colord } from "colord"
-import { computed, type PropType, ref } from "vue"
+import { computed, type PropType, ref, useAttrs } from "vue"
 
 import { extractRootEl as vExtractRootEl } from "../../directives/extractRootEl.js"
 import LibButton from "../LibButton/LibButton.vue"
 import LibColorPicker from "../LibColorPicker/LibColorPicker.vue"
 import LibPopup from "../LibPopup/LibPopup.vue"
+import { linkableByIdProps } from "../shared/props"
 
 
 type HsvaColor = { h: number, s: number, v: number, a?: number }
 type RgbaColor = { r: number, g: number, b: number, a?: number }
-
+defineOptions({
+	name: "lib-color-input",
+})
 const props = defineProps({
+	...linkableByIdProps(),
 	modelValue: { type: Object as PropType<RgbaColor>, required: false, default: () => ({ r: 0, g: 0, b: 0 }) },
 	allowAlpha: { type: Boolean, required: false, default: true },
 	copyTransform: {
@@ -81,6 +77,7 @@ const props = defineProps({
 		default: (_val: RgbaColor, stringVal: string) => stringVal,
 	},
 })
+const $attrs = useAttrs()
 
 const stringColor = computed(() => colord(props.modelValue).toRgbString())
 const tempValue = ref({ ...props.modelValue })

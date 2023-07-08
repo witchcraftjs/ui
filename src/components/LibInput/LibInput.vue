@@ -1,41 +1,42 @@
 <template>
-	<div
-		:class="twMerge(`input
+<div
+	:class="twMerge(`input
+			grow
 			flex
 			flex-wrap
 			`,
-			disabled && `
+		disabled && `
 				text-neutral-400
 			`,
-			wrapperAttrs.class
-		)"
-		tabindex="-1"
-		v-bind="{...wrapperAttrs, class:undefined}"
-		@blur="canOpen = false"
-	>
-		<slot name="label" v-bind="slotProps">
-			<lib-label v-if="label || $slots.default"
-				:id="id"
-				:type="'top'"
-				:disabled="disabled"
-				:readonly="readonly"
-				:valid="valid"
-			>
-				<slot v-bind="slotProps">
-					{{ label }}
-				</slot>
-			</lib-label>
-		</slot>
-		<slot name="outer-left"/>
-		<!-- These are mostly copies of the classes on LibSimpleInput except made to work with disabled/readonly/etc manually since a div cannot have these states. -->
-		<div
-			:data-border="border"
-			:data-invalid="!valid"
-			:data-disabled="disabled"
-			:data-read-only="readonly"
-			:data-is-open="isOpen"
-			v-bind="{...innerWrapperAttrs, class:undefined}"
-			:class="twMerge(`wrapper
+		wrapperAttrs.class
+	)"
+	tabindex="-1"
+	v-bind="{...wrapperAttrs, class:undefined}"
+	@blur="canOpen = false"
+>
+	<slot name="label" v-bind="slotProps">
+		<lib-label v-if="label || $slots.default"
+			:id="id"
+			:type="'top'"
+			:disabled="disabled"
+			:readonly="readonly"
+			:valid="valid"
+		>
+			<slot v-bind="slotProps">
+				{{ label }}
+			</slot>
+		</lib-label>
+	</slot>
+	<slot name="outer-left"/>
+	<!-- These are mostly copies of the classes on LibSimpleInput except made to work with disabled/readonly/etc manually since a div cannot have these states. -->
+	<div
+		:data-border="border"
+		:data-invalid="!valid"
+		:data-disabled="disabled"
+		:data-read-only="readonly"
+		:data-is-open="isOpen"
+		v-bind="{...innerWrapperAttrs, class:undefined}"
+		:class="twMerge(`wrapper
 					relative
 					flex
 					flex-1
@@ -44,102 +45,101 @@
 					flex-wrap
 					rounded
 				`,
-				border && `
-					bg-bg
-					dark:bg-fg
+			border && `
+					bg-inherit
 					border
 					border-neutral-500
 					outlined-within:border-accent-500
 				`,
-				isOpen && `rounded-b-none`,
-				!valid && `
+			isOpen && `rounded-b-none`,
+			!valid && `
 					border-danger-700
 					outlined:!ring-danger-700
 					text-danger-800
 					dark:text-danger-400
 					dark:border-danger-600
 					`,
-				readonly && `
+			readonly && `
 					bg-neutral-50
 					text-neutral-800
 					dark:bg-neutral-950
 					dark:text-neutral-200
 					`,
-				disabled && `
+			disabled && `
 					bg-neutral-50
 					text-neutral-400
 					dark:border-neutral-600
 					border-neutral-400
 				`,
-				($slots.left || $slots.right) && `px-2`,
-				innerWrapperAttrs.class
-			)"
-		>
-			<slot name="left" v-bind="slotProps"/>
-			<slot name="input" v-bind="{ ...inputProps, ...slotProps, suggestionsIndicatorClickHandler }">
-				<lib-simple-input
-					:id="id"
-					v-bind="inputProps"
-				/>
-			</slot>
-			<slot name="indicator px-0" v-bind="{isOpen, suggestionsIndicatorClickHandler }">
-				<div
-					v-if="suggestions"
-					:data-is-open="isOpen"
-					:class="twMerge(`flex flex-col justify-center`, !$slots.right && (!values || values.length === 0 )&& `pr-1`, isOpen && `rotate-180`)"
-					@click="suggestionsIndicatorClickHandler"
-				>
-					<fa :icon="'chevron-up'"/>
-				</div>
-			</slot>
-			<slot name="values">
-				<template v-if="values && values.length > 0">
-					<!-- @vue-expected-error -->
-					<!-- @vue-expect-error todo #awaiting release-->
-					<lib-multi-values
-						:class="twMerge(`
+			($slots.left || $slots.right) && `px-2`,
+			innerWrapperAttrs.class
+		)"
+	>
+		<slot name="left" v-bind="slotProps"/>
+		<slot name="input" v-bind="{ ...inputProps, ...slotProps, suggestionsIndicatorClickHandler }">
+			<lib-simple-input
+				:id="id"
+				v-bind="inputProps"
+			/>
+		</slot>
+		<slot name="indicator px-0" v-bind="{isOpen, suggestionsIndicatorClickHandler }">
+			<div
+				v-if="suggestions"
+				:data-is-open="isOpen"
+				:class="twMerge(`flex flex-col justify-center`, !$slots.right && (!values || values.length === 0 )&& `pr-1`, isOpen && `rotate-180`)"
+				@click="suggestionsIndicatorClickHandler"
+			>
+				<fa :icon="'chevron-up'"/>
+			</div>
+		</slot>
+		<slot name="values">
+			<template v-if="values && values.length > 0">
+				<!-- @vue-expected-error -->
+				<!-- @vue-expect-error todo #awaiting release-->
+				<lib-multi-values
+					:class="twMerge(`
 							grow-[9000]
 							justify-space-between
 							py-1
 						`,
-							!$slots.right && `
+						!$slots.right && `
 							-mr-1
 						`
-						)"
-						:label="label"
-						:border="border"
-						:disabled="disabled"
-						:readonly="readonly"
-						:values="values"
-						@update:values="values = $event"
-					/>
-				</template>
-			</slot>
-			<slot name="right" v-bind="slotProps"/>
+					)"
+					:label="label"
+					:border="border"
+					:disabled="disabled"
+					:readonly="readonly"
+					:values="values"
+					@update:values="values = $event"
+				/>
+			</template>
+		</slot>
+		<slot name="right" v-bind="slotProps"/>
 
-			<slot v-if="suggestions" name="suggestions" v-bind="suggestionProps">
-				<!-- todo 1px needs to be abstracted to var -->
-				<lib-suggestions
-					class="
+		<slot v-if="suggestions" name="suggestions" v-bind="suggestionProps">
+			<!-- todo 1px needs to be abstracted to var -->
+			<lib-suggestions
+				class="
+							border-accent-500
 							absolute
 							inset-x-[-1px]
 							top-full
 							z-10
 							rounded-b
 							border
-							border-accent-500
 						"
-					ref="suggestionsComponent"
-					v-bind="suggestionProps"
-				>
-					<template #item="itemSlotProps">
-						<slot name="item" v-bind="itemSlotProps"/>
-					</template>
-				</lib-suggestions>
-			</slot>
-		</div>
-		<slot name="outer-right" v-bind="slotProps"/>
+				ref="suggestionsComponent"
+				v-bind="suggestionProps"
+			>
+				<template #item="itemSlotProps">
+					<slot name="item" v-bind="itemSlotProps"/>
+				</template>
+			</lib-suggestions>
+		</slot>
 	</div>
+	<slot name="outer-right" v-bind="slotProps"/>
+</div>
 </template>
 <script setup lang="ts" generic="T extends string|number">
 import { computed, type PropType, ref, useAttrs, useSlots, watch } from "vue"
