@@ -8,8 +8,7 @@
 		@apply bg-squares-gradient square-light-white square-dark-neutral-300 square-size-[6px];
 	}
 	.focus-outline {
-		@apply outlined:outline-none outlined:ring-2 outlined:ring-accent-500 outlined:ring-offset-2 outlined:ring-offset-white dark:outlined:ring-offset-black;
-		/* TODO make ring offset background color configurable by theme variable */
+		@apply outlined:outline-none outlined:ring-2 outlined:ring-accent-500 outlined:ring-offset-2 dark:ring-offset-fg dark-outlined:ring-offset-bg; 
 	}
 	.focus-outline-no-offset {
 		@apply outlined:outline-none outlined:ring-2 outlined:ring-accent-500;

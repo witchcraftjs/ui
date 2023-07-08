@@ -113,7 +113,7 @@ export default config
 
 \* Note that it overrides the h-screen utility to use dvh units by default, with vh as a fallback.
 
-You will need to import `@alanscodelog/vue-components/utilities.css` and optionally `@alanscodelog/vue-components/base.css` in your css file.
+You will need to import `@alanscodelog/vue-components/utilities.css` and `@alanscodelog/vue-components/base.css` in your css file. 
 
 ```css
 @import "@alanscodelog/vue-components/base.css";
@@ -125,7 +125,8 @@ You will need to import `@alanscodelog/vue-components/utilities.css` and optiona
 
 Utilities contains required utilities.
 
-Base just contains some basic styles for vue's animations.
+Base just contains animation keyframes and basic styles for vue animations. They are not "layered", i.e. they will get imported regardless of whether they are used since otherwise tailwind does not to detect they are being used.
+
 
 ## Getting Globally Registered Component Types
 

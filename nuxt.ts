@@ -24,7 +24,7 @@ export default defineNuxtModule({
 
 		nuxt.hook("tailwindcss:config" as any, (twConfig: DeepPartial<Config>) => {
 			twConfig.plugins = [...(twConfig.plugins ?? []), ...config.plugins]
-			twConfig.darkMode = "class"
+			twConfig.darkMode = config.darkMode
 			twConfig.theme ??= {}
 			twConfig.theme.configViewer = {
 			// https://github.com/rogden/tailwind-config-viewer/issues/84

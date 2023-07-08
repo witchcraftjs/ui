@@ -10,6 +10,7 @@ import { createTailwindPlugin } from "metamorphosis/tailwind"
 
 const config = {
 	// todo https://tailwindcss.com/docs/dark-mode#toggling-dark-mode-manually
+	// https://github.com/tailwindlabs/tailwindcss/discussions/2917#discussioncomment-5663924
 	darkMode: "class",
 	content: [
 		"./index.html",
@@ -28,6 +29,6 @@ const config = {
 	],
 } satisfies Config
 
-console.log(createTailwindPlugin(theme, themePluginOpts).config.theme)
+// console.log(createTailwindPlugin(theme, themePluginOpts).config.theme)
 export default config
 

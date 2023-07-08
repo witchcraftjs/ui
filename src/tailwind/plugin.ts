@@ -22,6 +22,12 @@ export const plugin = tailwindPlugin(({
 	addVariant("outlined", [`:merge(.group).outlined &:focus-visible`, `:merge(.group).outlined-visible &:focus-visible`])
 	addVariant("outlined-focus", [`:merge(.group).outlined &:focus`])
 	addVariant("outlined-within", [`:merge(.group).outlined &:focus-within`])
+	addVariant("dark-outlined", [
+		`:merge(.group).dark.outlined &:focus-visible`,
+		`:merge(.group).dark.outlined-visible &:focus-visible`,
+	])
+	addVariant("dark-outlined-focus", [`:merge(.group).dark.outlined &:focus`])
+	addVariant("dark-outlined-within", [`:merge(.group).dark.outlined &:focus-within`])
 	addUtilities({
 		".scrollbar-hide": {
 			"-ms-overflow-style": "none", /* IE and Edge */
