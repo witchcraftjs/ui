@@ -70,8 +70,14 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      # https://github.com/semantic-release/semantic-release/blob/master/docs/support/node-version.md
-      run: npx -p node@v18-lts -c semantic-release
+      run: npx semantic-release
+
+    - name: Release Dry Run
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      run: npx semantic-release --dry-run 
+      if: "env.ENABLE_RELEASE != 'true'"
 
     - run: echo "env.ENABLE_RELEASE is ${{ env.ENABLE_RELEASE }}, no release can be published" && exit 1
       if: "env.ENABLE_RELEASE != 'true'"
