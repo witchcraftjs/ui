@@ -72,7 +72,7 @@ You should also be able to use tailwind directly instead of importing the styles
 You can use the exported config and merge it with your own if needed.
 
 ```ts
-import componentsconfig from "@alanscodelog/vue-components/tailwind.config.ts"
+import componentsConfig from "@alanscodelog/vue-components/tailwind.config.js"
 import { theme } from "./lib/general/theme.js"
 
 export default {
