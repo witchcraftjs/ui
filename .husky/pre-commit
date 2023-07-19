@@ -3,5 +3,4 @@
 
 echo "Running pre-commit hook"
 
-npm run build && npm run build:check-deps-externalized && npm run lint
-# future && npm run test
+npm run build && npm run lint # future && npm run test

@@ -1,14 +1,12 @@
-import { escapeRegex } from "@alanscodelog/utils"
 import vue from "@vitejs/plugin-vue"
 import glob from "fast-glob"
 import fs from "fs"
-import { builtinModules } from "module"
 // import Previewer from 'vite-plugin-vue-component-preview';
 import path from "path"
 import { defineConfig } from "vite"
 import dts from "vite-plugin-dts"
+import { externalizeDeps } from "vite-plugin-externalize-deps"
 
-import packageJson from "./package.json"
 // @ts-expect-error .
 import postcss from "./postcss.config.js"
 
@@ -20,19 +18,12 @@ const folders = fs.readdirSync("src", { withFileTypes: true })
 const fileEntries = glob.sync(path.resolve(__dirname, `src/{${folders.join((","))}}/*.{ts, vue}`))
 	.filter(filepath => !filepath.endsWith(".stories.ts"))
 
-// It is not enought to list the packages since we will not get matches when importing files inside the package. This converts the external dependencies to a regex to properly match all imports from a package.
-// We can be sure none escape by checking in the build output that there are no dist/node_modules files, this is done by a pre-push git hook.
-const external = [
-	...builtinModules,
-	...Object.keys((packageJson as any).dependencies ?? {}),
-	...Object.keys((packageJson as any).peerDependencies ?? {}),
-	"@babel/runtime",
-].map(pkg => new RegExp(`^${escapeRegex(pkg)}($|\\/)`))
 
-// return
 // https://vitejs.dev/config/
 export default async ({ mode }: { mode: string }) => defineConfig({
 	plugins: [
+		// it isn't enough to just pass the deps list to rollup.external since it will not exclude subpath exports
+		externalizeDeps(),
 		vue({
 			script: {
 				defineModel: true,
@@ -57,8 +48,6 @@ export default async ({ mode }: { mode: string }) => defineConfig({
 			formats: ["es"],
 		},
 		rollupOptions: {
-			external,
-
 			output: {
 				preserveModules: true,
 				preserveModulesRoot: "src",
