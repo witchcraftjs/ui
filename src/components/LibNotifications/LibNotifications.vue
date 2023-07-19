@@ -61,7 +61,7 @@ import { linkableByIdProps } from "../shared/props.js"
 
 
 defineOptions({
-	name: "lib-notificiations",
+	name: "lib-notifications",
 	inheritAttrs: false,
 })
 
