@@ -4,7 +4,6 @@ import fs from "fs"
 // import Previewer from 'vite-plugin-vue-component-preview';
 import path from "path"
 import { defineConfig } from "vite"
-import dts from "vite-plugin-dts"
 import { externalizeDeps } from "vite-plugin-externalize-deps"
 
 // @ts-expect-error .
@@ -24,18 +23,17 @@ export default async ({ mode }: { mode: string }) => defineConfig({
 	plugins: [
 		// it isn't enough to just pass the deps list to rollup.external since it will not exclude subpath exports
 		externalizeDeps(),
+		// this along with tsc-alias (in a build:types:fix script) is in most of my projects to handle baseUrl imports
+		// here we don't want them because I've had it cause issues with nuxt
+		// tsconfigPaths(),
 		vue({
 			script: {
 				defineModel: true,
 			},
 		}),
-		dts({
-			entryRoot: "src",
-			tsconfigPath: "tsconfig.types.json",
-		}),
+			
 	],
 	build: {
-		emptyOutDir: true,
 		outDir: "dist",
 		lib: {
 			entry: [
@@ -49,12 +47,12 @@ export default async ({ mode }: { mode: string }) => defineConfig({
 		},
 		rollupOptions: {
 			output: {
-				preserveModules: true,
 				preserveModulesRoot: "src",
+				preserveModules: true,
 			},
 		},
 		...(mode === "production" ? {
-			minify: false,
+			minify: true,
 		} : {
 			minify: false,
 			sourcemap: "inline",
@@ -75,7 +73,12 @@ export default async ({ mode }: { mode: string }) => defineConfig({
 	},
 	server: {
 		port: 3001,
+		fs: {
+			allow: [process.env.CODE_PROJECTS!],
+		},
 		watch: {
+			// for pnpm
+			followSymlinks: true,
 			// watch changes in linked repos
 			ignored: ["!**/node_modules/@alanscodelog/**"],
 		},

@@ -1,3 +1,4 @@
+// @ts-nocheck remove when copying
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { Meta, StoryObj } from "@storybook/vue3"
 

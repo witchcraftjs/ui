@@ -3,7 +3,9 @@ import type { ResizeCallback } from "../types.js"
 
 export class ResizeObserverWrapper {
 	observers: WeakMap<Element, Set<ResizeCallback>> = new WeakMap()
+
 	observer: ResizeObserver
+
 	constructor() {
 		this.observers = new WeakMap()
 		this.observer = new ResizeObserver(elements => {
@@ -29,6 +31,7 @@ export class ResizeObserverWrapper {
 		const callbacks = this.observers.get(element)!
 		callbacks.add(callback)
 	}
+
 	unobserve(element: Element, callback: ResizeCallback): void {
 		const entry = this.observers.get(element)
 		if (!entry) return

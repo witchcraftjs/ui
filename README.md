@@ -89,10 +89,11 @@ export default {
 If you need to setup the config completely from scratch the package provides a plugin `@alanscodelog/vue-components/tailwind/plugin.js` that sets up a few utility classes\*. It also requires setting up the theming library. The options it uses are exported for easy re-use.
 
 ```ts
+import { type Config } from "tailwindcss"
 import { createTailwindPlugin } from "metamorphosis/tailwind"
 // you can also use your own metamorphosis theme so long as the necessary colors are provided ( warning/ok/danger/accent, neutral is also used, but that is already provided by tailwind )
 import { theme } from "@alanscodelog/vue-components/theme.js"
-import { libraryPlugin } from "@alanscodelog/vue-components/tailwind/plugin.js"
+import { plugin as libraryPlugin } from "@alanscodelog/vue-components/tailwind/plugin.js"
 import { themePluginOpts } from "@alanscodelog/vue-components/tailwind/themePluginOpts.js"
 import componentsconfig from "@alanscodelog/vue-components/tailwind.config.ts"
 

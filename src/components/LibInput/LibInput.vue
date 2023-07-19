@@ -95,7 +95,6 @@
 		<slot name="values">
 			<template v-if="values && values.length > 0">
 				<!-- @vue-expected-error -->
-				<!-- @vue-expect-error todo #awaiting release-->
 				<lib-multi-values
 					:class="twMerge(`
 							grow-[9000]
@@ -119,6 +118,7 @@
 
 		<slot v-if="suggestions" name="suggestions" v-bind="suggestionProps">
 			<!-- todo 1px needs to be abstracted to var -->
+			<!-- @vue-expected-error -->
 			<lib-suggestions
 				class="
 							border-accent-500
@@ -195,7 +195,7 @@ const inputWrapperEl = ref<HTMLElement | null>(null)
 const isOpen = ref(false)
 const canOpen = ref(false)
 const isValid = ref(true)
-const isActuallyValid = computed(() => props.valid !== undefined ? props.valid : isValid.value)
+const isActuallyValid = computed(() => props.valid ?? isValid.value)
 
 
 const updateIsValid = (e: boolean) => {
@@ -221,6 +221,7 @@ const handleInput = () => {
 }
 
 const handleKeydown = (e: KeyboardEvent) => {
+	// @ts-expect-error awaiting proper types for defineExpose
 	if (props.suggestions) suggestionsComponent.value?.inputKeydownHandler?.(e)
 
 	if (values && e.key === "Enter" && !hasModifiers(e)) {
@@ -232,6 +233,7 @@ const handleKeydown = (e: KeyboardEvent) => {
 }
 const handleBlur = (e: FocusEvent) => {
 	if (props.suggestions) {
+		// @ts-expect-error awaiting proper types for defineExpose
 		suggestionsComponent.value?.inputBlurHandler?.(e)
 	}
 	canOpen.value = false
@@ -266,7 +268,7 @@ const inputProps = computed(() => ({
 
 const slotProps = computed(() => ({
 	isOpen: isOpen.value,
-	isValid: props.valid !== undefined ? props.valid : isValid.value,
+	isValid: props.valid ?? isValid.value,
 	id: props.id,
 }))
 

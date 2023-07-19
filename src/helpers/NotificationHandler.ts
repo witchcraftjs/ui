@@ -7,13 +7,21 @@ export class NotificationHandler<
 	TEntry extends NotificationEntry<TRawEntry> = NotificationEntry<TRawEntry>,
 > {
 	timeout: number = 5000
+
 	debug: boolean = false
+
 	private id: number = 0
+
 	readonly queue: TEntry[] = []
+
 	readonly history: TEntry[] = []
+
 	maxHistory: number = 100
+
 	listeners: NotificationListener<TEntry>[] = []
+
 	stringifier?: NotificationStringifier<TEntry>
+
 	constructor({
 		timeout,
 		stringifier,
@@ -27,6 +35,7 @@ export class NotificationHandler<
 		if (maxHistory) this.maxHistory = maxHistory
 		if (stringifier) this.stringifier = stringifier
 	}
+
 	private _checkEntry(entry: Omit<TEntry, "promise" | "resolve">): void {
 		if (entry.cancellable !== undefined && isBlank(entry.cancellable)) {
 			throw new Error(
@@ -75,6 +84,7 @@ export class NotificationHandler<
 				`)
 		}
 	}
+
 	protected _createEntry<TNotifyEntry extends RawNotificationEntry<any, any>>(rawEntry: TNotifyEntry): TEntry {
 		const entry: Partial<TEntry> & Omit<TEntry, "promise" | "resolve"> = {
 			requiresAction: false,
@@ -102,6 +112,7 @@ export class NotificationHandler<
 		entry.id = this.id
 		return entry
 	}
+
 	async notify<TNotifyEntry extends RawNotificationEntry<any, any>>(rawEntry: TNotifyEntry):
 	NotificationPromise<TNotifyEntry["options"][number] extends string
 			? TNotifyEntry["options"][number]
@@ -136,14 +147,18 @@ export class NotificationHandler<
 			this.queue.splice(this.queue.indexOf(entry), 1)
 			return res
 		}) satisfies NotificationPromise as any
-	}	static resolveToDefault(notification: NotificationEntry): void {
+	}
+
+	static resolveToDefault(notification: NotificationEntry): void {
 		notification.resolve(notification.default)
 	}
+
 	static dismiss(notification: NotificationEntry): void {
 		if (notification.cancellable) {
 			notification.resolve(notification.cancellable)
 		}
 	}
+
 	stringify(notification: NotificationEntry): string {
 		if (this.stringifier) return this.stringifier(notification as any)
 		let str = ""
@@ -152,12 +167,15 @@ export class NotificationHandler<
 		if (notification.code) str += `code:${notification.code}\n`
 		return str
 	}
+
 	clear(): void {
 		setReadOnly(this, "history", [])
 	}
+
 	addNotificationListener(cb: NotificationListener<TEntry>): void {
 		this.listeners.push(cb)
 	}
+
 	removeNotificationListener(cb: NotificationListener<TEntry>): void {
 		const exists = this.listeners.indexOf(cb)
 		if (exists > -1) {

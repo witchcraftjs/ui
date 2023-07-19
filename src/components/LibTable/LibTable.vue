@@ -83,11 +83,7 @@
 </table>
 </template>
 
-<script lang="ts">
-export default {
-	name: "lib-table",
-}
-</script>
+
 <script setup lang="ts" generic="T extends Record<string, any>">
 import { keys, type MakeRequired } from "@alanscodelog/utils"
 import { computed, type PropType, ref } from "vue"
@@ -95,6 +91,11 @@ import { computed, type PropType, ref } from "vue"
 import { resizableCols as vResizableCols } from "../../directives/resizableCols.js"
 import { twMerge } from "../../helpers/twMerge.js"
 import type { Options } from "../../types.js"
+
+
+defineOptions({
+	name: "lib-table",
+})
 
 
 const props = defineProps({
