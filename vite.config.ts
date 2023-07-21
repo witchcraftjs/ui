@@ -1,8 +1,10 @@
+import { run } from "@alanscodelog/utils/node"
 import vue from "@vitejs/plugin-vue"
 import glob from "fast-glob"
 import fs from "fs"
-// import Previewer from 'vite-plugin-vue-component-preview';
 import path from "path"
+import type { PluginOption } from "vite"
+// import Previewer from 'vite-plugin-vue-component-preview';
 import { defineConfig } from "vite"
 import { externalizeDeps } from "vite-plugin-externalize-deps"
 
@@ -16,6 +18,13 @@ const folders = fs.readdirSync("src", { withFileTypes: true })
 
 const fileEntries = glob.sync(path.resolve(__dirname, `src/{${folders.join((","))}}/*.{ts, vue}`))
 	.filter(filepath => !filepath.endsWith(".stories.ts"))
+
+const typesPlugin = (): PluginOption => ({
+	name: "typesPlugin",
+	// process exit is disabled because I'm getting weird problems with vue component types due to experimental features
+	// eslint-disable-next-line no-console
+	writeBundle: async () => run(`npm run build:types`).promise.catch(e => { console.log(e.stdout)/* ; process.exit(1) */ }).then(() => undefined),
+})
 
 
 // https://vitejs.dev/config/
@@ -31,7 +40,8 @@ export default async ({ mode }: { mode: string }) => defineConfig({
 				defineModel: true,
 			},
 		}),
-			
+		// runs build:types script which takes care of generating types and fixing type aliases and baseUrl imports
+		typesPlugin(),
 	],
 	build: {
 		outDir: "dist",
@@ -51,13 +61,11 @@ export default async ({ mode }: { mode: string }) => defineConfig({
 				preserveModules: true,
 			},
 		},
+		minify: false,
 		...(mode === "production" ? {
-			minify: true,
 		} : {
-			minify: false,
 			sourcemap: "inline",
 		}),
-		minify: false,
 	},
 	css: {
 		postcss,
@@ -71,16 +79,16 @@ export default async ({ mode }: { mode: string }) => defineConfig({
 		include: [
 		],
 	},
-	server: {
-		port: 3001,
-		fs: {
-			allow: [process.env.CODE_PROJECTS!],
-		},
-		watch: {
-			// for pnpm
-			followSymlinks: true,
-			// watch changes in linked repos
-			ignored: ["!**/node_modules/@alanscodelog/**"],
-		},
-	},
+	// server: {
+	// 	port: 3001,
+	// 	fs: {
+	// 		allow: [process.env.CODE_PROJECTS!],
+	// 	},
+	// 	watch: {
+	// 		// for pnpm
+	// 		followSymlinks: true,
+	// 		// watch changes in linked repos
+	// 		ignored: ["!**/node_modules/@alanscodelog/**"],
+	// 	},
+	// },
 })

@@ -44,7 +44,7 @@
 		"lint:imports": "madge --circular --extensions ts ./src",
 		"lint": "echo temporarily disabled npm run lint:types && npm run lint:eslint && npm run lint:imports",
 		"prepare": "husky install && npm run build",
-		"actions:debug": "act -r -v -j build-only",
+		"actions:debug": "act -r -v -j build",
 		"gen:exports": "indexit update --ignore **.d.ts **.stories.js **.vue -o '${path}.js'"
 	},
 	"peerDependencies": {
