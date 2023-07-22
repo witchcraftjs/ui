@@ -5,17 +5,29 @@
 		"target": "ESNext",
 		"outDir": "dist",
 		"baseUrl": ".",
-		"types": [ "node" ],
-		"lib": [ "dom", "esnext", "dom.iterable" ], // dom needed for browser utils
+		"types": [
+			"node"
+		],
+		"lib": [
+			"dom",
+			"esnext",
+			"dom.iterable"
+		],
 		"importsNotUsedAsValues": "remove", // todo - workaround for https://github.com/microsoft/TypeScript/issues/53302 - must remove from main config package
 		// "verbatimModuleSyntax": true,
 		"moduleResolution": "bundler", //https://github.com/vuejs/language-tools/issues/1542 ?
 		// see https://github.com/qmhc/vite-plugin-dts#type-errors-that-are-unable-to-infer-types-from-packages-in-node_modules
 		// https://github.com/microsoft/TypeScript/issues/42873
 		"paths": {
-			"tailwind": ["node_modules/tailwind"],
-			"tailwind-merge": ["node_modules/tailwind-merge"],
-			"metamorphosis": ["metamorphosis"]
+			"tailwind": [
+				"node_modules/tailwind"
+			],
+			"tailwind-merge": [
+				"node_modules/tailwind-merge"
+			],
+			"metamorphosis": [
+				"node_modules/metamorphosis"
+			]
 		}
 	},
 	"include": [

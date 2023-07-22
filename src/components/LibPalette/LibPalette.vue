@@ -23,9 +23,8 @@ export default { name: "lib-palette" }
 <script setup  lang="ts">
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { keys } from "@alanscodelog/utils"
-import { computed, getCurrentInstance, onBeforeUnmount, onMounted, type PropType, reactive, type Ref, ref, watch } from "vue"
-
 import { type Theme } from "metamorphosis"
+import { computed, getCurrentInstance, onBeforeUnmount, onMounted, type PropType, reactive, type Ref, ref, watch } from "vue"
 
 import { baseInteractiveProps, linkableByIdProps } from "../shared/props.js"
 

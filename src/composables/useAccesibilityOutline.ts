@@ -10,10 +10,10 @@ import { onBeforeUnmount, onMounted, type Ref, ref, watch } from "vue"
  * ```ts
  * const el = ref(null)
  *
- * const {outline, control: outlineControl} = setupAccesibilityOutline(el)
+ * const {outline, control: outlineControl} = useAccesibilityOutline(el)
  * outlineControl.value = userSettings.outlineOnlyOnNavigation
  * // or
- * setupAccesibilityOutline(el, userSettings.outlineOnlyOnNavigation)
+ * useAccesibilityOutline(el, userSettings.outlineOnlyOnNavigation)
  *
  * const classes = computed(() =>( {
  * 	// if setting is false => always outline
@@ -41,7 +41,7 @@ import { onBeforeUnmount, onMounted, type Ref, ref, watch } from "vue"
  *
  */
 // TODO tailwind example/plugin?
-export function setupAccesibilityOutline(
+export function useAccesibilityOutline(
 	target: Ref<HTMLElement | null>,
 	enable: Ref<boolean> = ref(true),
 ): Record<"outline" | "control", Ref<boolean>> {

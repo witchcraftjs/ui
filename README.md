@@ -33,8 +33,8 @@ Everything can just be done from the config. Nuxt will automatically import the 
 In `main.ts` or where vue is mounted:
 
 ```ts
-// import global styles required to get the component styles working
-// import "@alanscodelog/vue-components/style.css" // currently broken due to same issue as above
+// a global style import is required to get the component styles working if not using tailwind
+// import "@alanscodelog/vue-components/style.css" // currently broken, vite is not properly resolving css imports 
 import "../node_modules/@alanscodelog/vue-components/dist/style.css"
 
 // import plugin
@@ -65,6 +65,7 @@ In the vite config, vue will require the experimental useModel:
 		}),
 	],
 ```
+
 ## Setting up Tailwind
 
 You should also be able to use tailwind directly instead of importing the styles.
@@ -72,7 +73,7 @@ You should also be able to use tailwind directly instead of importing the styles
 You can use the exported config and merge it with your own if needed.
 
 ```ts
-import componentsConfig from "@alanscodelog/vue-components/tailwind.config.js"
+import componentsConfig from "@alanscodelog/vue-components/tailwind/config.js"
 import { theme } from "./lib/general/theme.js"
 
 export default {
@@ -93,9 +94,11 @@ import { type Config } from "tailwindcss"
 import { createTailwindPlugin } from "metamorphosis/tailwind"
 // you can also use your own metamorphosis theme so long as the necessary colors are provided ( warning/ok/danger/accent, neutral is also used, but that is already provided by tailwind )
 import { theme } from "@alanscodelog/vue-components/theme.js"
-import { plugin as libraryPlugin } from "@alanscodelog/vue-components/tailwind/plugin.js"
-import { themePluginOpts } from "@alanscodelog/vue-components/tailwind/themePluginOpts.js"
-import componentsconfig from "@alanscodelog/vue-components/tailwind.config.ts"
+import {
+	plugin as libraryPlugin,
+	config as componentsConfig,
+	themePluginOpts,
+} from "@alanscodelog/vue-components/tailwind"
 
 const config = {
 	darkMode: "class",

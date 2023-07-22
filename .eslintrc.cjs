@@ -16,7 +16,6 @@ module.exports = {
 		"coverage",
 		"dist",
 		"docs",
-		"**/*.scss",
 		"**/*.html"
 	],
 	parser: "vue-eslint-parser",
@@ -32,7 +31,6 @@ module.exports = {
 		"tailwindcss/no-custom-classname": "off",
 		"@typescript-eslint/explicit-function-return-type": "off",
 		"import/no-namespace": "off",
-		"no-restricted-imports":"off"
 	},
 	overrides: [
 		// Eslint: https://eslint.org/docs/rules/
@@ -43,5 +41,11 @@ module.exports = {
 		// 	rules: {
 		// 	},
 		// },
+		{
+			files: ["*.stories.ts", "TemplateStory.ts"],
+			rules:{
+				"@typescript-eslint/no-restricted-imports":"off"
+			} 
+		}
 	],
 }

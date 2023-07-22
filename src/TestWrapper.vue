@@ -1,10 +1,9 @@
 <script setup lang="ts">
+import { cssObjectToString } from "metamorphosis/utils"
 import { computed, onBeforeUnmount, onMounted, type PropType, ref } from "vue"
 
-import { setupAccesibilityOutline } from "./mixins/index.js"
+import { useAccesibilityOutline } from "./composables/index.js"
 import { theme } from "./theme.js"
-
-import { cssObjectToString } from "metamorphosis/utils"
 
 
 defineOptions({ name: "test-wrapper" })
@@ -16,7 +15,7 @@ const props = defineProps({
 const el = ref<HTMLElement | null>(null)
 const styleEl = ref<HTMLElement | null>(null)
 
-const autoOutline = setupAccesibilityOutline(el).outline
+const autoOutline = useAccesibilityOutline(el).outline
 
 const showOutline = computed(() => (props.outline && autoOutline.value) || props.forceOutline)
 
@@ -42,7 +41,6 @@ onBeforeUnmount(() => {
 	accessible from the storybook preview decorator. See theme callback
 	above. -->
 <component :is="'style'" ref="styleEl"/>
-{{ props.outline }}
 <div id="app"
 	:class="showOutline ? 'group outlined outlined-visible' : '[&_*]:outline-none'"
 	class="

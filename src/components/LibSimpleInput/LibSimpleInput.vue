@@ -72,8 +72,8 @@
 import { keys, pick } from "@alanscodelog/utils"
 import { computed, type PropType, useAttrs } from "vue"
 
+import { useAriaLabel } from "../../composables/useAriaLabel.js"
 import { twMerge } from "../../helpers/twMerge.js"
-import { useAriaLabel } from "../../mixins/useAriaLabel.js"
 import { baseInteractiveProps, fallthroughEventProps, labelProp, linkableByIdProps } from "../shared/props.js"
 
 

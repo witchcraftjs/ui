@@ -34,7 +34,8 @@ export default defineNuxtModule({
 				),
 			}
 			twConfig.content ??= []
-			twConfig.content.push(resolve("./src/**/*.vue"))
+			// todo check am not overriding anything wrong
+			;(twConfig.content as string[]).push(resolve("./src/**/*.vue"))
 		})
 	},
 })

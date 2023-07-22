@@ -5,7 +5,7 @@ import type { App, Plugin } from "vue"
 
 export * as components from "./components/index.js"
 export * as helpers from "./helpers/index.js"
-export * as mixins from "./mixins/index.js"
+export * as composables from "./composables/index.js"
 export * as directives from "./directives/index.js"
 
 import * as components from "./components/index.js"

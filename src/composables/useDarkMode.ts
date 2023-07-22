@@ -3,7 +3,7 @@ import { computed, onMounted, ref, watch } from "vue"
 
 // future add lib name?
 const defaultLocalStorageKey = "prefersColorSchemeDark"
-export const useDarkMode = ({ useLocalStorage }: { useLocalStorage: boolean | string }) => {
+export const useDarkMode = ({ useLocalStorage }: { useLocalStorage?: boolean | string } = {}) => {
 	const systemDarkMode = ref(false)
 	const manualDarkMode = ref<boolean | undefined>(undefined)
 	if (useLocalStorage) {
