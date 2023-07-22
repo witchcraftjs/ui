@@ -79,16 +79,16 @@ export default async ({ mode }: { mode: string }) => defineConfig({
 		include: [
 		],
 	},
-	// server: {
-	// 	port: 3001,
-	// 	fs: {
-	// 		allow: [process.env.CODE_PROJECTS!],
-	// 	},
-	// 	watch: {
-	// 		// for pnpm
-	// 		followSymlinks: true,
-	// 		// watch changes in linked repos
-	// 		ignored: ["!**/node_modules/@alanscodelog/**"],
-	// 	},
-	// },
+	server: {
+		port: 3001,
+		fs: {
+			allow: [...(process.env.CODE_PROJECTS ?? [])!],
+		},
+		watch: {
+			// for pnpm
+			followSymlinks: true,
+			// watch changes in linked repos
+			ignored: ["!**/node_modules/@alanscodelog/**"],
+		},
+	},
 })
