@@ -263,3 +263,26 @@ export const InputSlotReplacement: Story = {
 	},
 }
 
+
+export const NextToButton: Story = {
+	render: args => ({
+		components: { ...components, LibInput },
+		setup: () => ({
+			args,
+		}),
+
+		template: `
+		<div class="flex gap-2 items-center">
+			<lib-input
+				v-bind="args"
+				v-model:values="args.values"
+				v-model="args.modelValue"
+:label="undefined"
+			>
+			</lib-input>
+			<lib-button>Button</lib-button>
+		</div>
+		`,
+	}),
+}
+

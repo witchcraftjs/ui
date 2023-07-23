@@ -25,17 +25,30 @@
 		border && `
 				transition-all
 				bg-neutral-100
-				shadow-sm
-				shadow-neutral-950/50
-				hover:shadow-md
+				shadow-[0_1px_1px_0]
+				shadow-neutral-950/20
+				hover:shadow-[0_1px_3px_0]
 				hover:shadow-neutral-950/30
 				hover:border-neutral-300
+
+				relative
+				after:absolute
+				after:rounded
+				after:inset-0
+				after:content
+				after:shadow-[0_1px_0_0_inset]
+				after:shadow-bg/20
+				hover:after:shadow-bg/60
+				dark:after:shadow-bg/10
+				dark:hover:after:shadow-bg/50
+				after:pointer-events-none
+				after:mix-blend-overlay
 
 				active:shadow-inner
 				active:shadow-fg/20
 				active:border-transparent
 				border
-				border-neutral-200
+				border-neutral-400
 				disabled:border-neutral-200
 				disabled:bg-neutral-50
 
@@ -47,6 +60,12 @@
 				dark:disabled:border-neutral-800
 				dark:disabled:bg-neutral-900
 			`,
+		border && ( !color || color === `secondary` ) && `
+			after:shadow-bg/90
+			hover:after:shadow-bg
+			dark:after:shadow-bg/20
+			dark:hover:after:shadow-bg/90
+		`,
 		!border && color === `primary` && `
 				font-bold
 				hover:text-accent-50
