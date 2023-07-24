@@ -132,11 +132,6 @@ export const Slots: Story = {
 				<template #label>
 					Custom Label Slot
 				</template>
-				<template #outer-left>
-					<lib-button >
-						Outer Left Slot
-					</lib-button>
-				</template>
 				<template #left>
 					<lib-button  class="px-0" :border="false" :label="'none'">
 						<fa :icon="'chevron-left'"/>
@@ -145,11 +140,6 @@ export const Slots: Story = {
 				<template #right>
 					<lib-button  class="px-0" :border="false"  :label="'none'">
 						<fa :icon="'chevron-right'"/>
-					</lib-button>
-				</template>
-				<template #outer-right>
-					<lib-button  >
-						Outer Right Slot
 					</lib-button>
 				</template>
 			</lib-input>
@@ -251,9 +241,7 @@ export const InputSlotReplacement: Story = {
 					/>
 				</template>
 				<template #left>
-					<lib-button class="px-0" :disabled="true" :border="false">
-						<fa :icon="'keyboard solid'"/>
-					</lib-button>
+					<fa :icon="'keyboard solid'"/>
 				</template>
 			</lib-input>
 		`,

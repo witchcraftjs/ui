@@ -23,13 +23,24 @@ export const Primary: Story = {
 		setup: () => ({ args }),
 		template: `
 		 <div class="flex flex-wrap border border-red-500">
-			<fa v-bind="{...args}"></fa>
+			<fa v-bind="{...args}" class="border-red-500 border"></fa>
 			<div class="border border-red-500 flex-initial w-full">Some Text</div>
 		</div>
 		`,
 	}),
 	args: {
+		class: "outline-red-500 outline-1",
 
 	},
 }
 
+/**
+ * All space to the sides should disappear.
+ */
+export const DisablingFixedWidth: Story = {
+	...Primary,
+	args: {
+		...Primary.args,
+		fixedWidth: false,
+	},
+}

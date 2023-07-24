@@ -33,9 +33,9 @@ Everything can just be done from the config. Nuxt will automatically import the 
 In `main.ts` or where vue is mounted:
 
 ```ts
-// a global style import is required to get the component styles working if not using tailwind
-// import "@alanscodelog/vue-components/style.css" // currently broken, vite is not properly resolving css imports 
-import "../node_modules/@alanscodelog/vue-components/dist/style.css"
+// if NOT using tailwind a global style import is required to get the component styles working
+// import "../node_modules/@alanscodelog/vue-components/dist/style.css"
+// proper import is currently broken, vite is not properly resolving css imports 
 
 // import plugin
 import { MyLibPlugin } from "@alanscodelog/vue-components"
@@ -73,17 +73,24 @@ You should also be able to use tailwind directly instead of importing the styles
 You can use the exported config and merge it with your own if needed.
 
 ```ts
-import componentsConfig from "@alanscodelog/vue-components/tailwind/config.js"
-import { theme } from "./lib/general/theme.js"
 
-export default {
-	...componentsConfig,
-	// ... your config
+import { config } from "@alanscodelog/vue-components/tailwind/config.js"
+
+export default  {
+	...config,
+	content: [
+		...config.content,
+		"./index.html",
+		"./src/**/*.{vue,js,ts,jsx,tsx}",
+		// be sure to add this or tailwind will not include the classes in the component library
+		"./node_modules/@alanscodelog/vue-components/**/*.{vue,js,ts,jsx,tsx}",
+	],
 	plugins: [
-		// ...your plugins
-		...componentsConfig.plugins
+		...config.plugins
 	]
 }
+
+
 
 ```
 
@@ -102,6 +109,7 @@ import {
 
 const config = {
 	darkMode: "class",
+	content: [/* ... */],
 	plugins: [
 		// integration with my theme library
 		createTailwindPlugin(theme, themePluginOpts),

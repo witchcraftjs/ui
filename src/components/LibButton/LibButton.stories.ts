@@ -24,13 +24,13 @@ export const Primary: Story = {
 		template: `
 		<div class="flex gap-4 justify-center">
 			<template v-for="type of [false, 'ok', 'warning', 'danger', 'primary', 'secondary' ]">
-				<lib-button v-bind="{...args, color: type, label: args.label + ' ' + capitalize(type || 'false')}">
+				<lib-button v-bind="{...args, color: type, label: !args.label ? undefined : args.label + ' ' + capitalize(type || 'false')}" icon-fixed-width>
 				</lib-button>
 			</template>
 		</div>
 		<div class="flex flex-col gap-4 pt-10">
 			<template v-for="type of [false, 'ok', 'warning', 'danger', 'primary', 'secondary']">
-				<lib-button v-bind="{...args, color: type , label: args.label + ' ' + capitalize(type || 'false') }">
+				<lib-button v-bind="{...args, color: type , label: !args.label ? undefined : args.label + ' ' + capitalize(type || 'false') }" icon-fixed-width>
 				</lib-button>
 			</template>
 		</div>
@@ -38,6 +38,13 @@ export const Primary: Story = {
 	}),
 }
 
+export const OnlyIcon: Story = {
+	...Primary,
+	args: {
+		...Primary.args,
+		label: undefined,
+	},
+}
 export const Disabled: Story = {
 	...Primary,
 	args: {

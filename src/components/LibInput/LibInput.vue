@@ -27,7 +27,6 @@
 			</slot>
 		</lib-label>
 	</slot>
-	<slot name="outer-left"/>
 	<!-- These are mostly copies of the classes on LibSimpleInput except made to work with disabled/readonly/etc manually since a div cannot have these states. -->
 	<div
 		:data-border="border"
@@ -41,9 +40,9 @@
 					flex
 					flex-1
 					basis-[max-content]
-					gap-2
 					flex-wrap
 					rounded
+					gap-2
 				`,
 			border && `
 					bg-inherit
@@ -71,7 +70,7 @@
 					dark:border-neutral-600
 					border-neutral-400
 				`,
-			($slots.left || $slots.right) && `px-2`,
+			/* ($slots.left || $slots.right) &&  */`px-2`,
 			innerWrapperAttrs.class
 		)"
 	>
@@ -79,6 +78,7 @@
 		<slot name="input" v-bind="{ ...inputProps, ...slotProps, suggestionsIndicatorClickHandler }">
 			<lib-simple-input
 				:id="id"
+				:class="twMerge(`p-0`, $attrs.class)"
 				v-bind="inputProps"
 			/>
 		</slot>
@@ -86,7 +86,10 @@
 			<div
 				v-if="suggestions"
 				:data-is-open="isOpen"
-				:class="twMerge(`flex flex-col justify-center`, !$slots.right && (!values || values.length === 0 )&& `pr-1`, isOpen && `rotate-180`)"
+				:class="twMerge(
+					`flex flex-col justify-center`,
+					!$slots.right && (!values || values.length === 0 ) && `pr-1`,
+					isOpen && `rotate-180`)"
 				@click="suggestionsIndicatorClickHandler"
 			>
 				<fa :icon="'chevron-up'"/>
@@ -138,12 +141,12 @@
 			</lib-suggestions>
 		</slot>
 	</div>
-	<slot name="outer-right" v-bind="slotProps"/>
 </div>
 </template>
 <script setup lang="ts" generic="T extends string|number">
 import { computed, type PropType, ref, useAttrs, useSlots, watch } from "vue"
 
+import { useDivideAttrs } from "../../composables/useDivideAttrs"
 import { addValue } from "../../helpers/addValue.js"
 import { hasModifiers } from "../../helpers/hasModifiers.js"
 import { twMerge } from "../../helpers/twMerge.js"
@@ -161,24 +164,36 @@ defineOptions({
 	inheritAttrs: false,
 })
 const $slots = useSlots()
-const $attrs = useAttrs()
+// const $attrs = useAttrs()
 const emits = defineEmits<{
 	(e: "update:modelValue", val: T): void
+	(e: "submit", val: T): void
 }>()
 
+/**
+ * There's three levels of $attrs that can be passed, the outwer wrapper, the inner wrapper, and the input.
+ *
+ * Unprefixed attributes are passed directly to the input.
+ *
+ * The others can be passed to by prefixing with `wrapper-` and `inner-wrapper`.
+ */
 const props = defineProps({
 	...linkableByIdProps(),
 	...baseInteractiveProps,
 	valid: { type: Boolean as PropType<boolean>, required: false, default: true },
-	/** There's three levels of $attrs that can be passed. Usually you will want to pass attributes directly and these will get sent to the input element. But there are also the inner wrapper attributes that contain everything that is styled as part of the "input", and the outer wrapper attributes that also contains the label and any aditional side slots. */
-	wrapperAttrs: { type: Object as PropType<any>, required: false, default: () => ({}) },
-	/** See wrapperAttrs. */
-	innerWrapperAttrs: { type: Object as PropType<any>, required: false, default: () => ({}) },
 	...labelProp,
 	...suggestionsProps,
 	...multiValueProps,
 	...fallthroughEventProps,
 })
+
+
+const {
+	$attrs,
+	wrapperAttrs,
+	"inner-wrapperAttrs": innerWrapperAttrs,
+} = useDivideAttrs(useAttrs(), ["wrapper", "inner-wrapper"])
+
 const values = defineModel<T[]>("values", { default: () => []})
 const modelValue = defineModel<T>({ required: true })
 
@@ -257,6 +272,7 @@ const inputProps = computed(() => ({
 	"onUpdate:modelValue": (e: T) => {
 		inputValue.value = e
 	},
+	onSubmit: (e: T) => emits("submit", e),
 	"aria-autocomplete": props.suggestions !== undefined ? "both" : undefined,
 	"aria-controls": props.suggestions !== undefined ? `suggestions-${props.id}` : undefined,
 	role: props.suggestions ? "combobox" : undefined,
@@ -264,6 +280,7 @@ const inputProps = computed(() => ({
 	"aria-activedescendant": isOpen.value ? `suggestion-${props.id}-${activeSuggestion.value}` : undefined,
 	canEdit: canEdit.value,
 	...$attrs,
+	class: undefined,
 }))
 
 const slotProps = computed(() => ({
