@@ -220,7 +220,7 @@ const listeners = computed(() => pick(props, keys(fallthroughEventProps) as any)
 const ariaLabel = useAriaLabel(props)
 
 const autoTitle = computed(() => ({
-	title: props.autoTitleFromAria && ($attrs["aria-label"] ?? props.label),
+	title: (props.autoTitleFromAria && ($attrs["aria-label"] ?? props.label)) || undefined,
 }))
 
 </script>
