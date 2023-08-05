@@ -25,9 +25,9 @@ import { keys } from "@alanscodelog/utils"
  */
 export const useDivideAttrs = <T extends readonly string[]>(attrs: Record<string, any>, divisionKeys: T): Record<`${T[number]}Attrs` | "$attrs", any> => {
 	const res: any = { $attrs: {} }
-	for (const attrKey of keys(attrs)) {
-		for (const key of divisionKeys) {
-			res[`${key}Attrs`] = res[`${key}Attrs`] ?? {}
+	for (const key of divisionKeys) {
+		res[`${key}Attrs`] = {}
+		for (const attrKey of keys(attrs)) {
 			if (attrKey.startsWith(`${key}-`)) {
 				res[`${key}Attrs`][attrKey.slice(key.length + 1)] = attrs[attrKey]
 			} else if (attrKey.startsWith(key)) {
