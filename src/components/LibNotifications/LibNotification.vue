@@ -1,50 +1,45 @@
 <template>
-<div
-	:class="twMerge(`notification
-			max-w-700px
-			bg-neutral-50
-			dark:bg-neutral-950
-			border
-			border-neutral-400
-			rounded
-			focus-outline
-			flex-flex-col
-			gap-2
-			p-2 m-2
-		`,
-		notification.requiresAction && `
-		`,
-		($attrs as any).class)"
-	v-bind="{...$attrs, class:undefined}"
+<div :class="twMerge(`notification
+		max-w-700px
+		bg-neutral-50
+		dark:bg-neutral-950
+		text-fg
+		dark:text-bg
+		border
+		border-neutral-400
+		rounded
+		focus-outline
+		flex-flex-col
+		gap-2
+		p-2 m-2
+	`,
+	/* notification.requiresAction && ` `, */
+	($attrs as any).class)"
+	v-bind="{ ...$attrs, class: undefined }"
 	tabindex="0"
 	ref="notificationEl"
 	@keydown.enter.self="NotificationHandler.resolveToDefault(notification)"
 >
 	<div class="header flex-reverse flex justify-between">
-		<div
-			v-if="notification.title"
+		<div v-if="notification.title"
 			tabindex="0"
-			class=" title
+			class="title
 				focus-outline flex
 				rounded
 				font-bold
-				"
+			"
 		>
 			{{ notification.title }}
 		</div>
+		<div class="flex-1"/>
 		<div class="actions flex">
-			<LibButton
-				:border="false"
+			<LibButton :border="false"
 				class="copy text-neutral-700"
 				@click="copy(handler ? handler.stringify(notification) : JSON.stringify(notification))"
 			>
 				<fa :icon="'regular copy'"/>
 			</LibButton>
-			<lib-button
-				v-if="notification.cancellable"
-				:border="false"
-				@click="NotificationHandler.dismiss(notification)"
-			>
+			<lib-button v-if="notification.cancellable" :border="false" @click="NotificationHandler.dismiss(notification)">
 				<fa :icon="'solid times'"/>
 			</lib-button>
 		</div>
@@ -64,8 +59,7 @@
 				gap-2
 			"
 		>
-			<lib-button
-				:label="option"
+			<lib-button :label="option"
 				:class="buttonColors[i] == 'secondary' && 'p-0'"
 				:border="buttonColors[i] !== 'secondary'"
 				:color="buttonColors[i]"
@@ -91,12 +85,12 @@ defineOptions({
 	name: "lib-notification",
 	inheritAttrs: false,
 })
-
 const $attrs = useAttrs()
 
 const props = defineProps({
 	notification: { type: Object as PropType<NotificationEntry>, required: true },
-	handler: { type: Object as PropType<NotificationHandler>, required: true },
+	// is not required only for testing
+	handler: { type: Object as PropType<NotificationHandler>, required: false, default: undefined },
 })
 
 const getColor = (notification: NotificationEntry, option: string): "ok" | "primary" | "danger" | "secondary" => notification.default === option ? "primary" : notification.dangerous.includes(option) ? "danger" : "secondary"
@@ -104,13 +98,11 @@ const getColor = (notification: NotificationEntry, option: string): "ok" | "prim
 const buttonColors = computed(() => props.notification.options.map((option: any /* what ??? */) => getColor(props.notification, option)))
 
 const notificationEl = ref<null | HTMLElement>(null)
-
 defineExpose({
 	focus: () => {
 		notificationEl.value?.focus()
 	},
 })
-
 
 </script>
 

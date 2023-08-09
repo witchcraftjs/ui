@@ -24,11 +24,11 @@ export const Primary: Story = {
 	render: args => ({
 		components: { ...components, LibNotification },
 		setup() {
-			return { handler, args }
+			return { args }
 		},
 		backgrounds: { disable: true },
 		template: `
-			<lib-notification :handler="handler" :v-bind="args"/>
+			<lib-notification v-bind="args"/>
 		`,
 	}),
 	args: {
@@ -37,11 +37,21 @@ export const Primary: Story = {
 			title: `Notification`,
 			message: `This is a notification. Pick an option:`,
 		}),
-																		// eslint-disable-next-line @typescript-eslint/no-empty-function
+			// eslint-disable-next-line @typescript-eslint/no-empty-function
 																		resolve: () => { } },
 	},
 }
-
+export const WithoutTitle: Story = {
+	...Primary,
+	args: {
+		...Primary.args,
+		// @ts-expect-error calling protected method
+		notification: handler._createEntry({
+			...Primary.args!.notification,
+			title: undefined,
+		}),
+	},
+}
 export const WithCode: Story = {
 	...Primary,
 	args: {

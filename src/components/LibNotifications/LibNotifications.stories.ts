@@ -11,7 +11,8 @@ import * as components from "../index.js"
 const meta: Meta<typeof LibNotifications> = {
 	component: LibNotifications,
 	args: {
-
+	// @ts-expect-error story only arg
+		withTitle: true,
 	},
 }
 
@@ -27,7 +28,7 @@ export const Primary: Story = {
 
 			let count = 0
 
-			const withTitle = ref(true)
+			const withTitle = ref(args.withTitle)
 			const disableTimeout = ref(false)
 
 			const notifyRequiresAction = () => {
