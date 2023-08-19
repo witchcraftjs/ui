@@ -12,8 +12,7 @@
 		`, ($attrs as any).class)"
 	v-bind="{ ...$attrs, class: undefined }"
 >
-	<lib-notification
-		class="pointer-events-auto"
+	<lib-notification class="pointer-events-auto"
 		:handler="handler"
 		tabindex="0"
 		:notification="notification"
@@ -22,11 +21,10 @@
 	/>
 </TransitionGroup>
 <Transition>
-	<div v-show="topNotifications.length > 0">AAAAAAAA</div>
+	<div v-show="topNotifications.length > 0"/>
 </Transition>
 <Transition>
-	<dialog
-		v-show="topNotifications.length > 0"
+	<dialog v-show="topNotifications.length > 0"
 		:id="id"
 		class="modal
 			bg-transparent
@@ -38,8 +36,7 @@
 		@click.self.prevent="NotificationHandler.dismiss(topNotifications[0])"
 	>
 		<form>
-			<lib-notification
-				v-if="topNotifications.length > 0"
+			<lib-notification v-if="topNotifications.length > 0"
 				:handler="handler"
 				class="top-notification"
 				:notification="topNotifications[0]"
@@ -116,7 +113,7 @@ const notificationListener = (entry: NotificationEntry, type: "added" | "resolve
 }
 props.handler.addNotificationListener(notificationListener)
 
-for (const entry of props.handler.queue) {addNotification(entry)}
+for (const entry of props.handler.queue) { addNotification(entry) }
 onBeforeUnmount(() => {
 	props.handler.removeNotificationListener(notificationListener)
 })

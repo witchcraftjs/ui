@@ -83,8 +83,10 @@
 </table>
 </template>
 
-
-<script setup lang="ts" generic="T extends Record<string, any>">
+<!-- generic="T extends Record<string, any> -->"
+<script setup lang="ts">
+/* awaiting better support for emitting component types with genertics */
+type T = any
 import { keys, type MakeRequired } from "@alanscodelog/utils"
 import { computed, type PropType, ref } from "vue"
 

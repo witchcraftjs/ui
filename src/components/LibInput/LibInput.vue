@@ -121,7 +121,7 @@
 
 		<slot v-if="suggestions" name="suggestions" v-bind="suggestionProps">
 			<!-- todo 1px needs to be abstracted to var -->
-			<!-- @vue-expected-error -->
+			<!-- @vue-expect-error -->
 			<lib-suggestions
 				class="
 							border-accent-500
@@ -146,7 +146,7 @@
 <script setup lang="ts" generic="T extends string|number">
 import { computed, type PropType, ref, useAttrs, useSlots, watch } from "vue"
 
-import { useDivideAttrs } from "../../composables/useDivideAttrs"
+import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
 import { addValue } from "../../helpers/addValue.js"
 import { hasModifiers } from "../../helpers/hasModifiers.js"
 import { twMerge } from "../../helpers/twMerge.js"

@@ -59,7 +59,7 @@ import { extractRootEl as vExtractRootEl } from "../../directives/extractRootEl.
 import LibButton from "../LibButton/LibButton.vue"
 import LibColorPicker from "../LibColorPicker/LibColorPicker.vue"
 import LibPopup from "../LibPopup/LibPopup.vue"
-import { linkableByIdProps } from "../shared/props"
+import { linkableByIdProps } from "../shared/props.js"
 
 
 type HsvaColor = { h: number, s: number, v: number, a?: number }
