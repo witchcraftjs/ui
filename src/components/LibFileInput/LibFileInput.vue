@@ -34,7 +34,7 @@
 		<label v-if="!compact" class="flex flex-col items-center text-sm">
 			<slot name="formats">Accepted Formats: </slot>
 			<div class="">
-				{{ formats.join(", ") }}
+				{{ extensions.join(", ") }}
 			</div>
 		</label>
 		<input
@@ -121,7 +121,7 @@ export default { name: "lib-file-input" }
 </script>
 <script setup  lang="ts">
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { computed, getCurrentInstance, onBeforeUnmount, onMounted, type PropType, reactive, type Ref, ref, watch } from "vue"
+import { computed, getCurrentInstance, onBeforeUnmount, onMounted, type PropType, reactive, type Ref, ref, shallowReactive, watch } from "vue"
 
 import { twMerge } from "../../helpers/twMerge.js"
 import Fa from "../fa/Fa.vue"
@@ -131,10 +131,10 @@ import { linkableByIdProps } from "../shared/props.js"
 
 const el = ref<null | HTMLInputElement>(null)
 type Entry = { file: File, isImg: boolean }
-const files = ref<(Entry)[]>([])
+const files = shallowReactive<(Entry)[]>([])
 
 watch(files, () => {
-	emits("input", files.value.map(entry => entry.file))
+	emits("input", files.map(entry => entry.file))
 })
 
  
@@ -148,9 +148,12 @@ const props = defineProps({
 	// ...baseInteractiveProps,
 	// modelValue: { type: Array as PropType<Entry[]>, required: false },
 	multiple: { type: Boolean, required: false, default: false },
-	formats: { type: Array as PropType<string[]>, required: false, default: () => [".jpeg", ".png", ".jpg", ".stl"]},
+	/** A list of extensions or mime types to add to the input's accept. Basic validations are done so that files match an extension and mimeType, but note that a file could still be lying, all files should be validated server side.*/
+	formats: { type: Array as PropType<string[]>, required: false, default: () => ["image/*", ".jpeg", ".jpg", ".png"]},
 	compact: { type: Boolean, required: false, default: false },
 })
+const mimeTypes = computed(() => props.formats.filter(_ => !_.startsWith(".")))
+const extensions = computed(() => props.formats.filter(_ => _.startsWith(".")))
 
 const getSrc = (file: File) => {
 	const src = URL.createObjectURL(file)
@@ -158,19 +161,32 @@ const getSrc = (file: File) => {
 }
 
 const removeFile = (entry: Entry) => {
-	const index = files.value.indexOf(entry)
-	files.value.splice(index, 1)
+	const index = files.indexOf(entry)
+	files.splice(index, 1)
 }
-const inputFile = async (e: InputEvent): Promise<void> => {
+const inputFile = async (e: InputEvent): Promise<void | boolean> => {
 	e.preventDefault()
-	const res = []
 	if (el.value!.files) {
 		for (const file of el.value!.files) {
 			const isImg = file.type.startsWith("image")
-			res.push({ file, isImg })
+			const isValidMimeType = mimeTypes.value.find(_ => _.endsWith("/*") ? file.type.startsWith(_.slice(0, -2)) : _ === file.type) !== undefined
+			const isValidExtension = extensions.value.find(_ => file.name.endsWith(_)) !== undefined
+			if (!isValidMimeType || !isValidExtension) {
+				files.splice(0, files.length)
+				return false
+			}
+			if (!files.find(_ => _.file === file)) {
+				if ((props.multiple || files.length < 1)
+				) {
+					files.push({ file, isImg })
+				} else {
+					files.splice(0, files.length, { file, isImg })
+				}
+			} else {
+				return false
+			}
 		}
 	}
-	files.value = res
 }
 
 </script>
