@@ -54,7 +54,7 @@ export const ErrorHandling: Story = {
 			}
 		},
 		template: `
-			<lib-debug>{{errors}}</lib-debug>
+			<lib-debug :title="'Errors'">{{errors}}</lib-debug>
 			<lib-file-input v-bind="{...args}"  @errors="errorHandler"></lib-file-input>
 		`,
 	}),

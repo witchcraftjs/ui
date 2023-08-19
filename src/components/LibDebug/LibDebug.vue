@@ -11,7 +11,7 @@
 	"
 >
 	<div class="flex justify-between">
-		<span class="font-bold">Debug</span>
+		<span class="font-bold">{{ title }}</span>
 		<LibButton class="w-min-content" @click="copy()"><fa :icon="'regular copy'"/></LibButton>
 	</div>
 	<pre v-if="value"
@@ -51,6 +51,7 @@ const props = defineProps({
 	value: { type: Object as PropType<any>, required: false, default: undefined },
 	/** Sets the tab size in css. Defaults to 3. */
 	tab: { type: Number as PropType<number>, required: false, default: () => 3 },
+	title: { type: String as PropType<string>, required: false, default: "Debug" },
 })
 const getStringValue = (value: any): string => value === undefined
 	? "undefined"
