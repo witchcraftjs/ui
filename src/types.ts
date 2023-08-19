@@ -1,3 +1,4 @@
+import type { ErrorW } from "@alanscodelog/utils"
 import { type Ref } from "vue"
 
 
@@ -45,4 +46,6 @@ export type Options = {
 	selector: string
 }
 export type ResizeCallback = (rect: DOMRectReadOnly, el: Element) => void
+
+export type FileInputError = ErrorW<{ file: File, isValidMimeType: boolean, isValidExtension: boolean }>
 

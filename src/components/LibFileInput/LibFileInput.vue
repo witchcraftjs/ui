@@ -114,7 +114,7 @@
 				<div v-if="!entry.isImg"
 					class="no-image
 					flex h-[80px]
-						flex-1 basis-full flex-wrap items-center justify-center
+					flex-1 basis-full flex-wrap items-center justify-center
 					"
 				>
 					<fa icon="regular file" class="text-4xl opacity-50"/>
@@ -132,10 +132,10 @@
 export default { name: "lib-file-input" }
 </script>
 <script setup  lang="ts">
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { computed, getCurrentInstance, onBeforeUnmount, onMounted, type PropType, reactive, type Ref, ref, shallowReactive, useAttrs, watch } from "vue"
+import { computed, type PropType, ref, shallowReactive, useAttrs, watch } from "vue"
 
 import { twMerge } from "../../helpers/twMerge.js"
+import { type FileInputError } from "../../types.js"
 import Fa from "../fa/Fa.vue"
 import LibButton from "../LibButton/LibButton.vue"
 import { linkableByIdProps } from "../shared/props.js"
@@ -143,22 +143,24 @@ import { linkableByIdProps } from "../shared/props.js"
 
 const el = ref<null | HTMLInputElement>(null)
 type Entry = { file: File, isImg: boolean }
-type ErrorEntry = { file: File, isValidMimeType: boolean, isValidExtension: boolean }
+
 const files = shallowReactive<(Entry)[]>([])
-const errors = shallowReactive<(ErrorEntry)[]>([])
+const errors = shallowReactive<(FileInputError)[]>([])
 const errorFlashing = ref(false)
 
 watch(files, () => {
 	emits("input", files.map(entry => entry.file))
 })
-watch(errors, () => {
+watch(errors, (newVal, oldVal) => {
 	if (errors.length > 0) {
 		errorFlashing.value = true
 		setTimeout(() => {
 			errorFlashing.value = false
 		}, 500)
 	}
-	emits("errors", errors)
+	if (newVal.length !== oldVal.length) {
+		emits("errors", errors)
+	}
 })
 
 defineOptions({
@@ -169,7 +171,7 @@ const $attrs = useAttrs()
  
 const emits = defineEmits<{
 	(e: "input", val: File[]): void
-	(e: "errors", val: ErrorEntry[]): void
+	(e: "errors", val: FileInputError[]): void
 }>()
 /* eslint-enable @typescript-eslint/prefer-function-type */
 
@@ -194,16 +196,25 @@ const removeFile = (entry: Entry) => {
 	const index = files.indexOf(entry)
 	files.splice(index, 1)
 }
+const extensionsList = computed(() => extensions.value.join(", "))
 const inputFile = async (e: InputEvent): Promise<void | boolean> => {
 	e.preventDefault()
 	if (el.value!.files) {
 		const errs = []
 		for (const file of el.value!.files) {
 			const isImg = file.type.startsWith("image")
+			
 			const isValidMimeType = mimeTypes.value.find(_ => _.endsWith("/*") ? file.type.startsWith(_.slice(0, -2)) : _ === file.type) !== undefined
 			const isValidExtension = extensions.value.find(_ => file.name.endsWith(_)) !== undefined
 			if (!isValidMimeType || !isValidExtension) {
-				errs.push({ file, isValidMimeType, isValidExtension })
+				const extension = file.name.match(/.*(\..*)/)?.[1] ?? "Unknown"
+				const type = file.type === "" ? "" : ` (${file.type})`
+				const message = `File type ${extension}${type} is not allowed. Allowed file types are: ${extensionsList.value}.`
+				const err = new Error(message) as FileInputError
+				err.file = file
+				err.isValidExtension = isValidExtension
+				err.isValidMimeType = isValidMimeType
+				errs.push(err)
 				continue
 			}
 			if (errs.length > 0) continue
