@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { Meta, StoryObj } from "@storybook/vue3"
+import { ref } from "vue"
 
 import LibFileInput from "./LibFileInput.vue"
 
@@ -42,3 +43,19 @@ export const Compact: Story = {
 	},
 }
 
+export const ErrorHandling: Story = {
+	render: args => ({
+		components,
+		setup: () => {
+			const errors = ref([])
+			const errorHandler = (e: any) => errors.value = e
+			return {
+				args, errors, errorHandler,
+			}
+		},
+		template: `
+			<lib-debug>{{errors}}</lib-debug>
+			<lib-file-input v-bind="{...args}"  @errors="errorHandler"></lib-file-input>
+		`,
+	}),
+}

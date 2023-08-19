@@ -1,17 +1,27 @@
 <template>
+<!-- todo aria errors -->
 <div :class="twMerge(
-		`file-input justify-center border-2 border-dashed border-accent-500/80`,
+		`file-input
+		justify-center
+		border-2
+		border-dashed
+		border-accent-500/80
+		transition-[border-color]
+		duration-300
+		ease-out`,
 		compact && `rounded`,
-		!compact && `flex w-full flex-col items-center gap-2 rounded-xl  p-2 `
+		!compact && `flex w-full flex-col items-center gap-2 rounded-xl  p-2 `,
+		errors.length > 0 && errorFlashing && `border-red-400`,
+		( $attrs as any ).class
 	)"
-	@input="(inputFile as any)"
+	v-bind="{...$attrs, class:undefined}"
 >
 	<div :class="twMerge(
 		`relative justify-center`,
 		compact && `flex gap-2`,
 		!compact && `input-wrapper
-				flex flex-col items-center
-			`
+			flex flex-col items-center
+		`
 	)"
 	>
 		<label
@@ -52,7 +62,9 @@
 			:multiple="multiple"
 			ref="el"
 			@input="(inputFile as any)"
+			@click="($event.target! as any).value = null"
 		>
+		<!--  click event allows event to fire even if the user picks the same file -->
 	</div>
 	<div v-if="!compact && files.length > 0"
 		:class="twMerge(`previews
@@ -121,7 +133,7 @@ export default { name: "lib-file-input" }
 </script>
 <script setup  lang="ts">
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { computed, getCurrentInstance, onBeforeUnmount, onMounted, type PropType, reactive, type Ref, ref, shallowReactive, watch } from "vue"
+import { computed, getCurrentInstance, onBeforeUnmount, onMounted, type PropType, reactive, type Ref, ref, shallowReactive, useAttrs, watch } from "vue"
 
 import { twMerge } from "../../helpers/twMerge.js"
 import Fa from "../fa/Fa.vue"
@@ -131,15 +143,33 @@ import { linkableByIdProps } from "../shared/props.js"
 
 const el = ref<null | HTMLInputElement>(null)
 type Entry = { file: File, isImg: boolean }
+type ErrorEntry = { file: File, isValidMimeType: boolean, isValidExtension: boolean }
 const files = shallowReactive<(Entry)[]>([])
+const errors = shallowReactive<(ErrorEntry)[]>([])
+const errorFlashing = ref(false)
 
 watch(files, () => {
 	emits("input", files.map(entry => entry.file))
 })
+watch(errors, () => {
+	if (errors.length > 0) {
+		errorFlashing.value = true
+		setTimeout(() => {
+			errorFlashing.value = false
+		}, 500)
+	}
+	emits("errors", errors)
+})
 
+defineOptions({
+	name: "lib-file-input",
+	inheritAttrs: false,
+})
+const $attrs = useAttrs()
  
 const emits = defineEmits<{
 	(e: "input", val: File[]): void
+	(e: "errors", val: ErrorEntry[]): void
 }>()
 /* eslint-enable @typescript-eslint/prefer-function-type */
 
@@ -167,14 +197,16 @@ const removeFile = (entry: Entry) => {
 const inputFile = async (e: InputEvent): Promise<void | boolean> => {
 	e.preventDefault()
 	if (el.value!.files) {
+		const errs = []
 		for (const file of el.value!.files) {
 			const isImg = file.type.startsWith("image")
 			const isValidMimeType = mimeTypes.value.find(_ => _.endsWith("/*") ? file.type.startsWith(_.slice(0, -2)) : _ === file.type) !== undefined
 			const isValidExtension = extensions.value.find(_ => file.name.endsWith(_)) !== undefined
 			if (!isValidMimeType || !isValidExtension) {
-				files.splice(0, files.length)
-				return false
+				errs.push({ file, isValidMimeType, isValidExtension })
+				continue
 			}
+			if (errs.length > 0) continue
 			if (!files.find(_ => _.file === file)) {
 				if ((props.multiple || files.length < 1)
 				) {
@@ -182,9 +214,13 @@ const inputFile = async (e: InputEvent): Promise<void | boolean> => {
 				} else {
 					files.splice(0, files.length, { file, isImg })
 				}
-			} else {
-				return false
 			}
+		}
+		if (errs.length > 0) {
+			errors.splice(0, errors.length, ...errs)
+			return false
+		} else if (errors.length > 0) {
+			errors.splice(0, errors.length)
 		}
 	}
 }
