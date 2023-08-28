@@ -70,7 +70,10 @@
 					dark:border-neutral-600
 					border-neutral-400
 				`,
-			/* ($slots.left || $slots.right) &&  */`px-2`,
+			$slots.left && `pl-2`,
+			$slots.right && `pr-2`,
+
+			/* ($slots.left || $slots.right) &&  `px-2`*/
 			innerWrapperAttrs.class
 		)"
 	>
@@ -78,7 +81,7 @@
 		<slot name="input" v-bind="{ ...inputProps, ...slotProps, suggestionsIndicatorClickHandler }">
 			<lib-simple-input
 				:id="id"
-				:class="twMerge(`p-0`, $attrs.class)"
+				:class="twMerge(`p-0`, !$slots.left && `pl-2`, !$slots.right && `pr-2`, $attrs.class)"
 				v-bind="inputProps"
 			/>
 		</slot>
