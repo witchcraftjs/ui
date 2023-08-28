@@ -1,4 +1,8 @@
-import { twMerge as tm } from "tailwind-merge"
+import { extendTailwindMerge } from "tailwind-merge"
 
 
-export const twMerge = tm
+export const twMerge = extendTailwindMerge({
+	classGroups: {
+		"focus-outline": [{ "focus-outline": ["", "no-offset", "none"]}],
+	},
+})

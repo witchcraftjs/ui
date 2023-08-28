@@ -13,4 +13,8 @@
 	.focus-outline-no-offset {
 		@apply outlined:outline-none outlined:ring-2 outlined:ring-accent-500;
 	}
+	.focus-outline-none {
+		@apply outlined:outline-none
+		/* this just causes tailwind merge to remove the other classes */
+	}
 }
