@@ -74,9 +74,9 @@ const listeners = computed(() => pick(props, keys(fallthroughEventProps) as any)
 
  
 const emits = defineEmits<{
-	(e: "update:modelValue", val: string): void
+	(e: "update:modelValue", val: boolean): void
 	/* User presses enter.*/
-	(e: "submit", val: string): void
+	(e: "submit", val: boolean): void
 }>()
 
 const el = ref<null | HTMLElement>(null)
