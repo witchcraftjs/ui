@@ -44,7 +44,7 @@
 			</lib-button>
 		</div>
 	</div>
-	<div class="message" tabindex="0">
+	<div class="message whitespace-pre-wrap" tabindex="0">
 		{{ notification.message }}
 	</div>
 	<div class="bottom flex items-end justify-between">
