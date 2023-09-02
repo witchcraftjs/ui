@@ -32,7 +32,7 @@
 					checked:after:bg-accent-700
 					disabled:border-neutral-500
 					disabled:checked:after:bg-neutral-700
-				`, $attrs.class as any)"
+				`, !disabled && `after:cursor-pointer`,$attrs.class as any)"
 			type="checkbox"
 			:disabled="disabled"
 			ref="inputEl"
