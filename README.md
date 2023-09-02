@@ -38,7 +38,7 @@ In `main.ts` or where vue is mounted:
 // proper import is currently broken, vite is not properly resolving css imports 
 
 // import plugin
-import { MyLibPlugin } from "@alanscodelog/vue-components"
+import { VueComponentsPlugin } from "@alanscodelog/vue-components"
 
 import App from "./App.vue"
 import { createApp } from "vue"
@@ -51,7 +51,7 @@ import { fas } from "@fortawesome/free-solid-svg-icons"
 
 library.add(fas, far) // add needed icons, or all for dev
 createApp(App)
-	.use(MyLibPlugin) //use plugin
+	.use(VueComponentsPlugin) //use plugin
 
 ```
 In the vite config, vue will require the experimental useModel:

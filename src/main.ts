@@ -6,11 +6,11 @@ import { fas } from "@fortawesome/free-solid-svg-icons"
 import { createApp } from "vue"
 
 import App from "./App.vue"
-import { MyLibPlugin } from "./main.lib.js"
+import { VueComponentsPlugin } from "./main.lib.js"
 
 
 library.add(fas, far)
 createApp(App)
-	.use(MyLibPlugin)
+	.use(VueComponentsPlugin)
 	// add $tw as a global variable for tailwind-merge
 	.mount("#app")

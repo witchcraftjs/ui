@@ -11,7 +11,7 @@ export * as directives from "./directives/index.js"
 import * as components from "./components/index.js"
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const MyLibPlugin: Plugin = {
+export const VueComponentsPlugin: Plugin = {
 	install(app: App) {
 		for (const componentName of Object.keys(components)) {
 			const component = (components as any)[componentName]
