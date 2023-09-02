@@ -43,6 +43,7 @@
 					flex-wrap
 					rounded
 					gap-2
+					px-2
 				`,
 			border && `
 					bg-inherit
@@ -70,10 +71,8 @@
 					dark:border-neutral-600
 					border-neutral-400
 				`,
-			$slots.left && `pl-2`,
-			$slots.right && `pr-2`,
 
-			/* ($slots.left || $slots.right) &&  `px-2`*/
+
 			innerWrapperAttrs.class
 		)"
 	>
@@ -81,7 +80,12 @@
 		<slot name="input" v-bind="{ ...inputProps, ...slotProps, suggestionsIndicatorClickHandler }">
 			<lib-simple-input
 				:id="id"
-				:class="twMerge(`p-0`, !$slots.left && `pl-2`, !$slots.right && `pr-2`, $attrs.class)"
+				:class="twMerge(
+					`p-0`,
+					!$slots.left && `-ml-2 pl-2`,
+					!$slots.right && (!values || values.length === 0) && !suggestions && `-mr-2 -pr-2`,
+					$attrs.class
+				)"
 				v-bind="inputProps"
 			/>
 		</slot>
@@ -91,11 +95,10 @@
 				:data-is-open="isOpen"
 				:class="twMerge(
 					`flex flex-col justify-center`,
-					!$slots.right && (!values || values.length === 0 ) && `pr-1`,
-					isOpen && `rotate-180`)"
+				)"
 				@click="suggestionsIndicatorClickHandler"
 			>
-				<fa :icon="'chevron-up'"/>
+				<fa :class="isOpen && `rotate-180`" :icon="'chevron-up'"/>
 			</div>
 		</slot>
 		<slot name="values">
@@ -127,14 +130,14 @@
 			<!-- @vue-expect-error -->
 			<lib-suggestions
 				class="
-							border-accent-500
-							absolute
-							inset-x-[-1px]
-							top-full
-							z-10
-							rounded-b
-							border
-						"
+					border-accent-500
+					absolute
+					inset-x-[-1px]
+					top-full
+					z-10
+					rounded-b
+					border
+				"
 				ref="suggestionsComponent"
 				v-bind="suggestionProps"
 			>
@@ -314,3 +317,4 @@ const suggestionProps = computed(() => ({
 }))
 
 </script>
+
