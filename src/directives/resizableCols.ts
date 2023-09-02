@@ -3,7 +3,7 @@ import { castType, override, throttle, unreachable } from "@alanscodelog/utils"
 import type { Directive, Ref } from "vue"
 
 import { globalResizeObserver } from "../globalResizeObserver.js"
-import type { Options, ResizeCallback } from "../types.js"
+import type { ResizableOptions, ResizeCallback } from "../types.js"
 
 
 const observer = globalResizeObserver
@@ -23,11 +23,11 @@ type Data = {
 	selector: string
 }
 const elMap = new WeakMap<HTMLElement, Data>()
-type RawOpts = { value: Partial<Options> }
+type RawOpts = { value: Partial<ResizableOptions> }
 
 type ResizableElement = HTMLElement
 
-const defaultOpts: Omit<Options, "colCount" | "widths" | "selector"> = {
+const defaultOpts: Omit<ResizableOptions, "colCount" | "widths" | "selector"> = {
 	fitWidth: true,
 	margin: "dynamic",
 	enabled: true,
@@ -68,16 +68,18 @@ const throttledCallback = throttle(callback)
  * 		bottom: 0;
  * 		cursor: col-resize;
  * 	}
+ * 	[cells] {
+ * 		none
+ * 	}
  * }
  * ```
- *
- * It does NOT set the widths on the cells. It used to, but for maximum flexibility a ref with an array should be passedto be populated by the widths calculated.
- *
  * Note that they aren't removed if the directive is disabled.
+ *
+ * It does NOT set the widths on the cells. It used to, but for maximum flexibility a ref with an array should be passed to be populated by the widths calculated.
  *
  * Additionally the following are suggested:
  * - If fitWidth is true, `overflow: hidden` should be set on the column elements to avoid glitches when dragging the last column near the right edge.
- * - The containing element should have `overflow-x:scroll` even if `fitWidth` is true, since there is some minimum space (margin+grip * col) the element will always occupy.
+ * - The root element should have `overflow-x:scroll` even if `fitWidth` is true, since there is some minimum space (margin+grip * col) the element will always occupy.
  *
  * The directive also adds a class after the initial setup `resizable-cols-setup`. This is useful to set initial column widths, for example, using flexboxes, then removing those styles when the element is setup. You can also check if the passed widths array is still of 0 length.
  *
@@ -89,14 +91,14 @@ const throttledCallback = throttle(callback)
  *
  * You can prevent columns from being resized by adding the class `no-resize`. When a column cannot be moved, the `resizable-cols-error` class is added to the element.
  *
- * Also note the `.grip` element added is added to the element. This is so you can have `overflow:hidden` on cells if you want without the grip getting hidden. But this does mean that if you're styling the cells using `:last-child`, to, for example, target table rows, won't work, you'll need `:last-of-type`.
+ * Also note the `.grip` element added is added to the root element. This is so you can have `overflow:hidden` on cells if you want without the grip getting hidden. But this does mean that if you're styling the cells using `:last-child`, to, for example, target table rows, won't work, you'll need `:last-of-type`.
  *
  * # Options
- * See {@link Options}
+ * See {@link ResizableOptions}
  */
 export const resizableCols: Directive = {
 	mounted(el: ResizableElement, { value: opts = {} }: RawOpts) {
-		const options = override({ ...defaultOpts }, opts) as Options
+		const options = override({ ...defaultOpts }, opts) as ResizableOptions
 
 		if (options.enabled) {
 			setupColumns(el, options)
@@ -104,7 +106,7 @@ export const resizableCols: Directive = {
 		}
 	},
 	updated(el: ResizableElement, { value: opts = {} }: RawOpts) {
-		const options = override({ ...defaultOpts }, opts) as Options
+		const options = override({ ...defaultOpts }, opts) as ResizableOptions
 		const hasGrips = elMap.has(el) && elMap.get(el)!.grips
 		if (hasGrips && !options.enabled) {
 			teardownColumns(el)
@@ -279,7 +281,7 @@ const getColEls = (el: ResizableElement): HTMLElement[] => {
 	return [...el.querySelectorAll(`:scope ${$el.selector ? $el.selector : "tr > td"}`)] as any
 }
 
-const setupColumns = (el: ResizableElement, opts: Options): void => {
+const setupColumns = (el: ResizableElement, opts: ResizableOptions): void => {
 	const gripWidth = getTestGripSize(el)
 	const $el: Data = {
 		grips: new Map(),

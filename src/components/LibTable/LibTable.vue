@@ -92,7 +92,7 @@ import { computed, type PropType, ref } from "vue"
 
 import { resizableCols as vResizableCols } from "../../directives/resizableCols.js"
 import { twMerge } from "../../helpers/twMerge.js"
-import type { Options } from "../../types.js"
+import type { ResizableOptions } from "../../types.js"
 
 
 defineOptions({
@@ -101,10 +101,10 @@ defineOptions({
 
 
 const props = defineProps({
-	resizable: { type: Object as PropType<Partial<Options>>, required: false, default: () => ({}) },
-	/** Let's the table know the shape of the data since values might be empty. */
+	resizable: { type: Object as PropType<Partial<ResizableOptions>>, required: false, default: () => ({}) },
 	values: { type: Object as PropType<T[]>, required: false, default: () => ([] as T[]) },
 	itemKey: { type: String as PropType<keyof T>, required: true },
+	/** Let's the table know the shape of the data since values might be empty. */
 	cols: { type: Object as PropType<(keyof T)[]>, required: true },
 	rounded: { type: Boolean, required: false, default: true },
 	border: { type: Boolean, required: false, default: true },
@@ -113,7 +113,7 @@ const props = defineProps({
 	colInfo: { type: Object as PropType<Record<keyof T, { name?: string, resizable?: boolean }>>, required: false, default: () => ({}) },
 })
 const widths = ref([])
-const resizableOptions = computed<MakeRequired<Partial<Options>, "colCount" | "widths">>(() => ({
+const resizableOptions = computed<MakeRequired<Partial<ResizableOptions>, "colCount" | "widths">>(() => ({
 	colCount: props.cols.length,
 	widths,
 	selector: ".cell",

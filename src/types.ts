@@ -2,7 +2,7 @@ import type { ErrorW } from "@alanscodelog/utils"
 import { type Ref } from "vue"
 
 
-export type Options = {
+export type ResizableOptions = {
 	/**
 	 * Defaults to true.
 	 *
