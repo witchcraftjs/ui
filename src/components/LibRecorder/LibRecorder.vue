@@ -65,7 +65,7 @@
 </template>
 <script setup lang="ts">
 import { keys } from "@alanscodelog/utils"
-import { computed, onBeforeUnmount, onMounted, type PropType, ref, watch, watchPostEffect } from "vue"
+import { computed, onMounted, onUnmounted, type PropType, ref, watch, watchPostEffect } from "vue"
 
 import { useAriaLabel } from "../../composables/useAriaLabel.js"
 import { twMerge } from "../../helpers/twMerge.js"
@@ -95,16 +95,25 @@ const props = defineProps({
 	/** A title to display on the input div while recording. Is also used as the aria-description. */
 	recordingTitle: { type: String as PropType<string>, required: false, default: "" },
 	/**
-	 * If a recorder object is passed, the input goes into recorder mode. Recording can then be started/stopped by setting `recording`.
-	 *
-	 * The recorder object is a series of event listeners to attach to the input div while recording is started.
+	 * The recorder object is a series of event listeners to attach to the input div while recording is started. If you need to bind directly to the element, see the `binders` prop.
 	 *
 	 * The listeners are then unbound when recording is set to false again.
 	 *
-	 * Note that the component does not handle the setting of `recording`, `modelValue`,  or `recordingValue` at all and has no mechanism for cancelling a recording. It is left to the recorder listeners and any `recorder:*` handlers to determine what to do.
+	 * Note that the component does not handle the setting of `recording` (unless the component is disabled), `modelValue`,  or `recordingValue` at all and has no mechanism for cancelling a recording. It is left to the recorder listeners and any `recorder:*` handlers to determine what to do.
 	 */
-	recorder: { type: Object as PropType<undefined | Record<string, any>>, required: false, default: undefined },
+	recorder: {
+		type: Object as PropType<undefined | Record<string, any>>,
+		required: false,
+		default: undefined,
+	},
+	/** This provides a way to manually attach/remove event listeners to/from the element. It is an alternative to the `recorder` prop, see it for more details. Both cannot be specified at the same time.*/
+	binders: {
+		type: Object as PropType<undefined | { bind: (el: HTMLElement) => void, unbind: (el: HTMLElement) => void }>,
+		required: false,
+		default: undefined,
+	},
 })
+
 /**
  * Puts the element into recording mode if true. See {@link props.recorder}.
  */
@@ -118,26 +127,50 @@ const recorderEl = ref<HTMLInputElement | null>(null)
 const recorderIndicatorEl = ref<HTMLInputElement | null>(null)
 const canEdit = computed(() => !props.disabled && !props.readonly)
 const tempValue = ref(modelValue.value)
-watch(props, () => {
+
+watch([() => props.binders, () => props.binders], () => {
+	if (recording.value) {
+		throw new Error("Component was not designed to allow swapping out of binders/recorders while recording")
+	}
+})
+
+watch(modelValue, () => {
 	tempValue.value = modelValue.value
 })
 const ariaLabel = useAriaLabel(props)
 
 const boundListeners: Record<string, any> = {}
+let isBound = false
 
 const unbindListeners = (): void => {
-	for (const key of keys(boundListeners)) {
-		recorderEl.value?.removeEventListener(key, boundListeners[key])
-		delete boundListeners[key]
+	if (!isBound) return
+	isBound = false
+	if (props.recorder) {
+		for (const key of keys(boundListeners)) {
+			recorderEl.value?.removeEventListener(key, boundListeners[key])
+			delete boundListeners[key]
+		}
+	}
+	if (props.binders && recorderEl.value) {
+		props.binders.unbind(recorderEl.value)
 	}
 }
 const bindListeners = (): void => {
-	if (!props.recorder) {
-		throw new Error("Record is true but recorder object missing.")
+	if (!props.recorder && !props.binders) {
+		throw new Error("Record is true but no recorder or binders props was passed")
 	}
-	for (const key of keys(props.recorder)) {
-		recorderEl.value?.addEventListener(key, props.recorder[key], { passive: false })
-		boundListeners[key] = props.recorder[key]
+	if (props.recorder && props.binders) {
+		throw new Error("Recording is true and was passed both a recorder and a binders prop. Both cannot be used at the same time.")
+	}
+	isBound = true
+	if (props.recorder) {
+		for (const key of keys(props.recorder)) {
+			recorderEl.value?.addEventListener(key, props.recorder[key], { passive: false })
+			boundListeners[key] = props.recorder[key]
+		}
+	}
+	if (props.binders && recorderEl.value) {
+		props.binders.bind(recorderEl.value)
 	}
 }
 
@@ -150,8 +183,8 @@ watchPostEffect(() => {
 	if (recording.value) {
 		bindListeners()
 	} else {
-		unbindListeners()
-		if (props.recorder && keys(boundListeners).length > 0) {
+		if ((props.recorder || props.binders) && isBound) {
+			unbindListeners()
 			// if we just blur the input then we can't shift+tab backwards
 			// this way we can go forwards or backwards without actually focusing since parentEl is not focusable
 			// parentEl.value?.focus()
@@ -160,7 +193,7 @@ watchPostEffect(() => {
 	}
 })
 
-onBeforeUnmount(() => {
+onUnmounted(() => {
 	unbindListeners()
 })
 onMounted(() => {
@@ -171,7 +204,7 @@ onMounted(() => {
 
 const handleBlurRecorder = (e: FocusEvent): void => {
 	if (!canEdit.value) return
-	if (props.recorder) {
+	if (props.recorder || props.binders) {
 		emits("recorder:blur", e)
 	}
 }
@@ -180,7 +213,7 @@ const handleClickRecorder = (e: MouseEvent | KeyboardEvent): void => {
 	if (!canEdit.value) return
 	recorderEl.value?.focus()
 	// toggle if clicking on the recording indicator, otherwise only allow starting recording, so if needed, clicks can be recorded
-	if (props.recorder) {
+	if (props.recorder || props.binders) {
 		emits("recorder:click", { event: e, indicator: recorderIndicatorEl.value!, input: recorderEl.value! })
 	}
 }
