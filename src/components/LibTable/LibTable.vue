@@ -47,7 +47,7 @@
 					:class="[
 						extraClasses[`-1-${i}`],
 						'cell',
-						(colInfo as any)[col]?.resizable === false
+						(colConfig as any)[col]?.resizable === false
 							? 'no-resize'
 							: ''
 					].join(' ')"
@@ -55,13 +55,13 @@
 					<td :class="[
 							extraClasses[`-1-${i}`] ,
 							'cell',
-							(colInfo as any)[col]?.resizable === false
+							(colConfig as any)[col]?.resizable === false
 								? 'no-resize'
 								: ''
 						].join(' ')"
 						:style="` width:${widths.length > 0 ? widths[i] : ``}; `"
 					>
-						{{ (colInfo as any)[col]?.name ?? col }}
+						{{ (colConfig as any)[col]?.name ?? col }}
 					</td>
 				</slot>
 			</template>
@@ -92,7 +92,7 @@ import { computed, type PropType, ref } from "vue"
 
 import { resizableCols as vResizableCols } from "../../directives/resizableCols.js"
 import { twMerge } from "../../helpers/twMerge.js"
-import type { ResizableOptions } from "../../types.js"
+import type { ResizableOptions, TableColConfig } from "../../types.js"
 
 
 defineOptions({
@@ -110,7 +110,7 @@ const props = defineProps({
 	border: { type: Boolean, required: false, default: true },
 	cellBorder: { type: Boolean, required: false, default: true },
 	header: { type: Boolean, required: false, default: true },
-	colInfo: { type: Object as PropType<Record<keyof T, { name?: string, resizable?: boolean }>>, required: false, default: () => ({}) },
+	colConfig: { type: Object as PropType<TableColConfig<T>>, required: false, default: () => ({}) },
 })
 const widths = ref([])
 const resizableOptions = computed<MakeRequired<Partial<ResizableOptions>, "colCount" | "widths">>(() => ({

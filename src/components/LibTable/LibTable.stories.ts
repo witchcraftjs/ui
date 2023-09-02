@@ -7,7 +7,6 @@ import * as components from "../index.js"
 
 
 const meta: Meta<typeof LibTable> = {
-	// @ts-expect-error ???
 	component: LibTable,
 }
 
@@ -18,14 +17,12 @@ export const Primary: Story = {
 		components,
 		setup: () => ({ args }),
 		template: `
-			<test-wrapper :outline="args.outline">
 				<div class="overflow-x-scroll scrollbar-hidden">
 					<lib-table
 						v-bind="args"
 					>
 					</lib-table>
 				</div>
-			</test-wrapper>
 		`,
 	}),
 	args: {
@@ -35,7 +32,8 @@ export const Primary: Story = {
 			{ prop1: "Item2 Prop 1", prop2: "Item2 Prop 2", prop3: "Item2 Prop 3" },
 			{ prop1: "Item3 Prop 1", prop2: "Item3 Prop 2", prop3: "Item3 Prop 3" },
 		],
-		colInfo: { prop1: { name: "Header 1" }, prop2: { name: "Header 2" } },
+		colConfig: { prop1: { name: "Header 1" }, prop2: { name: "Header 2" } },
+		itemKey: "prop1",
 	},
 }
 
@@ -107,32 +105,31 @@ export const ThreeColSomeColsNotResizable: Story = {
 		components,
 		setup: () => ({ args }),
 		template: `
-			<test-wrapper :outline="args.outline">
-				<lib-table
-					v-bind="args"
-				>
-				</lib-table>
-				<br>
-				<lib-table
-				v-bind="{...args, colInfo:args.colInfo2}"
-				>
+			<lib-table
+				v-bind="args"
+			>
 			</lib-table>
 			<br>
-				<lib-table
-					v-bind="{...args, colInfo:args.colInfo3}"
-				>
-				</lib-table>
-			</test-wrapper>
+			<lib-table
+			v-bind="{...args, colConfig:args.colConfig2}"
+			>
+			</lib-table>
+			<br>
+			<lib-table
+				v-bind="{...args, colConfig:args.colConfig3}"
+			>
+			</lib-table>
 		`,
 	}),
 	args: {
 		cols: ["prop1", "prop2", "prop3"],
+		itemKey: "prop1",
 		values: [
 			{ prop1: "Prop 1", prop2: "Prop 2", prop3: "Prop 3" },
 		],
-		colInfo: { prop1: { name: "No Resize", resizable: false } },
-		colInfo2: { prop2: { name: "No Resize", resizable: false } },
-		colInfo3: { prop3: { name: "No Resize", resizable: false } },
+		colConfig: { prop1: { name: "No Resize", resizable: false } },
+		colConfig2: { prop2: { name: "No Resize", resizable: false } },
+		colConfig3: { prop3: { name: "No Resize", resizable: false } },
 	} as any,
 }
 export const FourColSomeColsNotResizable: Story = {
@@ -140,22 +137,20 @@ export const FourColSomeColsNotResizable: Story = {
 		components,
 		setup: () => ({ args }),
 		template: `
-			<test-wrapper :outline="args.outline">
 				<lib-table
 					v-bind="args"
 				>
 				</lib-table>
 				<br>
 				<lib-table
-				v-bind="{...args, colInfo:args.colInfo2}"
+				v-bind="{...args, colConfig:args.colConfig2}"
 				>
 			</lib-table>
 			<br>
 				<lib-table
-					v-bind="{...args, colInfo:args.colInfo3}"
+					v-bind="{...args, colConfig:args.colConfig3}"
 				>
 				</lib-table>
-			</test-wrapper>
 		`,
 	}),
 	args: {
@@ -163,9 +158,10 @@ export const FourColSomeColsNotResizable: Story = {
 		values: [
 			{ prop1: "Prop 1", prop2: "Prop 2", prop3: "Prop 3", prop4: "Prop 4" },
 		],
-		colInfo: { prop1: { name: "No Resize", resizable: false }, prop3: { name: "No Resize", resizable: false } },
-		colInfo2: { prop2: { name: "No Resize", resizable: false }, prop3: { name: "No Resize", resizable: false } },
-		colInfo3: { prop1: { name: "No Resize", resizable: false }, prop4: { name: "No Resize", resizable: false } },
+		itemKey: "prop1",
+		colConfig: { prop1: { name: "No Resize", resizable: false }, prop3: { name: "No Resize", resizable: false } },
+		colConfig2: { prop2: { name: "No Resize", resizable: false }, prop3: { name: "No Resize", resizable: false } },
+		colConfig3: { prop1: { name: "No Resize", resizable: false }, prop4: { name: "No Resize", resizable: false } },
 	} as any,
 }
 

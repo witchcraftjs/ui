@@ -45,6 +45,8 @@ export type ResizableOptions = {
 	/** The selector to use for the cells. "tr > td" by default. */
 	selector: string
 }
+export type TableColConfig<T = {}> = Record<keyof T, { name?: string, resizable?: boolean }>
+
 export type ResizeCallback = (rect: DOMRectReadOnly, el: Element) => void
 
 export type FileInputError = ErrorW<{ file: File, isValidMimeType: boolean, isValidExtension: boolean }>
