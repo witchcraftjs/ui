@@ -51,6 +51,8 @@
 							? 'no-resize'
 							: ''
 					].join(' ')"
+					:style="`width:${widths.length > 0 ? widths[i] : ``}; `"
+					:col-key="col"
 				>
 					<td :class="[
 							extraClasses[`-1-${i}`] ,
@@ -59,7 +61,7 @@
 								? 'no-resize'
 								: ''
 						].join(' ')"
-						:style="` width:${widths.length > 0 ? widths[i] : ``}; `"
+						:style="`width:${widths.length > 0 ? widths[i] : ``}; `"
 					>
 						{{ (colConfig as any)[col]?.name ?? col }}
 					</td>
@@ -71,7 +73,12 @@
 		<template v-for="item, i of values" :key="item[itemKey]">
 			<tr>
 				<template v-for="col, j of cols" :key="item[itemKey as keyof typeof item] + col.toString()">
-					<slot :name="col" :prop="item[col]" :class="extraClasses[`${i}-${j}`] + ' cell'">
+					<slot
+						:name="col"
+						:item="item"
+						:value="item[col]"
+						:class="extraClasses[`${i}-${j}`] + ' cell'"
+					>
 						<td :class="extraClasses[`${i}-${j}`] + ' cell'">
 							{{ item[col] }}
 						</td>
