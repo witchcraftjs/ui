@@ -278,7 +278,10 @@ const inputProps = computed(() => ({
 	"onUpdate:modelValue": (e: T) => {
 		inputValue.value = e
 	},
-	onSubmit: (e: T) => emits("submit", e),
+	onSubmit: (e: T) => {
+		isOpen.value = false
+		emits("submit", e)
+	},
 	"aria-autocomplete": props.suggestions !== undefined ? "both" : undefined,
 	"aria-controls": props.suggestions !== undefined ? `suggestions-${props.id}` : undefined,
 	role: props.suggestions ? "combobox" : undefined,
