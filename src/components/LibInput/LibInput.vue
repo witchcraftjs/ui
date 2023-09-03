@@ -89,7 +89,7 @@
 				v-bind="inputProps"
 			/>
 		</slot>
-		<slot name="indicator px-0" v-bind="{isOpen, suggestionsIndicatorClickHandler }">
+		<slot name="indicator" v-bind="{isOpen, suggestionsIndicatorClickHandler }">
 			<div
 				v-if="suggestions"
 				:data-is-open="isOpen"
@@ -142,7 +142,7 @@
 				v-bind="suggestionProps"
 			>
 				<template #item="itemSlotProps">
-					<slot name="item" v-bind="itemSlotProps"/>
+					<slot name="suggestion-item" v-bind="itemSlotProps"/>
 				</template>
 			</lib-suggestions>
 		</slot>
@@ -174,6 +174,10 @@ const $slots = useSlots()
 const emits = defineEmits<{
 	(e: "update:modelValue", val: T): void
 	(e: "submit", val: T): void
+	(e: "input", val: InputEvent): void
+	(e: "keydown", val: KeyboardEvent): void
+	(e: "blur", val: FocusEvent): void
+	(e: "focus", val: FocusEvent): void
 }>()
 
 /**
@@ -232,13 +236,14 @@ const suggestionsIndicatorClickHandler = () => {
 		// inputWrapperEl.value?.blur()
 	}
 }
-const handleInput = () => {
+const handleInput = (e: InputEvent) => {
 	if (canEdit.value) {
 		if (!props.restrictToSuggestions) {
 			emits("update:modelValue", inputValue.value)
 		} // else suggestions will handle updating modelvalue
 		canOpen.value = true
 	}
+	emits("input", e)
 }
 
 const handleKeydown = (e: KeyboardEvent) => {
@@ -251,6 +256,7 @@ const handleKeydown = (e: KeyboardEvent) => {
 	if (values && e.key === "Escape" && !hasModifiers(e)) {
 		canOpen.value = false
 	}
+	emits("keydown", e)
 }
 const handleBlur = (e: FocusEvent) => {
 	if (props.suggestions) {
@@ -258,9 +264,11 @@ const handleBlur = (e: FocusEvent) => {
 		suggestionsComponent.value?.inputBlurHandler?.(e)
 	}
 	canOpen.value = false
+	emits("blur", e)
 }
-const handleFocus = () => {
+const handleFocus = (e: FocusEvent) => {
 	canOpen.value = true
+	emits("focus", e)
 }
 // todo emitting of value changes for isvalid
 const inputProps = computed(() => ({
