@@ -1,7 +1,7 @@
 {
 	"extends": "@alanscodelog/tsconfigs",
 	"compilerOptions": {
-		"module": "ESNext",
+		"module": "NodeNext",
 		"target": "ESNext",
 		"outDir": "dist",
 		"baseUrl": ".",
