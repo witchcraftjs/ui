@@ -35,7 +35,7 @@ const el = ref<null | HTMLElement>(null)
 const emits = defineEmits<{
 	(e: "update:modelValue", val: string): void
 }>()
-/* eslint-enable @typescript-eslint/prefer-function-type */
+ 
 
 const props = defineProps({
 	...linkableByIdProps(),

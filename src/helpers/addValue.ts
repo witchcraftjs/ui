@@ -1,6 +1,10 @@
+import { pushIfNotIn } from "@alanscodelog/utils"
+
+
 export const addValue = <T>(value: T, values: T[], preventDuplicateValues: boolean): T[] => {
-	if (!(preventDuplicateValues && values?.includes(value))) {
-		return [...values, value]
+	if (preventDuplicateValues) {
+		return pushIfNotIn(values, [value])
 	}
+	values.push(value)
 	return values
 }

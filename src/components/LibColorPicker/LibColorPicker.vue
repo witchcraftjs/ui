@@ -117,8 +117,7 @@
 		</div>
 		<div class="color-controls flex flex-1 items-center gap-2">
 			<slot name="input">
-				<!-- @vue-expected-error -->
-				<!-- @vue-expect-error todo #awaiting release-->
+				<!-- @vue-expected-error todo #awaiting release-->
 				<lib-input
 					:aria-label="label"
 					:model-value="localColorString"

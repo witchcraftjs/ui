@@ -49,7 +49,6 @@ import { keys, omit, pick } from "@alanscodelog/utils"
 import { computed, type PropType, ref, useAttrs, useSlots } from "vue"
 
 import { twMerge } from "../../helpers/twMerge.js"
-import { vModel } from "../../helpers/vModel.js"
 import { baseInteractiveProps, fallthroughEventProps, labelProp, linkableByIdProps } from "../shared/props.js"
 
 
@@ -81,7 +80,7 @@ const emits = defineEmits<{
 
 const el = ref<null | HTMLElement>(null)
 const inputEl = ref<null | HTMLElement>(null)
-const value = vModel("modelValue", props, emits)
+const value = defineModel("modelValue", { default: false })
 
 
 </script>

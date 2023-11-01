@@ -150,10 +150,10 @@
 </div>
 </template>
 <script setup lang="ts" generic="T extends string|number">
+import { pushIfNotIn } from "@alanscodelog/utils"
 import { computed, type PropType, ref, useAttrs, useSlots, watch } from "vue"
 
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
-import { addValue } from "../../helpers/addValue.js"
 import { hasModifiers } from "../../helpers/hasModifiers.js"
 import { twMerge } from "../../helpers/twMerge.js"
 import fa from "../fa/Fa.vue"
@@ -251,7 +251,9 @@ const handleKeydown = (e: KeyboardEvent) => {
 	if (props.suggestions) suggestionsComponent.value?.inputKeydownHandler?.(e)
 
 	if (values && e.key === "Enter" && !hasModifiers(e)) {
-		values.value = addValue(inputValue.value, values.value, props.preventDuplicateValues)
+		props.preventDuplicateValues
+			? pushIfNotIn(values.value, [inputValue.value])
+			: values.value.push(inputValue.value)
 	}
 	if (values && e.key === "Escape" && !hasModifiers(e)) {
 		canOpen.value = false

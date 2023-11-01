@@ -70,10 +70,10 @@
 </template>
 <script setup lang="ts" generic="T extends string | number">
 
+import { removeIfIn } from "@alanscodelog/utils"
 import { computed, useAttrs } from "vue"
 
 import { copy } from "../../helpers/copy.js"
-import { removeValue } from "../../helpers/removeValue.js"
 import { twMerge } from "../../helpers/twMerge.js"
 import fa from "../fa/Fa.vue"
 import libButton from "../LibButton/LibButton.vue"
@@ -100,7 +100,7 @@ const values = defineModel<T[]>("values", { default: () => []})
 
 const removeVal = (value: T) => {
 	if (!canEdit.value) return
-	values.value = removeValue(value, values.value)
+	removeIfIn(values.value, value)
 }
 </script>
 

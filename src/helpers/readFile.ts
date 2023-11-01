@@ -1,3 +1,4 @@
+// todo move to utils
 export const readFile = async <TType extends "DataUrl" | "ArrayBuffer" | "BinaryString" | "text" = "DataUrl">(
 	file?: File | Blob,
 	type: TType = "DataUrl" as TType

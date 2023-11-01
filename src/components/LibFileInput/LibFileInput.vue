@@ -173,7 +173,7 @@ const emits = defineEmits<{
 	(e: "input", val: File[]): void
 	(e: "errors", val: FileInputError[]): void
 }>()
-/* eslint-enable @typescript-eslint/prefer-function-type */
+ 
 
 const props = defineProps({
 	...linkableByIdProps(),

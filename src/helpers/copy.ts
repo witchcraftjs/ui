@@ -1,3 +1,4 @@
+// todo move to utils
 /* eslint-disable no-console */
 export const copy = (text: string): void => {
 	if (navigator.clipboard) {
