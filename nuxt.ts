@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/typedef */
-
 import { type DeepPartial } from "@alanscodelog/utils"
-import { createResolver, defineNuxtModule } from "@nuxt/kit"
+import { addImports, createResolver, defineNuxtModule } from "@nuxt/kit"
 import { type Config } from "tailwindcss"
 import { fileURLToPath } from "url"
 
@@ -37,5 +35,11 @@ export default defineNuxtModule({
 			// todo check am not overriding anything wrong
 			;(twConfig.content as string[]).push(resolve("./src/**/*.vue"))
 		})
+		addImports([
+			{
+				name: "twMerge",
+				from: resolve("./src/helpers/twMerge.ts"),
+			},
+		])
 	},
 })
