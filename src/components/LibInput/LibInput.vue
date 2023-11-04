@@ -204,7 +204,7 @@ const {
 	"inner-wrapperAttrs": innerWrapperAttrs,
 } = useDivideAttrs(useAttrs(), ["wrapper", "inner-wrapper"])
 
-const values = defineModel<T[]>("values", { default: () => []})
+const values = defineModel<T[] | undefined>("values", { default: undefined })
 const modelValue = defineModel<T>({ required: true })
 
 
@@ -250,12 +250,12 @@ const handleKeydown = (e: KeyboardEvent) => {
 	// @ts-expect-error awaiting proper types for defineExpose
 	if (props.suggestions) suggestionsComponent.value?.inputKeydownHandler?.(e)
 
-	if (values && e.key === "Enter" && !hasModifiers(e)) {
+	if (values.value && e.key === "Enter" && !hasModifiers(e)) {
 		props.preventDuplicateValues
 			? pushIfNotIn(values.value, [inputValue.value])
 			: values.value.push(inputValue.value)
 	}
-	if (values && e.key === "Escape" && !hasModifiers(e)) {
+	if (values.value && e.key === "Escape" && !hasModifiers(e)) {
 		canOpen.value = false
 	}
 	emits("keydown", e)
