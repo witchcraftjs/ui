@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import { castType, override, throttle, unreachable } from "@alanscodelog/utils"
 import type { Directive, Ref } from "vue"
+
+import { castType } from "@alanscodelog/utils/castType"
+import { override } from "@alanscodelog/utils/override"
+import { throttle } from "@alanscodelog/utils/throttle"
+import { unreachable } from "@alanscodelog/utils/unreachable"
 
 import { globalResizeObserver } from "../globalResizeObserver.js"
 import type { ResizableOptions, ResizeCallback } from "../types.js"
@@ -150,7 +154,7 @@ const getBox = (el: Element): { x: number, width: number } => {
 const getCols = (el: ResizableElement): { col: HTMLElement | null, colNext: HTMLElement | null } => {
 	const $el = getElInfo(el)
 	if (!$el.target) unreachable()
-	let col = getColEls(el)[$el.grips.get($el.target)!]
+	let col = getColEls(el)[$el.grips.get($el.target!)!]
 
 	if (!col) unreachable()
 	while (col?.classList.contains("no-resize")) {

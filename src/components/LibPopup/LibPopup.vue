@@ -5,35 +5,43 @@
 	:extract-el="(_:any)=> buttonEl = _"
 />
 <!-- <Transition> -->
-<dialog
+<component
 	:id="id"
-	class="bg-transparent
+	:class="twMerge(
+		useBackdrop && `bg-transparent
 			p-0
 			backdrop:bg-transparent
-			"
+		`,
+
+	)"
+	:is="useBackdrop ? 'dialog' : 'div'"
 	ref="dialogEl"
-	@mousedown="mousedown = true"
-	@mouseup.self.prevent="handleMouseup"
+	@mousedown="useBackdrop ? mousedown = true : undefined"
+	@mouseup.self="useBackdrop && handleMouseup"
 >
-	<div class="scrollbar-hidden fixed overflow-scroll" :style="`top:${pos.y}px;left:${pos.x}px;${pos.maxWidth ? `max-width:${pos.maxWidth}px` : ''}`">
+	<div v-if="useBackdrop || modelValue" class="scrollbar-hidden fixed overflow-scroll" :style="`top:${pos.y}px;left:${pos.x}px;${pos.maxWidth ? `max-width:${pos.maxWidth}px` : ''}`">
 		<slot
 			name="popup"
 			:position="pos"
 			:extract-el="(_:any) => popupEl = _"
 		/>
 	</div>
-</dialog>
+</component>
 	<!-- </Transition> -->
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue"
+import { onMounted, type PropType, ref, watch } from "vue"
 
+import { twMerge } from "../../helpers/twMerge.js"
 import { linkableByIdProps } from "../shared/props.js"
 
 
-/* const props =  */defineProps({
+const props = defineProps({
 	...linkableByIdProps(),
+	useBackdrop: { type: Boolean, required: false, default: true },
+	preferredHorizontal: { type: Array as PropType<("center" | "right" | "left" | "either")[]>, default: () => ["center", "right", "left", "either"]},
+	preferredVertical: { type: Array as PropType<("top" | "bottom" | "either")[]>, default: () => ["top", "bottom", "either"]},
 })
 defineOptions({ name: "lib-popup" })
 
@@ -46,16 +54,12 @@ const pos = ref<{ x: number, y: number, maxWidth?: number }>({} as any)
 const modelValue = defineModel<boolean>({ default: false })
 let isOpen = false
 
-// todo NEXT convert to props
-const preferredHorizontal = ["center", "right", "left", "either"] as const
-const preferredVertical = ["top", "bottom", "either"] as const
-
 
 /**
  * We don't have access to the dialog backdrop and without extra styling, it's of 0 width/height,
  * positioned in the center of the screen, with margins taking up all the space.
  *
- * This returns a modified rect that makes more logical sense.
+ * This returns a modified rect that makes more logical sense. It's also available when we aren't using the dialog element.
  */
 const getVeilBoundingRect = (el: HTMLElement): Omit<DOMRect, "toJSON"> => {
 	const rect = el.getBoundingClientRect()
@@ -79,7 +83,7 @@ const recompute = (): void => {
 		const finalPos: { x: number, y: number, maxWidth: number } = {} as any
 
 		const el = buttonEl.value.getBoundingClientRect()
-		const veil = getVeilBoundingRect(dialogEl.value)
+		const veil = getVeilBoundingRect(props.useBackdrop ? dialogEl.value : document.body)
 		const popup = popupEl.value.getBoundingClientRect()
 
 		const spaceLeft = (el.x + el.width) - veil.x
@@ -89,6 +93,7 @@ const recompute = (): void => {
 		const spaceTop = el.y - veil.y
 		const spaceBottom = (veil.y + veil.height) - (el.y + el.height)
 
+		const { preferredHorizontal, preferredVertical } = props
 		/* eslint-disable no-labels */
 		outerloop:
 		for (const type of preferredHorizontal) {
@@ -152,7 +157,7 @@ const show = () => {
 	if (!isOpen) {
 		isOpen = true
 		modelValue.value = isOpen
-		dialogEl.value?.showModal()
+		if (props.useBackdrop) dialogEl.value?.showModal()
 		recompute()
 	}
 }
@@ -162,7 +167,7 @@ const close = () => {
 		isOpen = false
 		modelValue.value = isOpen
 		pos.value.maxWidth = undefined
-		dialogEl.value?.close()
+		if (props.useBackdrop) dialogEl.value?.close()
 	}
 }
 

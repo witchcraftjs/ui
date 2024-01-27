@@ -4,7 +4,6 @@
 		"module": "NodeNext",
 		"target": "ESNext",
 		"outDir": "dist",
-		"baseUrl": ".",
 		"types": [
 			"node"
 		],
@@ -17,16 +16,20 @@
 		// "verbatimModuleSyntax": true,
 		"moduleResolution": "bundler", //https://github.com/vuejs/language-tools/issues/1542 ?
 		// see https://github.com/qmhc/vite-plugin-dts#type-errors-that-are-unable-to-infer-types-from-packages-in-node_modules
-		// https://github.com/microsoft/TypeScript/issues/42873
+		// awaiting https://github.com/microsoft/TypeScript/issues/42873
+		"baseUrl": ".", // DO NOT USE baseUrl imports, this is just until the above is fixed, even with relative paths, only also adding baseUrl works
 		"paths": {
 			"tailwind": [
-				"node_modules/tailwind"
+				"./node_modules/tailwind"
 			],
 			"tailwind-merge": [
-				"node_modules/tailwind-merge"
+				"./node_modules/tailwind-merge"
 			],
 			"metamorphosis": [
-				"node_modules/metamorphosis"
+				"./node_modules/metamorphosis"
+			],
+			"@alanscodelog/utils": [
+				"./node_modules/@alanscodelog/utils"
 			]
 		}
 	},
@@ -44,5 +47,8 @@
 	},
 	"types": [
 		"vite/client"
-	]
+	],
+	"vueCompilerOptions": {
+		"strictTemplates": true,
+	}
 }

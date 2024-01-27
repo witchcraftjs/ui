@@ -15,7 +15,7 @@
 	)
 	"
 	:data-top="type === 'top'"
-	:disabled="disabled"
+	:data-disabled="disabled"
 	:readonly="readonly"
 	:data-invalid="!valid"
 	:for="id"

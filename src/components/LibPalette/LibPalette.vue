@@ -21,18 +21,15 @@
 export default { name: "lib-palette" }
 </script>
 <script setup  lang="ts">
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { keys } from "@alanscodelog/utils"
+import { type PropType } from "vue"
+
 import { type Theme } from "metamorphosis"
-import { computed, getCurrentInstance, onBeforeUnmount, onMounted, type PropType, reactive, type Ref, ref, watch } from "vue"
+import { keys } from "@alanscodelog/utils/keys"
 
 import { baseInteractiveProps, linkableByIdProps } from "../shared/props.js"
 
-
-const el = ref<null | HTMLElement>(null)
-
  
-const emits = defineEmits<{
+/* const emits =  */defineEmits<{
 	(e: "update:modelValue", val: string): void
 }>()
  

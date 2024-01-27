@@ -117,7 +117,6 @@
 		</div>
 		<div class="color-controls flex flex-1 items-center gap-2">
 			<slot name="input">
-				<!-- @vue-expected-error todo #awaiting release-->
 				<lib-input
 					:aria-label="label"
 					:model-value="localColorString"
@@ -138,10 +137,12 @@
 </template>
 
 <script setup lang="ts">
-import { castType, isArray } from "@alanscodelog/utils"
 /* todo change to colorjsio for less dependencies */
 import { colord } from "colord"
 import { computed, onMounted, type PropType, reactive, type Ref, ref, type UnwrapRef, watch } from "vue"
+
+import { castType } from "@alanscodelog/utils/castType"
+import { isArray } from "@alanscodelog/utils/isArray"
 
 import { twMerge } from "../../helpers/twMerge.js"
 import aria from "../aria/Aria.vue"

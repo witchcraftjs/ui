@@ -40,8 +40,10 @@
 </template>
 <script setup lang="ts" generic="T extends string | object">
 
-import { isBlank, isObject } from "@alanscodelog/utils"
 import { computed, type PropType, ref, useAttrs, watch, watchPostEffect } from "vue"
+
+import { isBlank } from "@alanscodelog/utils/isBlank"
+import { isObject } from "@alanscodelog/utils/isObject"
 
 import { twMerge } from "../../helpers/twMerge.js"
 import { baseInteractiveProps, linkableByIdProps, multiValueProps, suggestionsProps } from "../shared/props.js"
@@ -79,7 +81,7 @@ const $modelValue = defineModel<string>("modelValue", { required: true })
  *
  * It allows the component to read even invalid output, and also to reset that invalid output when either modelValue is set to a new value, or when the component is closed via cancel.
  */
-const $inputValue = defineModel<string >("inputValue", { local: true, default: "" })
+const $inputValue = defineModel<string >("inputValue", { default: "" })
 const $isValid = defineModel<boolean>("isValid", { required: false, default: true })
 const _isOpen = ref(false)
 const $isOpen = computed<boolean>({

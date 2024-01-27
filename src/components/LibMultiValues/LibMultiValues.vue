@@ -70,8 +70,9 @@
 </template>
 <script setup lang="ts" generic="T extends string | number">
 
-import { removeIfIn } from "@alanscodelog/utils"
 import { computed, useAttrs } from "vue"
+
+import { removeIfIn } from "@alanscodelog/utils/removeIfIn"
 
 import { copy } from "../../helpers/copy.js"
 import { twMerge } from "../../helpers/twMerge.js"

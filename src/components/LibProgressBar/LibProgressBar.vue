@@ -41,8 +41,7 @@
 			after:opacity-0
 			before:opacity-0
 			`, ($attrs as any).class)"
-		max="100"
-		:value="progress"
+		:data-value="progress"
 		:title="label"
 		v-bind="{...$attrs, class:undefined}"
 		:style="`--progress: ${clampVal(progress, clamp[0] ?? 0, clamp[1] ?? 100)}%;`"
@@ -92,9 +91,7 @@
 </Transition>
 </template>
 <script setup  lang="ts">
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { isBlank } from "@alanscodelog/utils"
-import { computed, getCurrentInstance, onBeforeUnmount, onMounted, type PropType, reactive, type Ref, ref, watch } from "vue"
+import { type PropType, ref, watch } from "vue"
 
 import { twMerge } from "../../helpers/twMerge.js"
 import { baseInteractiveProps, linkableByIdProps } from "../shared/props.js"
@@ -128,7 +125,6 @@ const props = defineProps({
 	clamp: { type: Array as any as PropType<[start:number, end:number]>, required: false, default: () => [0, 100]},
 })
 
-const el = ref<null | HTMLElement>(null)
 const hide = ref<boolean>(false)
 const psuedoHide = ref<boolean>(false)
 let timeout: number

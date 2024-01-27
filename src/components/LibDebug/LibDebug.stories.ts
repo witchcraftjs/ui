@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { crop } from "@alanscodelog/utils"
 import type { Meta, StoryObj } from "@storybook/vue3"
 
 import LibDebug from "./LibDebug.vue"
+
+import { crop } from "@alanscodelog/utils/crop"
 
 import * as components from "../index.js"
 

@@ -17,7 +17,7 @@
 	<pre v-if="value"
 		:class="`
 		[tab-size:${tab}]
-		w-full`
+		`
 		"
 	>{{ getStringValue(value) }}</pre>
 	<pre v-if="value === undefined"><slot/></pre>

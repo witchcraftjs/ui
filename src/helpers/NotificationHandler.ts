@@ -1,5 +1,10 @@
 import type { AnyFunction, MakeRequired } from "@alanscodelog/utils"
-import { castType, crop, indent, isBlank, pretty, setReadOnly } from "@alanscodelog/utils"
+import { castType } from "@alanscodelog/utils/castType"
+import { crop } from "@alanscodelog/utils/crop"
+import { indent } from "@alanscodelog/utils/indent"
+import { isBlank } from "@alanscodelog/utils/isBlank"
+import { pretty } from "@alanscodelog/utils/pretty"
+import { setReadOnly } from "@alanscodelog/utils/setReadOnly"
 
 
 export class NotificationHandler<
@@ -86,7 +91,7 @@ export class NotificationHandler<
 	}
 
 	protected _createEntry<TNotifyEntry extends RawNotificationEntry<any, any>>(rawEntry: TNotifyEntry): TEntry {
-		const entry: Partial<TEntry> & Omit<TEntry, "promise" | "resolve"> = {
+		const entry: Partial<NotificationEntry<any>> & Omit<NotificationEntry<any>, "promise" | "resolve"> = {
 			requiresAction: false,
 			options: ["Ok", "Cancel"],
 			default: "Ok",
@@ -98,7 +103,7 @@ export class NotificationHandler<
 				: rawEntry.timeout !== undefined && rawEntry.timeout !== false
 				? rawEntry.timeout
 				: undefined,
-		} as TEntry
+		} as any as TEntry
 
 
 		if (rawEntry.cancellable === true || (rawEntry.cancellable === undefined && entry.options?.includes("Cancel"))) {

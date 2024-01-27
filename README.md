@@ -147,6 +147,9 @@ To get global typings, in a global declaration file (e.g. global.d.ts) do:
 import { GlobalComponentTypes } from "@alanscodelog/vue-components"
 declare module "@vue/runtime-core" {
 	export interface GlobalComponents extends GlobalComponentTypes { }
+	// also you to be able to pass extra attributes you will need this because of https://github.com/vuejs/language-tools/issues/1077#issuecomment-1145960878
+	export type HTMLAttributes = Record<string, any>
+	export type AllowedComponentProps = Record<string, any>
 }
 ```
 

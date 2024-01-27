@@ -170,10 +170,10 @@
 >
 	<label :id="`label-${id}`" class="label pointer-events-none flex flex-1 items-center justify-center gap-1">
 		<slot>
-			<slot name="icon" v-bind="{icon, ...iconAttrs}">
+			<slot name="icon" v-bind="{icon, ...extraAttrs.iconAttrs}">
 				<fa v-if="icon"
 					:icon="icon"
-					v-bind="{...iconAttrs}"
+					v-bind="{...extraAttrs.iconAttrs}"
 					class="slot before:content-vertical-holder flex items-center justify-center"
 				/>
 			</slot>
@@ -185,8 +185,11 @@
 </button>
 </template>
 <script setup  lang="ts">
-import { isBlank, keys, pick } from "@alanscodelog/utils"
-import { computed, type PropType, useAttrs } from "vue"
+import { computed, type PropType } from "vue"
+
+import { isBlank } from "@alanscodelog/utils/isBlank"
+import { keys } from "@alanscodelog/utils/keys"
+import { pick } from "@alanscodelog/utils/pick"
 
 import { useAriaLabel } from "../../composables/useAriaLabel.js"
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
@@ -195,7 +198,7 @@ import fa from "../fa/Fa.vue"
 import { baseInteractiveProps, fallthroughEventProps, labelProp, linkableByIdProps } from "../shared/props.js"
 
 
-const { $attrs, iconAttrs } = useDivideAttrs(useAttrs(), ["icon"])
+const extraAttrs = useDivideAttrs(["icon"])
 
 defineOptions({
 	name: "lib-button",
@@ -220,7 +223,7 @@ const listeners = computed(() => pick(props, keys(fallthroughEventProps) as any)
 const ariaLabel = useAriaLabel(props)
 
 const autoTitle = computed(() => ({
-	title: (props.autoTitleFromAria && ($attrs["aria-label"] ?? props.label)) || undefined,
+	title: (props.autoTitleFromAria && (extraAttrs.value.$attrs.value["aria-label"] ?? props.label)) || undefined,
 }))
 
 </script>

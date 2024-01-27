@@ -1,7 +1,6 @@
 <template>
 <input
 	:id="id"
-	:test="JSON.stringify($attrs)"
 	:class="twMerge(`
 			input
 			flex-1
@@ -70,8 +69,10 @@
 <script lang="ts" generic="T">
 </script>
 <script setup lang="ts">
-import { keys, pick } from "@alanscodelog/utils"
 import { computed, type PropType, useAttrs } from "vue"
+
+import { keys } from "@alanscodelog/utils/keys"
+import { pick } from "@alanscodelog/utils/pick"
 
 import { useAriaLabel } from "../../composables/useAriaLabel.js"
 import { twMerge } from "../../helpers/twMerge.js"

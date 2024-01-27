@@ -1,9 +1,9 @@
 /** Fixes tailwind autocompletion for variable dependent colors. */
-import { createTailwindPlugin } from "metamorphosis/tailwind"
-
 import { themePluginOpts } from "./src/tailwind/themePluginOpts.js"
 import { theme } from "./src/theme.js"
 import config from "./tailwind.config.js"
+
+import { createTailwindPlugin } from "metamorphosis/tailwind"
 
 
 config.plugins = [...config.plugins, createTailwindPlugin(theme, {

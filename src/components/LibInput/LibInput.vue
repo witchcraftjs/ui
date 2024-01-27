@@ -1,6 +1,6 @@
 <template>
 <div
-	:class="twMerge(`input
+	:class="twMerge(`input wrapper
 			grow
 			flex
 			flex-wrap
@@ -8,10 +8,10 @@
 		disabled && `
 				text-neutral-400
 			`,
-		wrapperAttrs.class
+		extraAttrs.wrapperAttrs.class
 	)"
 	tabindex="-1"
-	v-bind="{...wrapperAttrs, class:undefined}"
+	v-bind="{...extraAttrs.wrapperAttrs, class:undefined}"
 	@blur="canOpen = false"
 >
 	<slot name="label" v-bind="slotProps">
@@ -34,8 +34,8 @@
 		:data-disabled="disabled"
 		:data-read-only="readonly"
 		:data-is-open="isOpen"
-		v-bind="{...innerWrapperAttrs, class:undefined}"
-		:class="twMerge(`wrapper
+		v-bind="{...extraAttrs['inner-wrapperAttrs'], class:undefined}"
+		:class="twMerge(`inner-wrapper
 					relative
 					flex
 					flex-1
@@ -73,7 +73,7 @@
 				`,
 
 
-			innerWrapperAttrs.class
+			extraAttrs['inner-wrapperAttrs'].class
 		)"
 	>
 		<slot name="left" v-bind="slotProps"/>
@@ -84,7 +84,7 @@
 					`p-0`,
 					!$slots.left && `-ml-2 pl-2`,
 					!$slots.right && (!values || values.length === 0) && !suggestions && `-mr-2 -pr-2`,
-					$attrs.class
+					extraAttrs.$attrs.class
 				)"
 				v-bind="inputProps"
 			/>
@@ -103,7 +103,6 @@
 		</slot>
 		<slot name="values">
 			<template v-if="values && values.length > 0">
-				<!-- @vue-expected-error -->
 				<lib-multi-values
 					:class="twMerge(`
 							grow-[9000]
@@ -127,7 +126,6 @@
 
 		<slot v-if="suggestions" name="suggestions" v-bind="suggestionProps">
 			<!-- todo 1px needs to be abstracted to var -->
-			<!-- @vue-expect-error -->
 			<lib-suggestions
 				class="
 					border-accent-500
@@ -150,8 +148,9 @@
 </div>
 </template>
 <script setup lang="ts" generic="T extends string|number">
-import { pushIfNotIn } from "@alanscodelog/utils"
-import { computed, type PropType, ref, useAttrs, useSlots, watch } from "vue"
+import { computed, type PropType, ref, useSlots, watch } from "vue"
+
+import { pushIfNotIn } from "@alanscodelog/utils/pushIfNotIn"
 
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
 import { hasModifiers } from "../../helpers/hasModifiers.js"
@@ -197,12 +196,7 @@ const props = defineProps({
 	...fallthroughEventProps,
 })
 
-
-const {
-	$attrs,
-	wrapperAttrs,
-	"inner-wrapperAttrs": innerWrapperAttrs,
-} = useDivideAttrs(useAttrs(), ["wrapper", "inner-wrapper"])
+const extraAttrs = useDivideAttrs(["wrapper", "inner-wrapper"])
 
 const values = defineModel<T[] | undefined>("values", { default: undefined })
 const modelValue = defineModel<T>({ required: true })
@@ -239,7 +233,7 @@ const suggestionsIndicatorClickHandler = () => {
 const handleInput = (e: InputEvent) => {
 	if (canEdit.value) {
 		if (!props.restrictToSuggestions) {
-			emits("update:modelValue", inputValue.value)
+			emits("update:modelValue", (e.target as any)?.value)
 		} // else suggestions will handle updating modelvalue
 		canOpen.value = true
 	}
@@ -298,7 +292,7 @@ const inputProps = computed(() => ({
 	"aria-expanded": props.suggestions !== undefined ? isOpen.value : undefined,
 	"aria-activedescendant": isOpen.value ? `suggestion-${props.id}-${activeSuggestion.value}` : undefined,
 	canEdit: canEdit.value,
-	...$attrs,
+	...extraAttrs.value.$attrs,
 	class: undefined,
 }))
 
@@ -328,6 +322,5 @@ const suggestionProps = computed(() => ({
 	// eslint-disable-next-line @typescript-eslint/naming-convention
 	"onUpdate:modelValue": (e: T) => modelValue.value = e,
 }))
-
 </script>
 

@@ -1,5 +1,6 @@
-import type { AnyFunction } from "@alanscodelog/utils"
 import { onMounted, onUnmounted, type Ref, watch } from "vue"
+
+import type { AnyFunction } from "@alanscodelog/utils"
 
 import { globalResizeObserver } from "../globalResizeObserver.js"
 

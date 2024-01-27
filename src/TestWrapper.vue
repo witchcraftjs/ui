@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { cssObjectToString } from "metamorphosis/utils"
 import { computed, onBeforeUnmount, onMounted, type PropType, ref } from "vue"
 
 import { useAccesibilityOutline } from "./composables/index.js"
 import { theme } from "./theme.js"
+
+import { cssObjectToString } from "metamorphosis/utils"
 
 
 defineOptions({ name: "test-wrapper" })

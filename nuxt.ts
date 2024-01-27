@@ -1,10 +1,11 @@
-import { type DeepPartial } from "@alanscodelog/utils"
-import { addImports, createResolver, defineNuxtModule } from "@nuxt/kit"
-import { type Config } from "tailwindcss"
+import { addImports, addPlugin, createResolver, defineNuxtModule } from "@nuxt/kit"
 import { fileURLToPath } from "url"
 
 import { theme } from "./src/theme.js"
 import config from "./tailwind.config.js"
+
+import { type Config } from "tailwindcss"
+import type { DeepPartial } from "@alanscodelog/utils"
 
 
 export default defineNuxtModule({
@@ -13,6 +14,8 @@ export default defineNuxtModule({
 	},
 	setup(_opts, nuxt) {
 		const { resolve } = createResolver(import.meta.url)
+
+
 		nuxt.hook("components:dirs", dirs => {
 			dirs.push({
 				path: fileURLToPath(new URL("./src/components/", import.meta.url)),

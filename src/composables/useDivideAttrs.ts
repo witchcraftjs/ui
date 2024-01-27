@@ -1,4 +1,6 @@
-import { keys } from "@alanscodelog/utils"
+import { computed, type Ref, useAttrs } from "vue"
+
+import { keys } from "@alanscodelog/utils/keys"
 
 /**
  * Allows users to more easily pass attributes to different parts of a component. Suppose a component has an input and a wrapper and you want most attributes to go to the input, but any that start with `wrapper` to go to the wrapper.
@@ -6,7 +8,7 @@ import { keys } from "@alanscodelog/utils"
  * You can do:
  *
  * ```ts
- * const {$attrs, wrapperAttrs} = useDivideAttrs(useAttrs(), ["wrapper"])
+ * const extraAttrs = useDivideAttrs(["wrapper"])
  * ```
  * This will correctly remove the start of the key. So if the user passes:
  * ```vue
@@ -15,15 +17,16 @@ import { keys } from "@alanscodelog/utils"
  * You will get:
  *
  * ```ts
- * {
-	* $attrs: { regular-attr: true },
-	* wrapperAttrs: { attr: true, Attrs: true },
+ * extraAttrs = {
+ * 	$attrs: { regular-attr: true },
+ * 	wrapperAttrs: { attr: true, Attrs: true },
  * }
+ *
+ * Additionally attributes are properly reactive, tough this is probably a bit expensive given they weren't meant to be reactive.
  * ```
- *
- *
  */
-export const useDivideAttrs = <T extends readonly string[]>(attrs: Record<string, any>, divisionKeys: T): Record<`${T[number]}Attrs` | "$attrs", any> => {
+export const useDivideAttrs = <T extends readonly string[]>(divisionKeys: T): Ref<Record<`${T[number]}Attrs` | "$attrs", any>> => computed(() => {
+	const attrs: Record<string, any> = useAttrs()
 	const res: any = { $attrs: {} }
 	for (const key of divisionKeys) {
 		res[`${key}Attrs`] = {}
@@ -38,4 +41,4 @@ export const useDivideAttrs = <T extends readonly string[]>(attrs: Record<string
 		}
 	}
 	return res
-}
+})

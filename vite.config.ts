@@ -1,4 +1,3 @@
-import { run } from "@alanscodelog/utils/node"
 import vue from "@vitejs/plugin-vue"
 import glob from "fast-glob"
 import fs from "fs"
@@ -10,6 +9,8 @@ import { externalizeDeps } from "vite-plugin-externalize-deps"
 
 // @ts-expect-error .
 import postcss from "./postcss.config.js"
+
+import { run } from "@alanscodelog/utils/node"
 
 
 const folders = fs.readdirSync("src", { withFileTypes: true })
@@ -32,15 +33,13 @@ export default async ({ mode }: { mode: string }) => defineConfig({
 	plugins: [
 		// it isn't enough to just pass the deps list to rollup.external since it will not exclude subpath exports
 		externalizeDeps(),
-		// this along with tsc-alias (in a build:types:fix script) is in most of my projects to handle baseUrl imports
-		// here we don't want them because I've had it cause issues with nuxt
-		// tsconfigPaths(),
 		vue({
 			script: {
 				defineModel: true,
 			},
 		}),
-		// runs build:types script which takes care of generating types and fixing type aliases and baseUrl imports
+		// runs build:types script which takes care of generating types
+		// note aliases and baseUrl imports should not be used, they have all been removed
 		typesPlugin(),
 	],
 	build: {

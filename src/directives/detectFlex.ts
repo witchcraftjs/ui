@@ -1,5 +1,8 @@
-import { castType, last, throttle } from "@alanscodelog/utils"
 import type { Directive } from "vue"
+
+import { castType } from "@alanscodelog/utils/castType"
+import { last } from "@alanscodelog/utils/last"
+import { throttle } from "@alanscodelog/utils/throttle"
 
 import { globalResizeObserver } from "../globalResizeObserver.js"
 import type { ResizeCallback } from "../types.js"

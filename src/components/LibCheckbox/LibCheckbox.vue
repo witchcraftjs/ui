@@ -45,8 +45,11 @@
 </template>
 <script setup  lang="ts">
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { keys, omit, pick } from "@alanscodelog/utils"
 import { computed, type PropType, ref, useAttrs, useSlots } from "vue"
+
+import { keys } from "@alanscodelog/utils/keys"
+import { omit } from "@alanscodelog/utils/omit"
+import { pick } from "@alanscodelog/utils/pick"
 
 import { twMerge } from "../../helpers/twMerge.js"
 import { baseInteractiveProps, fallthroughEventProps, labelProp, linkableByIdProps } from "../shared/props.js"

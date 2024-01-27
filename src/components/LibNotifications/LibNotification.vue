@@ -53,7 +53,6 @@
 		</div>
 		<div class="flex-1 py-1"/>
 		<div v-if="notification.options"
-			:border="false"
 			class="options
 				flex flex-wrap justify-end
 				gap-2

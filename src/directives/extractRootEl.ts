@@ -21,6 +21,8 @@ import type { Directive } from "vue"
  * Currently only tested with single root elements.
  */
 export const extractRootEl: Directive = {
+	// @ts-expect-error for registering properly without doing complicated case conversion
+	directiveName: "extract-root-el",
 	mounted(el: HTMLElement, { value: callback }: Options) {
 		callback(el)
 	},
