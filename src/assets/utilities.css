@@ -7,6 +7,9 @@
 	.bg-transparency-squares {
 		@apply bg-squares-gradient square-light-white square-dark-neutral-300 square-size-[6px];
 	}
+	.focus-outline-within {
+		@apply outlined-within:outline-none outlined-within:ring-2 outlined-within:ring-accent-500 outlined-within:ring-offset-2 dark:ring-offset-fg; 
+	}
 	.focus-outline {
 		@apply outlined:outline-none outlined:ring-2 outlined:ring-accent-500 outlined:ring-offset-2 dark:ring-offset-fg; 
 	}

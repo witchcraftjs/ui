@@ -6,8 +6,8 @@
 		border-2
 		border-dashed
 		border-accent-500/80
-		transition-[border-color]
-		duration-300
+		focus-outline-within
+		transition-[border-color,box-shadow]
 		ease-out`,
 		compact && `rounded`,
 		!compact && `flex w-full flex-col items-center gap-2 rounded-xl  p-2 `,
