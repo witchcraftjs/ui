@@ -11,6 +11,8 @@ Custom vue component library.
 
 Everything can just be done from the config. Nuxt will automatically import the component types. The module also automatically registers it's tailwind config and provides the necessary colors to the tailwind theme viewer for use with `@nuxtjs/tailwindcss`, be sure to install it as a peer dependency.
 
+You can also configure which directives the vue plugin auto-imports with the witchcraftComponents key (the lib will soon be renamed).
+
 ```ts
 	modules: [
 		[
@@ -18,6 +20,10 @@ Everything can just be done from the config. Nuxt will automatically import the 
 			"@nuxtjs/tailwindcss",
 		],
 	],
+	witchcraftComponents: {
+		// only register some directives globally
+		directives: ["v..."]
+	},
 	vite: {
 		vue: {
 			script: {
