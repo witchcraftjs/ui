@@ -17,6 +17,14 @@
 			"types": "./dist/components/index.d.ts",
 			"import": "./dist/components/index.js"
 		},
+		"./components/*": {
+			"types": "./dist/components/*/*.vue.d.ts",
+			"import": "./dist/components/*/*.vue.js"
+		},
+		"./composables/*": {
+			"types": "./dist/composables/*",
+			"import": "./dist/composables/*"
+		},
 		"./composables": {
 			"types": "./dist/composables/index.d.ts",
 			"import": "./dist/composables/index.js"
@@ -25,9 +33,15 @@
 			"types": "./dist/directives/index.d.ts",
 			"import": "./dist/directives/index.js"
 		},
+		"./directives/*": {
+			"import": "./dist/directives/*"
+		},
 		"./helpers": {
 			"types": "./dist/helpers/index.d.ts",
 			"import": "./dist/helpers/index.js"
+		},
+		"./helpers/*": {
+			"import": "./dist/helpers/*"
 		},
 		"./tailwind": {
 			"types": "./dist/tailwind/index.d.ts",
