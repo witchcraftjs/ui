@@ -215,15 +215,13 @@ const props = defineProps({
 	color: { type: [String, Boolean] as PropType<"warning" | "ok" | "danger" | "primary" | "secondary" | false>, required: false, default: false },
 	unstyle: { type: Boolean, required: false, default: false },
 	autoTitleFromAria: Boolean,
-	test: Boolean,
 })
 
 const listeners = computed(() => pick(props, keys(fallthroughEventProps) as any) as any)
 
 const ariaLabel = useAriaLabel(props)
-
 const autoTitle = computed(() => ({
-	title: (props.autoTitleFromAria && (extraAttrs.value.$attrs.value["aria-label"] ?? props.label)) || undefined,
+	title: (props.autoTitleFromAria && (extraAttrs.value.$attrs["aria-label"] ?? props.label)) || undefined,
 }))
 
 </script>
