@@ -26,6 +26,8 @@
 				{{ label }}
 			</slot>
 		</lib-label>
+		<!-- Allow blurring when clicking the blank part of a label. -->
+		<div class="flex-1"/>
 	</slot>
 	<!-- These are mostly copies of the classes on LibSimpleInput except made to work with disabled/readonly/etc manually since a div cannot have these states. -->
 	<div
@@ -39,7 +41,7 @@
 					relative
 					flex
 					flex-1
-					basis-[max-content]
+					basis-[100%]
 					flex-wrap
 					rounded
 					gap-2

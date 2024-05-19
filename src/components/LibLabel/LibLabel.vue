@@ -7,7 +7,6 @@
 			border-transparent
 		`,
 		type === 'top' && `
-			w-full
 			pr-0
 			text-sm
 		`,
