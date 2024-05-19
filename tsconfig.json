@@ -1,7 +1,7 @@
 {
 	"extends": "@alanscodelog/tsconfigs",
 	"compilerOptions": {
-		"module": "NodeNext",
+		"module": "ESNext",
 		"target": "ESNext",
 		"outDir": "dist",
 		"types": [
@@ -19,17 +19,11 @@
 		// awaiting https://github.com/microsoft/TypeScript/issues/42873
 		"baseUrl": ".", // DO NOT USE baseUrl imports, this is just until the above is fixed, even with relative paths, only also adding baseUrl works
 		"paths": {
-			"tailwind": [
-				"./node_modules/tailwind"
+			"metamorphosis/*": [
+				"./node_modules/metamorphosis/*"
 			],
-			"tailwind-merge": [
-				"./node_modules/tailwind-merge"
-			],
-			"metamorphosis": [
-				"./node_modules/metamorphosis"
-			],
-			"@alanscodelog/utils": [
-				"./node_modules/@alanscodelog/utils"
+			"@alanscodelog/utils/*": [
+				"./node_modules/@alanscodelog/utils/*"
 			]
 		}
 	},

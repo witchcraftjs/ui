@@ -76,7 +76,7 @@ import { computed, type PropType, ref, useAttrs } from "vue"
 import { copy } from "../../helpers/copy.js"
 import { type NotificationEntry, NotificationHandler } from "../../helpers/NotificationHandler.js"
 import { twMerge } from "../../helpers/twMerge.js"
-import fa from "../fa/Fa.vue"
+import fa from "../Fa/Fa.vue"
 import LibButton from "../LibButton/LibButton.vue"
 
 

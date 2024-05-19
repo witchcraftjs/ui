@@ -136,7 +136,7 @@ import { computed, type PropType, ref, shallowReactive, useAttrs, watch } from "
 
 import { twMerge } from "../../helpers/twMerge.js"
 import { type FileInputError } from "../../types.js"
-import Fa from "../fa/Fa.vue"
+import Fa from "../Fa/Fa.vue"
 import LibButton from "../LibButton/LibButton.vue"
 import { linkableByIdProps } from "../shared/props.js"
 

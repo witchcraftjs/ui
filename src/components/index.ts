@@ -1,7 +1,7 @@
 /* Manually Generated Index */
 
-export { default as aria } from "./aria/Aria.vue"
-export { default as fa } from "./fa/Fa.vue"
+export { default as aria } from "./Aria/Aria.vue"
+export { default as fa } from "./Fa/Fa.vue"
 export { default as LibButton } from "./LibButton/LibButton.vue"
 export { default as LibDebug } from "./LibDebug/LibDebug.vue"
 export { default as LibInput } from "./LibInput/LibInput.vue"

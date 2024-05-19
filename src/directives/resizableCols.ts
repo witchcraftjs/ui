@@ -129,6 +129,9 @@ export const resizableCols: Directive = {
 			globalResizeObserver.unobserve(el, throttledCallback)
 		}
 	},
+	getSSRProps() {
+		return {}
+	},
 }
 
 

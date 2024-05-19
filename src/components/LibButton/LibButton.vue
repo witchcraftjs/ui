@@ -194,7 +194,7 @@ import { pick } from "@alanscodelog/utils/pick"
 import { useAriaLabel } from "../../composables/useAriaLabel.js"
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
 import { twMerge } from "../../helpers/twMerge.js"
-import fa from "../fa/Fa.vue"
+import fa from "../Fa/Fa.vue"
 import { baseInteractiveProps, fallthroughEventProps, labelProp, linkableByIdProps } from "../shared/props.js"
 
 

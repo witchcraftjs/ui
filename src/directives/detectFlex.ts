@@ -106,6 +106,9 @@ export const detectFlex = (throttleTime: number = 50, ignoreSelector = ".detect-
 			(el as any)[dir] = vertical
 			observer.unobserve(el, throttledCallback)
 		},
+		getSSRProps() {
+			return {}
+		},
 	}
 }
 type DetectFlexOptions = {

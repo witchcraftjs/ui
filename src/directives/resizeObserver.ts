@@ -33,6 +33,9 @@ export const resizeObserver: Directive = {
 		observer.unobserve(el, callback)
 		delete (el as any)[lastCondition]
 	},
+	getSSRProps() {
+		return {}
+	},
 }
 type Options = {
 	value: {

@@ -76,7 +76,7 @@ import { removeIfIn } from "@alanscodelog/utils/removeIfIn"
 
 import { copy } from "../../helpers/copy.js"
 import { twMerge } from "../../helpers/twMerge.js"
-import fa from "../fa/Fa.vue"
+import fa from "../Fa/Fa.vue"
 import libButton from "../LibButton/LibButton.vue"
 import { baseInteractiveProps, fallthroughEventProps, labelProp } from "../shared/props.js"
 

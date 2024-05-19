@@ -26,7 +26,7 @@
 <script lang="ts">
 import { type PropType, useSlots } from "vue"
 
-import fa from "../fa/Fa.vue"
+import fa from "../Fa/Fa.vue"
 import LibButton from "../LibButton/LibButton.vue"
 
 
