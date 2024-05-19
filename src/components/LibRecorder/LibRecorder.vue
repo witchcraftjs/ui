@@ -66,7 +66,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, type PropType, ref, watch, watchPostEffect } from "vue"
 
-import { keys } from "@alanscodelog/utils/keys"
+import { keys } from "@alanscodelog/utils/keys.js"
 
 import { useAriaLabel } from "../../composables/useAriaLabel.js"
 import { twMerge } from "../../helpers/twMerge.js"

@@ -141,8 +141,8 @@
 import { colord } from "colord"
 import { computed, onMounted, type PropType, reactive, type Ref, ref, type UnwrapRef, watch } from "vue"
 
-import { castType } from "@alanscodelog/utils/castType"
-import { isArray } from "@alanscodelog/utils/isArray"
+import { castType } from "@alanscodelog/utils/castType.js"
+import { isArray } from "@alanscodelog/utils/isArray.js"
 
 import { twMerge } from "../../helpers/twMerge.js"
 import aria from "../Aria/Aria.vue"

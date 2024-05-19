@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/vue3"
 
 import LibDebug from "./LibDebug.vue"
 
-import { crop } from "@alanscodelog/utils/crop"
+import { crop } from "@alanscodelog/utils/crop.js"
 
 import * as components from "../index.js"
 

@@ -97,7 +97,7 @@ type T = any
 import { computed, type PropType, ref } from "vue"
 
 import type { MakeRequired } from "@alanscodelog/utils"
-import { keys } from "@alanscodelog/utils/keys"
+import { keys } from "@alanscodelog/utils/keys.js"
 
 import { vResizableCols } from "../../directives/vResizableCols.js"
 import { twMerge } from "../../helpers/twMerge.js"

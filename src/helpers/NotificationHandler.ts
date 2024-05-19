@@ -1,10 +1,10 @@
 import type { AnyFunction, MakeRequired } from "@alanscodelog/utils"
-import { castType } from "@alanscodelog/utils/castType"
-import { crop } from "@alanscodelog/utils/crop"
-import { indent } from "@alanscodelog/utils/indent"
-import { isBlank } from "@alanscodelog/utils/isBlank"
-import { pretty } from "@alanscodelog/utils/pretty"
-import { setReadOnly } from "@alanscodelog/utils/setReadOnly"
+import { castType } from "@alanscodelog/utils/castType.js"
+import { crop } from "@alanscodelog/utils/crop.js"
+import { indent } from "@alanscodelog/utils/indent.js"
+import { isBlank } from "@alanscodelog/utils/isBlank.js"
+import { pretty } from "@alanscodelog/utils/pretty.js"
+import { setReadOnly } from "@alanscodelog/utils/setReadOnly.js"
 
 
 export class NotificationHandler<

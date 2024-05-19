@@ -43,8 +43,8 @@
 
 import { computed, type PropType, ref, useAttrs, watch, watchPostEffect } from "vue"
 
-import { isBlank } from "@alanscodelog/utils/isBlank"
-import { isObject } from "@alanscodelog/utils/isObject"
+import { isBlank } from "@alanscodelog/utils/isBlank.js"
+import { isObject } from "@alanscodelog/utils/isObject.js"
 
 import { twMerge } from "../../helpers/twMerge.js"
 import { baseInteractiveProps, linkableByIdProps, multiValueProps, suggestionsProps } from "../shared/props.js"

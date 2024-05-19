@@ -152,7 +152,7 @@
 <script setup lang="ts" generic="T extends string|number">
 import { computed, type PropType, ref, useSlots, watch } from "vue"
 
-import { pushIfNotIn } from "@alanscodelog/utils/pushIfNotIn"
+import { pushIfNotIn } from "@alanscodelog/utils/pushIfNotIn.js"
 
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
 import { hasModifiers } from "../../helpers/hasModifiers.js"

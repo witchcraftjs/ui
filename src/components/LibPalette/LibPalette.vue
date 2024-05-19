@@ -24,7 +24,7 @@ export default { name: "lib-palette" }
 import { type PropType } from "vue"
 
 import { type Theme } from "metamorphosis"
-import { keys } from "@alanscodelog/utils/keys"
+import { keys } from "@alanscodelog/utils/keys.js"
 
 import { baseInteractiveProps, linkableByIdProps } from "../shared/props.js"
 

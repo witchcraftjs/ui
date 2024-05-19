@@ -51,7 +51,7 @@ import { nextTick, onBeforeUnmount, type PropType, ref, shallowReactive } from "
 
 import LibNotification from "./LibNotification.vue"
 
-import { removeIfIn } from "@alanscodelog/utils/removeIfIn"
+import { removeIfIn } from "@alanscodelog/utils/removeIfIn.js"
 
 import { type NotificationEntry, NotificationHandler } from "../../helpers/NotificationHandler.js"
 import { twMerge } from "../../helpers/twMerge.js"

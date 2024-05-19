@@ -2,7 +2,7 @@ import type { NuxtApp } from "@nuxt/schema"
 
 // @ts-expect-error only defined in nuxt
 import { defineNuxtPlugin, useRuntimeConfig } from "#app"
-import { isArray } from "@alanscodelog/utils/isArray"
+import { isArray } from "@alanscodelog/utils/isArray.js"
 
 import { registerDirectives } from "../../vue/registerDirectives.js"
 

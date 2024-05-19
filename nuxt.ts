@@ -8,7 +8,7 @@ import { theme } from "./src/theme.js"
 import config from "./tailwind.config.js"
 
 import type { DeepPartial } from "@alanscodelog/utils"
-import { isArray } from "@alanscodelog/utils/isArray"
+import { isArray } from "@alanscodelog/utils/isArray.js"
 
 
 const knownDirectives = ["vExtractRootEl", "vResizableCols", "vResizeObserver", "vResizableCols"] as const

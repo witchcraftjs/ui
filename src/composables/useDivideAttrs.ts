@@ -1,6 +1,6 @@
 import { computed, type Ref, useAttrs } from "vue"
 
-import { keys } from "@alanscodelog/utils/keys"
+import { keys } from "@alanscodelog/utils/keys.js"
 
 /**
  * Allows users to more easily pass attributes to different parts of a component. Suppose a component has an input and a wrapper and you want most attributes to go to the input, but any that start with `wrapper` to go to the wrapper.

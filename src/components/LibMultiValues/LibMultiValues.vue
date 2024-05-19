@@ -72,7 +72,7 @@
 
 import { computed, useAttrs } from "vue"
 
-import { removeIfIn } from "@alanscodelog/utils/removeIfIn"
+import { removeIfIn } from "@alanscodelog/utils/removeIfIn.js"
 
 import { copy } from "../../helpers/copy.js"
 import { twMerge } from "../../helpers/twMerge.js"

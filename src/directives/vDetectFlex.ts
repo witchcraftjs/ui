@@ -1,9 +1,9 @@
 import type { Directive } from "vue"
 
-import { castType } from "@alanscodelog/utils/castType"
-import { last } from "@alanscodelog/utils/last"
-import { throttle } from "@alanscodelog/utils/throttle"
-import { unreachable } from "@alanscodelog/utils/unreachable"
+import { castType } from "@alanscodelog/utils/castType.js"
+import { last } from "@alanscodelog/utils/last.js"
+import { throttle } from "@alanscodelog/utils/throttle.js"
+import { unreachable } from "@alanscodelog/utils/unreachable.js"
 
 import { globalResizeObserver } from "../globalResizeObserver.js"
 

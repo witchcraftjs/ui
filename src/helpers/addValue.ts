@@ -1,4 +1,4 @@
-import { pushIfNotIn } from "@alanscodelog/utils/pushIfNotIn"
+import { pushIfNotIn } from "@alanscodelog/utils/pushIfNotIn.js"
 
 
 export const addValue = <T>(value: T, values: T[], preventDuplicateValues: boolean): T[] => {

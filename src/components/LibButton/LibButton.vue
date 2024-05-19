@@ -187,9 +187,9 @@
 <script setup  lang="ts">
 import { computed, type PropType } from "vue"
 
-import { isBlank } from "@alanscodelog/utils/isBlank"
-import { keys } from "@alanscodelog/utils/keys"
-import { pick } from "@alanscodelog/utils/pick"
+import { isBlank } from "@alanscodelog/utils/isBlank.js"
+import { keys } from "@alanscodelog/utils/keys.js"
+import { pick } from "@alanscodelog/utils/pick.js"
 
 import { useAriaLabel } from "../../composables/useAriaLabel.js"
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
