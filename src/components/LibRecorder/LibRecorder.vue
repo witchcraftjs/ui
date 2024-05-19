@@ -35,7 +35,7 @@
 	v-bind="{...ariaLabel, ...$attrs, class:undefined}"
 	@blur="handleBlurRecorder($event)"
 	@click="handleClickRecorder($event)"
-	@keydown.space.prevent="handleClickRecorder($event)"
+	@keydown.space.prevent="handleClickRecorder($event, true)"
 >
 	<!-- :aria-description="recording ? recordingTitle : ''" -->
 	<div
@@ -210,11 +210,14 @@ const handleBlurRecorder = (e: FocusEvent): void => {
 	}
 }
 
-const handleClickRecorder = (e: MouseEvent | KeyboardEvent): void => {
+const handleClickRecorder = (e: MouseEvent | KeyboardEvent, isSpaceKey: boolean = false): void => {
 	if (!canEdit.value) return
-	recorderEl.value?.focus()
+	if (!recording.value) {
+		recorderEl.value?.focus()
+	}
 	// toggle if clicking on the recording indicator, otherwise only allow starting recording, so if needed, clicks can be recorded
 	if (props.recorder || props.binders) {
+		if (isSpaceKey) { return }
 		emits("recorder:click", { event: e, indicator: recorderIndicatorEl.value!, input: recorderEl.value! })
 	}
 }
