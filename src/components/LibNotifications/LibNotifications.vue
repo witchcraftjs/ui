@@ -58,10 +58,8 @@ import { twMerge } from "../../helpers/twMerge.js"
 import { linkableByIdProps } from "../shared/props.js"
 
 
-defineOptions({
-	name: "lib-notifications",
-	inheritAttrs: false,
-})
+defineOptions({ name: "lib-notifications",
+																inheritAttrs: false })
 
 const props = defineProps({
 	...linkableByIdProps(),

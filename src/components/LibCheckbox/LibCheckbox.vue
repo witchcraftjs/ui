@@ -83,7 +83,7 @@ const emits = defineEmits<{
 
 const el = ref<null | HTMLElement>(null)
 const inputEl = ref<null | HTMLElement>(null)
-const value = defineModel("modelValue", { default: false })
+const value = defineModel<boolean>("modelValue", { default: false })
 
 
 </script>

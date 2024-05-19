@@ -6,8 +6,8 @@
 			flex-wrap
 			`,
 		disabled && `
-				text-neutral-400
-			`,
+			text-neutral-400
+		`,
 		extraAttrs.wrapperAttrs.class
 	)"
 	tabindex="-1"
@@ -132,7 +132,7 @@
 				class="
 					border-accent-500
 					absolute
-					inset-x-[-1px]
+					-inset-x-px
 					top-full
 					z-10
 					rounded-b

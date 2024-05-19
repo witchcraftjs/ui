@@ -82,7 +82,7 @@ const emits = defineEmits<{
 	/** Recorder is blurred */
 	(e: "recorder:blur", $event: FocusEvent): void
 	/** Recorder is clicked. The component's indicator and recorder elements are passed to help filter out those clicks. */
-	(e: "recorder:click", { event, indicator, input }: { event: MouseEvent | KeyboardEvent, indicator: HTMLElement, input: HTMLElement }): void
+	(e: "recorder:click", { event, indicator, input }: { event: MouseEvent | KeyboardEvent, indicator: HTMLElement, input: HTMLInputElement }): void
 	/* User presses enter. Not emitted when multiple values are used. */
 	(e: "focus:parent"): void
 }>()
@@ -125,7 +125,7 @@ const modelValue = defineModel<string>({ required: true })
 
 
 const recorderEl = ref<HTMLInputElement | null>(null)
-const recorderIndicatorEl = ref<HTMLInputElement | null>(null)
+const recorderIndicatorEl = ref<HTMLElement | null>(null)
 const canEdit = computed(() => !props.disabled && !props.readonly)
 const tempValue = ref(modelValue.value)
 
@@ -153,7 +153,7 @@ const unbindListeners = (): void => {
 		}
 	}
 	if (props.binders && recorderEl.value) {
-		props.binders.unbind(recorderEl.value)
+		props.binders.unbind(recorderEl.value as HTMLInputElement)
 	}
 }
 const bindListeners = (): void => {
@@ -171,7 +171,7 @@ const bindListeners = (): void => {
 		}
 	}
 	if (props.binders && recorderEl.value) {
-		props.binders.bind(recorderEl.value)
+		props.binders.bind(recorderEl.value as HTMLInputElement)
 	}
 }
 
@@ -218,7 +218,7 @@ const handleClickRecorder = (e: MouseEvent | KeyboardEvent, isSpaceKey: boolean 
 	// toggle if clicking on the recording indicator, otherwise only allow starting recording, so if needed, clicks can be recorded
 	if (props.recorder || props.binders) {
 		if (isSpaceKey) { return }
-		emits("recorder:click", { event: e, indicator: recorderIndicatorEl.value!, input: recorderEl.value! })
+		emits("recorder:click", { event: e as MouseEvent, indicator: recorderIndicatorEl.value! as HTMLElement, input: recorderEl.value! as HTMLInputElement })
 	}
 }
 

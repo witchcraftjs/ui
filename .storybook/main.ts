@@ -19,10 +19,6 @@ export default {
 	docsPage: {
 		docs: "automatic"
 	},
-	async viteFinal(config) {
-		return mergeConfig(config, {
-		});
-	},
 	docs: {
 		autodocs: true
 	}

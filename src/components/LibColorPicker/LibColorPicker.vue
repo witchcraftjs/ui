@@ -106,8 +106,8 @@
 		>
 			<!-- <input class="color-input" :value="localColorString" @input="parseInput"> -->
 			<div class="color
-					h-full
-					w-full rounded-full
+					size-full
+					rounded-full
 					border-2
 					border-neutral-600
 					dark:border-neutral-300
@@ -433,7 +433,7 @@ const invertColors = computed(() => !!(localColor.percent.v < 50 || (localColor.
 
 <style lang="postcss" scoped>
 canvas {
-	@apply h-full w-full shadow-sm shadow-black/50 rounded;
+	@apply size-full shadow-sm shadow-black/50 rounded;
 }
 </style>
 
