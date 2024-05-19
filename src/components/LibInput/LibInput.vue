@@ -314,6 +314,10 @@ const suggestionProps = computed(() => ({
 	modelValue: modelValue.value,
 	inputValue: inputValue.value,
 	canOpen: canOpen.value,
+	onSubmit: (e: T) => {
+		canOpen.value = false
+		emits("submit", e)
+	},
 	// eslint-disable-next-line @typescript-eslint/naming-convention
 	"onUpdate:isOpen": (e: boolean) => { isOpen.value = e },
 	"onUpdate:isValid": updateIsValid,
