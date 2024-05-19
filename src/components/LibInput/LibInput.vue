@@ -262,6 +262,7 @@ const handleBlur = (e: FocusEvent) => {
 		suggestionsComponent.value?.inputBlurHandler?.(e)
 	}
 	canOpen.value = false
+	inputValue.value = modelValue.value
 	emits("blur", e)
 }
 const handleFocus = (e: FocusEvent) => {
