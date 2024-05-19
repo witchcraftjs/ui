@@ -13,7 +13,9 @@
 			backdrop:bg-transparent
 		`,
 
+		attrs.class
 	)"
+	v-bind="{...attrs, class:undefined}"
 	:is="useBackdrop ? 'dialog' : 'div'"
 	ref="dialogEl"
 	@mousedown="useBackdrop ? mousedown = true : undefined"
@@ -43,6 +45,7 @@ const props = defineProps({
 	preferredHorizontal: { type: Array as PropType<("center" | "right" | "left" | "either")[]>, default: () => ["center", "right", "left", "either"]},
 	preferredVertical: { type: Array as PropType<("top" | "bottom" | "either")[]>, default: () => ["top", "bottom", "either"]},
 })
+const attrs = useAttrs()
 defineOptions({ name: "lib-popup" })
 
 // todo, can we have transitions?
