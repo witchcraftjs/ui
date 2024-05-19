@@ -12,16 +12,22 @@
 			p-0
 			backdrop:bg-transparent
 		`,
-
 		attrs.class
 	)"
 	v-bind="{...attrs, class:undefined}"
 	:is="useBackdrop ? 'dialog' : 'div'"
 	ref="dialogEl"
-	@mousedown="useBackdrop ? mousedown = true : undefined"
-	@mouseup.self="useBackdrop && handleMouseup"
+	@mousedown.self="handleMouseup"
 >
-	<div v-if="useBackdrop || modelValue" class="scrollbar-hidden fixed overflow-scroll" :style="`top:${pos.y}px;left:${pos.x}px;${pos.maxWidth ? `max-width:${pos.maxWidth}px` : ''}`">
+	<div v-if="useBackdrop || modelValue"
+		class="scrollbar-hidden fixed overflow-scroll"
+		:style="`
+		top:${pos.y}px;
+		left:${pos.x}px;
+		${pos.maxWidth ? `max-width:${pos.maxWidth}px` : ''}
+		${pos.maxHeight ? `max-height:${pos.maxHeight}px` : ''}
+		`"
+	>
 		<slot
 			name="popup"
 			:position="pos"
@@ -33,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, type PropType, ref, watch } from "vue"
+import { onMounted, type PropType, ref, useAttrs, watch } from "vue"
 
 import { twMerge } from "../../helpers/twMerge.js"
 import { linkableByIdProps } from "../shared/props.js"
@@ -42,8 +48,8 @@ import { linkableByIdProps } from "../shared/props.js"
 const props = defineProps({
 	...linkableByIdProps(),
 	useBackdrop: { type: Boolean, required: false, default: true },
-	preferredHorizontal: { type: Array as PropType<("center" | "right" | "left" | "either")[]>, default: () => ["center", "right", "left", "either"]},
-	preferredVertical: { type: Array as PropType<("top" | "bottom" | "either")[]>, default: () => ["top", "bottom", "either"]},
+	preferredHorizontal: { type: Array as PropType<("center" | "right" | "left" | "either" | "center-screen")[]>, default: () => ["center", "right", "left", "either"]},
+	preferredVertical: { type: Array as PropType<("top" | "bottom" | "either" | "center-screen")[]>, default: () => ["top", "bottom", "either"]},
 })
 const attrs = useAttrs()
 defineOptions({ name: "lib-popup" })
@@ -53,7 +59,7 @@ const dialogEl = ref<HTMLDialogElement | null>(null)
 const popupEl = ref<HTMLElement | null>(null)
 const buttonEl = ref<HTMLElement | null>(null)
 
-const pos = ref<{ x: number, y: number, maxWidth?: number }>({} as any)
+const pos = ref<{ x: number, y: number, maxWidth?: number, maxHeight?: number }>({} as any)
 const modelValue = defineModel<boolean>({ default: false })
 let isOpen = false
 
@@ -83,7 +89,7 @@ const recompute = (): void => {
 			pos.value = {} as any
 			return
 		}
-		const finalPos: { x: number, y: number, maxWidth: number } = {} as any
+		const finalPos: { x: number, y: number, maxWidth?: number, maxHeight?: number } = {} as any
 
 		const el = buttonEl.value.getBoundingClientRect()
 		const veil = getVeilBoundingRect(props.useBackdrop ? dialogEl.value : document.body)
@@ -97,10 +103,20 @@ const recompute = (): void => {
 		const spaceBottom = (veil.y + veil.height) - (el.y + el.height)
 
 		const { preferredHorizontal, preferredVertical } = props
+		let maxWidth: number
+		let maxHeight: number
 		/* eslint-disable no-labels */
 		outerloop:
 		for (const type of preferredHorizontal) {
 			switch (type) {
+				case "center-screen":
+					if (popup.width < veil.width) {
+						finalPos.x = (veil.width / 2) - (popup.width / 2)
+					} else {
+						finalPos.x = 0
+						maxWidth = finalPos.x
+					}
+					break
 				case "center":
 					if (spaceLeftFromCenter >= (popup.width / 2) &&
 						spaceRightFromCenter >= (popup.width / 2)) {
@@ -133,6 +149,14 @@ const recompute = (): void => {
 		outerloop:
 		for (const type of preferredVertical) {
 			switch (type) {
+				case "center-screen":
+					if (popup.height < veil.height) {
+						finalPos.y = (veil.height / 2) - (popup.height / 2)
+					} else {
+						finalPos.y = 0
+						maxHeight = finalPos.y
+					}
+					break
 				case "top":
 					if (spaceTop >= popup.height) {
 						finalPos.y = el.y - popup.height; break outerloop
@@ -150,7 +174,8 @@ const recompute = (): void => {
 				}
 			}
 		}
-		finalPos.maxWidth = veil.width - finalPos.x
+		finalPos.maxWidth = maxWidth ?? veil.width - finalPos.x
+		finalPos.maxHeight = maxHeight ?? veil.height - finalPos.y
 		/* eslint-enable no-labels */
 		pos.value = finalPos
 	})
@@ -198,13 +223,9 @@ watch([() => modelValue.value, () => popupEl.value], () => {
 })
 
 
-const mousedown = ref(false)
 const handleMouseup = ($event: MouseEvent) => {
 	$event.preventDefault()
-	if (mousedown.value) {
-		toggle()
-		mousedown.value = false
-	}
+	toggle()
 }
 onMounted(() => {
 	recompute()

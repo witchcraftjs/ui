@@ -72,8 +72,13 @@ export const Primary: Story = {
 				<input type="checkbox" v-model="autoRotatePos">
 			</div>
 			<div class="test" style="display:grid;height:80vh;padding:50px;border:1px solid black;">
+
 			<lib-popup
 				v-model="value"
+				v-bind="{
+					preferredHorizontal:args.preferredHorizontal, 
+					preferredVertical:args.preferredVertical
+				}"
 			>
 			{{value}}
 				<template #button="{extractEl}">
@@ -95,5 +100,14 @@ export const PopupTooBig = {
 	args: {
 		...Primary,
 		width: "110vw",
+	},
+}
+export const PopupCenterScreen = {
+	...Primary,
+	args: {
+		...Primary,
+		width: "500px",
+		preferredHorizontal: ["center-screen"],
+		preferredVertical: ["center-screen"],
 	},
 }
