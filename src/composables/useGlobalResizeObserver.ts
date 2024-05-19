@@ -1,4 +1,4 @@
-import { onMounted, onUnmounted, type Ref, watch } from "vue"
+import { onBeforeUnmount, onMounted, type Ref, watch } from "vue"
 
 import type { AnyFunction } from "@alanscodelog/utils"
 
@@ -18,7 +18,7 @@ export const useGlobalResizeObserver = (el: Ref<HTMLElement | null>, cb: AnyFunc
 		}, { immediate: true })
 	})
 	// todo is this needed?
-	onUnmounted(() => {
+	onBeforeUnmount(() => {
 		if (el.value) {
 			globalResizeObserver.unobserve(el.value, cb)
 		}

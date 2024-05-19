@@ -64,7 +64,7 @@
 </div>
 </template>
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, type PropType, ref, watch, watchPostEffect } from "vue"
+import { computed, onBeforeUnmount, onMounted, type PropType, ref, watch, watchPostEffect } from "vue"
 
 import { keys } from "@alanscodelog/utils/keys"
 
@@ -194,7 +194,7 @@ watchPostEffect(() => {
 	}
 })
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
 	unbindListeners()
 })
 onMounted(() => {
