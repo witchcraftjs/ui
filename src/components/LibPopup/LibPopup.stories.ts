@@ -4,7 +4,7 @@ import { computed, ref, watch } from "vue"
 
 import LibPopup from "./LibPopup.vue"
 
-import { extractRootEl } from "../../directives/extractRootEl.js"
+import { vExtractRootEl } from "../../directives/vExtractRootEl.js"
 import * as components from "../index.js"
 
 
@@ -22,7 +22,7 @@ type Story = StoryObj<typeof LibPopup>
 export const Primary: Story = {
 	render: args => ({
 		components,
-		directives: { extractRootEl },
+		directives: { extractRootEl: vExtractRootEl },
 		setup: () => {
 			const value = ref(false)
 			const buttonPositions = ["TL", "TC", "TR", "BL", "BC", "BR"] as const

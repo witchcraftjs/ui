@@ -99,7 +99,7 @@ import { computed, type PropType, ref } from "vue"
 import type { MakeRequired } from "@alanscodelog/utils"
 import { keys } from "@alanscodelog/utils/keys"
 
-import { resizableCols as vResizableCols } from "../../directives/resizableCols.js"
+import { vResizableCols } from "../../directives/vResizableCols.js"
 import { twMerge } from "../../helpers/twMerge.js"
 import type { ResizableOptions, TableColConfig } from "../../types.js"
 

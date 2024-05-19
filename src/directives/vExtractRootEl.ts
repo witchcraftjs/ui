@@ -9,7 +9,7 @@ import type { Directive } from "vue"
  *
  * One can create a ref:
  * ```ts
- * import { extractRootEl as vExtractRootEl } from "@alanscodelog/vue-components/directives"
+ * import { vExtractRootEl } from "@alanscodelog/vue-components/directives"
  * const el = ref<HTMLElement|null>(null)
  *
  * ```
@@ -20,7 +20,7 @@ import type { Directive } from "vue"
  *
  * Currently only tested with single root elements.
  */
-export const extractRootEl: Directive = {
+export const vExtractRootEl: Directive = {
 	// @ts-expect-error for registering properly without doing complicated case conversion
 	directiveName: "extract-root-el",
 	mounted(el: HTMLElement, { value: callback }: Options) {

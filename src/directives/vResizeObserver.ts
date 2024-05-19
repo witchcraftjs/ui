@@ -11,7 +11,7 @@ const checkCallback = (cb: any): void => {
 		throw new Error("No callback function passed to resize observer directive.")
 	}
 }
-export const resizeObserver: Directive = {
+export const vResizeObserver: Directive = {
 	mounted(el: HTMLElement, { value: { condition = true, callback } }: Options) {
 		if (condition) {
 			observer.observe(el, callback)

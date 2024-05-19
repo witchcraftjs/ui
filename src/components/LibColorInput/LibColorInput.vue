@@ -55,7 +55,7 @@
 import { colord } from "colord"
 import { computed, type PropType, ref, useAttrs } from "vue"
 
-import { extractRootEl as vExtractRootEl } from "../../directives/extractRootEl.js"
+import { vExtractRootEl } from "../../directives/vExtractRootEl.js"
 import LibButton from "../LibButton/LibButton.vue"
 import LibColorPicker from "../LibColorPicker/LibColorPicker.vue"
 import LibPopup from "../LibPopup/LibPopup.vue"

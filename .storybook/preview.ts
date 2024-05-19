@@ -1,6 +1,6 @@
 import { Preview,Parameters } from '@storybook/vue3';
 import TestWrapper from "../src/TestWrapper.vue"
-import {extractRootEl} from "../src/directives/extractRootEl.js"
+import {vExtractRootEl} from "../src/directives/vExtractRootEl.js"
 import "../src/assets/style.css"
 
 import { library } from "@fortawesome/fontawesome-svg-core"
@@ -42,7 +42,7 @@ const preview: Preview = {
 		},
 	},
 	decorators: [(story, { args }) => ({
-		directives: {extractRootEl},
+		directives: {vExtractRootEl},
 		components: { TestWrapper, story },
 		setup: () => ({ args }),
 		template: `

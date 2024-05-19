@@ -37,7 +37,7 @@ const defaultOpts: Omit<ResizableOptions, "colCount" | "widths" | "selector"> = 
 	enabled: true,
 }
 
-const callback: ResizeCallback = (_rect, el): void => {
+const callback: ResizeCallback = (_rect: DOMRectReadOnly, el: Element): void => {
 	setColWidths(el as ResizableElement)
 	positionGrips(el as ResizableElement)
 }
@@ -52,7 +52,7 @@ const throttledCallback = throttle(callback)
  * 	</div>
  * </template>
  * <script setup>
- * import {resizeCols} from "@alanscodelog/vue-components"
+ * import {vResizeCols} from "@alanscodelog/vue-components"
  * </script>
  * ```
  *
@@ -100,7 +100,7 @@ const throttledCallback = throttle(callback)
  * # Options
  * See {@link ResizableOptions}
  */
-export const resizableCols: Directive = {
+export const vResizableCols: Directive = {
 	mounted(el: ResizableElement, { value: opts = {} }: RawOpts) {
 		const options = override({ ...defaultOpts }, opts) as ResizableOptions
 
