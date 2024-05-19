@@ -99,6 +99,14 @@ export const AutosuggestSelectLike = {
 		restrictToSuggestions: true,
 	},
 }
+export const AutosuggestSelectLikeShowAllUnrestricted = {
+	...WithAutosuggest,
+	args: {
+		...WithAutosuggest.args,
+		restrictToSuggestions: false,
+		suggestionsFilter: (_input: string, items: string[]) => items,
+	},
+}
 export const AutosuggestObjectOptions = {
 	...WithAutosuggest,
 	args: {

@@ -99,6 +99,14 @@ export const AlwaysShowAllSuggestions = {
 		suggestionsFilter: (_input: string, items: string[]) => items,
 	},
 }
+export const AlwaysShowAllSuggestionsAndNoRestrictToSuggestions = {
+	...Primary,
+	args: {
+		...Primary.args,
+		restrictToSuggestions: false,
+		suggestionsFilter: (_input: string, items: string[]) => items,
+	},
+}
 export const CustomSuggestionsObject = {
 	...Primary,
 	args: {

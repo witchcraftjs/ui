@@ -20,6 +20,7 @@
 					px-1
 					user-select-none
 					cursor-pointer
+					px-2
 				`,
 			index=== activeSuggestion && `bg-accent-200 dark:bg-accent-800`
 		)"
@@ -29,7 +30,7 @@
 		:key="item"
 		@mouseover="activeSuggestion = index"
 		@mousedown="activeSuggestion = index; mousedown = true;"
-		@mouseup="activeSuggestion = index; mousedown = true;"
+		@mouseup="activeSuggestion = index; mousedown = false;"
 		@click="setSelected()"
 	>
 		<slot name="item" :item="item" :index="index">
@@ -191,7 +192,13 @@ const openSuggestions = (): void => {
 	if (!openable.value) return
 	$isOpen.value = true
 	// see delay close
-	if (activeSuggestion.value === -1) activeSuggestion.value = 0
+	if (activeSuggestion.value === -1) {
+		if (exactlyMatchingSuggestion.value) {
+			activeSuggestion.value = suggestionsList.value?.indexOf(exactlyMatchingSuggestion.value) ?? -1
+		} else {
+			activeSuggestion.value = 0
+		}
+	}
 	// activeSuggestion.value = 0
 }
 watch(() => props.canOpen, val => {
@@ -211,13 +218,17 @@ watch(() => $modelValue.value, () => {
 	$inputValue.value = getStringValue($modelValue.value)
 })
 watch(() => $inputValue.value, () => {
-	if (props.restrictToSuggestions) {
-		if (exactlyMatchingSuggestion.value !== undefined) {
-			$modelValue.value = $inputValue.value
-		}
-	} else {
-		$modelValue.value = $inputValue.value
+	if (props.restrictToSuggestions && !exactlyMatchingSuggestion.value) {
+		return
 	}
+	$modelValue.value = $inputValue.value
+	const i = suggestionsList.value?.indexOf(exactlyMatchingSuggestion.value) ?? -1
+	if (
+		i === -1
+		&& props.restrictToSuggestions
+		&& exactlyMatchingSuggestion.value !== undefined
+	) return
+	activeSuggestion.value = i
 })
 watchPostEffect((): void => {
 	if (!openable.value) {
@@ -225,7 +236,7 @@ watchPostEffect((): void => {
 		return
 	}
 	if (suggestionAvailable.value) {
-		if (!exactlyMatchingSuggestion.value || moreThanOneSuggestionAvailable.value) {
+		if (!$isOpen.value && (!exactlyMatchingSuggestion.value || moreThanOneSuggestionAvailable.value)) {
 			openSuggestions()
 		}
 	} else if (isValidSuggestion.value) {
@@ -234,7 +245,7 @@ watchPostEffect((): void => {
 })
 
 
-const setSuggestion = (num: number): void => {
+function setSuggestion(num: number): void {
 	if (fullSuggestionsList.value === undefined) return
 	const val = suggestionLabel.value(fullSuggestionsList.value[num])
 
