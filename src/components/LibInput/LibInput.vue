@@ -14,7 +14,7 @@
 	v-bind="{...extraAttrs.wrapperAttrs, class:undefined}"
 	@blur="canOpen = false"
 >
-	<slot name="label" v-bind="slotProps">
+	<slot name="label" v-bind="{ ...slotProps, type:'top', disabled, readonly, label }">
 		<lib-label v-if="label || $slots.default"
 			:id="id"
 			:type="'top'"
