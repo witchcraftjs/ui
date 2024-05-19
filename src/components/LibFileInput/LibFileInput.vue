@@ -39,7 +39,7 @@
 						(multiple ? 's' :'')
 				}}
 			</slot>
-			<span v-if="compact">{{ ` (${files.length})` }}</span>
+			<span v-if="compact && multiple">{{ ` (${files.length})` }}</span>
 		</label>
 		<label v-if="!compact" class="flex flex-col items-center text-sm">
 			<slot name="formats">Accepted Formats: </slot>
