@@ -10,3 +10,5 @@ dist
 src/assets/variables.scss
 **/*.wip.*
 test.css
+!flake.lock
+.direnv
