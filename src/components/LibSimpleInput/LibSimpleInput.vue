@@ -69,10 +69,9 @@
 <script lang="ts" generic="T">
 </script>
 <script setup lang="ts">
-import { computed, type PropType, useAttrs } from "vue"
-
 import { keys } from "@alanscodelog/utils/keys.js"
 import { pick } from "@alanscodelog/utils/pick.js"
+import { computed, type PropType, useAttrs } from "vue"
 
 import { useAriaLabel } from "../../composables/useAriaLabel.js"
 import { twMerge } from "../../helpers/twMerge.js"
@@ -94,6 +93,7 @@ const props = defineProps({
 	...fallthroughEventProps,
 })
 // @ts-expect-error vue experimental stuff
+// eslint-disable-next-line no-undef
 const modelValue = defineModel<T>({ required: true })
 
 const emits = defineEmits<{

@@ -44,12 +44,11 @@
 </div>
 </template>
 <script setup  lang="ts">
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { computed, type PropType, ref, useAttrs, useSlots } from "vue"
 
 import { keys } from "@alanscodelog/utils/keys.js"
 import { omit } from "@alanscodelog/utils/omit.js"
 import { pick } from "@alanscodelog/utils/pick.js"
+import { computed, type PropType, ref, useAttrs, useSlots } from "vue"
 
 import { twMerge } from "../../helpers/twMerge.js"
 import { baseInteractiveProps, fallthroughEventProps, labelProp, linkableByIdProps } from "../shared/props.js"

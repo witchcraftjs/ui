@@ -10,7 +10,7 @@ export const linkableByIdProps = () => ({
 	id: { type: String as PropType<string>, required: false, default: () => getCurrentInstance()!.uid.toString() },
 } as const)
 
-export const linkableByIdPropsDefault = () => getCurrentInstance()!.uid.toString()
+export const linkableByIdPropsDefault = (): string => getCurrentInstance()!.uid.toString()
 
 
 export const labelProp = {

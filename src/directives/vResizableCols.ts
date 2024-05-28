@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
-import type { Directive, Ref } from "vue"
-
 import { castType } from "@alanscodelog/utils/castType.js"
 import { override } from "@alanscodelog/utils/override.js"
 import { throttle } from "@alanscodelog/utils/throttle.js"
 import { unreachable } from "@alanscodelog/utils/unreachable.js"
+import type { Directive, Ref } from "vue"
 
 import { globalResizeObserver } from "../globalResizeObserver.js"
 import type { ResizableOptions, ResizeCallback } from "../types.js"

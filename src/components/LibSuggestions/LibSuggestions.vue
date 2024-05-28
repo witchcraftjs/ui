@@ -41,10 +41,9 @@
 </template>
 <script setup lang="ts" generic="T extends string | object">
 
-import { computed, type PropType, ref, useAttrs, watch, watchPostEffect } from "vue"
-
 import { isBlank } from "@alanscodelog/utils/isBlank.js"
 import { isObject } from "@alanscodelog/utils/isObject.js"
+import { computed, type PropType, ref, useAttrs, watch, watchPostEffect } from "vue"
 
 import { twMerge } from "../../helpers/twMerge.js"
 import { baseInteractiveProps, linkableByIdProps, multiValueProps, suggestionsProps } from "../shared/props.js"

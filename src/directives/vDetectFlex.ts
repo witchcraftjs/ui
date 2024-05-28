@@ -1,11 +1,11 @@
-import type { Directive } from "vue"
-
 import { castType } from "@alanscodelog/utils/castType.js"
 import { last } from "@alanscodelog/utils/last.js"
 import { throttle } from "@alanscodelog/utils/throttle.js"
 import { unreachable } from "@alanscodelog/utils/unreachable.js"
+import type { Directive } from "vue"
 
 import { globalResizeObserver } from "../globalResizeObserver.js"
+import type { ResizeCallback } from "../types.js"
 
 
 const observer = globalResizeObserver
@@ -39,7 +39,7 @@ type PrivateState = {
 const callbacks: Record<number, { count: number, callback: typeof callback }> = {}
 const elMap = new WeakMap<HTMLElement, PrivateState>()
 
-function getOrCreateCallback(throttleTime: number) {
+function getOrCreateCallback(throttleTime: number): ResizeCallback {
 	if (callbacks[throttleTime]) {
 		callbacks[throttleTime].count++
 	} else {
@@ -47,7 +47,7 @@ function getOrCreateCallback(throttleTime: number) {
 	}
 	return callbacks[throttleTime].callback
 }
-function removeCallback(throttleTime: number) {
+function removeCallback(throttleTime: number): void {
 	if (callbacks[throttleTime]) {
 		callbacks[throttleTime].count--
 		if (callbacks[throttleTime].count === 0) delete callbacks[throttleTime]

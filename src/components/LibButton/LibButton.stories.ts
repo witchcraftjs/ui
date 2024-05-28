@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import { capitalize } from "@alanscodelog/utils/capitalize.js"
 import type { Meta, StoryObj } from "@storybook/vue3"
 
-import { capitalize } from "@alanscodelog/utils/capitalize.js"
-
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
 
 

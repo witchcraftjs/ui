@@ -4,6 +4,7 @@ import { onUnmounted, ref } from "vue"
 
 import LibProgressBar from "./LibProgressBar.vue"
 
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
 
 
@@ -26,7 +27,7 @@ export const Primary: Story = {
 	render: args => ({
 		components,
 		setup: () => {
-			const progress = ref(args._start as number)
+			const progress = ref((args as any)._start as number)
 			if (args.progress) {
 				progress.value = args.progress
 			} else {
@@ -34,9 +35,9 @@ export const Primary: Story = {
 					if (progress.value >= 100) {
 						progress.value = 0
 					} else {
-						progress.value += args._add as number
+						progress.value += (args as any)._add as number
 					}
-				}, args._timeout)
+				}, (args as any)._timeout as number)
 				onUnmounted(() => {
 					clearInterval(interval)
 				})

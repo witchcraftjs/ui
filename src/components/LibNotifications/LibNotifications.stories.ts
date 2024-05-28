@@ -5,6 +5,7 @@ import { reactive, ref } from "vue"
 import LibNotifications from "./LibNotifications.vue"
 
 import { NotificationHandler } from "../../helpers/NotificationHandler.js"
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
 
 

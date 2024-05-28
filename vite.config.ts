@@ -1,16 +1,14 @@
+import { run } from "@alanscodelog/utils/node"
 import vue from "@vitejs/plugin-vue"
 import glob from "fast-glob"
 import fs from "fs"
 import path from "path"
-import type { PluginOption } from "vite"
+import { defineConfig,type PluginOption } from "vite"
 // import Previewer from 'vite-plugin-vue-component-preview';
-import { defineConfig } from "vite"
 import { externalizeDeps } from "vite-plugin-externalize-deps"
 
 // @ts-expect-error .
 import postcss from "./postcss.config.js"
-
-import { run } from "@alanscodelog/utils/node"
 
 
 const folders = fs.readdirSync("src", { withFileTypes: true })

@@ -4,6 +4,7 @@ import { ref } from "vue"
 
 import LibPagination from "./LibPagination.vue"
 
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
 
 

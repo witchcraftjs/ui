@@ -4,11 +4,12 @@ import { ref } from "vue"
 
 import LibMultiValues from "./LibMultiValues.vue"
 
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
 
 
 const meta = {
-	component: LibMultiValues,
+	component: LibMultiValues as any,
 	args: {
 		values: ["A", "B", "C"],
 		border: true,
@@ -33,7 +34,7 @@ export const Primary: Story = {
 			const inputValue = ref("B")
 			const multiValueEl = ref<typeof LibMultiValues | null>(null)
 			const onKeydownEnter = (e: KeyboardEvent): void => {
-				if (e.key === "Enter") (args.values).push(inputValue.value)
+				if (e.key === "Enter") (args.values!).push(inputValue.value)
 			}
 			return ({
 				args,

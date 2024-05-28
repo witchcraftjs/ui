@@ -1,3 +1,5 @@
+import type { DeepPartial } from "@alanscodelog/utils"
+import { isArray } from "@alanscodelog/utils/isArray.js"
 import { addComponent, addImports, addPlugin, createResolver, defineNuxtModule } from "@nuxt/kit"
 import { defu } from "defu"
 import { glob } from "fast-glob"
@@ -6,9 +8,6 @@ import { type Config } from "tailwindcss"
 
 import { theme } from "./src/theme.js"
 import config from "./tailwind.config.js"
-
-import type { DeepPartial } from "@alanscodelog/utils"
-import { isArray } from "@alanscodelog/utils/isArray.js"
 
 
 const knownDirectives = ["vExtractRootEl", "vResizableCols", "vResizeObserver", "vResizableCols"] as const

@@ -1,6 +1,5 @@
-import { type Ref } from "vue"
-
 import type { ErrorW } from "@alanscodelog/utils"
+import { type Ref } from "vue"
 
 
 export type ResizableOptions = {

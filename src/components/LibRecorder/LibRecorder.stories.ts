@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/vue3"
 import { ref, watchEffect } from "vue"
 
 import { createRecorderHandler, createRecorderWatchEffect } from "../../helpers/storybook.js"
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
 /**
  * This is a special input component designed to record any type of event.

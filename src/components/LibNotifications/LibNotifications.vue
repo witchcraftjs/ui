@@ -47,11 +47,10 @@
 </Transition>
 </template>
 <script setup lang="ts">
+import { removeIfIn } from "@alanscodelog/utils/removeIfIn.js"
 import { nextTick, onBeforeUnmount, type PropType, ref, shallowReactive } from "vue"
 
 import LibNotification from "./LibNotification.vue"
-
-import { removeIfIn } from "@alanscodelog/utils/removeIfIn.js"
 
 import { type NotificationEntry, NotificationHandler } from "../../helpers/NotificationHandler.js"
 import { twMerge } from "../../helpers/twMerge.js"
@@ -90,14 +89,12 @@ const addNotification = (entry: NotificationEntry) => {
 		if (entry.requiresAction) {
 			topNotifications.push(entry)
 			open()
-			// eslint-disable-next-line @typescript-eslint/no-floating-promises
 			entry.promise.then(() => {
 				removeIfIn(topNotifications, entry)
 				close()
 			})
 		} else {
 			notifications.splice(0, 0, entry)
-			// eslint-disable-next-line @typescript-eslint/no-floating-promises
 			entry.promise.then(() => {
 				removeIfIn(notifications, entry)
 			})

@@ -1,6 +1,5 @@
-import { onBeforeUnmount, onMounted, type Ref, ref, watch } from "vue"
-
 import { castType } from "@alanscodelog/utils/castType.js"
+import { onBeforeUnmount, onMounted, type Ref, ref, watch } from "vue"
 
 /**
  * Returns a reactive ref that indicates whether the user presses a key *and* produced a change in focus. Used for only providing a `:focus` outline when the user is navigating via the keyboard.

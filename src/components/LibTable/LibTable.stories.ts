@@ -3,6 +3,8 @@ import type { Meta, StoryObj } from "@storybook/vue3"
 
 import LibTable from "./LibTable.vue"
 
+// todo
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
 
 

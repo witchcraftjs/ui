@@ -1,9 +1,8 @@
+import { createTailwindPlugin } from "metamorphosis/tailwind"
 import type { Config } from "tailwindcss"
 
 import { plugin as libraryPlugin } from "./plugin.js"
 import { themePluginOpts } from "./themePluginOpts.js"
-
-import { createTailwindPlugin } from "metamorphosis/tailwind"
 
 import { theme } from "../theme.js"
 

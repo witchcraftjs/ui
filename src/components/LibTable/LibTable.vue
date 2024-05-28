@@ -94,10 +94,9 @@
 <script setup lang="ts">
 /* awaiting better support for emitting component types with genertics */
 type T = any
-import { computed, type PropType, ref } from "vue"
-
 import type { MakeRequired } from "@alanscodelog/utils"
 import { keys } from "@alanscodelog/utils/keys.js"
+import { computed, type PropType, ref } from "vue"
 
 import { vResizableCols } from "../../directives/vResizableCols.js"
 import { twMerge } from "../../helpers/twMerge.js"

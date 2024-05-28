@@ -1,6 +1,5 @@
-import type { App } from "vue"
-
 import { capitalize } from "@alanscodelog/utils/capitalize.js"
+import type { App } from "vue"
 
 /**
  * Register only specific components. Will register components as both snake case and pascal case.

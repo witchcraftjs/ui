@@ -5,11 +5,12 @@ import { ref, watchEffect } from "vue"
 import LibInput from "./LibInput.vue"
 
 import { createRecorderHandler, createRecorderWatchEffect } from "../../helpers/storybook.js"
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
 
 
 const meta = {
-	component: LibInput,
+	component: LibInput as any,
 	args: {
 		modelValue: "A",
 		border: true,
@@ -70,19 +71,19 @@ export const AttrsPassword: Story = {
 	...Primary,
 	args: {
 		type: "password",
-	},
+	} as any,
 }
 export const AttrsDate: Story = {
 	...Primary,
 	args: {
 		type: "date",
-	},
+	} as any,
 }
 export const AttrsNumber: Story = {
 	...Primary,
 	args: {
 		type: "number",
-	},
+	} as any,
 }
 
 export const WithAutosuggest = {
@@ -215,7 +216,7 @@ export const InputSlotReplacement: Story = {
 			const values = ref(args.values ?? [])
 			const recorderEl = ref(null)
 			const recorder = createRecorderHandler(recordingValue, recording, modelValue, recorderEl)
-			watchEffect(createRecorderWatchEffect(recordingValue, recording, modelValue, values))
+			watchEffect(createRecorderWatchEffect(recordingValue, recording, modelValue, values as any))
 			return {
 				recorder,
 				recording,

@@ -1,3 +1,4 @@
+<!-- eslint-disable -->
 <template>
 <div :class="twMerge(`
 
@@ -8,7 +9,7 @@
 </div>
 </template>
 <script setup  lang="ts">
-/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
 import { computed, getCurrentInstance, onBeforeUnmount, onMounted, type PropType, reactive, type Ref, ref, watch } from "vue"
 
 import { twMerge } from "../../helpers/twMerge.js"

@@ -138,11 +138,10 @@
 
 <script setup lang="ts">
 /* todo change to colorjsio for less dependencies */
-import { colord } from "colord"
-import { computed, onMounted, type PropType, reactive, type Ref, ref, type UnwrapRef, watch } from "vue"
-
 import { castType } from "@alanscodelog/utils/castType.js"
 import { isArray } from "@alanscodelog/utils/isArray.js"
+import { colord } from "colord"
+import { computed, onMounted, type PropType, reactive, type Ref, ref, type UnwrapRef, watch } from "vue"
 
 import { twMerge } from "../../helpers/twMerge.js"
 import aria from "../Aria/Aria.vue"
@@ -248,7 +247,6 @@ const copy = (): void => {
 	if (navigator.clipboard) {
 		const text = props.copyTransform?.(localColor.val, localColorString.value)
 
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		navigator.clipboard.writeText(text).catch(() => { })
 	}
 }

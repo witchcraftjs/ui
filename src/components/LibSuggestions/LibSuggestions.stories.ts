@@ -4,6 +4,7 @@ import { ref } from "vue"
 
 import LibSuggestions from "./LibSuggestions.vue"
 
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
 
 

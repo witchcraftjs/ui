@@ -150,9 +150,8 @@
 </div>
 </template>
 <script setup lang="ts" generic="T extends string|number">
-import { computed, type PropType, ref, useSlots, watch } from "vue"
-
 import { pushIfNotIn } from "@alanscodelog/utils/pushIfNotIn.js"
+import { computed, type PropType, ref, useSlots, watch } from "vue"
 
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
 import { hasModifiers } from "../../helpers/hasModifiers.js"
@@ -281,7 +280,6 @@ const inputProps = computed(() => ({
 	onBlur: handleBlur,
 	onFocus: handleFocus,
 	modelValue: inputValue.value,
-	// eslint-disable-next-line @typescript-eslint/naming-convention
 	"onUpdate:modelValue": (e: T) => {
 		inputValue.value = e
 	},
@@ -319,14 +317,10 @@ const suggestionProps = computed(() => ({
 		canOpen.value = false
 		emits("submit", e)
 	},
-	// eslint-disable-next-line @typescript-eslint/naming-convention
 	"onUpdate:isOpen": (e: boolean) => { isOpen.value = e },
 	"onUpdate:isValid": updateIsValid,
-	// eslint-disable-next-line @typescript-eslint/naming-convention
 	"onUpdate:activeSuggestions": (e: number) => activeSuggestion.value = e,
-	// eslint-disable-next-line @typescript-eslint/naming-convention
 	"onUpdate:inputValue": (e: T) => inputValue.value = e,
-	// eslint-disable-next-line @typescript-eslint/naming-convention
 	"onUpdate:modelValue": (e: T) => modelValue.value = e,
 }))
 </script>

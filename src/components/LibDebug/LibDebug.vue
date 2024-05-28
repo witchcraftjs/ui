@@ -75,7 +75,6 @@ const copy = (): void => {
 	if (navigator.clipboard) {
 		const text = props.value ? getStringValue(props.value) : findText([...$slots.default!()![0].children as any[]])
 
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		navigator.clipboard.writeText(text).catch(() => { })
 	}
 }

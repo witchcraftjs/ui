@@ -21,10 +21,9 @@
 export default { name: "lib-palette" }
 </script>
 <script setup  lang="ts">
-import { type PropType } from "vue"
-
-import { type Theme } from "metamorphosis"
 import { keys } from "@alanscodelog/utils/keys.js"
+import { type Theme } from "metamorphosis"
+import { type PropType } from "vue"
 
 import { baseInteractiveProps, linkableByIdProps } from "../shared/props.js"
 

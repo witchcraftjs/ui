@@ -22,8 +22,7 @@ export default {
 
 <script setup lang="ts">
 import type { IconParams } from "@fortawesome/fontawesome-svg-core"
-import type { FontAwesomeIconProps } from "@fortawesome/vue-fontawesome"
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
+import { FontAwesomeIcon,type FontAwesomeIconProps } from "@fortawesome/vue-fontawesome"
 import { computed, useAttrs } from "vue"
 
 import { twMerge } from "../../helpers/twMerge.js"

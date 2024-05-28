@@ -4,6 +4,7 @@ import { ref } from "vue"
 
 import LibColorInput from "./LibColorInput.vue"
 
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
 
 
@@ -23,7 +24,7 @@ export const Primary: Story = {
 		components,
 		setup: () => {
 			const color = ref({ r: 0, g: 0, b: 0/* , a: 0.5 */ })
-			const handleChange = (e: any) => {
+			const handleChange = (e: any): void => {
 				color.value = { ...e }
 			}
 			return {

@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/vue3"
 
 import Fa from "./Fa.vue"
 
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
 
 
