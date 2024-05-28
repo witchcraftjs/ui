@@ -12,7 +12,7 @@
 			p-0
 			backdrop:bg-transparent
 		`,
-		attrs.class
+		attrs.class as any
 	)"
 	v-bind="{...attrs, class:undefined}"
 	:is="useBackdrop ? 'dialog' : 'div'"
@@ -103,8 +103,8 @@ const recompute = (): void => {
 		const spaceBottom = (veil.y + veil.height) - (el.y + el.height)
 
 		const { preferredHorizontal, preferredVertical } = props
-		let maxWidth: number
-		let maxHeight: number
+		let maxWidth: number | undefined
+		let maxHeight: number | undefined
 		/* eslint-disable no-labels */
 		outerloop:
 		for (const type of preferredHorizontal) {

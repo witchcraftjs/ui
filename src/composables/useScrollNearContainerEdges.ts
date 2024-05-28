@@ -54,7 +54,8 @@ export const useScrollNearContainerEdges = ({
 	timerInterval?: number
 }): {
 		scrollEdges: (clientX: number, clientY: number, overrideUseTimer?: boolean) => void
-		scrollIndicator: Ref<{ left: boolean, right: boolean, down: boolean, up: boolean }>
+		/** Reactive. */
+		scrollIndicator: { left: boolean, right: boolean, down: boolean, up: boolean }
 		resetScrollIndicator: () => void
 		clearScrollInterval: () => void
 		isScrolling: Ref<boolean>

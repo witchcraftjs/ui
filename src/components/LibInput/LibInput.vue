@@ -310,7 +310,7 @@ const suggestionProps = computed(() => ({
 	restrictToSuggestions: props.restrictToSuggestions,
 	suggestionLabel: props.suggestionLabel,
 	suggestionsFilter: props.suggestionsFilter,
-	modelValue: modelValue.value,
+	modelValue: modelValue.value.toString(),
 	inputValue: inputValue.value,
 	canOpen: canOpen.value,
 	onSubmit: (e: T) => {
