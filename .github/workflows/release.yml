@@ -61,7 +61,7 @@ jobs:
 
     - run: pnpm build
 
-    - run: pnpm lint:eslint
+    - run: pnpm lint
 
     # - run: pnpm test
 
