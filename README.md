@@ -1,7 +1,9 @@
 ### 🚧 WORK IN PROGRESS 🚧
-![Docs](https://github.com/alanscodelog/vue-components/workflows/Docs/badge.svg)
-![Build](https://github.com/alanscodelog/vue-components/workflows/Build/badge.svg)
-[![Release](https://github.com/alanscodelog/vue-components/workflows/Release/badge.svg)](https://www.npmjs.com/package/@alanscodelog/vue-components)
+[![Docs](https://github.com/alanscodelog/vue-components/workflows/Docs/badge.svg)](https://github.com/alanscodelog/vue-components/actions/workflows/docs.yml)
+[![Build](https://github.com/alanscodelog/vue-components/actions/workflows/build.yml/badge.svg)](https://github.com/alanscodelog/vue-components/actions/workflows/build.yml)
+[![Release](https://github.com/alanscodelog/vue-components/actions/workflows/release.yml/badge.svg)](https://github.com/alanscodelog/vue-components/actions/workflows/release.yml)
+[![NPM Version (with latest tag)](https://img.shields.io/npm/v/%40alanscodelog%2Fvue-components/latest)](https://www.npmjs.com/package/@alanscodelog/vue-components/v/latest)
+[![NPM Version (with beta tag)](https://img.shields.io/npm/v/%40alanscodelog%2Fvue-components/beta)](https://www.npmjs.com/package/@alanscodelog/vue-components/v/beta)
 
 Custom vue component library.
 

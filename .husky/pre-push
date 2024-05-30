@@ -3,5 +3,4 @@
 
 echo "Running pre-push hook"
 
-# todo
-# npm run lint:commits
+npm run lint:commits

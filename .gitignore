@@ -5,10 +5,10 @@ node_modules
 worktree*/**/*
 docs
 coverage
-dist
 
 src/assets/variables.scss
 **/*.wip.*
 test.css
+dist
 !flake.lock
 .direnv

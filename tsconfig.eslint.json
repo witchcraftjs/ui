@@ -1,8 +1,9 @@
-{ // i give up, idk why eslint thinks vue files are not included in the regular tsconfig
+{
+	// Here partly because eslint tends to think vue files aren't included even when they explicitly are
+	// also here because I want to lint configs as well, but including them in the regular tsconfig can cause problems
 	"extends": "./tsconfig.json",
 	"compilerOptions": {
 		"outDir": "dist",
-		"baseUrl": "."
 	},
 	"include": [
 		"**/*",

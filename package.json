@@ -76,7 +76,7 @@
 		"doc:dev": "pnpm run storybook",
 		"lint:eslint": "eslint \"{src,tests}/**/*.{js,ts,vue,cjs}\" \"*.{js,ts}\" --max-warnings=0 --report-unused-disable-directives",
 		"lint:types": "vue-tsc --noEmit --pretty --project tsconfig.types.json",
-		"lint:commits": "commitlint --from $(git rev-list HEAD --not --remotes | tail -1)^ --to HEAD --verbose",
+		"lint:commits": "commitlint --from $(git rev-list --max-parents=0 HEAD) --to HEAD --verbose",
 		"lint:imports": "madge --circular --extensions ts ./src",
 		"lint": "npm run lint:types && npm run lint:eslint && npm run lint:imports",
 		"prepare": "husky install && npm run build",
@@ -193,7 +193,7 @@
 		]
 	},
 	"engines": {
-		"node": ">=20"
+		"node": ">=20.0.0"
 	},
 	"@comments": {
 		"scripts": {
