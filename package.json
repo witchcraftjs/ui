@@ -34,6 +34,7 @@
 			"import": "./dist/directives/index.js"
 		},
 		"./directives/*": {
+			"types": "./dist/directives/*.d.ts",
 			"import": "./dist/directives/*"
 		},
 		"./helpers": {
@@ -41,6 +42,7 @@
 			"import": "./dist/helpers/index.js"
 		},
 		"./helpers/*": {
+			"types": "./dist/helpers/*.d.ts",
 			"import": "./dist/helpers/*"
 		},
 		"./tailwind": {
