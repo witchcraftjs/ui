@@ -48,22 +48,23 @@
 </template>
 <script setup lang="ts">
 import { removeIfIn } from "@alanscodelog/utils/removeIfIn.js"
-import { nextTick, onBeforeUnmount, type PropType, ref, shallowReactive } from "vue"
+import { type HTMLAttributes,nextTick, onBeforeUnmount, type PropType, ref, shallowReactive,withDefaults } from "vue"
 
 import LibNotification from "./LibNotification.vue"
 
 import { type NotificationEntry, NotificationHandler } from "../../helpers/NotificationHandler.js"
 import { twMerge } from "../../helpers/twMerge.js"
-import { linkableByIdProps } from "../shared/props.js"
+import type { LinkableByIdProps, TailwindClassProp } from "../shared/props.js"
 
-
-defineOptions({ name: "lib-notifications",
-																inheritAttrs: false })
-
-const props = defineProps({
-	...linkableByIdProps(),
-	handler: { type: Object as PropType<NotificationHandler>, required: true },
+defineOptions({
+	name: "lib-notifications",
+	inheritAttrs: false,
 })
+
+
+// eslint-disable-next-line no-use-before-define
+const props = defineProps<Props>()
+
 const dialogEl = ref<HTMLDialogElement | null>(null)
 
 const isOpen = ref(false)
@@ -114,4 +115,19 @@ onBeforeUnmount(() => {
 	props.handler.removeNotificationListener(notificationListener)
 })
 
+</script>
+<script lang="ts">
+
+type RealProps =
+& LinkableByIdProps
+& {
+	handler: NotificationHandler
+}
+
+interface Props
+	extends
+	/** @vue-ignore */
+	Partial<Omit<HTMLAttributes,"class"> & TailwindClassProp>,
+	RealProps
+{}
 </script>

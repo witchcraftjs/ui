@@ -1,6 +1,6 @@
 <template>
 <input
-	:id="id"
+	:id="id ?? fallbackId"
 	:class="twMerge(`
 			input
 			flex-1
@@ -52,7 +52,7 @@
 			dark:placeholder:text-danger-700
 			dark:border-danger-600
 		`,
-		$attrs.class as any
+		($attrs as any)?.class
 	)"
 	:data-border="border"
 	:data-invalid="!valid"
@@ -62,20 +62,22 @@
 	:readonly="readonly"
 	ref="inputEl"
 	v-model="modelValue"
-	v-bind="{...$attrs, class:undefined, ...listeners, ...ariaLabel}"
+	v-bind="{...$attrs, class:undefined, ...ariaLabel}"
 	@keydown.enter="emits('submit', modelValue)"
 >
 </template>
-<script lang="ts" generic="T">
-</script>
-<script setup lang="ts">
+
+
+<script lang="ts" setup generic="T">
 import { keys } from "@alanscodelog/utils/keys.js"
 import { pick } from "@alanscodelog/utils/pick.js"
-import { computed, type PropType, useAttrs } from "vue"
+import type { MakeRequired } from "@alanscodelog/utils/types"
+import { castType } from "@alanscodelog/utils/utils"
+import { getCurrentInstance, type InputHTMLAttributes, type InputTypeHTMLAttribute,toRef,useAttrs,withDefaults } from "vue"
 
 import { useAriaLabel } from "../../composables/useAriaLabel.js"
 import { twMerge } from "../../helpers/twMerge.js"
-import { baseInteractiveProps, fallthroughEventProps, labelProp, linkableByIdProps } from "../shared/props.js"
+import { type BaseInteractiveProps, baseInteractivePropsDefaults, getFallbackId,type LabelProps, type LinkableByIdProps, type TailwindClassProp } from "../shared/props.js"
 
 
 defineOptions({
@@ -83,39 +85,54 @@ defineOptions({
 	inheritAttrs: false,
 })
 
-const props = defineProps({
-	placeholder: { type: String as PropType<string>, required: false, default: "" },
-	type: { type: String as PropType<string>, required: false, default: "text" },
-	valid: { type: Boolean as PropType<boolean>, required: false, default: true },
-	...labelProp,
-	...linkableByIdProps(),
-	...baseInteractiveProps,
-	...fallthroughEventProps,
+const fallbackId = getFallbackId()
+
+// eslint-disable-next-line no-use-before-define
+const props = withDefaults(defineProps<Props>(), {
+	id: "",
+	placeholder: "",
+	valid: true,
+	label: "",
+	type: undefined,
+	...baseInteractivePropsDefaults
 })
-// @ts-expect-error vue experimental stuff
-// eslint-disable-next-line no-undef
+
 const modelValue = defineModel<T>({ required: true })
 
 const emits = defineEmits<{
-	// (e: "update:modelValue", val: any): void
 	/* User presses enter.*/
 	(e: "submit", val: any): void
 }>()
 const $attrs = useAttrs()
-const listeners = computed(() => pick(props, keys(fallthroughEventProps) as any) as any)
-const ariaLabel = useAriaLabel(props)
-
-
-// const props = withDefaults(defineProps<
-// 	InputHTMLAttributes &
-// 	{
-// 		modelValue: string
-// 		placeholder?: string
-// 		id: string
-// 	}
-// >(), {
-// 	id: linkableByIdPropsDefault,
-// 	placeholder: "",
+const ariaLabel = useAriaLabel(props, fallbackId)
 
 </script>
 
+<script lang="ts">
+
+type RealProps =
+	& LinkableByIdProps
+	& LabelProps
+	& BaseInteractiveProps
+	& {
+		placeholder?: InputHTMLAttributes["placeholder"]
+		disabled?: InputHTMLAttributes["disabled"]
+		id?: InputHTMLAttributes["id"]
+		type?: InputHTMLAttributes["type"]
+		valid?: boolean
+	}
+
+interface Props
+	extends
+	/** @vue-ignore */
+	Partial<Omit<
+		InputHTMLAttributes,
+		| "class"
+		| "readonly"
+		| "disabled"
+		| "onSubmit"
+		| "onInput"
+	> & TailwindClassProp>,
+	RealProps
+{}
+</script>

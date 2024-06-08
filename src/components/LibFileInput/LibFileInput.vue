@@ -12,20 +12,20 @@
 		compact && `rounded`,
 		!compact && `flex w-full flex-col items-center gap-2 rounded-xl  p-2 `,
 		errors.length > 0 && errorFlashing && `border-red-400`,
-		( $attrs as any ).class
+		( $.wrapperAttrs as any ).class
 	)"
-	v-bind="{...$attrs, class:undefined}"
+	v-bind="{...$.wrapperAttrs, class:undefined}"
 >
 	<div :class="twMerge(
 		`relative justify-center`,
 		compact && `flex gap-2`,
 		!compact && `input-wrapper
-			flex flex-col items-center
+		flex flex-col items-center
 		`
 	)"
 	>
 		<label
-			:for="id"
+			:for="id ?? fallbackId"
 			:class="twMerge(
 				`pointer-events-none flex gap-1 items-center whitespace-nowrap`
 			)"
@@ -48,19 +48,21 @@
 			</div>
 		</label>
 		<input
-			:id="id"
-			class="
-					absolute
-					inset-0
-					z-0
-					cursor-pointer
-					text-[0]
-					opacity-0
-				"
+			:id="id ?? fallbackId"
+			:class="twMerge(
+				`absolute inset-0
+				z-0
+				cursor-pointer
+				text-[0]
+				opacity-0
+				`,
+				($.inputAttrs as any)?.class
+			)"
 			type="file"
 			:accept="formats.join(', ')"
 			:multiple="multiple"
 			ref="el"
+			v-bind="{...$.inputAttrs, class:undefined}"
 			@input="(inputFile as any)"
 			@click="($event.target! as any).value = null"
 		>
@@ -72,7 +74,9 @@
 			`,
 			multiple && `
 				w-full
-			`)"
+			`,
+			($.previewsAttrs as any)?.class
+		)"
 	>
 		<div class="flex-1"/>
 		<div class="preview
@@ -127,18 +131,15 @@
 	</div>
 </div>
 </template>
-<script lang="ts">
- 
-export default { name: "lib-file-input" }
-</script>
-<script setup  lang="ts">
-import { computed, type PropType, ref, shallowReactive, useAttrs, watch } from "vue"
+<script setup lang="ts">
+import { computed, type HTMLAttributes, type InputHTMLAttributes,ref, shallowReactive, watch,withDefaults } from "vue"
 
+import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
 import { twMerge } from "../../helpers/twMerge.js"
 import { type FileInputError } from "../../types.js"
 import Fa from "../Fa/Fa.vue"
 import LibButton from "../LibButton/LibButton.vue"
-import { linkableByIdProps } from "../shared/props.js"
+import { getFallbackId,type LinkableByIdProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
 
 
 const el = ref<null | HTMLInputElement>(null)
@@ -167,23 +168,22 @@ defineOptions({
 	name: "lib-file-input",
 	inheritAttrs: false,
 })
-const $attrs = useAttrs()
+const $ = useDivideAttrs(["wrapper", "input", "previews"] as const)
  
 const emits = defineEmits<{
 	(e: "input", val: File[]): void
 	(e: "errors", val: FileInputError[]): void
 }>()
- 
 
-const props = defineProps({
-	...linkableByIdProps(),
-	// ...baseInteractiveProps,
-	// modelValue: { type: Array as PropType<Entry[]>, required: false },
-	multiple: { type: Boolean, required: false, default: false },
-	/** A list of extensions or mime types to add to the input's accept. Basic validations are done so that files match an extension and mimeType, but note that a file could still be lying, all files should be validated server side.*/
-	formats: { type: Array as PropType<string[]>, required: false, default: () => ["image/*", ".jpeg", ".jpg", ".png"]},
-	compact: { type: Boolean, required: false, default: false },
+const fallbackId = getFallbackId()
+// eslint-disable-next-line no-use-before-define
+const props = withDefaults(defineProps<Props>(), {
+
+	multiple: false,
+	formats: () => ["image/*", ".jpeg", ".jpg", ".png"],
+	compact: false,
 })
+
 const mimeTypes = computed(() => props.formats.filter(_ => !_.startsWith(".")))
 const extensions = computed(() => props.formats.filter(_ => _.startsWith(".")))
 
@@ -236,5 +236,30 @@ const inputFile = async (e: InputEvent): Promise<void | boolean> => {
 	}
 }
 
+</script>
+<script lang="ts">
+export default { name: "lib-file-input" }
+
+type WrapperTypes =
+	& WrapperProps<"input", InputHTMLAttributes >
+	& WrapperProps<"wrapper", HTMLAttributes >
+	& WrapperProps<"previews",HTMLAttributes >
+
+type RealProps =
+& LinkableByIdProps
+& {
+	multiple?: boolean
+	/** A list of extensions or mime types to add to the input's accept. Basic validations are done so that files match an extension and mimeType, but note that a file could still be lying, all files should be validated server side.*/
+	formats?: string[]
+	compact?: boolean
+}
+
+interface Props
+	extends
+	/** @vue-ignore */
+	Partial<Omit<InputHTMLAttributes,"class" | "multiple" | "formats" | "compact"> & TailwindClassProp>,
+	/** @vue-ignore */
+	Partial<WrapperTypes>,
+	RealProps { }
 </script>
 

@@ -145,25 +145,125 @@ You will need to import `@alanscodelog/vue-components/utilities.css` and `@alans
 
 Utilities contains required utilities.
 
-Base just contains animation keyframes and basic styles for vue animations. They are not "layered", i.e. they will get imported regardless of whether they are used since otherwise tailwind does not to detect they are being used.
+Base just contains animation keyframes and basic styles for vue animations. They are not "layered", i.e. they will get imported regardless of whether they are used since otherwise tailwind does not detect they are being used.
 
 
 ## Getting Globally Registered Component Types
 
 To get global typings, in a global declaration file (e.g. global.d.ts) do:
+See also [this issue](https://github.com/vuejs/language-tools/issues/1077#issuecomment-1145960878).
 ```ts
 import { GlobalComponentTypes } from "@alanscodelog/vue-components"
 declare module "@vue/runtime-core" {
 	export interface GlobalComponents extends GlobalComponentTypes { }
-	// also you to be able to pass extra attributes you will need this because of https://github.com/vuejs/language-tools/issues/1077#issuecomment-1145960878
-	export type HTMLAttributes = Record<string, any>
-	export type AllowedComponentProps = Record<string, any>
+	// also you to be able to pass extra attributes, you will need to do the following 
+	export interface HTMLAttributes = Record<string, any>
+	// OR alternatively you can extend/interface merge the AdditionalAttributes interface instead
+	export interface AllowedComponentProps = Record<string, any>
+
 }
 ```
+# General Usage
 
+# Props
+
+To make it easier to style parts of components or override behavior, some components can accept additional prefixed attributes, for example, you can pass `wrapper-class` to the input component to style it's wrapper.
+
+I think this is nicer in general than having to pass an object with extra attributes. The only weird part, is because of how vue changes the case of props, for attributes like `innerHTML` you will need to pass `{prefix}-inner-h-t-m-l`, but all components have proper types to help this. Similarly events look like `{prefix}-on-click`.
+
+# Slots
+
+Usually it is possible to do most modifications through props, but slots to replace parts of components are available.
+
+Most slots where possible are passed all properties needed to replace them except classes so you can do something like this, to for example replace the simple input component inside the input component.
+
+```vue
+<lib-input>
+	<template #input="slotProps">
+		<lib-simple-input
+			:class="'completely custom styles'"
+			v-bind="slotProps"
+		></lib-simple-input>
+	</template>
+</lib-input>
+
+```
 
 # Development
 
 `src/main.ts` is a playground for testing things and will work with the `dev` script which will serve a vite server in dev mode.
 
 `scr/main.lib.ts` is the actual library export which is used when vite builds in production mode.
+
+## Props
+
+Due to issues with vue 3 removing $listeners and the fact that we can't inherit from an existing HTML attribute types to specify props for wrapper components (most of them), we have to declare props in a convoluted way to get proper types when we consume the componenets.
+
+Here is an example of the needed code for props to work correctly:
+```vue
+<script lang="ts">
+// this is done in a seperate script so that it actually compiles
+// and we can have interface merging, a setup script cannot interface merge
+
+import type { BaseInteractiveProps } from "../shared/props.js"
+
+// if using useDivideAttrs, we need to do the below for each prefix
+// a helper type WrapperProps is provided to do this
+type WrapperTypes =  (WrapperProps<"wrapper", HTMLAttributes, {
+	// overrides
+	/** Tailwind classes. */
+	class:string;
+}>)
+
+// real props vue can understand, they will show up under props.*
+type RealProps =
+// simple types are okay
+& BaseInteractiveProps
+& {
+	// any ignored props that we need to use in the component template 
+	// will need to be re-defined so vue can see them
+	// in a way vue can see them if it's one of the problem properties
+	id?: InputHTMLAttributes["id"]
+}
+
+
+interface Props
+	extends
+	// we need to ignore the complex InputHTMLAttributes type
+	// otherwise vue compilation fails
+	// if we ignore it, all it's properties are passed as fallback attrs
+	// NOT to props as normal
+	// we also need to omit properties or events that the component overrides with a different type
+	/** @vue-ignore */
+	Partial<Omit<InputHTMLAttributes,"class" | "onSubmit"> & {
+		//	overrides for the components
+		// usually, for example, class can only be a string (because of tailwind)
+		// this is still part of the ignored type above 
+		// it will be passed as an attr
+		class?:string
+	}>,
+	/** @vue-ignore */
+	Partial<WrapperTypes>,
+	RealProps
+{ }
+</script>
+
+<script lang="ts" setup>
+// eslint-disable-next-line no-duplicate-imports
+import { baseInteractivePropsDefaults } from "../shared/props.js"
+
+const props = withDefaults(defineProps<Props>(), {
+	id: "",
+	...baseInteractivePropsDefaults
+})
+const $ = useDivideAttrs(["wrapper"] as const)
+</script>
+```
+
+For prop types that don't error, I think we can just define them normally, but then it turns into a mess, some components will have their values in props, some in $attrs, this way. This is consistent and also more in line with what we expect.
+
+Related Links:
+- https://github.com/vuejs/rfcs/discussions/397
+- https://github.com/vuejs/core/issues/8522
+- https://github.com/vuejs/rfcs/pull/477
+- https://github.com/vuejs/language-tools/issues/1232#issuecomment-1118176103

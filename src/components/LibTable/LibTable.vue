@@ -91,35 +91,34 @@
 </template>
 
 <!-- generic="T extends Record<string, any> -->"
-<script setup lang="ts">
-/* awaiting better support for emitting component types with genertics */
-type T = any
+<script setup lang="ts" generic="T">
 import type { MakeRequired } from "@alanscodelog/utils"
 import { keys } from "@alanscodelog/utils/keys.js"
-import { computed, type PropType, ref } from "vue"
+import { computed, type PropType, ref, type TableHTMLAttributes } from "vue"
 
 import { vResizableCols } from "../../directives/vResizableCols.js"
 import { twMerge } from "../../helpers/twMerge.js"
 import type { ResizableOptions, TableColConfig } from "../../types.js"
+import type { TailwindClassProp } from "../shared/props.js"
 
 
 defineOptions({
 	name: "lib-table",
 })
 
-
-const props = defineProps({
-	resizable: { type: Object as PropType<Partial<ResizableOptions>>, required: false, default: () => ({}) },
-	values: { type: Object as PropType<T[]>, required: false, default: () => ([] as T[]) },
-	itemKey: { type: String as PropType<keyof T>, required: true },
-	/** Let's the table know the shape of the data since values might be empty. */
-	cols: { type: Object as PropType<(keyof T)[]>, required: true },
-	rounded: { type: Boolean, required: false, default: true },
-	border: { type: Boolean, required: false, default: true },
-	cellBorder: { type: Boolean, required: false, default: true },
-	header: { type: Boolean, required: false, default: true },
-	colConfig: { type: Object as PropType<TableColConfig<T>>, required: false, default: () => ({}) },
+// eslint-disable-next-line no-use-before-define
+const props = withDefaults(defineProps<Props>(), {
+	resizable: () => ({}),
+	values: () => [] as T[],
+	itemKey: "",
+	cols: () => [] as (keyof T)[],
+	rounded: true,
+	border: true,
+	cellBorder: true,
+	header: true,
+	colConfig: () => ({}) ,
 })
+
 const widths = ref([])
 const resizableOptions = computed<MakeRequired<Partial<ResizableOptions>, "colCount" | "widths">>(() => ({
 	colCount: props.cols.length,
@@ -128,9 +127,8 @@ const resizableOptions = computed<MakeRequired<Partial<ResizableOptions>, "colCo
 	...props.resizable,
 }))
 
+/* props.values.length instead of `props.values.length - 1` because we're creating an artificial first row for the header */
 const getExtraClasses = (row: number, col: number, isHeader: boolean): string[] => {
-	/* props.values.length instead of `props.values.length - 1` because we're creating an artificial first row for the header */
-
 	const res = {
 		bl: !isHeader && row === props.values.length - 1 && col === 0,
 		br: !isHeader && row === props.values.length - 1 && col === props.cols.length - 1,
@@ -154,4 +152,26 @@ const extraClasses = computed(() => Object.fromEntries([...Array(props.values.le
 	.flat(),
 ))
 
+</script>
+<script lang="ts">
+// generic isn't working here :/
+type T = any
+	
+type RealProps = {
+	resizable: Partial<ResizableOptions>
+	values: T[]
+	itemKey: keyof T
+	/** Let's the table know the shape of the data since values might be empty. */
+	cols: (keyof T)[]
+	rounded: boolean
+	border: boolean
+	cellBorder: boolean
+	header: boolean
+	colConfig: TableColConfig<T>
+}
+interface Props
+	extends
+	/** @vue-ignore */
+	Partial<Omit<TableHTMLAttributes,"class" | "readonly" | "disabled"> & TailwindClassProp>,
+	RealProps { }
 </script>

@@ -1,7 +1,7 @@
 <template>
 <Transition>
 	<div v-if="!hide"
-		:id="id"
+		:id="id ?? fallbackId"
 		:class="twMerge(`
 			w-[200px]
 			whitespace-nowrap
@@ -40,7 +40,7 @@
 		`,psuedoHide && `
 			after:opacity-0
 			before:opacity-0
-			`, ($attrs as any).class)"
+		`, ($attrs as any).class)"
 		:data-value="progress"
 		:title="label"
 		v-bind="{...$attrs, class:undefined}"
@@ -91,10 +91,10 @@
 </Transition>
 </template>
 <script setup  lang="ts">
-import { type PropType, ref, watch } from "vue"
+import { type HTMLAttributes,type PropType, ref, watch } from "vue"
 
 import { twMerge } from "../../helpers/twMerge.js"
-import { baseInteractiveProps, linkableByIdProps } from "../shared/props.js"
+import { type BaseInteractiveProps, baseInteractivePropsDefaults,getFallbackId,type LabelProps, type LinkableByIdProps, type TailwindClassProp } from "../shared/props.js"
 
 // TODO move to utils
 const clampVal = (n: number, min: number, max: number) => Math.min(Math.max(n, min), max)
@@ -103,28 +103,14 @@ defineOptions({
 	name: "lib-progress-bar",
 	inheritAttrs: false,
 })
-
-
-const props = defineProps({
-	...linkableByIdProps(),
-	...baseInteractiveProps,
-	progress: { type: Number, required: true },
-	label: { type: String, required: false, default: undefined },
-	/** Will auto hide after this given time if progress is 100% or more or less than 0% until progress is set to something else. Disabled (-1) by default. */
-	autohideOnComplete: { type: Number, required: false, default: -1 },
-	/**
-	 * Do not actually hide the element, just leave an unstyled div,
-	 * so the whole layout doesn't change on completion when autohideOnComplete is set.
-	 */
-	keepSpaceWhenHidden: { type: Boolean, required: false, default: false },
-	/**
-	 * By default the progress bar is visually clamped to 0-100, even if the value might be something else.
-	 * You can change what it's clamped to here, to for example,
-	 * show at least a small sliver of the progress bar when it's still 0.
-	 */
-	clamp: { type: Array as any as PropType<[start:number, end:number]>, required: false, default: () => [0, 100]},
+const fallbackId = getFallbackId()
+// eslint-disable-next-line no-use-before-define
+const props = withDefaults(defineProps<Props>(), {
+	autohideOnComplete: -1,
+	keepSpaceWhenHidden: false,
+	clamp: () => [0, 100],
+	...baseInteractivePropsDefaults
 })
-
 const hide = ref<boolean>(false)
 const psuedoHide = ref<boolean>(false)
 let timeout: number
@@ -172,4 +158,34 @@ watch([
 }, { immediate: false })
 
 </script>
+<script lang="ts">
 
+type RealProps =
+& LinkableByIdProps
+& BaseInteractiveProps
+& LabelProps
+& {
+	progress: number
+	/** Will auto hide after this given time if progress is 100% or more or less than 0% until progress is set to something else. Disabled (-1) by default. */
+	autohideOnComplete?: number
+	/**
+		* Do not actually hide the element, just leave an unstyled div,
+		* so the whole layout doesn't change on completion when autohideOnComplete is set.
+		*/
+	keepSpaceWhenHidden?: boolean
+	/**
+		* By default the progress bar is visually clamped to 0-100, even if the value might be something else.
+		* You can change what it's clamped to here, to for example,
+		* show at least a small sliver of the progress bar when it's still 0.
+		*/
+	clamp?: [start:number, end:number]
+}
+
+interface Props
+	extends
+	/** @vue-ignore */
+	Partial<Omit<HTMLAttributes,"class"> & TailwindClassProp>,
+	RealProps
+{ }
+
+</script>

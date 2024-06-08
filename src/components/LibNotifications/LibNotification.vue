@@ -13,7 +13,6 @@
 		gap-2
 		p-2 m-2
 	`,
-	/* notification.requiresAction && ` `, */
 	($attrs as any).class)"
 	v-bind="{ ...$attrs, class: undefined }"
 	tabindex="0"
@@ -59,7 +58,7 @@
 			"
 		>
 			<lib-button :label="option"
-				:class="buttonColors[i] == 'secondary' && 'p-0'"
+				:class="buttonColors[i] == 'secondary' ? 'p-0': undefined"
 				:border="buttonColors[i] !== 'secondary'"
 				:color="buttonColors[i]"
 				v-for="option, i in notification.options"
@@ -71,13 +70,14 @@
 </div>
 </template>
 <script setup lang="ts">
-import { computed, type PropType, ref, useAttrs } from "vue"
+import { computed, type HTMLAttributes,type PropType, ref, useAttrs,withDefaults } from "vue"
 
 import { copy } from "../../helpers/copy.js"
 import { type NotificationEntry, NotificationHandler } from "../../helpers/NotificationHandler.js"
 import { twMerge } from "../../helpers/twMerge.js"
 import fa from "../Fa/Fa.vue"
 import LibButton from "../LibButton/LibButton.vue"
+import type { BaseInteractiveProps, LabelProps, LinkableByIdProps, TailwindClassProp } from "../shared/props.js"
 
 
 defineOptions({
@@ -86,14 +86,15 @@ defineOptions({
 })
 const $attrs = useAttrs()
 
-const props = defineProps({
-	notification: { type: Object as PropType<NotificationEntry>, required: true },
-	// is not required only for testing
-	handler: { type: Object as PropType<NotificationHandler>, required: false, default: undefined },
+// eslint-disable-next-line no-use-before-define
+const props = withDefaults(defineProps<Props>(), {
+	handler: undefined,
 })
 
 const getColor = (notification: NotificationEntry, option: string): "ok" | "primary" | "danger" | "secondary" => notification.default === option ? "primary" : notification.dangerous.includes(option) ? "danger" : "secondary"
+
 /* Todo make this more flexible? */
+// eslint-disable-next-line @stylistic/space-in-parens
 const buttonColors = computed(() => props.notification.options.map((option: any /* what ??? */) => getColor(props.notification, option)))
 
 const notificationEl = ref<null | HTMLElement>(null)
@@ -105,3 +106,16 @@ defineExpose({
 
 </script>
 
+<script lang="ts">
+type RealProps = {
+	notification: NotificationEntry
+	handler?: NotificationHandler
+}
+
+interface Props
+	extends
+	/** @vue-ignore */
+	Partial<Omit<HTMLAttributes,"class"> & TailwindClassProp>,
+	RealProps
+{}
+</script>

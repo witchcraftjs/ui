@@ -1,6 +1,10 @@
 import type { ErrorW } from "@alanscodelog/utils"
 import { type Ref } from "vue"
 
+/** You can extend this interface to add your own attributes that can be passed to any element. */
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface AdditionalAttributes {
+}
 
 export type ResizableOptions = {
 	/**
@@ -50,4 +54,7 @@ export type TableColConfig<T = {}> = Record<keyof T, { name?: string, resizable?
 export type ResizeCallback = (_rect: DOMRectReadOnly, el: Element) => void
 
 export type FileInputError = ErrorW<{ file: File, isValidMimeType: boolean, isValidExtension: boolean }>
+
+export type HsvaColor = { h: number, s: number, v: number, a?: number }
+export type RgbaColor = { r: number, g: number, b: number, a?: number }
 

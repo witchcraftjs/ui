@@ -1,5 +1,5 @@
 <template>
-<button :id="id"
+<button :id="id ?? fallbackId"
 	:class="!unstyle && twMerge(`
 			button
 			flex
@@ -20,7 +20,7 @@
 			dark:hover:text-accent-500
 			dark:disabled:text-neutral-500
 			dark:disabled:hover:text-neutral-500
-			`,
+		`,
 		!color && `active:text-neutral-800` /* todo for colors */,
 		border && `
 			transition-all
@@ -75,9 +75,9 @@
 			dark:text-ok-600 dark:hover:text-ok-500
 		`,
 		!border && color === `warning` && `
-				text-warning-500 hover:text-warning-300
-				dark:text-warning-600 dark:hover:text-warning-400
-			`,
+			text-warning-500 hover:text-warning-300
+			dark:text-warning-600 dark:hover:text-warning-400
+		`,
 		!border && color === `danger` && `
 			text-danger-500 hover:text-danger-300
 			dark:text-danger-600 dark:hover:text-danger-400
@@ -152,9 +152,9 @@
 			dark:hover:border-accent-700
 			dark:hover:shadow-accent-900/50
 		`,
-		$attrs.class as any
+		($.attrs as any)?.class
 	)"
-	:type="$attrs.type ?? 'submit'"
+	:type="$.attrs.type ?? 'submit'"
 	:tabindex="0"
 	:disabled="disabled"
 	:data-border="border"
@@ -162,66 +162,91 @@
 	:aria-disabled="disabled"
 	v-bind="{
 		...autoTitle,
-		...$attrs,
+		...$.attrs,
 		class: undefined,
-		...listeners,
 		...ariaLabel,
 	}"
 >
-	<label :id="`label-${id}`" class="label pointer-events-none flex flex-1 items-center justify-center gap-1">
+	<label :id="`label-${id ?? fallbackId}`" class="label pointer-events-none flex flex-1 items-center justify-center gap-1">
 		<slot>
-			<slot name="icon" v-bind="{icon, ...extraAttrs.iconAttrs}">
+			<slot name="icon" v-bind="{icon, ...$.iconAttrs}">
 				<fa v-if="icon"
 					:icon="icon"
-					v-bind="{...extraAttrs.iconAttrs}"
+					v-bind="{...$.iconAttrs}"
 					class="slot before:content-vertical-holder flex items-center justify-center"
 				/>
 			</slot>
-			<span v-if="!isBlank(label)">
+			<span v-if="!isBlank(label!)">
 				{{ label }}
 			</span>
 		</slot>
 	</label>
 </button>
 </template>
+
 <script setup  lang="ts">
 import { isBlank } from "@alanscodelog/utils/isBlank.js"
 import { keys } from "@alanscodelog/utils/keys.js"
 import { pick } from "@alanscodelog/utils/pick.js"
-import { computed, type PropType } from "vue"
+import type { MakeRequired } from "@alanscodelog/utils/types"
+import { type ButtonHTMLAttributes,computed, type HTMLAttributes, type PropType,withDefaults } from "vue"
 
 import { useAriaLabel } from "../../composables/useAriaLabel.js"
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
 import { twMerge } from "../../helpers/twMerge.js"
 import fa from "../Fa/Fa.vue"
-import { baseInteractiveProps, fallthroughEventProps, labelProp, linkableByIdProps } from "../shared/props.js"
+import { type BaseInteractiveProps, baseInteractiveProps, baseInteractivePropsDefaults, getFallbackId,type LabelProps, type LinkableByIdProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
 
 
-const extraAttrs = useDivideAttrs(["icon"])
+const $ = useDivideAttrs(["icon"])
 
 defineOptions({
 	name: "lib-button",
 })
 
-/** Attributes can be passed to the icon by prefixing with icon- */
-const props = defineProps({
-	...linkableByIdProps(),
-	...labelProp,
-	...baseInteractiveProps,
-	...fallthroughEventProps,
-	readonly: undefined as any,
-	icon: { type: String, required: false, default: undefined },
-	color: { type: [String, Boolean] as PropType<"warning" | "ok" | "danger" | "primary" | "secondary" | false>, required: false, default: false },
-	unstyle: { type: Boolean, required: false, default: false },
-	autoTitleFromAria: Boolean,
+const fallbackId = getFallbackId()
+
+// eslint-disable-next-line no-use-before-define
+const props = withDefaults(defineProps<Props>(), {
+	icon: undefined,
+	color: false,
+	label: "",
+	...baseInteractivePropsDefaults
 })
 
-const listeners = computed(() => pick(props, keys(fallthroughEventProps) as any) as any)
 
-const ariaLabel = useAriaLabel(props)
+const ariaLabel = useAriaLabel(props, fallbackId)
 const autoTitle = computed(() => ({
-	title: (props.autoTitleFromAria && (extraAttrs.value.$attrs["aria-label"] ?? props.label)) || undefined,
+	title: (props.autoTitleFromAria && ($.value.attrs["aria-label"] ?? props.label)) || undefined,
 }))
 
 </script>
 
+<script lang="ts">
+type WrapperTypes = Partial<WrapperProps<"icon",HTMLAttributes >>
+type RealProps =
+	& LinkableByIdProps
+	& LabelProps
+	& BaseInteractiveProps
+	& {
+		border?: boolean
+		icon?: string
+		color?: "warning" | "ok" | "danger" | "primary" | "secondary" | false
+		label?: string
+		autoTitleFromAria?: boolean
+	}
+
+interface Props
+	extends
+	/** @vue-ignore */
+	Partial<Omit<ButtonHTMLAttributes,"class" | "color" | "disabled">
+	& TailwindClassProp
+	& {
+		// why is this not already a part of button?
+		"aria-label": string
+	}>,
+	/** @vue-ignore */
+	WrapperTypes,
+	RealProps
+{}
+</script>

@@ -8,16 +8,15 @@
 		disabled && `
 			text-neutral-400
 		`,
-		extraAttrs.wrapperAttrs.class
+		($.wrapperAttrs as any)?.class,
 	)"
 	tabindex="-1"
-	v-bind="{...extraAttrs.wrapperAttrs, class:undefined}"
+	v-bind="{...$.wrapperAttrs, class:undefined}"
 	@blur="canOpen = false"
 >
-	<slot name="label" v-bind="{ ...slotProps, type:'top', disabled, readonly, label }">
+	<slot name="label" v-bind="{ ...slotProps, label }">
 		<lib-label v-if="label || $slots.default"
-			:id="id"
-			:type="'top'"
+			:id="id ?? fallbackId"
 			:disabled="disabled"
 			:readonly="readonly"
 			:valid="valid"
@@ -36,57 +35,54 @@
 		:data-disabled="disabled"
 		:data-read-only="readonly"
 		:data-is-open="isOpen"
-		v-bind="{...extraAttrs['inner-wrapperAttrs'], class:undefined}"
+		v-bind="{...$['inner-wrapperAttrs'], class:undefined}"
 		:class="twMerge(`inner-wrapper
-					relative
-					flex
-					flex-1
-					basis-[100%]
-					flex-wrap
-					rounded
-					gap-2
-					px-2
-				`,
+				relative
+				flex
+				flex-1
+				basis-[100%]
+				flex-wrap
+				rounded
+				gap-2
+				px-2
+			`,
 			border && `
-					bg-inherit
-					border
-					border-neutral-500
-					outlined-within:border-accent-500
-				`,
+				bg-inherit
+				border
+				border-neutral-500
+				outlined-within:border-accent-500
+			`,
 			isOpen && `rounded-b-none`,
 			!valid && `
-					border-danger-700
-					outlined:!ring-danger-700
-					text-danger-800
-					dark:text-danger-400
-					dark:border-danger-600
-					`,
-			readonly && `
-					bg-neutral-50
-					text-neutral-800
-					dark:bg-neutral-950
-					dark:text-neutral-200
-					`,
-			disabled && `
-					bg-neutral-50
-					text-neutral-400
-					dark:border-neutral-600
-					border-neutral-400
+				border-danger-700
+				outlined:!ring-danger-700
+				text-danger-800
+				dark:text-danger-400
+				dark:border-danger-600
 				`,
-
-
-			extraAttrs['inner-wrapperAttrs'].class
+			readonly && `
+				bg-neutral-50
+				text-neutral-800
+				dark:bg-neutral-950
+				dark:text-neutral-200
+				`,
+			disabled && `
+				bg-neutral-50
+				text-neutral-400
+				dark:border-neutral-600
+				border-neutral-400
+			`,
+			($['inner-wrapperAttrs'] as any)?.class,
 		)"
 	>
 		<slot name="left" v-bind="slotProps"/>
 		<slot name="input" v-bind="{ ...inputProps, ...slotProps, suggestionsIndicatorClickHandler }">
 			<lib-simple-input
-				:id="id"
 				:class="twMerge(
 					`p-0`,
 					!$slots.left && `-ml-2 pl-2`,
-					!$slots.right && (!values || values.length === 0) && !suggestions && `-mr-2 -pr-2`,
-					extraAttrs.$attrs.class
+					!$slots.right && (!$values || $values.length === 0) && !suggestions && `-mr-2 -pr-2`,
+					($.attrs as any)?.class,
 				)"
 				v-bind="inputProps"
 			/>
@@ -103,8 +99,11 @@
 				<fa :class="isOpen && `rotate-180`" :icon="'chevron-up'"/>
 			</div>
 		</slot>
-		<slot name="values">
-			<template v-if="values && values.length > 0">
+		<slot
+			name="values"
+			v-bind="{...multivaluesProps, ...slotProps}"
+		>
+			<template v-if="$values && $values.length > 0">
 				<lib-multi-values
 					:class="twMerge(`
 							grow-[9000]
@@ -113,23 +112,19 @@
 						`,
 						!$slots.right && `
 							-mr-1
-						`
+						`,
+						($.multivaluesAttrs as any)?.class,
 					)"
-					:label="label"
-					:border="border"
-					:disabled="disabled"
-					:readonly="readonly"
-					:values="values"
-					@update:values="values = $event"
+					v-bind="multivaluesProps"
 				/>
 			</template>
 		</slot>
 		<slot name="right" v-bind="slotProps"/>
 
-		<slot v-if="suggestions" name="suggestions" v-bind="suggestionProps">
+		<slot v-if="suggestions" name="suggestions" v-bind="{...suggestionProps, ...slotProps}">
 			<!-- todo 1px needs to be abstracted to var -->
 			<lib-suggestions
-				class="
+				:class="twMerge(`
 					border-accent-500
 					absolute
 					-inset-x-px
@@ -137,7 +132,9 @@
 					z-10
 					rounded-b
 					border
-				"
+				`,
+					($.suggestionsAttrs as any)?.class,
+				)"
 				ref="suggestionsComponent"
 				v-bind="suggestionProps"
 			>
@@ -149,9 +146,10 @@
 	</div>
 </div>
 </template>
-<script setup lang="ts" generic="T extends string|number">
+<script setup lang="ts">
 import { pushIfNotIn } from "@alanscodelog/utils/pushIfNotIn.js"
-import { computed, type PropType, ref, useSlots, watch } from "vue"
+import type { MakeRequired } from "@alanscodelog/utils/types"
+import { computed, defineProps,type HTMLAttributes,type InputHTMLAttributes, type PropType, ref, useSlots, watch,withDefaults } from "vue"
 
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
 import { hasModifiers } from "../../helpers/hasModifiers.js"
@@ -161,7 +159,7 @@ import LibLabel from "../LibLabel/LibLabel.vue"
 import LibMultiValues from "../LibMultiValues/LibMultiValues.vue"
 import LibSimpleInput from "../LibSimpleInput/LibSimpleInput.vue"
 import LibSuggestions from "../LibSuggestions/LibSuggestions.vue"
-import { baseInteractiveProps, fallthroughEventProps, labelProp, linkableByIdProps, multiValueProps, suggestionsProps } from "../shared/props.js"
+import { type BaseInteractiveProps, baseInteractivePropsDefaults, getFallbackId,type LabelProps, type LinkableByIdProps, type MultiValueProps, type SuggestionsProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
 
 
 /* #region base */
@@ -170,45 +168,35 @@ defineOptions({
 	inheritAttrs: false,
 })
 const $slots = useSlots()
-// const $attrs = useAttrs()
-const emits = defineEmits<{
-	(e: "update:modelValue", val: T): void
-	(e: "submit", val: T): void
+const emit = defineEmits<{
+	(e: "submit", val: string): void
 	(e: "input", val: InputEvent): void
 	(e: "keydown", val: KeyboardEvent): void
 	(e: "blur", val: FocusEvent): void
 	(e: "focus", val: FocusEvent): void
 }>()
 
-/**
- * There's three levels of $attrs that can be passed, the outwer wrapper, the inner wrapper, and the input.
- *
- * Unprefixed attributes are passed directly to the input.
- *
- * The others can be passed to by prefixing with `wrapper-` and `inner-wrapper`.
- */
-const props = defineProps({
-	...linkableByIdProps(),
-	...baseInteractiveProps,
-	valid: { type: Boolean as PropType<boolean>, required: false, default: true },
-	...labelProp,
-	...suggestionsProps,
-	...multiValueProps,
-	...fallthroughEventProps,
+const fallbackId = getFallbackId()
+
+// eslint-disable-next-line no-use-before-define
+const props = withDefaults(defineProps<Props>(), {
+	valid: true,
+	suggestions: undefined,
+	...baseInteractivePropsDefaults,
 })
 
-const extraAttrs = useDivideAttrs(["wrapper", "inner-wrapper"])
+const $ = useDivideAttrs(["wrapper", "inner-wrapper", "suggestions", "multivalues"] as const)
 
-const values = defineModel<T[] | undefined>("values", { default: undefined })
-const modelValue = defineModel<T>({ required: true })
+const $values = defineModel<string[] | undefined>("values", { default: undefined })
+const $modelValue = defineModel<string>({ required: true })
 
 
-const inputValue = ref<any>(modelValue.value)
+const inputValue = ref<any>($modelValue.value)
 const canEdit = computed(() => !props.disabled && !props.readonly)
 const suggestionsComponent = ref<typeof LibSuggestions | null>(null)
 const activeSuggestion = ref(0)
-watch(() => modelValue.value, () => {
-	inputValue.value = modelValue.value
+watch(() => $modelValue.value, () => {
+	inputValue.value = $modelValue.value
 })
 
 const inputWrapperEl = ref<HTMLElement | null>(null)
@@ -227,101 +215,140 @@ const suggestionsIndicatorClickHandler = () => {
 	if (canOpen.value) {
 		const inputEl = inputWrapperEl.value?.querySelector("input, .input") as HTMLElement | null
 		inputEl?.focus()
-	} else {
-		// inputWrapperEl.value?.blur()
 	}
 }
 const handleInput = (e: InputEvent) => {
 	if (canEdit.value) {
 		if (!props.restrictToSuggestions) {
-			emits("update:modelValue", (e.target as any)?.value)
+			$modelValue.value = (e.target as any)?.value
 		} // else suggestions will handle updating modelvalue
 		canOpen.value = true
 	}
-	emits("input", e)
+	emit("input", e)
 }
 
 const handleKeydown = (e: KeyboardEvent) => {
-	// @ts-expect-error awaiting proper types for defineExpose
-	if (props.suggestions) suggestionsComponent.value?.inputKeydownHandler?.(e)
+	if (props.suggestions)(suggestionsComponent.value as any)?.inputKeydownHandler?.(e)
 
-	if (values.value && e.key === "Enter" && !hasModifiers(e)) {
+	if ($values.value && e.key === "Enter" && !hasModifiers(e)) {
 		props.preventDuplicateValues
-			? pushIfNotIn(values.value, [inputValue.value])
-			: values.value.push(inputValue.value)
+			? pushIfNotIn($values.value, [inputValue.value])
+			: $values.value.push(inputValue.value)
 	}
-	if (values.value && e.key === "Escape" && !hasModifiers(e)) {
+	if ($values.value && e.key === "Escape" && !hasModifiers(e)) {
 		canOpen.value = false
 	}
-	emits("keydown", e)
+	emit("keydown", e)
 }
 const handleBlur = (e: FocusEvent) => {
 	if (props.suggestions) {
-		// @ts-expect-error awaiting proper types for defineExpose
-		suggestionsComponent.value?.inputBlurHandler?.(e)
+		(suggestionsComponent.value as any)?.inputBlurHandler?.(e)
 	}
 	canOpen.value = false
-	inputValue.value = modelValue.value
-	emits("blur", e)
+	inputValue.value = $modelValue.value
+	emit("blur", e)
 }
 const handleFocus = (e: FocusEvent) => {
 	canOpen.value = true
-	emits("focus", e)
+	emit("focus", e)
 }
+
 // todo emitting of value changes for isvalid
 const inputProps = computed(() => ({
+	id: props.id ?? fallbackId,
 	border: false,
 	disabled: props.disabled,
 	readonly: props.readonly,
-	// class: inputClasses.value,
 	valid: isActuallyValid.value,
 	onInput: handleInput,
 	onKeydown: handleKeydown,
 	onBlur: handleBlur,
 	onFocus: handleFocus,
 	modelValue: inputValue.value,
-	"onUpdate:modelValue": (e: T) => {
+	"onUpdate:modelValue": (e: string) => {
 		inputValue.value = e
 	},
-	onSubmit: (e: T) => {
+	onSubmit: (e: string) => {
 		isOpen.value = false
-		emits("submit", e)
+		emit("submit", e)
 	},
-	"aria-autocomplete": props.suggestions !== undefined ? "both" : undefined,
-	"aria-controls": props.suggestions !== undefined ? `suggestions-${props.id}` : undefined,
+	"aria-autocomplete": props.suggestions !== undefined ? "both" as const : undefined,
+	"aria-controls": props.suggestions !== undefined ? `suggestions-${props.id ?? fallbackId}` : undefined,
 	role: props.suggestions ? "combobox" : undefined,
 	"aria-expanded": props.suggestions !== undefined ? isOpen.value : undefined,
-	"aria-activedescendant": isOpen.value ? `suggestion-${props.id}-${activeSuggestion.value}` : undefined,
+	"aria-activedescendant": isOpen.value ? `suggestion-${props.id ?? fallbackId}-${activeSuggestion.value}` : undefined,
 	canEdit: canEdit.value,
-	...extraAttrs.value.$attrs,
+	...$.value.attrs,
 	class: undefined,
 }))
 
 const slotProps = computed(() => ({
+	id: props.id ?? fallbackId,
 	isOpen: isOpen.value,
 	isValid: props.valid ?? isValid.value,
-	id: props.id,
+	disabled: props.disabled,
+	readonly: props.readonly,
 }))
 
 const suggestionProps = computed(() => ({
-	id: props.id,
+	id: props.id ?? fallbackId,
 	suggestions: props.suggestions,
 	allowOpenEmpty: props.allowOpenEmpty,
 	restrictToSuggestions: props.restrictToSuggestions,
 	suggestionLabel: props.suggestionLabel,
 	suggestionsFilter: props.suggestionsFilter,
-	modelValue: modelValue.value.toString(),
+	modelValue: $modelValue.value.toString(),
 	inputValue: inputValue.value,
 	canOpen: canOpen.value,
-	onSubmit: (e: T) => {
+	onSubmit: (e: string) => {
 		canOpen.value = false
-		emits("submit", e)
+		emit("submit", e)
 	},
 	"onUpdate:isOpen": (e: boolean) => { isOpen.value = e },
 	"onUpdate:isValid": updateIsValid,
 	"onUpdate:activeSuggestions": (e: number) => activeSuggestion.value = e,
-	"onUpdate:inputValue": (e: T) => inputValue.value = e,
-	"onUpdate:modelValue": (e: T) => modelValue.value = e,
+	"onUpdate:inputValue": (e: string) => inputValue.value = e,
+	"onUpdate:modelValue": (e: string) => $modelValue.value = e,
+	...$.value.suggestionsAttrs,
+	class: undefined,
 }))
+
+const multivaluesProps = computed(() => ({
+	hasSlotRight: !$slots.right,
+	label: props.label,
+	border: props.border,
+	disabled: props.disabled,
+	readonly: props.readonly,
+	values: $values.value,
+	"onUpdate:values": (e: string[]) => $values.value = e,
+	...$.value.multivaluesAttrs,
+	class: undefined,
+}))
+</script>
+<script lang="ts">
+
+type WrapperTypes =
+	& WrapperProps<"suggestions",HTMLAttributes >
+	& WrapperProps<"wrapper", HTMLAttributes >
+	& WrapperProps<"inner-wrapper",HTMLAttributes>
+
+type RealProps =
+	SuggestionsProps
+	& LinkableByIdProps
+	& LabelProps
+	& BaseInteractiveProps
+	& MultiValueProps
+& {
+	suggestions?: SuggestionsProps["suggestions"]
+	valid?: boolean
+}
+
+interface Props
+	extends
+	/** @vue-ignore */
+	Partial<Omit<InputHTMLAttributes,"class" | "readonly" | "disabled"> & TailwindClassProp>,
+	/** @vue-ignore */
+	Partial<WrapperTypes>,
+	RealProps { }
 </script>
 

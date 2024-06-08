@@ -13,30 +13,19 @@
 </div>
 </template>
 
-<script lang="ts">
-export default {
-
-	name: "fa",
-}
-</script>
-
 <script setup lang="ts">
 import type { IconParams } from "@fortawesome/fontawesome-svg-core"
 import { FontAwesomeIcon,type FontAwesomeIconProps } from "@fortawesome/vue-fontawesome"
-import { computed, useAttrs } from "vue"
+import { computed, type HTMLAttributes,useAttrs } from "vue"
 
 import { twMerge } from "../../helpers/twMerge.js"
+import type { TailwindClassProp } from "../shared/props.js"
 
 
-const $attrs: IconParams | FontAwesomeIconProps | Record<string, any> = useAttrs()
+const $attrs = useAttrs()
 
-
-const props = defineProps({
-	/** Names without the fa- part, so instead of `fa-plus fa-sharp`, it's `plus sharp`. Defaults to solid set if no weight (e.g solid/regular) specified.*/
-	icon: { type: String, required: true },
-	// attrs: { type: Object as PropType<IconParams | FontAwesomeIconProps | Record<string, any>>, required: false, default: () => ({ fixedWidth: true }) },
-})
-
+// eslint-disable-next-line no-use-before-define
+const props = defineProps<Props>()
 
 const name = computed(() => {
 	const names = props.icon.split(" ")
@@ -45,5 +34,26 @@ const name = computed(() => {
 })
 
 
+</script>
+
+<script lang="ts">
+export default {
+	name: "fa",
+}
+
+type RealProps = {
+	/** Names without the fa- part, so instead of `fa-plus fa-sharp`, it's `plus sharp`. Defaults to solid set if no weight (e.g solid/regular) specified.*/
+	icon: string
+}
+
+interface Props
+	extends
+	/** @vue-ignore */
+	Partial<Omit<HTMLAttributes, "class">
+		& TailwindClassProp
+		& IconParams
+		& Omit<FontAwesomeIconProps, "icon">
+	>,
+	RealProps { }
 </script>
 

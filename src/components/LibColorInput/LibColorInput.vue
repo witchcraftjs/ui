@@ -5,10 +5,14 @@
 	<template #button="{extractEl}">
 		<lib-button
 			:id="id"
-			class="flex flex-nowrap"
+			:class="twMerge(`
+				flex flex-nowrap
+			`,
+				($attrs as any).class
+			)"
 			:aria-label="stringColor"
 			:title="stringColor"
-			v-bind="$attrs"
+			v-bind="{...$attrs, class: undefined}"
 			v-extract-root-el="extractEl"
 			@click="togglePopup"
 		>
@@ -43,62 +47,78 @@
 			:allow-alpha="allowAlpha"
 			v-model="tempValue"
 			v-extract-root-el="extractEl"
-			@save="emits('update:modelValue', tempValue); showPopup = false"
+			@save="$value = tempValue; showPopup = false"
 			@cancel="showPopup = false"
 		/>
 	</template>
 </lib-popup>
-	<!-- </div> -->
 </template>
 
 <script setup lang="ts">
 import { colord } from "colord"
-import { computed, type PropType, ref, useAttrs } from "vue"
+import { type ButtonHTMLAttributes,computed, type PropType, ref, useAttrs,withDefaults } from "vue"
 
 import { vExtractRootEl } from "../../directives/vExtractRootEl.js"
+import { twMerge } from "../../helpers/twMerge.js"
+import type { HsvaColor, RgbaColor } from "../../types.js"
 import LibButton from "../LibButton/LibButton.vue"
 import LibColorPicker from "../LibColorPicker/LibColorPicker.vue"
 import LibPopup from "../LibPopup/LibPopup.vue"
-import { linkableByIdProps } from "../shared/props.js"
+import { getFallbackId,type LabelProps, type LinkableByIdProps, type TailwindClassProp } from "../shared/props.js"
 
-
-type HsvaColor = { h: number, s: number, v: number, a?: number }
-type RgbaColor = { r: number, g: number, b: number, a?: number }
 defineOptions({
 	name: "lib-color-input",
 })
-const props = defineProps({
-	...linkableByIdProps(),
-	modelValue: { type: Object as PropType<RgbaColor>, required: false, default: () => ({ r: 0, g: 0, b: 0 }) },
-	allowAlpha: { type: Boolean, required: false, default: true },
-	copyTransform: {
-		type: Function as PropType<(val: HsvaColor, stringVal: string) => any>,
-		required: false,
-		default: (_val: RgbaColor, stringVal: string) => stringVal,
-	},
-})
-const $attrs = useAttrs()
 
-const stringColor = computed(() => colord(props.modelValue).toRgbString())
-const tempValue = ref({ ...props.modelValue })
+// todo move to types
+
+
+const fallbackId = getFallbackId()
+// eslint-disable-next-line no-use-before-define
+const props = withDefaults(defineProps<Props>(), {
+	allowAlpha: true,
+	border: true,
+	copyTransform: (_val: HsvaColor, stringVal: string) => stringVal,
+})
+
+
+const $attrs = useAttrs()
+ 
+const $value = defineModel<RgbaColor>({ required: false, default: () => ({ r: 0, g: 0, b: 0 }) })
+const stringColor = computed(() => colord($value.value).toRgbString())
+const tempValue = ref({ ...$value.value })
 
 const showPopup = ref(false)
 
-const emits = defineEmits<{
-	(e: "update:modelValue", val: RgbaColor): void
-}>()
-
-
-const updateValue = (val: RgbaColor): void => {
-	emits("update:modelValue", val)
-}
 
 const togglePopup = (): void => {
 	if (showPopup.value) {
-		updateValue(tempValue.value)
+		$value.value = tempValue.value
 	}
 	showPopup.value = !showPopup.value
 }
 
 </script>
 
+<script lang="ts">
+
+type RealProps =
+& LabelProps
+& LinkableByIdProps
+& {
+	allowAlpha?: boolean
+	border?: boolean
+	copyTransform?: (val: HsvaColor, stringVal: string) => any
+}
+interface Props
+	extends
+	/** @vue-ignore */
+	Partial<Omit<ButtonHTMLAttributes,"class">
+	& TailwindClassProp
+	& {
+		// why is this not already a part of button?
+		"aria-label": string
+	}>,
+	RealProps
+{}
+</script>

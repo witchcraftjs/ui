@@ -16,28 +16,27 @@
 	</div>
 </div>
 </template>
+
 <script lang="ts">
- 
 export default { name: "lib-palette" }
 </script>
+
 <script setup  lang="ts">
 import { keys } from "@alanscodelog/utils/keys.js"
 import { type Theme } from "metamorphosis"
 import { type PropType } from "vue"
 
-import { baseInteractiveProps, linkableByIdProps } from "../shared/props.js"
+import { type BaseInteractiveProps, baseInteractiveProps, baseInteractivePropsDefaults,type LinkableByIdProps } from "../shared/props.js"
 
- 
-/* const emits =  */defineEmits<{
-	(e: "update:modelValue", val: string): void
-}>()
- 
 
-const props = defineProps({
-	...linkableByIdProps(),
-	...baseInteractiveProps,
-	modelValue: { type: String as PropType<string>, required: true },
-	theme: { type: Object as PropType<Theme>, required: true },
+const props = withDefaults(defineProps<
+& LinkableByIdProps
+& BaseInteractiveProps
+& {
+	theme: Theme
+}>(), {
+	theme: () => ({} as any),
+	...baseInteractivePropsDefaults
 })
 
 const exclude = ["--color-bg", "--color-fg"]

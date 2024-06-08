@@ -1,5 +1,6 @@
 <template>
-<div aria-label="color picker"
+<div :id="id ?? fallbackId"
+	aria-label="color picker"
 	:class="twMerge(`color-picker
 			[--slider-size:var(--spacing-4)]
 			[--contrast-dark:var(--color-neutral-100)]
@@ -17,7 +18,7 @@
 			[--fg:rgb(var(--contrast-light))]
 			[--bg:rgb(var(--contrast-dark))]
 		`,
-		border &&`
+		border && `
 			border rounded border-neutral-600
 		`
 	)"
@@ -141,15 +142,15 @@
 import { castType } from "@alanscodelog/utils/castType.js"
 import { isArray } from "@alanscodelog/utils/isArray.js"
 import { colord } from "colord"
-import { computed, onMounted, type PropType, reactive, type Ref, ref, type UnwrapRef, watch } from "vue"
+import { computed, onMounted, type PropType, reactive, type Ref, ref, type UnwrapRef,watch,withDefaults } from "vue"
 
 import { twMerge } from "../../helpers/twMerge.js"
+import type { HsvaColor, RgbaColor } from "../../types.js"
 import aria from "../Aria/Aria.vue"
 import fa from "../Fa/Fa.vue"
 import LibButton from "../LibButton/LibButton.vue"
 import LibInput from "../LibInput/LibInput.vue"
-import { labelProp } from "../shared/props.js"
-
+import { getFallbackId, type LabelProps , type LinkableByIdProps } from "../shared/props.js"
 
 defineOptions({
 	name: "lib-color-picker",
@@ -182,22 +183,24 @@ const handleClasses = `
 
 const ariaDescription = "Use the arrow keys to move the handle, or use shift to move in 10 pixel increments."
 
-type HsvaColor = { h: number, s: number, v: number, a?: number }
-type RgbaColor = { r: number, g: number, b: number, a?: number }
-const props = defineProps({
-	...labelProp,
-	modelValue: { type: Object as PropType<RgbaColor>, required: false, default: () => ({ r: 0, g: 0, b: 0 }) },
-	allowAlpha: { type: Boolean, required: false, default: true },
-	border: { type: Boolean, required: false, default: true },
-	copyTransform: {
-		type: Function as PropType<(val: HsvaColor, stringVal: string) => any>,
-		required: false,
-		default: (_val: RgbaColor, stringVal: string) => stringVal,
-	},
+const $value = defineModel<RgbaColor>({ required: false, default: () => ({ r: 0, g: 0, b: 0 }) })
+
+const fallbackId = getFallbackId()
+const props = withDefaults(defineProps<
+& LabelProps
+& LinkableByIdProps
+& {
+	allowAlpha?: boolean
+	border?: boolean
+	copyTransform?: (val: HsvaColor, stringVal: string) => any
+}>(), {
+	allowAlpha: true,
+	border: true,
+	copyTransform: (_val: HsvaColor, stringVal: string) => stringVal,
 })
 
+
 const emits = defineEmits<{
-	(e: "update:modelValue", val: RgbaColor): void
 	(e: "save", val: RgbaColor): void
 	(e: "cancel"): void
 }>()
@@ -407,11 +410,11 @@ const parseInput = (e: Event): void => {
 }
 
 onMounted(() => {
-	const color = colord(props.modelValue)
+	const color = colord($value.value)
 	update(color.toHsv())
 })
 watch(props, () => {
-	const color = colord(props.modelValue)
+	const color = colord($value.value)
 	update(color.toHsv())
 })
 
@@ -422,7 +425,7 @@ watch(localColor, () => {
 const save = (): void => {
 	const color = colord(localColor.val).toRgb()
 	update(localColor.val, { updatePosition: false, updateValue: false })
-	emits("update:modelValue", color)
+	$value.value = color
 	emits("save", color)
 }
 

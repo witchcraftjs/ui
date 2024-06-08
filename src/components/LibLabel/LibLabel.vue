@@ -1,47 +1,63 @@
 <template>
+<!-- we use data-disabled because labels have no disabled property technically -->
 <label
-	:id="`label-${id}`"
+	:id="`label-${id ?? fallbackId}`"
 	:class="!unstyled && twMerge(`
-			pr-2
-			border
-			border-transparent
-		`,
-		type === 'top' && `
 			pr-0
 			text-sm
 		`,
-		!valid && `text-danger-700`
-	)
-	"
-	:data-top="type === 'top'"
+		!valid && `text-danger-700`,
+		($attrs as any)?.class
+	)"
 	:data-disabled="disabled"
-	:readonly="readonly"
 	:data-invalid="!valid"
 	:for="id"
+	v-bind="{...$attrs, class:undefined}"
 >
 	<slot/>
 </label>
 </template>
+
 <script setup  lang="ts">
-import { type PropType } from "vue"
+import type { MakeRequired } from "@alanscodelog/utils/types"
+import { type LabelHTMLAttributes,toRef,useAttrs ,withDefaults } from "vue"
 
 import { twMerge } from "../../helpers/twMerge.js"
-import { baseInteractiveProps, linkableByIdProps } from "../shared/props.js"
+import { type BaseInteractiveProps, baseInteractivePropsDefaults, getFallbackId, type LabelProps, type LinkableByIdProps, type TailwindClassProp } from "../shared/props.js"
 
 
 defineOptions({
 	name: "lib-label",
 })
-// const el = ref<null | HTMLElement>(null)
 
-/* const props =*/ defineProps({
-	...linkableByIdProps(),
-	...baseInteractiveProps,
-	type: { type: String as PropType<"normal" | "top">, required: false, default: "normal" },
-	border: undefined as any,
-	valid: { type: Boolean as PropType<boolean>, required: false, default: true },
-	unstyled: { type: Boolean as PropType<boolean>, required: false, default: false },
+const fallbackId = getFallbackId()
+
+// eslint-disable-next-line no-use-before-define
+const props = withDefaults(defineProps<Props>(), {
+	id: "",
+	unstyled: undefined,
+	valid: true,
+	...baseInteractivePropsDefaults,
 })
 
-
+const $attrs = useAttrs()
 </script>
+
+<script lang="ts">
+type RealProps =
+	& LinkableByIdProps
+	& LabelProps
+	& BaseInteractiveProps
+	& {
+		unstyled?: boolean
+		valid?: boolean
+	}
+
+interface Props
+	extends
+	/** @vue-ignore */
+	Partial<Omit<LabelHTMLAttributes,"class"> & TailwindClassProp>,
+	RealProps
+{}
+</script>
+

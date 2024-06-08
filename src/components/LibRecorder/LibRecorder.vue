@@ -4,7 +4,7 @@
 	contenteditable=false is because of storybook, it's shortcuts interfere when not using real input elements
 	-->
 <div
-	:id="id"
+	:id="id?? fallbackId"
 	:class="twMerge(`recorder
 			flex items-center
 			gap-2
@@ -65,12 +65,11 @@
 </template>
 <script setup lang="ts">
 import { keys } from "@alanscodelog/utils/keys.js"
-import { computed, onBeforeUnmount, onMounted, type PropType, ref, watch, watchPostEffect } from "vue"
+import { computed, type HTMLAttributes ,onBeforeUnmount, onMounted, type PropType, ref, watch, watchPostEffect } from "vue"
 
 import { useAriaLabel } from "../../composables/useAriaLabel.js"
 import { twMerge } from "../../helpers/twMerge.js"
-import { baseInteractiveProps, labelProp, linkableByIdProps } from "../shared/props.js"
-
+import { type BaseInteractiveProps, baseInteractivePropsDefaults, getFallbackId, type LabelProps, type LinkableByIdProps,type TailwindClassProp } from "../shared/props.js"
 
 defineOptions({
 	name: "lib-recorder",
@@ -85,35 +84,17 @@ const emits = defineEmits<{
 	/* User presses enter. Not emitted when multiple values are used. */
 	(e: "focus:parent"): void
 }>()
-
-const props = defineProps({
-	...linkableByIdProps(),
-	...baseInteractiveProps,
-	...labelProp,
-	/** A value to display while recording. */
-	recordingValue: { type: String as PropType<string>, required: false, default: "Recording" },
-	/** A title to display on the input div while recording. Is also used as the aria-description. */
-	recordingTitle: { type: String as PropType<string>, required: false, default: "" },
-	/**
-	 * The recorder object is a series of event listeners to attach to the input div while recording is started. If you need to bind directly to the element, see the `binders` prop.
-	 *
-	 * The listeners are then unbound when recording is set to false again.
-	 *
-	 * Note that the component does not handle the setting of `recording` (unless the component is disabled), `modelValue`,  or `recordingValue` at all and has no mechanism for cancelling a recording. It is left to the recorder listeners and any `recorder:*` handlers to determine what to do.
-	 */
-	recorder: {
-		type: Object as PropType<undefined | Record<string, any>>,
-		required: false,
-		default: undefined,
-	},
-	/** This provides a way to manually attach/remove event listeners to/from the element. It is an alternative to the `recorder` prop, see it for more details. Both cannot be specified at the same time.*/
-	binders: {
-		type: Object as PropType<undefined | { bind: (el: HTMLElement) => void, unbind: (el: HTMLElement) => void }>,
-		required: false,
-		default: undefined,
-	},
+const fallbackId = getFallbackId()
+// eslint-disable-next-line no-use-before-define
+const props = withDefaults(defineProps<Props>(), {
+	recordingValue: "Recording",
+	recordingTitle: "",
+	id: undefined,
+	fallbackId: undefined,
+	binders: undefined,
+	recorder: undefined,
+	...baseInteractivePropsDefaults
 })
-
 /**
  * Puts the element into recording mode if true. See {@link props.recorder}.
  */
@@ -221,4 +202,36 @@ const handleClickRecorder = (e: MouseEvent | KeyboardEvent, isSpaceKey: boolean 
 	}
 }
 
+</script>
+<script lang="ts">
+type RealProps =
+& LinkableByIdProps
+& BaseInteractiveProps
+& LabelProps
+& {
+	border?: boolean
+	/** A value to display while recording. */
+	recordingValue?: string
+	/** A title to display on the input div while recording. Is also used as the aria-description. */
+	recordingTitle?: string
+	/**
+	 * The recorder object is a series of event listeners to attach to the input div while recording is started. If you need to bind directly to the element, see the `binders` prop.
+	 *
+	 * The listeners are then unbound when recording is set to false again.
+	 *
+	 * Note that the component does not handle the setting of `recording` (unless the component is disabled), `modelValue`,  or `recordingValue` at all and has no mechanism for cancelling a recording. It is left to the recorder listeners and any `recorder:*` handlers to determine what to do.
+	 */
+	recorder?: undefined | Record<string, any>
+	/** This provides a way to manually attach/remove event listeners to/from the element. It is an alternative to the `recorder` prop, see it for more details. Both cannot be specified at the same time.*/
+	binders?: undefined | { bind: (el: HTMLElement) => void, unbind: (el: HTMLElement) => void }
+	/** The id of the element. If not provided, the id will be generated automatically. */
+	id?: string
+}
+
+interface Props
+	extends
+	/** @vue-ignore */
+	Partial<Omit<HTMLAttributes,"class"> & TailwindClassProp>,
+	RealProps
+{ }
 </script>

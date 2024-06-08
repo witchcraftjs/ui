@@ -1,7 +1,8 @@
 <template>
-<nav class="pages
+<nav
+	:class="twMerge(`
 		flex flex-wrap items-center justify-center gap-2
-	"
+	`, ($attrs as any).class)"
 	role="navigation"
 	aria-label="Pagination Navigation"
 >
@@ -105,8 +106,10 @@
 </nav>
 </template>
 <script setup lang="ts">
-import { computed, type PropType, watch } from "vue"
+import { computed, type HTMLAttributes,type PropType, useAttrs,watch,withDefaults } from "vue"
 
+import { twMerge } from "../../helpers/twMerge.js"
+import { type TailwindClassProp } from "../shared/props.js"
 
 const commonClasses = `
 	block
@@ -133,45 +136,19 @@ defineOptions({
 	name: "lib-pagination",
 	inheritAttrs: false,
 })
-/**
- * Pagination component.
- *
- * Can be passed a slot like so to use a custom link element (like NuxtLink):
- * ```vue
- * <template #link="{ href, i, text, ariaLabel, ariaCurrent}">
- * 	<NuxtLink :to="href" :aria-label="ariaLabel" :aria-current="ariaCurrent ?? false">{{ text ?? i }}</NuxtLink>
- * </template>
- * ```
- */
-const props = defineProps({
-	/** The total number of pages. */
-	total: { type: Number as PropType<number>, required: true },
-	/** The number of the current page. It must be valid, between 0 - total or the component will throw an error. */
-	current: { type: Number as PropType<number>, required: true },
-	/** The base route/link path for the page. Should end with a forward slash `/`. */
-	route: { type: String as PropType<string>, required: true },
-	/**
-	 * A function to customize the output href and page link number. By default, page 0 is page 1, page 1 is 1, then everything else is normal.
-	 *
-	 * This is because usually we have routes like: `/page/1`, `/page/2`, not `/page/0`.
-	 *
-	 * You can use this function to customize things further. For example, make `/page/1` just `/`
-	 */
-	customRoute: {
-		type: Function as PropType<(route: string, i: number) => { i: number, href: string }>,
-		required: false,
-		default: (route: string, i: number) => {
-			if (i === 0 || i === 1) {
-				const num = 1
-				return { href: route, i: num }
-			}
-			return { href: route + i.toString(), i }
-		},
-	},
-	/** How many extra pages to show to each side of the current page. */
-	extraPages: { type: Number as PropType<number>, required: false, default: 3 },
-})
 
+// eslint-disable-next-line no-use-before-define
+const props = withDefaults(defineProps<Props>(), {
+	customRoute: (route: string, i: number) => {
+		if (i === 0 || i === 1) {
+			const num = 1
+			return { href: route, i: num }
+		}
+		return { href: route + i.toString(), i }
+	},
+	extraPages: 3,
+})
+const $attrs = useAttrs()
 
 const currentLink = computed(() => props.customRoute(props.route, props.current))
 const currentIsInvalid = computed(() => currentLink.value.i < 0 || currentLink.value.i > props.total)
@@ -209,4 +186,43 @@ const extraPagesNext = computed(() => [...Array(props.extraPages + 1)].map((_, i
 }).filter(entry => entry !== undefined).slice(0, props.extraPages) as HrefInfo[])
 
 </script>
+<script lang="ts">
 
+/**
+ * Pagination component.
+ *
+ * Can be passed a slot like so to use a custom link element (like NuxtLink):
+ * ```vue
+ * <template #link="{ href, i, text, ariaLabel, ariaCurrent}">
+ * 	<NuxtLink :to="href" :aria-label="ariaLabel" :aria-current="ariaCurrent ?? false">{{ text ?? i }}</NuxtLink>
+ * </template>
+ * ```
+ */
+export default {
+	name: "lib-pagination",
+}
+type RealProps = {
+	/** The total number of pages. */
+	total: number
+	/** The number of the current page. It must be valid, between 0 - total or the component will throw an error. */
+	current: number
+	/** The base route/link path for the page. Should end with a forward slash `/`. */
+	route: string
+	/**
+	 * A function to customize the output href and page link number. By default, page 0 is page 1, page 1 is 1, then everything else is normal.
+	 *
+	 * This is because usually we have routes like: `/page/1`, `/page/2`, not `/page/0`.
+	 *
+	 * You can use this function to customize things further. For example, make `/page/1` just `/`
+	 */
+	customRoute?: (route: string, i: number) => { i: number, href: string }
+	/** How many extra pages to show to each side of the current page. */
+	extraPages?: number
+}
+interface Props
+	extends
+	/** @vue-ignore */
+	Partial<Omit<HTMLAttributes,"class"> & TailwindClassProp>,
+	RealProps
+{}
+</script>

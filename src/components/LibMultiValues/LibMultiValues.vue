@@ -1,57 +1,59 @@
 <template>
 <div
-	v-if="values && values?.length > 0"
+	v-if="$values && $values?.length > 0"
 	:class="twMerge(`
-			values
-			group
-			flex
-			flex-initial
-			items-center
-			justify-center
-			gap-1
-			overflow-x-scroll
-			scrollbar-hidden
-		`, ($attrs as any).class)
+		values
+		group
+		flex
+		flex-initial
+		items-center
+		justify-center
+		gap-1
+		overflow-x-scroll
+		scrollbar-hidden
+	`,
+		($ as any)?.class)
 	"
 	:data-disabled="disabled"
 	:data-read-only="readonly"
 	:aria-label="`Values for ${label}`"
 	:tabindex="disabled ? -1 : 0"
-	v-bind="{...$attrs, class:undefined}"
+	v-bind="{...$, class:undefined}"
 >
 	<div
 		:data-border="border"
 		:class="twMerge(`
-					value_wrapper
-					flex-basis-0
-					min-w-2
-					flex
-					max-w-fit
-					flex-1
-					items-center
-					gap-0.5
-					overflow-hidden
-					px-1
-					text-xs
-					leading-none`,
+				value_wrapper
+				flex-basis-0
+				min-w-2
+				flex
+				max-w-fit
+				flex-1
+				items-center
+				gap-0.5
+				overflow-hidden
+				px-1
+				text-xs
+				leading-none`,
 			!(disabled || readonly) && `
-					group-focus:text-accent-500
-					focus:text-accent-500`,
+				group-focus:text-accent-500
+				focus:text-accent-500`,
 			border && `
-					rounded
-					border-neutral-400
-					border
-					focus:border-accent-400
-				`,
+				rounded
+				border-neutral-400
+				border
+				focus:border-accent-400
+			`,
 			border && (disabled || readonly) && `
-					border-neutral-200
-					focus:border-neutral-200
-					dark:border-neutral-800
-					dark:focus:border-neutral-800
-				`)
-		"
+				border-neutral-200
+				focus:border-neutral-200
+				dark:border-neutral-800
+				dark:focus:border-neutral-800
+			`,
+			($.itemAttrs as any)?.class
+		)"
 		:tabindex="canEdit ? 0 : undefined"
-		v-for="(value) of values"
+		v-for="(value) of $values"
 		:key="value"
 		@keydown.ctrl.c.prevent="copy(value.toString())"
 	>
@@ -68,16 +70,18 @@
 	</div>
 </div>
 </template>
+
 <script setup lang="ts" generic="T extends string | number">
-
 import { removeIfIn } from "@alanscodelog/utils/removeIfIn.js"
-import { computed, useAttrs } from "vue"
+import type { MakeRequired } from "@alanscodelog/utils/types"
+import { computed, type HTMLAttributes,useAttrs,withDefaults } from "vue"
 
+import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
 import { copy } from "../../helpers/copy.js"
 import { twMerge } from "../../helpers/twMerge.js"
 import fa from "../Fa/Fa.vue"
 import libButton from "../LibButton/LibButton.vue"
-import { baseInteractiveProps, fallthroughEventProps, labelProp } from "../shared/props.js"
+import { type BaseInteractiveProps, baseInteractiveProps, baseInteractivePropsDefaults,type LabelProps, type MultiValueProps, type SuggestionsProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
 
 
 defineOptions({
@@ -85,22 +89,40 @@ defineOptions({
 	inheritAttrs: false,
 })
 
-const $attrs = useAttrs()
-const props = defineProps({
-	...labelProp,
-	...baseInteractiveProps,
-	...fallthroughEventProps,
-	border: { type: Boolean, required: false, default: true },
+const $ = useDivideAttrs(["item"] as const)
+// eslint-disable-next-line no-use-before-define
+const props = withDefaults(defineProps<Props>(), {
+	...baseInteractivePropsDefaults
 })
 
 
 const canEdit = computed(() => !props.disabled && !props.readonly)
-const values = defineModel<T[]>("values", { default: () => []})
-
+const $values = defineModel<T[]>("values", { default: () => []})
 
 const removeVal = (value: T) => {
 	if (!canEdit.value) return
-	removeIfIn(values.value, value)
+	removeIfIn($values.value, value)
 }
+</script>
+
+<script lang="ts">
+type WrapperTypes = Partial<WrapperProps<"item",HTMLAttributes>>
+
+type RealProps =
+	& LabelProps
+	& BaseInteractiveProps
+	& MultiValueProps
+	& {
+		border?: boolean
+	}
+interface Props
+	extends
+	/** @vue-ignore */
+	Partial<Omit<HTMLAttributes,"class"> & TailwindClassProp>,
+	/** @vue-ignore */
+	WrapperTypes,
+	RealProps
+{}
+
 </script>
 

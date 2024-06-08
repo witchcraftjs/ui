@@ -6,15 +6,15 @@
 />
 <!-- <Transition> -->
 <component
-	:id="id"
+	:id="id ?? fallbackId"
 	:class="twMerge(
 		useBackdrop && `bg-transparent
 			p-0
 			backdrop:bg-transparent
 		`,
-		attrs.class as any
+		$attrs.class as any
 	)"
-	v-bind="{...attrs, class:undefined}"
+	v-bind="{...$attrs, class:undefined}"
 	:is="useBackdrop ? 'dialog' : 'div'"
 	ref="dialogEl"
 	@mousedown.self="handleMouseup"
@@ -39,19 +39,20 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, type PropType, ref, useAttrs, watch } from "vue"
+// eslint-disable-next-line simple-import-sort/imports
+import { onMounted, type PropType, ref, useAttrs, watch , type HTMLAttributes } from "vue"
+import { getFallbackId, type LinkableByIdProps,type TailwindClassProp } from "../shared/props.js"
 
 import { twMerge } from "../../helpers/twMerge.js"
-import { linkableByIdProps } from "../shared/props.js"
 
-
-const props = defineProps({
-	...linkableByIdProps(),
-	useBackdrop: { type: Boolean, required: false, default: true },
-	preferredHorizontal: { type: Array as PropType<("center" | "right" | "left" | "either" | "center-screen")[]>, default: () => ["center", "right", "left", "either"]},
-	preferredVertical: { type: Array as PropType<("top" | "bottom" | "either" | "center-screen")[]>, default: () => ["top", "bottom", "either"]},
+const fallbackId = getFallbackId()
+// eslint-disable-next-line no-use-before-define
+const props = withDefaults(defineProps<Props>(), {
+	useBackdrop: true,
+	preferredHorizontal: () => ["center", "right", "left", "either"],
+	preferredVertical: () => ["top", "bottom", "either"],
 })
-const attrs = useAttrs()
+const $attrs = useAttrs()
 defineOptions({ name: "lib-popup" })
 
 // todo, can we have transitions?
@@ -236,4 +237,19 @@ defineExpose({
 })
 
 </script>
+<script lang="ts">
 
+type RealProps =
+& LinkableByIdProps
+& {
+	useBackdrop?: boolean
+	preferredHorizontal?: ("center" | "right" | "left" | "either" | "center-screen")[]
+	preferredVertical?: ("top" | "bottom" | "either" | "center-screen")[]
+}
+
+interface Props
+	extends
+	/** @vue-ignore */
+	Partial<Omit<HTMLAttributes,"class"> & TailwindClassProp>,
+	RealProps { }
+</script>

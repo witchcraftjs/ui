@@ -2,16 +2,15 @@
 <div tabindex="0">{{ value }}</div>
 </template>
 
-
 <script  setup lang="ts">
 import type { PropType } from "vue"
 
 
 defineOptions({ name: "aria" })
-defineProps({
+defineProps<{
 	// eslint-disable-next-line vue/no-restricted-props
-	value: { type: String as PropType<string>, required: true },
-})
+	value: string
+}>()
 </script>
 
 <style scoped>

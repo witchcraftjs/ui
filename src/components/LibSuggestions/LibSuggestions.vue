@@ -1,36 +1,40 @@
 <template>
 <div
 	v-if="$isOpen"
-	:id="`suggestions-${id}`"
-	class="
+	:id="`suggestions-${id ?? fallbackId}`"
+	:class="twMerge(`
 			suggestions
 			bg-bg
 			dark:bg-fg
-		"
+		`,
+		($.attrs as any)?.class
+	)"
 	:data-open="$isOpen"
 	role="listbox"
 	ref="el"
-	v-bind="$attrs"
+	v-bind="{...$.attrs, class:undefined}"
 >
 	<!-- Click event is just in case, it should not really be triggered. We can do click selections via the blur handler. -->
-	<div :id="`suggestion-${id}-${index}`"
+	<div :id="`suggestion-${id ?? fallbackId}-${index}`"
 		role="option"
-		:data-is-active-suggestions="index === activeSuggestion"
+		:data-is-active-suggestions="index === $activeSuggestion"
 		:class="twMerge(`
 					px-1
 					user-select-none
 					cursor-pointer
 					px-2
 				`,
-			index=== activeSuggestion && `bg-accent-200 dark:bg-accent-800`
+			index=== $activeSuggestion && `bg-accent-200 dark:bg-accent-800`,
+			($.itemAttrs as any)?.class
 		)"
-		:aria-selected="index === activeSuggestion ? true : false"
+		v-bind="{...$.itemAttrs, class:undefined}"
+		:aria-selected="index === $activeSuggestion ? true : false"
 		:aria-label="item"
 		v-for="(item, index) in fullSuggestionsList"
 		:key="item"
-		@mouseover="activeSuggestion = index"
-		@mousedown="activeSuggestion = index; mousedown = true;"
-		@mouseup="activeSuggestion = index; mousedown = false;"
+		@mouseover="$activeSuggestion = index"
+		@mousedown="$activeSuggestion = index; mousedown = true;"
+		@mouseup="$activeSuggestion = index; mousedown = false;"
 		@click="setSelected()"
 	>
 		<slot name="item" :item="item" :index="index">
@@ -39,37 +43,37 @@
 	</div>
 </div>
 </template>
+
+
 <script setup lang="ts" generic="T extends string | object">
 
 import { isBlank } from "@alanscodelog/utils/isBlank.js"
 import { isObject } from "@alanscodelog/utils/isObject.js"
-import { computed, type PropType, ref, useAttrs, watch, watchPostEffect } from "vue"
+import type { MakeRequired } from "@alanscodelog/utils/types"
+import { computed, type HTMLAttributes,type PropType, ref, toRef, useAttrs, watch, watchPostEffect,withDefaults } from "vue"
 
+import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
 import { twMerge } from "../../helpers/twMerge.js"
-import { baseInteractiveProps, linkableByIdProps, multiValueProps, suggestionsProps } from "../shared/props.js"
-
+import { type BaseInteractiveProps, baseInteractiveProps, baseInteractivePropsDefaults, getFallbackId,type LabelProps, type LinkableByIdProps, type MultiValueProps, type SuggestionsProps, type WrapperProps } from "../shared/props.js"
 
 defineOptions({
 	name: "lib-suggestions",
 	inheritAttrs: false,
 })
 
-const $attrs = useAttrs()
- 
+const $ = useDivideAttrs(["item"] as const)
+
 const emits = defineEmits<{
-	(e: "update:activeSuggestion", val: number): void
 	(e: "submit", val: string): void
-	(e: "update:isOpen", val: boolean): void
 }>()
 
-
-const props = defineProps({
-	...linkableByIdProps(),
-	...suggestionsProps,
-	...baseInteractiveProps,
-	...multiValueProps,
-	canOpen: { type: Boolean as PropType<boolean>, required: false, default: false },
-	values: { type: Array as PropType<string[]>, required: false, default: () => []},
+const fallbackId = getFallbackId()
+// eslint-disable-next-line no-use-before-define
+const props = withDefaults(defineProps<Props>(), {
+	canOpen: false,
+	values: undefined,
+	filterKeydown: undefined,
+	...baseInteractivePropsDefaults
 })
 
 /**
@@ -83,38 +87,18 @@ const $modelValue = defineModel<string>("modelValue", { required: true })
  */
 const $inputValue = defineModel<string >("inputValue", { default: "" })
 const $isValid = defineModel<boolean>("isValid", { required: false, default: true })
-const _isOpen = ref(false)
-const $isOpen = computed<boolean>({
-	get: () => _isOpen.value,
-	set: (val: boolean) => {
-		_isOpen.value = val
-		emits("update:isOpen", val)
-	},
-})
-
-const activeSuggestionRef = ref<number>(-1)
-const activeSuggestion = computed({
-	get: () => activeSuggestionRef.value,
-	set: (val: number) => {
-		activeSuggestionRef.value = val
-		emits("update:activeSuggestion", activeSuggestionRef.value)
-	},
-})
+const $isOpen = defineModel<boolean>("isOpen", { required: false, default: false })
+const $activeSuggestion = defineModel<number>("activeSuggestion", { required: false, default: -1 })
 
 
 if (typeof props.suggestions?.[0] === "object" && !props.suggestionLabel && !props.suggestionsFilter) {
 	throw new Error("`suggestionLabel` or `suggestionsFilter` must be passed if suggestions are objects.")
 }
 
-
-/* #regionend */
-/* #region Variables */
 const el = ref<HTMLElement | null>(null)
 const mousedown = ref(false)
 
-
 const defaultSuggestionsLabel = (item: any): string => item
-
 const suggestionLabel = computed(() =>
 	props.suggestionLabel ?? defaultSuggestionsLabel,
 )
@@ -185,20 +169,19 @@ const openable = computed(() =>
 const closeSuggestions = (): void => {
 	$isOpen.value = false
 	mousedown.value = false
-	activeSuggestion.value = -1
+	$activeSuggestion.value = -1
 }
 const openSuggestions = (): void => {
 	if (!openable.value) return
 	$isOpen.value = true
 	// see delay close
-	if (activeSuggestion.value === -1) {
+	if ($activeSuggestion.value === -1) {
 		if (exactlyMatchingSuggestion.value) {
-			activeSuggestion.value = suggestionsList.value?.indexOf(exactlyMatchingSuggestion.value) ?? -1
+			$activeSuggestion.value = suggestionsList.value?.indexOf(exactlyMatchingSuggestion.value) ?? -1
 		} else {
-			activeSuggestion.value = 0
+			$activeSuggestion.value = 0
 		}
 	}
-	// activeSuggestion.value = 0
 }
 watch(() => props.canOpen, val => {
 	if (!val) {
@@ -227,7 +210,7 @@ watch(() => $inputValue.value, () => {
 		&& props.restrictToSuggestions
 		&& exactlyMatchingSuggestion.value !== undefined
 	) return
-	activeSuggestion.value = i
+	$activeSuggestion.value = i
 })
 watchPostEffect((): void => {
 	if (!openable.value) {
@@ -253,17 +236,15 @@ function setSuggestion(num: number): void {
 	closeSuggestions()
 }
 
-// #region Exposed Functions
 const setSelected = (submit: boolean = props.values !== undefined): void => {
-	if (activeSuggestion.value > -1) {
+	if ($activeSuggestion.value > -1) {
 		// set to active suggestion
-		setSuggestion(activeSuggestion.value)
+		setSuggestion($activeSuggestion.value)
 	}
 	if (submit) {
 		emits("submit", getStringValue($modelValue.value))
 	}
 }
-
 
 const inputBlurHandler = (_e: MouseEvent): void => {
 	if (!$isOpen.value) return
@@ -274,16 +255,10 @@ const inputBlurHandler = (_e: MouseEvent): void => {
 		return
 	}
 
-
-	// not always working, sometimes things one is selecting the input node :/
-	// if (el.value!.contains(e.relatedTarget as Node)) {
-	// 	setSelected()
-	// 	return
-	// }
 	if (props.restrictToSuggestions) {
 		if (!exactlyMatchingSuggestion.value) {
-			if (activeSuggestion.value > -1) {
-				setSuggestion(activeSuggestion.value)
+			if ($activeSuggestion.value > -1) {
+				setSuggestion($activeSuggestion.value)
 			} else {
 				$inputValue.value = getStringValue($modelValue.value)
 			}
@@ -300,21 +275,21 @@ const toggleSuggestions = (): void => {
 	$isOpen.value ? closeSuggestions() : openSuggestions()
 }
 
-
 const prevSuggestion = (): void => {
 	if (!suggestionAvailable.value) return
-	if (activeSuggestion.value > 0) {
-		activeSuggestion.value--
+	if ($activeSuggestion.value > 0) {
+		$activeSuggestion.value--
 	} else if (fullSuggestionsList.value) {
-		activeSuggestion.value = fullSuggestionsList.value.length - 1
+		$activeSuggestion.value = fullSuggestionsList.value.length - 1
 	}
 }
+
 const nextSuggestion = (): void => {
 	if (!suggestionAvailable.value || !fullSuggestionsList.value) return
-	if (activeSuggestion.value >= fullSuggestionsList.value.length - 1) {
-		activeSuggestion.value = 0
+	if ($activeSuggestion.value >= fullSuggestionsList.value.length - 1) {
+		$activeSuggestion.value = 0
 	} else {
-		activeSuggestion.value++
+		$activeSuggestion.value++
 	}
 }
 
@@ -323,8 +298,8 @@ const cancel = (): void => {
 	closeSuggestions()
 }
 
-
 const inputKeydownHandler = (e: KeyboardEvent): void => {
+	if (props.filterKeydown?.(e)) return
 	if (e.key === "Enter") {
 		setSelected(true)
 		e.preventDefault()
@@ -357,5 +332,38 @@ defineExpose({
 	/** A blur handler for the input that controls the component. This also takes care of making clicking on a suggestion work, since otherwise if canOpen is set to false in the blur handler, no click event will fire. */
 	inputBlurHandler,
 })
+
+</script>
+
+<script lang="ts">
+type WrapperTypes = Partial<WrapperProps<"item",HTMLAttributes, {
+	/** Tailwind classes. */
+	class?: string
+}>>
+
+type RealProps =
+	& LinkableByIdProps
+	& LabelProps
+	& BaseInteractiveProps
+	& MultiValueProps
+	& SuggestionsProps
+	& {
+		canOpen?: boolean
+		values?: string[]
+		/** Return true to prevent the keydown event from being handled. */
+		filterKeydown?: (e: KeyboardEvent) => boolean
+	}
+
+interface Props
+	extends
+	/** @vue-ignore */
+	Partial<Omit<HTMLAttributes,"class" | "onSubmit"> & {
+		/** Tailwind classes. */
+		class?: string
+	}>,
+	/** @vue-ignore */
+	WrapperTypes,
+	RealProps
+{}
 
 </script>
