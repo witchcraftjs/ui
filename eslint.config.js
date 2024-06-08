@@ -13,14 +13,21 @@ export default tsEslintConfig(
 				tsconfigRootDir: import.meta.dirname,
 			},
 		},
-		ignores: [
-			// ...
-		],
 	},
 	{
 		files: [`**/*.stories.*`],
 		rules: {
 			"@typescript-eslint/explicit-function-return-type": "off"
+		}
+	},
+	{
+		files: [`**/*.vue`],
+		rules: {
+			"jsdoc/check-tag-names": ["warn", {
+				definedTags: [
+					"vue-ignore",
+				]
+			}]
 		}
 	}
 	// RULE LINKS
