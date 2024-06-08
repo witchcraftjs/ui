@@ -117,7 +117,8 @@
 		"colord": "^2.9.3",
 		"colorjs.io": "^0.4.3",
 		"metamorphosis": "^0.2.3",
-		"tailwind-merge": "^2.3.0"
+		"tailwind-merge": "^2.3.0",
+		"vue": "^3.4.27"
 	},
 	"devDependencies": {
 		"@alanscodelog/commitlint-config": "^3.0.1",
@@ -169,7 +170,6 @@
 		"typescript": "^5.4.5",
 		"vite": "^5.2.12",
 		"vite-plugin-externalize-deps": "^0.8.0",
-		"vue": "^3.4.27",
 		"vite-tsconfig-paths": "^4.3.2",
 		"vue-loader": "^17.4.2",
 		"vue-tsc": "^2.0.19"
