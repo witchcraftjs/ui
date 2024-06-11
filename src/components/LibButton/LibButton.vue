@@ -189,6 +189,8 @@ import { isBlank } from "@alanscodelog/utils/isBlank.js"
 import { keys } from "@alanscodelog/utils/keys.js"
 import { pick } from "@alanscodelog/utils/pick.js"
 import type { MakeRequired } from "@alanscodelog/utils/types"
+import type { IconParams } from "@fortawesome/fontawesome-svg-core"
+import type { FontAwesomeIconProps } from "@fortawesome/vue-fontawesome"
 import { type ButtonHTMLAttributes,computed, type HTMLAttributes, type PropType,withDefaults } from "vue"
 
 import { useAriaLabel } from "../../composables/useAriaLabel.js"
@@ -223,7 +225,11 @@ const autoTitle = computed(() => ({
 </script>
 
 <script lang="ts">
-type WrapperTypes = Partial<WrapperProps<"icon",HTMLAttributes >>
+type WrapperTypes = Partial<WrapperProps<
+	"icon",
+	HTMLAttributes
+	& Omit<FontAwesomeIconProps, "icon">
+>>
 type RealProps =
 	& LinkableByIdProps
 	& LabelProps

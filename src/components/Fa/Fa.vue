@@ -1,5 +1,4 @@
 <template>
-<!-- content forces the div height to be the same as if the div had real text with a zero width space, this way we can still use a flexbox instead of doing inline-block -->
 <div
 	:class="twMerge(`icon
 		inline-block
@@ -51,7 +50,6 @@ interface Props
 	/** @vue-ignore */
 	Partial<Omit<HTMLAttributes, "class">
 		& TailwindClassProp
-		& IconParams
 		& Omit<FontAwesomeIconProps, "icon">
 	>,
 	RealProps { }
