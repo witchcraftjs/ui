@@ -2,9 +2,9 @@
 import { cssObjectToString } from "metamorphosis/utils"
 import { computed, onBeforeUnmount, onMounted, type PropType, ref } from "vue"
 
+import LibDarkModeSwitcher from "./components/LibDarkModeSwitcher/LibDarkModeSwitcher.vue"
 import { useAccesibilityOutline } from "./composables/index.js"
 import { theme } from "./theme.js"
-
 
 defineOptions({ name: "test-wrapper" })
 const props = defineProps({
@@ -33,7 +33,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
 	theme.off("change", themeCb)
 })
-
+const darkMode = ref(false)
 </script>
 
 <template>
@@ -42,17 +42,25 @@ onBeforeUnmount(() => {
 	above. -->
 <component :is="'style'" ref="styleEl"/>
 <div id="app"
-	:class="showOutline ? 'group outlined outlined-visible' : '[&_*]:outline-none'"
-	class="
+	tabindex="-1"
+	:class="(showOutline ? 'group outlined outlined-visible' : '[&_*]:outline-none') +
+		(darkMode ? ' dark' : '') "
+	ref="el"
+>
+	<div class="flex gap-2 absolute right-0 top-0 m-1 dark:text-white">
+		<div>Wrapper Controls:</div>
+		<div class="outline-indicator">{{ showOutline ? "Outline Enabled" : "Outline Disabled" }}</div>
+		<lib-dark-mode-switcher @update:dark-mode="darkMode = $event"/>
+	</div>
+	<div
+		class="
 			p-10
 			dark:bg-neutral-900
 			dark:text-white
 		"
-	tabindex="-1"
-	ref="el"
->
-	<div class="outline-indicator absolute right-0 top-0 m-1">{{ showOutline ? "Outline Enabled" : "Outline Disabled" }}</div>
-	<slot/>
+	>
+		<slot/>
+	</div>
 </div>
 </template>
 
