@@ -1,11 +1,6 @@
 import type { ErrorW } from "@alanscodelog/utils"
 import { type Ref } from "vue"
 
-/** You can extend this interface to add your own attributes that can be passed to any element. */
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface AdditionalAttributes {
-}
-
 export type ResizableOptions = {
 	/**
 	 * Defaults to true.

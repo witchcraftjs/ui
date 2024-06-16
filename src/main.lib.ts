@@ -23,6 +23,7 @@ type Components = typeof components
  * declare module "@vue/runtime-core" {
  * 	export interface GlobalComponents extends GlobalComponentTypes { }
  * }
+ * export {}
  * ```
  * To be able to pass extra attributes you will have to have a global declaration file like the one the library has ({@link ./global.d.ts}), see https://github.com/vuejs/language-tools/issues/1077#issuecomment-1145960878
  */

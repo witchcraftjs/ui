@@ -3,11 +3,11 @@
 	"version": "0.0.0",
 	"module": "./dist/main.lib.js",
 	"type": "module",
-	"types": "./dist/main.lib.d.ts",
+	"types": "./types/index.d.ts",
 	"sideEffects": false,
 	"exports": {
 		".": {
-			"types": "./dist/main.lib.d.ts",
+			"types": "./types/index.d.ts",
 			"import": "./dist/main.lib.js"
 		},
 		"./*": {

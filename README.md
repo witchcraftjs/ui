@@ -147,22 +147,43 @@ Utilities contains required utilities.
 
 Base just contains animation keyframes and basic styles for vue animations. They are not "layered", i.e. they will get imported regardless of whether they are used since otherwise tailwind does not detect they are being used.
 
+## Getting Proper Types
 
-## Getting Globally Registered Component Types
+While components should be correctly typed, the library internally extends vue's `AllowedComponentProps` and `HTMLAttributes` interface to allow data-* attributes and also some missing attributes (like `aria-description`).
 
-To get global typings, in a global declaration file (e.g. global.d.ts) do:
-See also [this issue](https://github.com/vuejs/language-tools/issues/1077#issuecomment-1145960878).
+To get these types, in a global declaration file (e.g. global.d.ts) do:
+
 ```ts
+// apply library's extended attributes and props
+/// <reference types="@alanscodelog/vue-components" />
+
+```
+You might also need to add the following:
+
+```ts
+// to make the component types globally available you can do:
 import { GlobalComponentTypes } from "@alanscodelog/vue-components"
 declare module "@vue/runtime-core" {
 	export interface GlobalComponents extends GlobalComponentTypes { }
-	// also you to be able to pass extra attributes, you will need to do the following 
-	export interface HTMLAttributes = Record<string, any>
-	// OR alternatively you can extend/interface merge the AdditionalAttributes interface instead
-	export interface AllowedComponentProps = Record<string, any>
-
 }
+
+// to extend HTMLAttributes and AllowedComponentProps yourself you can do:
+declare module "@vue/runtime-dom" {
+	export interface HTMLAttributes {
+		// ...
+	}
+}
+
+declare module "@vue/runtime-core" {
+	export interface AllowedComponentProps {
+		// ...
+	}
+}
+export {}
 ```
+
+Note that using the strictTemplates compiler option causes weird issues with fallthrough props.
+
 # General Usage
 
 # Props
