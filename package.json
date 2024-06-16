@@ -180,6 +180,7 @@
 	"files": [
 		"src",
 		"dist",
+		"types",
 		"nuxt.ts",
 		"tailwind.config.ts",
 		"tailwind-colors.config.ts"
