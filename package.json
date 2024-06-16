@@ -11,7 +11,8 @@
 			"import": "./dist/main.lib.js"
 		},
 		"./*": {
-			"import": "./dist/*"
+			"import": "./dist/*",
+			"types": "./dist/*"
 		},
 		"./components": {
 			"types": "./dist/components/index.d.ts",
@@ -34,7 +35,7 @@
 			"import": "./dist/directives/index.js"
 		},
 		"./directives/*": {
-			"types": "./dist/directives/*.d.ts",
+			"types": "./dist/directives/*",
 			"import": "./dist/directives/*"
 		},
 		"./helpers": {
@@ -42,7 +43,7 @@
 			"import": "./dist/helpers/index.js"
 		},
 		"./helpers/*": {
-			"types": "./dist/helpers/*.d.ts",
+			"types": "./dist/helpers/*",
 			"import": "./dist/helpers/*"
 		},
 		"./tailwind": {
