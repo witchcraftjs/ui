@@ -67,6 +67,7 @@ export const Invalid: Story = {
 		valid: false,
 	},
 }
+
 export const AttrsPassword: Story = {
 	...Primary,
 	args: {
@@ -89,6 +90,13 @@ export const AttrsNumber: Story = {
 export const WithAutosuggest = {
 	...Primary,
 	args: {
+		suggestions: ["A", "AB", "ABC"],
+	},
+}
+export const Borderless = {
+	...Primary,
+	args: {
+		border: false,
 		suggestions: ["A", "AB", "ABC"],
 	},
 }

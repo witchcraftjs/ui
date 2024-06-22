@@ -60,7 +60,6 @@
 	:placeholder="placeholder"
 	:disabled="disabled"
 	:readonly="readonly"
-	ref="inputEl"
 	v-model="modelValue"
 	v-bind="{...$attrs, class:undefined, ...ariaLabel}"
 	@keydown.enter="emits('submit', modelValue)"

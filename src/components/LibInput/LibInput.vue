@@ -125,14 +125,17 @@
 			<!-- todo 1px needs to be abstracted to var -->
 			<lib-suggestions
 				:class="twMerge(`
-					border-accent-500
-					absolute
-					-inset-x-px
-					top-full
-					z-10
-					rounded-b
-					border
-				`,
+						absolute
+						-inset-x-px
+						z-10
+						rounded-b
+						border-accent-500
+						border
+						top-full
+					`,
+					!border && `
+						rounded
+					`,
 					($.suggestionsAttrs as any)?.class,
 				)"
 				ref="suggestionsComponent"
