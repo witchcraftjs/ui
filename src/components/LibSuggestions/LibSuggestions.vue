@@ -153,16 +153,9 @@ const fullSuggestionsList = computed(() => {
 const openable = computed(() =>
 	props.canOpen && (
 		(isBlank($inputValue.value) && props.allowOpenEmpty) ||
-		moreThanOneSuggestionAvailable.value ||
-		(
-			!exactlyMatchingSuggestion.value &&
-			suggestionAvailable.value
-		) ||
-		(
-			!isValidSuggestion.value &&
-			suggestionAvailable.value
-		)
-	),
+		suggestionAvailable.value
+
+	)
 )
 
 

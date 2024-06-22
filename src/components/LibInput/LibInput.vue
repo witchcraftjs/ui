@@ -269,6 +269,9 @@ const inputProps = computed(() => ({
 		inputValue.value = e
 	},
 	onSubmit: (e: string) => {
+		if (!props.restrictToSuggestions) {
+			$modelValue.value = e
+		}
 		isOpen.value = false
 		emit("submit", e)
 	},
@@ -301,6 +304,7 @@ const suggestionProps = computed(() => ({
 	inputValue: inputValue.value,
 	canOpen: canOpen.value,
 	onSubmit: (e: string) => {
+		$modelValue.value = e
 		canOpen.value = false
 		emit("submit", e)
 	},
@@ -308,7 +312,6 @@ const suggestionProps = computed(() => ({
 	"onUpdate:isValid": updateIsValid,
 	"onUpdate:activeSuggestions": (e: number) => activeSuggestion.value = e,
 	"onUpdate:inputValue": (e: string) => inputValue.value = e,
-	"onUpdate:modelValue": (e: string) => $modelValue.value = e,
 	...$.value.suggestionsAttrs,
 	class: undefined,
 }))
@@ -346,7 +349,7 @@ type RealProps =
 interface Props
 	extends
 	/** @vue-ignore */
-	Partial<Omit<InputHTMLAttributes,"class" | "readonly" | "disabled"> & TailwindClassProp>,
+	Partial<Omit<InputHTMLAttributes,"class" | "readonly" | "disabled" | "onSubmit"> & TailwindClassProp>,
 	/** @vue-ignore */
 	Partial<WrapperTypes>,
 	RealProps { }
