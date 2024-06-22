@@ -116,9 +116,10 @@
 				:style="`background:${localColorString}`"
 			/>
 		</div>
-		<div class="color-controls flex flex-1 items-center gap-2">
+		<div class="color-controls flex flex-1 items-center gap-2 border border-red">
 			<slot name="input">
-				<lib-input
+				<lib-simple-input
+					class="w-full"
 					:aria-label="label"
 					:model-value="localColorString"
 					@input="parseInput"
@@ -149,7 +150,7 @@ import type { HsvaColor, RgbaColor } from "../../types.js"
 import aria from "../Aria/Aria.vue"
 import fa from "../Fa/Fa.vue"
 import LibButton from "../LibButton/LibButton.vue"
-import LibInput from "../LibInput/LibInput.vue"
+import LibSimpleInput from "../LibSimpleInput/LibSimpleInput.vue"
 import { getFallbackId, type LabelProps , type LinkableByIdProps } from "../shared/props.js"
 
 defineOptions({
