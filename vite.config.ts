@@ -23,9 +23,8 @@ const fileEntries = glob.sync(path.resolve(__dirname, `src/{${folders.join((",")
 
 const typesPlugin = (): PluginOption => ({
 	name: "typesPlugin",
-	// process exit is disabled because I'm getting weird problems with vue component types due to experimental features
 	// eslint-disable-next-line no-console
-	writeBundle: async () => run(`npm run build:types`).promise.catch(e => { console.log(e.stdout)/* ; process.exit(1) */ }).then(() => undefined),
+	writeBundle: async () => run(`npm run build:types`).promise.catch(e => { console.log(e); process.exit(1) }).then(() => undefined),
 })
 
 
