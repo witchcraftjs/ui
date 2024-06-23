@@ -63,6 +63,7 @@
 	v-model="modelValue"
 	v-bind="{...$attrs, class:undefined, ...ariaLabel}"
 	@keydown.enter="emits('submit', modelValue)"
+	@input="emits('input', $event as InputEvent)"
 >
 </template>
 
@@ -101,6 +102,7 @@ const modelValue = defineModel<T>({ required: true })
 const emits = defineEmits<{
 	/* User presses enter.*/
 	(e: "submit", val: any): void
+	(e: "input", val: InputEvent): void
 }>()
 const $attrs = useAttrs()
 const ariaLabel = useAriaLabel(props, fallbackId)
