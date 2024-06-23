@@ -9,7 +9,7 @@ import { fas } from "@fortawesome/free-solid-svg-icons"
 library.add(fas, far)
 
 export const parameters:Parameters = {
-	actions: { argTypesRegex: "^on[A-Z].*" },
+	// actions: { argTypesRegex: "^on[A-Z].*" },
 	controls: {
 		controls: { expanded: true },
 	},
@@ -42,15 +42,17 @@ const preview: Preview = {
 		},
 	},
 	decorators: [(story, { args }) => ({
-		directives: {vExtractRootEl},
-		components: { TestWrapper, story },
-		setup: () => ({ args }),
-		template: `
-<test-wrapper :outline="args.outline"><story/></test-wrapper>
-`,
+	directives: {vExtractRootEl},
+	components: { TestWrapper, story },
+	setup: () => ({ args }),
+	template: `
+			<test-wrapper :outline="args.outline"><story/></test-wrapper>
+		`,
 	})],
 	args: {
 		outline:true,
-	}
+	},
+
+	tags: ["autodocs"]
 };
 export default preview;

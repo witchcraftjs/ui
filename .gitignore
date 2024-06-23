@@ -13,3 +13,5 @@ src/assets/variables.scss
 **/*.wip.*
 test.css
 todo.md
+
+*storybook.log

@@ -1,25 +1,28 @@
+import type { StorybookConfig } from "@storybook/vue3-vite";
 
-import {mergeConfig} from "vite"
-export default {
-	"stories": [
-		// "../src/**/*.stories.mdx",
-		"../src/**/*.stories.@(js|jsx|ts|tsx)"
-	],
-	"addons": [
-		"@storybook/addon-links",
-		"@storybook/addon-essentials",
-		"@storybook/addon-a11y",
-		"@storybook/addon-storysource",
-		"storybook-tailwind-dark-mode"
-	],
-	"framework": {
-		name: "@storybook/vue3-vite",
-		options: {}
-	},
-	docsPage: {
-		docs: "automatic"
-	},
-	docs: {
-		autodocs: true
-	}
+const config: StorybookConfig = {
+	stories: [
+    {
+      // 👇 Sets the directory containing your stories
+      directory: '../src/components',
+      // 👇 Storybook will load all files that match this glob
+      files: '**/*.stories.*',
+      // 👇 Used when generating automatic titles for your stories
+      titlePrefix: 'MyComponents',
+    },
+  ],
+  addons: [
+    "@storybook/addon-links",
+    "@storybook/addon-essentials",
+    "@chromatic-com/storybook",
+    "@storybook/addon-interactions",
+  ],
+
+  framework: {
+    name: "@storybook/vue3-vite",
+    options: {},
+  },
+
+  docs: {}
 };
+export default config;
