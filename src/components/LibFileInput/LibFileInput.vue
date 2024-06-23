@@ -31,7 +31,7 @@
 			)"
 		>
 			<slot v-if="compact || multiple || files.length === 0" name="icon">
-				<fa icon="solid arrow-up-from-bracket"/>
+				<icon><i-fa6-solid-arrow-up-from-bracket/></icon>
 			</slot>
 			<slot name="label">
 				{{
@@ -101,7 +101,7 @@
 					:aria-label="`Remove file ${entry.file.name}`"
 					@click="removeFile(entry)"
 				>
-					<fa icon="solid times"/>
+					<icon><i-fa6-solid-xmark/></icon>
 				</lib-button>
 			</div>
 
@@ -121,7 +121,7 @@
 					flex-1 basis-full flex-wrap items-center justify-center
 					"
 				>
-					<fa icon="regular file" class="text-4xl opacity-50"/>
+					<icon><i-fa6-regular-file class="text-4xl opacity-50"/></icon>
 				</div>
 			</div>
 			<div class="filename min-w-0 flex-1 basis-0 truncate break-all rounded p-1 text-sm" :title="entry.file.name">{{ entry.file.name }}</div>
@@ -137,7 +137,6 @@ import { computed, type HTMLAttributes, type InputHTMLAttributes,ref, shallowRea
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
 import { twMerge } from "../../helpers/twMerge.js"
 import { type FileInputError } from "../../types.js"
-import Fa from "../Fa/Fa.vue"
 import LibButton from "../LibButton/LibButton.vue"
 import { getFallbackId,type LinkableByIdProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
 
@@ -178,7 +177,6 @@ const emits = defineEmits<{
 const fallbackId = getFallbackId()
 // eslint-disable-next-line no-use-before-define
 const props = withDefaults(defineProps<Props>(), {
-
 	multiple: false,
 	formats: () => ["image/*", ".jpeg", ".jpg", ".png"],
 	compact: false,

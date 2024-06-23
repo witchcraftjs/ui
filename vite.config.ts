@@ -3,6 +3,9 @@ import vue from "@vitejs/plugin-vue"
 import glob from "fast-glob"
 import fs from "fs"
 import path from "path"
+import IconsResolver from "unplugin-icons/resolver"
+import Icons from "unplugin-icons/vite"
+import Components from "unplugin-vue-components/vite"
 import { defineConfig,type PluginOption } from "vite"
 // import Previewer from 'vite-plugin-vue-component-preview';
 import { externalizeDeps } from "vite-plugin-externalize-deps"
@@ -39,6 +42,22 @@ export default async ({ mode }: { mode: string }) => defineConfig({
 		// runs build:types script which takes care of generating types
 		// note aliases and baseUrl imports should not be used, they have all been removed
 		typesPlugin(),
+		Components({
+			dts: "types/components.d.ts",
+			dirs: ["src/components/Icon"], // don't auto-import our own components except icon
+			resolvers: [
+				IconsResolver({
+				}),
+			],
+		}),
+		Icons({
+			// makes this work like fontawesome
+			scale: 0, // removes the scale
+			defaultClass: "icon",
+			// note that we can't use tailwind classes
+			// i mean we could, but we have to tell it to include them manually (pain)
+			defaultStyle: "vertical-align: -0.125em; height: 1em; display: inline-block;",
+		})
 	],
 	build: {
 		outDir: "dist",

@@ -51,13 +51,6 @@ import { VueComponentsPlugin } from "@alanscodelog/vue-components"
 import App from "./App.vue"
 import { createApp } from "vue"
 
-// add fontawesome icons
-import { library } from "@fortawesome/fontawesome-svg-core"
-import { far } from "@fortawesome/free-regular-svg-icons"
-import { fas } from "@fortawesome/free-solid-svg-icons"
-
-
-library.add(fas, far) // add needed icons, or all for dev
 createApp(App)
 	.use(VueComponentsPlugin) //use plugin
 
@@ -183,6 +176,54 @@ export {}
 ```
 
 Note that using the strictTemplates compiler option causes weird issues with fallthrough props.
+
+## Icons
+
+This library uses unplugin-icons to provide icons. This means they should work out of the box. 
+
+If you want to use unplugin-icons in a similar manner to it, you can configure it like so in the vite config:
+
+You will also probably want to configure auto importing of the icon component. It's a wrapper that can be used around icons to make them take up a full line height so things like buttons don't shrink when they're just icons.
+```ts
+// vite.config.ts
+import IconsResolver from "unplugin-icons/resolver"
+import Icons from "unplugin-icons/vite"
+import Components from "unplugin-vue-components/vite"
+import { defineConfig } from "vite"
+
+export default async ({ mode }: { mode: string }) => defineConfig({
+	plugins: [
+// ...
+		Components({
+			// don't auto-import our own components
+			// (am usually not a fan of auto-importing)
+			dirs: [], 
+			resolvers: [
+				IconsResolver(),
+				// e.g. custom resolver to auto import only the icon component 
+				(componentName) => {
+					if (componentName.startsWith('icon'))
+					return { name: componentName, from: '@alanscodelog/vue-components/components/Icon
+				},
+			],
+		}),
+		Icons({
+			// makes this work like fontawesome
+			scale: 0, // removes the scale
+			// the icon class is just descriptive and does nothing
+			// we cannot use tailwind classes here because we would have to 
+			// tell it to include them manually (pain)
+			defaultClass: "icon",
+			// width is left up to the icon like in fontawesome
+			// fontawesome has a `fixed-width` attribute that you can use that set's it
+			// to simulate it you can just add the tailwind class `w-[1em]` to the icon 
+			defaultStyle: "vertical-align: -0.125em; height: 1em; display: inline-block;",
+		})
+	],
+	// ...
+})
+
+```
 
 # General Usage
 

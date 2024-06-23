@@ -90,7 +90,6 @@ const props = withDefaults(defineProps<Props>(), {
 	recordingValue: "Recording",
 	recordingTitle: "",
 	id: undefined,
-	fallbackId: undefined,
 	binders: undefined,
 	recorder: undefined,
 	...baseInteractivePropsDefaults

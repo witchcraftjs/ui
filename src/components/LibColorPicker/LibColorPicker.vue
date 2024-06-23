@@ -124,7 +124,9 @@
 					:model-value="localColorString"
 					@input="parseInput"
 				/>
-				<lib-button aria-label="'copy'" @click="copy()"><fa :icon="'regular copy'"/></lib-button>
+				<lib-button aria-label="'copy'" @click="copy()">
+					<icon><i-fa6-regular-copy/></icon>
+				</lib-button>
 			</slot>
 		</div>
 		<!-- <lib-button @click="emits('update:modelValue', localColor.val)">Save</lib-button> -->
@@ -148,7 +150,6 @@ import { computed, onMounted, type PropType, reactive, type Ref, ref, type Unwra
 import { twMerge } from "../../helpers/twMerge.js"
 import type { HsvaColor, RgbaColor } from "../../types.js"
 import aria from "../Aria/Aria.vue"
-import fa from "../Fa/Fa.vue"
 import LibButton from "../LibButton/LibButton.vue"
 import LibSimpleInput from "../LibSimpleInput/LibSimpleInput.vue"
 import { getFallbackId, type LabelProps , type LinkableByIdProps } from "../shared/props.js"

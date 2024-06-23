@@ -96,7 +96,7 @@
 				)"
 				@click="suggestionsIndicatorClickHandler"
 			>
-				<fa :class="isOpen && `rotate-180`" :icon="'chevron-up'"/>
+				<icon :class="isOpen && `rotate-180`"> <i-fa6-solid-chevron-up/> </icon>
 			</div>
 		</slot>
 		<slot
@@ -157,7 +157,6 @@ import { computed, defineProps,type HTMLAttributes,type InputHTMLAttributes, typ
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
 import { hasModifiers } from "../../helpers/hasModifiers.js"
 import { twMerge } from "../../helpers/twMerge.js"
-import fa from "../Fa/Fa.vue"
 import LibLabel from "../LibLabel/LibLabel.vue"
 import LibMultiValues from "../LibMultiValues/LibMultiValues.vue"
 import LibSimpleInput from "../LibSimpleInput/LibSimpleInput.vue"

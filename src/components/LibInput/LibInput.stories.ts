@@ -4,7 +4,13 @@ import { ref, watchEffect } from "vue"
 
 import LibInput from "./LibInput.vue"
 
+import IconFaChevronLeft from "~icons/fa6-solid/chevron-left"
+import IconFaChevronRight from "~icons/fa6-solid/chevron-right"
+import IconFaSolidKeyboard from "~icons/fa6-solid/keyboard"
+import IconFaSolidTags from "~icons/fa6-solid/tags"
+
 import { createRecorderHandler, createRecorderWatchEffect } from "../../helpers/storybook.js"
+import Icon from "../Icon/Icon.vue"
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
 
@@ -20,10 +26,19 @@ const meta = {
 
 export default meta
 type Story = StoryObj<typeof LibInput> // & StoryObj<typeof extraArgs>
+const allComponents = {
+	...components,
+	LibInput,
+	Icon,
+	IconFaChevronRight,
+	IconFaChevronLeft,
+	IconFaSolidKeyboard,
+	IconFaSolidTags,
+}
 
 export const Primary: Story = {
 	render: args => ({
-		components: { ...components, LibInput },
+		components: allComponents,
 		setup: () => ({
 			args,
 		})
@@ -132,7 +147,7 @@ export const AutosuggestObjectOptions = {
 
 export const Slots: Story = {
 	render: args => ({
-		components: { ...components, LibInput },
+		components: allComponents,
 		setup: () => ({
 			args,
 		})
@@ -151,12 +166,12 @@ export const Slots: Story = {
 				</template>
 				<template #left>
 					<lib-button  class="px-0" :border="false" :label="'none'">
-						<fa :icon="'chevron-left'"/>
+						<icon><icon-fa-chevron-left/></icon>
 					</lib-button>
 				</template>
 				<template #right>
 					<lib-button  class="px-0" :border="false"  :label="'none'">
-						<fa :icon="'chevron-right'"/>
+						<icon><icon-fa-chevron-right/></icon>
 					</lib-button>
 				</template>
 			</lib-input>
@@ -166,7 +181,7 @@ export const Slots: Story = {
 /** Press enter to add a value. */
 export const WithMultipleValues: Story = {
 	render: args => ({
-		components: { ...components, LibInput },
+		components: allComponents,
 		setup: () => ({
 			args,
 		})
@@ -181,7 +196,7 @@ export const WithMultipleValues: Story = {
 			>
 				<template #left>
 					<lib-button class="px-0" :border="false">
-						<fa :icon="'tags solid'"/>
+						<icon><icon-fa-solid-tags/></icon>
 					</lib-button>
 				</template>
 			</lib-input>
@@ -216,7 +231,7 @@ export const WithMultipleValuesReadonly = {
 
 export const InputSlotReplacement: Story = {
 	render: args => ({
-		components: { ...components, LibInput },
+		components: allComponents,
 		setup: () => {
 			const recording = ref(false)
 			const recordingValue = ref("")
@@ -258,7 +273,7 @@ export const InputSlotReplacement: Story = {
 					/>
 				</template>
 				<template #left>
-					<fa :icon="'keyboard solid'"/>
+					<icon><icon-fa-solid-keyboard/></icon>
 				</template>
 			</lib-input>
 		`,
@@ -271,7 +286,7 @@ export const InputSlotReplacement: Story = {
 
 export const NextToButton: Story = {
 	render: args => ({
-		components: { ...components, LibInput },
+		components: allComponents,
 		setup: () => ({
 			args,
 		}),

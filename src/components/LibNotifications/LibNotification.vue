@@ -36,10 +36,10 @@
 				class="copy text-neutral-700"
 				@click="copy(handler ? handler.stringify(notification) : JSON.stringify(notification))"
 			>
-				<fa :icon="'regular copy'"/>
+				<icon><i-fa6-regular-copy/></icon>
 			</LibButton>
 			<lib-button v-if="notification.cancellable" :border="false" @click="NotificationHandler.dismiss(notification)">
-				<fa :icon="'solid times'"/>
+				<icon><i-fa6-solid-xmark/></icon>
 			</lib-button>
 		</div>
 	</div>
@@ -75,7 +75,6 @@ import { computed, type HTMLAttributes,type PropType, ref, useAttrs,withDefaults
 import { copy } from "../../helpers/copy.js"
 import { type NotificationEntry, NotificationHandler } from "../../helpers/NotificationHandler.js"
 import { twMerge } from "../../helpers/twMerge.js"
-import fa from "../Fa/Fa.vue"
 import LibButton from "../LibButton/LibButton.vue"
 import type { BaseInteractiveProps, LabelProps, LinkableByIdProps, TailwindClassProp } from "../shared/props.js"
 

@@ -26,7 +26,7 @@ export const Primary: Story = {
 		setup: () => {
 			const darkMode = ref(false)
 			return {
-				...args,
+				args,
 				darkMode
 			}
 		},

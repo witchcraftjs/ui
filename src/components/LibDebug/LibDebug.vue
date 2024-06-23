@@ -12,7 +12,9 @@
 >
 	<div class="flex justify-between">
 		<span class="font-bold">{{ title }}</span>
-		<LibButton class="w-min-content" @click="copy()"><fa :icon="'regular copy'"/></LibButton>
+		<LibButton class="w-min-content" @click="copy()">
+			<icon><i-fa6-regular-copy/></icon>
+		</LibButton>
 	</div>
 	<pre v-if="value"
 		:class="`
@@ -28,7 +30,6 @@
 <script setup lang="ts">
 import { type PropType, useSlots,withDefaults } from "vue"
 
-import fa from "../Fa/Fa.vue"
 import LibButton from "../LibButton/LibButton.vue"
 
 const $slots = useSlots()

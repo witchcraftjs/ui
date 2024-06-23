@@ -65,7 +65,7 @@
 			:disabled="disabled || readonly"
 			@click="removeVal(value)"
 		>
-			<fa :icon="'solid times'"/>
+			<icon><i-fa6-solid-xmark/></icon>
 		</lib-button>
 	</div>
 </div>
@@ -79,7 +79,6 @@ import { computed, type HTMLAttributes,useAttrs,withDefaults } from "vue"
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
 import { copy } from "../../helpers/copy.js"
 import { twMerge } from "../../helpers/twMerge.js"
-import fa from "../Fa/Fa.vue"
 import libButton from "../LibButton/LibButton.vue"
 import { type BaseInteractiveProps, baseInteractiveProps, baseInteractivePropsDefaults,type LabelProps, type MultiValueProps, type SuggestionsProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
 

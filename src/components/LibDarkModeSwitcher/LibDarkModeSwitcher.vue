@@ -7,27 +7,42 @@
 		`,
 		($attrs as any)?.class
 	)"
-	style="--fa-fw-width:1em"
 	:title="`Switch dark mode type (current: ${darkModeState})`"
-	:icon="icon
-		? icon
-		: darkModeState==='dark'
-			?'solid moon':darkModeState==='light'
-				?'regular sun'
-				:'circle-half-stroke'"
-	icon-fixed-width
 	:label="autoLabel
 		? autoLabel[darkModeState]
 		: ''
 	"
 	@click="cycleDarkMode"
-/>
+>
+	<template #icon>
+		<div>
+			<icon
+				v-if="darkModeState==='dark'"
+				class="w-[1em]"
+			>
+				<i-fa-solid-moon/>
+			</icon>
+			<icon
+				v-else-if="darkModeState==='light'"
+				class="w-[1em]"
+			>
+				<i-ph-sun-bold/>
+			</icon>
+			<icon
+				v-else
+				class="w-[1em]"
+			>
+				<i-fa6-solid-circle-half-stroke/>
+			</icon>
+		</div>
+	</template>
+</lib-button>
 </template>
-<script lang="ts" setup> import { type ButtonHTMLAttributes,onMounted,useAttrs, watch, watchEffect } from "vue"
+<script lang="ts" setup>
+import { type ButtonHTMLAttributes,onMounted,useAttrs, watch, watchEffect } from "vue"
 
 import { type DarkModeOptions,defaultDarkModeOrder,useDarkMode } from "../../composables/useDarkMode.js"
 import { twMerge } from "../../helpers/twMerge.js"
-import Fa from "../Fa/Fa.vue"
 import LibButton from "../LibButton/LibButton.vue"
 import type { TailwindClassProp } from "../shared/props.js"
 
@@ -95,7 +110,6 @@ type RealProps = DarkModeOptions
 & {
 	/** The auto labels are shown by default. You can disable them by passing false or pass an object with your own labels. */
 	autoLabel?: false | Record<"system" | "dark" | "light", string>
-	icon?: false | string
 }
 
 interface Props

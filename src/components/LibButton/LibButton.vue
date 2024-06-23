@@ -1,5 +1,6 @@
 <template>
-<button :id="id ?? fallbackId"
+<button
+	:id="id ?? fallbackId"
 	:class="!unstyle && twMerge(`
 			button
 			flex
@@ -152,9 +153,9 @@
 			dark:hover:border-accent-700
 			dark:hover:shadow-accent-900/50
 		`,
-		($.attrs as any)?.class
+		($attrs as any)?.class
 	)"
-	:type="$.attrs.type ?? 'submit'"
+	:type="$attrs.type as any ?? 'submit'"
 	:tabindex="0"
 	:disabled="disabled"
 	:data-border="border"
@@ -162,24 +163,21 @@
 	:aria-disabled="disabled"
 	v-bind="{
 		...autoTitle,
-		...$.attrs,
+		...$attrs,
 		class: undefined,
 		...ariaLabel,
 	}"
 >
 	<label :id="`label-${id ?? fallbackId}`" class="label pointer-events-none flex flex-1 items-center justify-center gap-1">
-		<slot>
-			<slot name="icon" v-bind="{icon, ...$.iconAttrs}">
-				<fa v-if="icon"
-					:icon="icon"
-					v-bind="{...$.iconAttrs}"
-					class="slot before:content-vertical-holder flex items-center justify-center"
-				/>
-			</slot>
-			<span v-if="!isBlank(label!)">
+		<slot name="icon"/>
+		<slot
+			v-bind="{ label}"
+		>
+			<span v-if="label && !isBlank(label!)">
 				{{ label }}
 			</span>
 		</slot>
+		<slot name="icon-after"/>
 	</label>
 </button>
 </template>
@@ -189,18 +187,16 @@ import { isBlank } from "@alanscodelog/utils/isBlank.js"
 import { keys } from "@alanscodelog/utils/keys.js"
 import { pick } from "@alanscodelog/utils/pick.js"
 import type { MakeRequired } from "@alanscodelog/utils/types"
-import type { IconParams } from "@fortawesome/fontawesome-svg-core"
-import type { FontAwesomeIconProps } from "@fortawesome/vue-fontawesome"
-import { type ButtonHTMLAttributes,computed, type HTMLAttributes, type PropType,withDefaults } from "vue"
+import { type ButtonHTMLAttributes,computed, type HTMLAttributes, type PropType,useAttrs,withDefaults } from "vue"
 
 import { useAriaLabel } from "../../composables/useAriaLabel.js"
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
 import { twMerge } from "../../helpers/twMerge.js"
-import fa from "../Fa/Fa.vue"
 import { type BaseInteractiveProps, baseInteractiveProps, baseInteractivePropsDefaults, getFallbackId,type LabelProps, type LinkableByIdProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
 
 
-const $ = useDivideAttrs(["icon"])
+const $attrs = useAttrs()
+
 
 defineOptions({
 	name: "lib-button",
@@ -210,7 +206,6 @@ const fallbackId = getFallbackId()
 
 // eslint-disable-next-line no-use-before-define
 const props = withDefaults(defineProps<Props>(), {
-	icon: undefined,
 	color: false,
 	label: "",
 	...baseInteractivePropsDefaults
@@ -219,24 +214,21 @@ const props = withDefaults(defineProps<Props>(), {
 
 const ariaLabel = useAriaLabel(props, fallbackId)
 const autoTitle = computed(() => ({
-	title: (props.autoTitleFromAria && ($.value.attrs["aria-label"] ?? props.label)) || undefined,
+	title: props.autoTitleFromAria
+		? ($attrs["aria-label"] ?? props.label) as string
+		: undefined,
 }))
 
 </script>
 
 <script lang="ts">
-type WrapperTypes = Partial<WrapperProps<
-	"icon",
-	HTMLAttributes
-	& Omit<FontAwesomeIconProps, "icon">
->>
+
 type RealProps =
 	& LinkableByIdProps
 	& LabelProps
 	& BaseInteractiveProps
 	& {
 		border?: boolean
-		icon?: string
 		color?: "warning" | "ok" | "danger" | "primary" | "secondary" | false
 		label?: string
 		autoTitleFromAria?: boolean
@@ -251,8 +243,5 @@ interface Props
 		// why is this not already a part of button?
 		"aria-label": string
 	}>,
-	/** @vue-ignore */
-	WrapperTypes,
-	RealProps
-{}
+	RealProps {}
 </script>

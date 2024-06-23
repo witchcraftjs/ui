@@ -3,10 +3,6 @@ import TestWrapper from "../src/TestWrapper.vue"
 import {vExtractRootEl} from "../src/directives/vExtractRootEl.js"
 import "../src/assets/style.css"
 
-import { library } from "@fortawesome/fontawesome-svg-core"
-import { far } from "@fortawesome/free-regular-svg-icons"
-import { fas } from "@fortawesome/free-solid-svg-icons"
-library.add(fas, far)
 
 export const parameters:Parameters = {
 	// actions: { argTypesRegex: "^on[A-Z].*" },

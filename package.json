@@ -87,24 +87,11 @@
 		"build-storybook": "storybook build"
 	},
 	"peerDependencies": {
-		"@fortawesome/fontawesome-svg-core": "^6.4.0",
-		"@fortawesome/free-brands-svg-icons": "^6.4.0",
-		"@fortawesome/free-regular-svg-icons": "^6.4.0",
-		"@fortawesome/free-solid-svg-icons": "^6.4.0",
 		"@nuxtjs/tailwindcss": "^6.7.0",
 		"tailwindcss": "^3.3.2",
 		"vue": "^3.2.47"
 	},
 	"peerDependenciesMeta": {
-		"@fortawesome/free-solid-svg-icons": {
-			"optional": true
-		},
-		"@fortawesome/free-regular-svg-icons": {
-			"optional": true
-		},
-		"@fortawesome/free-brands-svg-icons": {
-			"optional": true
-		},
 		"@nuxtjs/tailwindcss": {
 			"optional": true
 		},
@@ -114,12 +101,13 @@
 	},
 	"dependencies": {
 		"@alanscodelog/utils": "^4.0.0",
-		"@fortawesome/vue-fontawesome": "^3.0.8",
 		"@nuxt/types": "^2.17.3",
 		"colord": "^2.9.3",
 		"colorjs.io": "^0.4.3",
 		"metamorphosis": "^0.2.3",
 		"tailwind-merge": "^2.3.0",
+		"unplugin-icons": "^0.19.0",
+		"unplugin-vue-components": "^0.27.0",
 		"vue": "^3.4.27"
 	},
 	"devDependencies": {
@@ -129,10 +117,7 @@
 		"@alanscodelog/tsconfigs": "^4.0.1",
 		"@chromatic-com/storybook": "^1.5.0",
 		"@commitlint/cli": "^19.3.0",
-		"@fortawesome/fontawesome-svg-core": "^6.5.2",
-		"@fortawesome/free-regular-svg-icons": "^6.5.2",
-		"@fortawesome/free-solid-svg-icons": "^6.5.2",
-		"@fortawesome/vue-fontawesome": "^3.0.3",
+		"@iconify/json": "^2.2.221",
 		"@nuxt/kit": "^3.11.2",
 		"@nuxt/schema": "^3.11.2",
 		"@nuxtjs/tailwindcss": "^6.12.0",

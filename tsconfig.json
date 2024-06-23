@@ -8,7 +8,8 @@
 		"target": "ESNext",
 		"outDir": "dist",
 		"types": [
-			"node"
+			"node",
+			"unplugin-icons/types/vue"
 		],
 		"lib": [
 			"dom",
