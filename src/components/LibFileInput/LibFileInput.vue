@@ -41,7 +41,7 @@
 			</slot>
 			<span v-if="compact && multiple">{{ ` (${files.length})` }}</span>
 		</label>
-		<label v-if="!compact" class="flex flex-col items-center text-sm">
+		<label v-if="!compact && formats?.length > 0" class="flex flex-col items-center text-sm">
 			<slot name="formats">Accepted Formats: </slot>
 			<div class="">
 				{{ extensions.join(", ") }}
@@ -151,14 +151,12 @@ const errorFlashing = ref(false)
 watch(files, () => {
 	emits("input", files.map(entry => entry.file))
 })
-watch(errors, (newVal, oldVal) => {
+watch(errors, () => {
 	if (errors.length > 0) {
 		errorFlashing.value = true
 		setTimeout(() => {
 			errorFlashing.value = false
 		}, 500)
-	}
-	if (newVal.length !== oldVal.length) {
 		emits("errors", errors)
 	}
 })
@@ -182,8 +180,8 @@ const props = withDefaults(defineProps<Props>(), {
 	compact: false,
 })
 
-const mimeTypes = computed(() => props.formats.filter(_ => !_.startsWith(".")))
-const extensions = computed(() => props.formats.filter(_ => _.startsWith(".")))
+const mimeTypes = computed(() => props.formats?.filter(_ => !_.startsWith(".")) ?? [])
+const extensions = computed(() => props.formats?.filter(_ => _.startsWith(".")) ?? [])
 
 const getSrc = (file: File) => {
 	const src = URL.createObjectURL(file)
@@ -201,10 +199,11 @@ const inputFile = async (e: InputEvent): Promise<void | boolean> => {
 		const errs = []
 		for (const file of el.value!.files) {
 			const isImg = file.type.startsWith("image")
-			
+
+			const byPassValidation = props.formats.length === 0
 			const isValidMimeType = mimeTypes.value.find(_ => _.endsWith("/*") ? file.type.startsWith(_.slice(0, -2)) : _ === file.type) !== undefined
 			const isValidExtension = extensions.value.find(_ => file.name.endsWith(_)) !== undefined
-			if (!isValidMimeType || !isValidExtension) {
+			if (!byPassValidation && (!isValidMimeType || !isValidExtension)) {
 				const extension = file.name.match(/.*(\..*)/)?.[1] ?? "Unknown"
 				const type = file.type === "" ? "" : ` (${file.type})`
 				const message = `File type ${extension}${type} is not allowed. Allowed file types are: ${extensionsList.value}.`
@@ -247,7 +246,11 @@ type RealProps =
 & LinkableByIdProps
 & {
 	multiple?: boolean
-	/** A list of extensions or mime types to add to the input's accept. Basic validations are done so that files match an extension and mimeType, but note that a file could still be lying, all files should be validated server side.*/
+	/**
+	 * A list of extensions or mime types to add to the input's accept. Basic validations are done so that files match an extension and mimeType, but note that a file could still be lying, all files should be validated server side.
+	 *
+	 * Pass an empty array to allow any filetype.
+	 */
 	formats?: string[]
 	compact?: boolean
 }

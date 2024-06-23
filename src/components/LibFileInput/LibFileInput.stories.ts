@@ -22,17 +22,33 @@ type Story = StoryObj<typeof LibFileInput>
 export const SingleFile: Story = {
 	render: args => ({
 		components,
-		setup: () => ({ args }),
+		setup: () => {
+			function errorHandler(e: any): void {
+				// eslint-disable-next-line no-console
+				console.log(e)
+			}
+			return { args, errorHandler }
+		},
 		template: `
-			<lib-file-input v-bind="{...args}"></lib-file-input>
+			<lib-file-input v-bind="{...args}" @errors="errorHandler"></lib-file-input>
 		`,
 	}),
 }
+
 export const MultipleFile: Story = {
 	...SingleFile,
 	args: {
 		...SingleFile.args,
 		multiple: true,
+	},
+}
+
+export const AnyFormat: Story = {
+	...SingleFile,
+	args: {
+		...SingleFile.args,
+		multiple: true,
+		formats: [],
 	},
 }
 
