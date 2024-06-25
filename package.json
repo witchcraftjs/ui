@@ -81,7 +81,7 @@
 		"lint:commits": "commitlint --from $(git rev-list --max-parents=0 HEAD) --to HEAD --verbose",
 		"lint:imports": "madge --circular --extensions ts ./src",
 		"lint": "npm run lint:types && npm run lint:eslint && npm run lint:imports",
-		"prepare": "husky install && npm run build",
+		"prepare": "husky && npm run build",
 		"actions:debug": "act -r -v -j build",
 		"gen:exports": "indexit update --ignore **.d.ts **.stories.ts **.vue -o '${path}.js'",
 		"build-storybook": "storybook build"
