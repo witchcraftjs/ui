@@ -42,7 +42,6 @@ export default async ({ mode }: { mode: string }) => defineConfig({
 		// note aliases and baseUrl imports should not be used, they have all been removed
 		typesPlugin(),
 		Components({
-			dts: "types/components.d.ts",
 			dirs: ["src/components/Icon"], // don't auto-import our own components except icon
 			resolvers: [
 				IconsResolver({
