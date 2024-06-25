@@ -164,6 +164,12 @@
 		"vue-loader": "^17.4.2",
 		"vue-tsc": "^2.0.19"
 	},
+	"pnpm": {
+		"overrides": {
+			"@volar/typescript": "2.3.1",
+			"@volar/language-core": "2.3.1"
+		}
+	},
 	"author": "Alan <alanscodelog@gmail.com>",
 	"repository": "https://github.com/alanscodelog/vue-components",
 	"license": "MIT",
