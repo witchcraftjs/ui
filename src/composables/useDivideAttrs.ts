@@ -29,17 +29,21 @@ import { computed, type Ref, useAttrs } from "vue"
 export const useDivideAttrs = <T extends readonly string[]>(divisionKeys: T): Ref<Record<`${T[number]}Attrs` | "attrs", Record<string, any>>> => computed(() => {
 	const attrs: Record<string, any> = useAttrs()
 	const res: any = { attrs: {} }
+	const unseen = keys(attrs)
 	for (const key of divisionKeys) {
 		res[`${key}Attrs`] = {}
-		for (const attrKey of keys(attrs)) {
+		for (const attrKey of unseen) {
 			if (attrKey.startsWith(`${key}-`)) {
 				res[`${key}Attrs`][attrKey.slice(key.length + 1)] = attrs[attrKey]
+				unseen.splice(unseen.indexOf(attrKey), 1)
 			} else if (attrKey.startsWith(key)) {
 				res[`${key}Attrs`][attrKey.slice(key.length)] = attrs[attrKey]
-			} else {
-				res.attrs[attrKey] = attrs[attrKey]
+				unseen.splice(unseen.indexOf(attrKey), 1)
 			}
 		}
+	}
+	for (const attrKey of unseen) {
+		res.attrs[attrKey] = attrs[attrKey]
 	}
 	return res
 })
