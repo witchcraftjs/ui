@@ -92,7 +92,7 @@
 				v-if="suggestions"
 				:data-is-open="isOpen"
 				:class="twMerge(
-					`flex flex-col justify-center`,
+					`indicator flex flex-col justify-center`,
 				)"
 				@click="suggestionsIndicatorClickHandler"
 			>
