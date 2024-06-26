@@ -44,7 +44,7 @@ export const InsideAFlexbox: Story = {
 				Inside a flexbox:
 				<div class="flex flex-wrap">
 					<lib-simple-input v-bind="args" v-model="args.modelValue"></lib-simple-input>
-					<div class="border-1 border-red-500 flex-1 whitespace-nowrap">Flex Grow: 1</div>
+					<div class="border-1 border-danger-500 flex-1 whitespace-nowrap">Flex Grow: 1</div>
 				</div>
 		`,
 	}),

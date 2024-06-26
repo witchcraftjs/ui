@@ -11,7 +11,7 @@
 		ease-out`,
 		compact && `rounded`,
 		!compact && `flex w-full flex-col items-center gap-2 rounded-xl  p-2 `,
-		errors.length > 0 && errorFlashing && `border-red-400`,
+		errors.length > 0 && errorFlashing && `border-danger-400`,
 		( $.wrapperAttrs as any ).class
 	)"
 	v-bind="{...$.wrapperAttrs, class:undefined}"

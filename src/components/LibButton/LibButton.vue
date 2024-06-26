@@ -126,13 +126,13 @@
 			bg-danger-400
 			border-danger-500
 			hover:border-danger-500
-			hover:shadow-red-900/50
+			hover:shadow-danger-900/50
 
 			dark:text-danger-100
 			dark:hover:text-danger-200
 			dark:bg-danger-900
 			dark:border-danger-950
-			dark:hover:shadow-red-500/10
+			dark:hover:shadow-ranger-500/10
 		`,
 		border && color === `secondary` && `
 			text-accent-800

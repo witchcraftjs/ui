@@ -41,16 +41,16 @@
 	<div
 		:class="twMerge(`recorder-indicator
 				inline-block
-				bg-red-700
+				bg-recorder-700
 				rounded-full
 				w-[1em]
 				h-[1em]
 				shrink-0
-				hover:bg-red-500
+				hover:bg-recorder-500
 			`,
 			recording && `
 				animate-[blink_1s_infinite]
-				bg-red-500
+				bg-recorder-500
 			`,
 			(disabled || readonly) && `
 				bg-neutral-500

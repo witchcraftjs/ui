@@ -6,7 +6,7 @@
 		flex-col
 		rounded
 		border
-		border-red-500
+		border-danger-500
 		p-2
 	"
 >
