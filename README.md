@@ -5,7 +5,14 @@
 [![NPM Version (with latest tag)](https://img.shields.io/npm/v/%40alanscodelog%2Fvue-components/latest)](https://www.npmjs.com/package/@alanscodelog/vue-components/v/latest)
 [![NPM Version (with beta tag)](https://img.shields.io/npm/v/%40alanscodelog%2Fvue-components/beta)](https://www.npmjs.com/package/@alanscodelog/vue-components/v/beta)
 
-Custom vue component library.
+This is a vue component library that I've been slowly building for use in my personal projects. It's opinionated and batteries included, but also customizable where I've found it useful and needed.
+
+- Parts can be easily styled without replacing them completely without having to pass complicated objects down. For example, the input component can take a `wrapper-class` attribute to style it's wrapper.
+- Parts can be replaced if needed and components have slots to easily swap parts out.
+- Simple components can be used minimally style if needed, though this is unfortunately not true styleless since the tailwind classes are still in the build output.
+- Built with accessibility in mind.
+- Built with theming in mind and uses a custom library [metamorphosis](https://github.com/alanscodelog/metamorphosis) to provide a custom set of tailwind variables for easier application theming (e.g. \*-fg, \*-bg, \*-accent). No regular tailwind colors are used except neutral.
+
 
 # [Storybook](https://alanscodelog.github.io/vue-components/storybook)
 
@@ -42,8 +49,8 @@ In `main.ts` or where vue is mounted:
 
 ```ts
 // if NOT using tailwind a global style import is required to get the component styles working
-// import "../node_modules/@alanscodelog/vue-components/dist/style.css"
 // proper import is currently broken, vite is not properly resolving css imports 
+// import "../node_modules/@alanscodelog/vue-components/dist/style.css"
 
 // import plugin
 import { VueComponentsPlugin } from "@alanscodelog/vue-components"
@@ -55,7 +62,7 @@ createApp(App)
 	.use(VueComponentsPlugin) //use plugin
 
 ```
-In the vite config, vue will require the experimental useModel:
+In the vite config, vue will require the experimental defineModel:
 
 ```
 	plugins: [
@@ -69,12 +76,28 @@ In the vite config, vue will require the experimental useModel:
 
 ## Setting up Tailwind
 
-You should also be able to use tailwind directly instead of importing the styles.
+### Extra Classes
+
+You will need to import `@alanscodelog/vue-components/utilities.css` and `@alanscodelog/vue-components/base.css` in your css file. 
+
+```css
+@import "@alanscodelog/vue-components/base.css";
+@import "@alanscodelog/vue-components/utilities.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+Utilities contains required utilities.
+
+Base just contains animation keyframes and basic styles for vue animations. They are not "layered", i.e. they will get imported regardless of whether they are used since otherwise tailwind does not detect they are being used.
+
+
+### Tailwind Configuration
 
 You can use the exported config and merge it with your own if needed.
 
 ```ts
-
 import { config } from "@alanscodelog/vue-components/tailwind/config.js"
 
 export default  {
@@ -90,8 +113,6 @@ export default  {
 		...config.plugins
 	]
 }
-
-
 
 ```
 
@@ -121,24 +142,14 @@ const config = {
 } satisfies Config
 
 export default config
-
 ```
 
 \* Note that it overrides the h-screen utility to use dvh units by default, with vh as a fallback.
 
-You will need to import `@alanscodelog/vue-components/utilities.css` and `@alanscodelog/vue-components/base.css` in your css file. 
+## Other
 
-```css
-@import "@alanscodelog/vue-components/base.css";
-@import "@alanscodelog/vue-components/utilities.css";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-```
+The library uses a customized twMerge instance, you can import it from `@alanscodelog/vue-components/helpers/twMerge.js` or import the options it extends  twMerge with.
 
-Utilities contains required utilities.
-
-Base just contains animation keyframes and basic styles for vue animations. They are not "layered", i.e. they will get imported regardless of whether they are used since otherwise tailwind does not detect they are being used.
 
 ## Getting Proper Types
 
