@@ -116,7 +116,7 @@
 				:style="`background:${localColorString}`"
 			/>
 		</div>
-		<div class="color-controls flex flex-1 items-center gap-2 border border-red">
+		<div class="color-controls flex flex-1 items-center gap-2">
 			<slot name="input">
 				<lib-simple-input
 					class="w-full"
