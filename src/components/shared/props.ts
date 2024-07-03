@@ -19,7 +19,7 @@ export interface LabelProps {
 
 export type SuggestionsProps = {
 	/**
-	 * A list of autocomplete suggestions. Can be a simple list of strings, or more complicated, like a list of objects. In the case of objects, you'll want to specify `suggestionsValue`.
+	 * A list of autocomplete suggestions. Can be a simple list of strings, or more complicated, like a list of objects. In the case of objects, you'll want to specify `suggestionsLabel`.
 	 *
 	 * Each item is passed to the suggestion slot via the `items` prop. You can access it like:
 	 * ```
