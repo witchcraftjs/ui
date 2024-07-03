@@ -105,14 +105,14 @@ export const AttrsNumber: Story = {
 export const WithAutosuggest = {
 	...Primary,
 	args: {
-		suggestions: ["A", "AB", "ABC"],
+		suggestions: ["A", "AB", "ABC", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"],
 	},
 }
 export const Borderless = {
 	...Primary,
 	args: {
 		border: false,
-		suggestions: ["A", "AB", "ABC"],
+		suggestions: ["A", "AB", "ABC", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"],
 	},
 }
 
@@ -140,6 +140,7 @@ export const AutosuggestObjectOptions = {
 			{ label: "A", other: "some data A" },
 			{ label: "AB", other: "some data AB" },
 			{ label: "ABC", other: "some data ABC" },
+			{ label: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", other: "some data ABCDEFGHIJKLMNOPQRSTUVWXYZ" },
 		],
 		suggestionLabel: (item: any) => item.label,
 	},
@@ -211,7 +212,7 @@ export const WithMultipleValuesWithSuggestions = {
 	...WithMultipleValues,
 	args: {
 		...WithMultipleValues.args,
-		suggestions: ["A", "AB", "ABC"],
+		suggestions: ["A", "AB", "ABC", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"],
 	},
 }
 export const WithMultipleValuesDisabled = {

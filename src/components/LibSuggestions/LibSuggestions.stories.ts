@@ -15,7 +15,7 @@ const meta = {
 		modelValue: "A",
 		label: "Some Label",
 		border: true,
-		suggestions: ["A", "AB", "ABC", "B", "BC", "C"],
+		suggestions: ["A", "AB", "ABC", "B", "BC", "C", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"],
 	},
 } // satisfies Meta<typeof LibSuggestions> & Meta<{ custom: string }>
 
@@ -117,6 +117,7 @@ export const CustomSuggestionsObject = {
 			{ label: "A", other: "some data A" },
 			{ label: "AB", other: "some data AB" },
 			{ label: "ABC", other: "some data ABC" },
+			{ label: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", other: "some data ABCDEFGHIJKLMNOPQRSTUVWXYZ" },
 		],
 		suggestionLabel: (item: any) => item.label,
 	},
