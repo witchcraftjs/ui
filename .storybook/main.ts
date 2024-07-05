@@ -17,7 +17,9 @@ const config: StorybookConfig = {
     "@chromatic-com/storybook",
     "@storybook/addon-interactions",
   ],
-
+ features: {
+    interactionsDebugger: true,
+  },
   framework: {
     name: "@storybook/vue3-vite",
     options: {},

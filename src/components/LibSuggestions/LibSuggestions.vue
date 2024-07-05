@@ -1,6 +1,6 @@
 <template>
 <div
-	v-if="$isOpen"
+	v-if="suggestions.isOpen"
 	:id="`suggestions-${id ?? fallbackId}`"
 	:class="twMerge(`
 			suggestions
@@ -9,7 +9,7 @@
 		`,
 		($.attrs as any)?.class
 	)"
-	:data-open="$isOpen"
+	:data-open="suggestions.isOpen"
 	role="listbox"
 	ref="el"
 	v-bind="{...$.attrs, class:undefined}"
@@ -17,25 +17,23 @@
 	<!-- Click event is just in case, it should not really be triggered. We can do click selections via the blur handler. -->
 	<div :id="`suggestion-${id ?? fallbackId}-${index}`"
 		role="option"
-		:data-is-active-suggestions="index === $activeSuggestion"
 		:class="twMerge(`
 					px-1
 					user-select-none
 					cursor-pointer
 					px-2
 				`,
-			index=== $activeSuggestion && `bg-accent-200 dark:bg-accent-800`,
+			index=== suggestions.active && `bg-accent-200 dark:bg-accent-800`,
 			($.itemAttrs as any)?.class
 		)"
 		v-bind="{...$.itemAttrs, class:undefined}"
-		:aria-selected="index === $activeSuggestion ? true : false"
-		:aria-label="item"
-		v-for="(item, index) in fullSuggestionsList"
+		:aria-selected="index === suggestions.active ? true : false"
+		:aria-label="suggestions.getLabel(item)"
+		v-for="(item, index) in suggestions.filtered"
 		:key="item"
-		@mouseover="$activeSuggestion = index"
-		@mousedown="$activeSuggestion = index; mousedown = true;"
-		@mouseup="$activeSuggestion = index; mousedown = false;"
-		@click="setSelected()"
+		@mouseover="suggestions.active = index"
+		@mousedown.prevent
+		@mouseup="suggestions.enterSuggestion(index)"
 	>
 		<slot name="item" :item="item" :index="index">
 			{{ item }}
@@ -45,16 +43,17 @@
 </template>
 
 
-<script setup lang="ts" generic="T extends string | object">
+<script setup lang="ts" generic="TSuggestion extends string | object">
 
 import { isBlank } from "@alanscodelog/utils/isBlank.js"
 import { isObject } from "@alanscodelog/utils/isObject.js"
 import type { MakeRequired } from "@alanscodelog/utils/types"
-import { computed, type HTMLAttributes,type PropType, ref, toRef, useAttrs, watch, watchPostEffect,withDefaults } from "vue"
+import { computed, type HTMLAttributes,type PropType, reactive, ref, toRef, toRefs, useAttrs, watch, watchPostEffect,withDefaults } from "vue"
 
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
+import { useSuggestions } from "../../composables/useSuggestions.js"
 import { twMerge } from "../../helpers/twMerge.js"
-import { type BaseInteractiveProps, baseInteractiveProps, baseInteractivePropsDefaults, getFallbackId,type LabelProps, type LinkableByIdProps, type MultiValueProps, type SuggestionsProps, type WrapperProps } from "../shared/props.js"
+import { type BaseInteractiveProps, baseInteractiveProps, baseInteractivePropsDefaults, getFallbackId,type LabelProps, type LinkableByIdProps, type MultiValueProps, type SuggestionsEmits, type SuggestionsProps, type WrapperProps } from "../shared/props.js"
 
 defineOptions({
 	name: "lib-suggestions",
@@ -63,14 +62,13 @@ defineOptions({
 
 const $ = useDivideAttrs(["item"] as const)
 
-const emits = defineEmits<{
-	(e: "submit", val: string): void
-}>()
+const emits = defineEmits<SuggestionsEmits>()
 
 const fallbackId = getFallbackId()
 // eslint-disable-next-line no-use-before-define
-const props = withDefaults(defineProps<Props>(), {
-	canOpen: false,
+const props = withDefaults(defineProps<Props & SuggestionsProps<TSuggestion>>(), {
+	isValid: true,
+	canOpen: true,
 	values: undefined,
 	filterKeydown: undefined,
 	...baseInteractivePropsDefaults
@@ -78,6 +76,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 /**
  * The final valid value. This is *not* the value you want to share with the input. If `restrictToSuggestions` is true this will not update on any invalid values that `inputValue` might be set to.
+ *
+ * If suggestions are objects, this will be the string returned by the `suggestionLabel` prop.
  */
 const $modelValue = defineModel<string>("modelValue", { required: true })
 /**
@@ -86,9 +86,6 @@ const $modelValue = defineModel<string>("modelValue", { required: true })
  * It allows the component to read even invalid output, and also to reset that invalid output when either modelValue is set to a new value, or when the component is closed via cancel.
  */
 const $inputValue = defineModel<string >("inputValue", { default: "" })
-const $isValid = defineModel<boolean>("isValid", { required: false, default: true })
-const $isOpen = defineModel<boolean>("isOpen", { required: false, default: false })
-const $activeSuggestion = defineModel<number>("activeSuggestion", { required: false, default: -1 })
 
 
 if (typeof props.suggestions?.[0] === "object" && !props.suggestionLabel && !props.suggestionsFilter) {
@@ -98,232 +95,71 @@ if (typeof props.suggestions?.[0] === "object" && !props.suggestionLabel && !pro
 const el = ref<HTMLElement | null>(null)
 const mousedown = ref(false)
 
-const defaultSuggestionsLabel = (item: any): string => item
-const suggestionLabel = computed(() =>
-	props.suggestionLabel ?? defaultSuggestionsLabel,
-)
-
-const getStringValue = (val: string | object): string => isObject(val) ? suggestionLabel.value(val) : val as string // wat ???
-const defaultSuggestionsFilter = (input: string, items: T[]): T[] => input === ""
-		? [...items]
-		: items.filter(item => suggestionLabel.value(item).toLowerCase().includes(input.toLowerCase()))
-
-
-const suggestionsFilter = computed(() =>
-	props.suggestionsFilter ?? defaultSuggestionsFilter)
-
-
-const suggestionsList = computed(() => {
-	if (props.suggestions) {
-		const res = suggestionsFilter.value($inputValue.value, props.suggestions)
-		return res
-	}
-	return undefined
-})
-
-const suggestionAvailable = computed<boolean>(() =>
-	(suggestionsList.value?.length ?? 0) > 0)
-
-const moreThanOneSuggestionAvailable = computed<boolean>(() =>
-	(suggestionsList.value?.length ?? 0) > 1)
-
-const exactlyMatchingSuggestion = computed(() =>
-	props.suggestions?.find(suggestion =>
-		$inputValue.value === suggestionLabel.value(suggestion)))
-
-const isValidSuggestion = computed(() =>
-	!props.restrictToSuggestions || suggestionAvailable.value)
-
-
-const fullSuggestionsList = computed(() => {
-	if (props.suggestions) {
-		const res = (suggestionAvailable.value
-			? suggestionsList.value
-			: props.suggestions)!
-
-		if (props.restrictToSuggestions && !isValidSuggestion.value) return res
-		if (props.preventDuplicateValues && props.values) {
-			return res.filter(suggestion => !props.values?.includes(suggestionLabel.value(suggestion)))
-		}
-		return res
-	}
-	return undefined
-})
-
-const openable = computed(() =>
-	props.canOpen && (
-		(isBlank($inputValue.value) && props.allowOpenEmpty) ||
-		suggestionAvailable.value
-
-	)
-)
-
-
-const closeSuggestions = (): void => {
-	$isOpen.value = false
-	mousedown.value = false
-	$activeSuggestion.value = -1
-}
-const openSuggestions = (): void => {
-	if (!openable.value) return
-	$isOpen.value = true
-	// see delay close
-	if ($activeSuggestion.value === -1) {
-		if (exactlyMatchingSuggestion.value) {
-			$activeSuggestion.value = suggestionsList.value?.indexOf(exactlyMatchingSuggestion.value) ?? -1
-		} else {
-			$activeSuggestion.value = 0
-		}
-	}
-}
-watch(() => props.canOpen, val => {
-	if (!val) {
-		closeSuggestions()
-	} else {
-		openSuggestions()
-	}
-})
-watch(isValidSuggestion, () => {
-	$isValid.value = isValidSuggestion.value
-	if (!isValidSuggestion.value) {
-		openSuggestions()
-	}
-})
-watch(() => $modelValue.value, () => {
-	$inputValue.value = getStringValue($modelValue.value)
-})
-watch(() => $inputValue.value, () => {
-	if (props.restrictToSuggestions && !exactlyMatchingSuggestion.value) {
-		return
-	}
-	$modelValue.value = $inputValue.value
-	const i = suggestionsList.value?.indexOf(exactlyMatchingSuggestion.value) ?? -1
-	if (
-		i === -1
-		&& props.restrictToSuggestions
-		&& exactlyMatchingSuggestion.value !== undefined
-	) return
-	$activeSuggestion.value = i
-})
-watchPostEffect((): void => {
-	if (!openable.value) {
-		closeSuggestions()
-		return
-	}
-	if (suggestionAvailable.value) {
-		if (!$isOpen.value && (!exactlyMatchingSuggestion.value || moreThanOneSuggestionAvailable.value)) {
-			openSuggestions()
-		}
-	} else if (isValidSuggestion.value) {
-		closeSuggestions()
-	}
-})
-
-
-function setSuggestion(num: number): void {
-	if (fullSuggestionsList.value === undefined) return
-	const val = suggestionLabel.value(fullSuggestionsList.value[num])
-
-	$modelValue.value = val
-	$inputValue.value = val
-	closeSuggestions()
-}
-
-const setSelected = (submit: boolean = props.values !== undefined): void => {
-	if ($activeSuggestion.value > -1) {
-		// set to active suggestion
-		setSuggestion($activeSuggestion.value)
-	}
-	if (submit) {
-		emits("submit", getStringValue($modelValue.value))
-	}
-}
-
-const inputBlurHandler = (_e: MouseEvent): void => {
-	if (!$isOpen.value) return
-	// clicked on self, ignore
-	if (mousedown.value) {
-		mousedown.value = false
-		setSelected(true)
-		return
-	}
-
-	if (props.restrictToSuggestions) {
-		if (!exactlyMatchingSuggestion.value) {
-			if ($activeSuggestion.value > -1) {
-				setSuggestion($activeSuggestion.value)
-			} else {
-				$inputValue.value = getStringValue($modelValue.value)
-			}
-		}
-	} else {
-		$modelValue.value = $inputValue.value
-	}
-	if ($isOpen.value) {
-		closeSuggestions()
-	}
-}
-
-const toggleSuggestions = (): void => {
-	$isOpen.value ? closeSuggestions() : openSuggestions()
-}
-
-const prevSuggestion = (): void => {
-	if (!suggestionAvailable.value) return
-	if ($activeSuggestion.value > 0) {
-		$activeSuggestion.value--
-	} else if (fullSuggestionsList.value) {
-		$activeSuggestion.value = fullSuggestionsList.value.length - 1
-	}
-}
-
-const nextSuggestion = (): void => {
-	if (!suggestionAvailable.value || !fullSuggestionsList.value) return
-	if ($activeSuggestion.value >= fullSuggestionsList.value.length - 1) {
-		$activeSuggestion.value = 0
-	} else {
-		$activeSuggestion.value++
-	}
-}
-
-const cancel = (): void => {
-	$inputValue.value = getStringValue($modelValue.value)
-	closeSuggestions()
-}
+const suggestions = reactive(useSuggestions(
+	$inputValue,
+	$modelValue,
+	emits,
+	props
+))
 
 const inputKeydownHandler = (e: KeyboardEvent): void => {
 	if (props.filterKeydown?.(e)) return
 	if (e.key === "Enter") {
-		setSelected(true)
+		suggestions.enterSelected()
 		e.preventDefault()
 	} else if (e.key === "Escape") {
-		cancel()
+		suggestions.cancel()
 		e.preventDefault()
-	} else if (!$isOpen.value && ["ArrowDown", "ArrowUp"].includes(e.key) && suggestionAvailable.value) {
-		openSuggestions()
+	} else if (!suggestions.isOpen && ["ArrowDown", "ArrowUp", "PageUp", "PageDown"].includes(e.key) && suggestions.available) {
+		suggestions.open()
 		e.preventDefault()
+		if (e.key === "PageUp") {
+			suggestions.first()
+		} else if (e.key === "PageDown") {
+			suggestions.last()
+		}
 	} else if (e.key === "ArrowUp") {
-		prevSuggestion()
+		suggestions.prev()
 		e.preventDefault()
 	} else if (e.key === "ArrowDown") {
-		nextSuggestion()
+		suggestions.next()
+		e.preventDefault()
+	} else if (e.key === "PageUp") {
+		suggestions.first()
+		e.preventDefault()
+	} else if (e.key === "PageDown") {
+		suggestions.last()
 		e.preventDefault()
 	}
 }
+const inputBlurHandler = (e: MouseEvent): void => {
+	if (props.filterBlur?.(e)) return
+	
+	if (!suggestions.isOpen) return
 
+	if (props.restrictToSuggestions) {
+		suggestions.cancel()
+	} else {
+		$modelValue.value = $inputValue.value
+	}
+	if (suggestions.isOpen) {
+		suggestions.close()
+	}
+}
+const inputFocusHandler = (e: FocusEvent): void => {
+	if (props.filterFocus?.(e)) return
+	suggestions.open()
+}
 
 defineExpose({
-	nextSuggestion,
-	prevSuggestion,
-	cancel,
-	setSelected,
-	toggleSuggestions,
-	closeSuggestions,
-	openSuggestions,
+	suggestions,
+	el,
 	/** A simple keydown handler that can be passed to an input to control the component while still focused inside it. */
 	inputKeydownHandler,
 	/** A blur handler for the input that controls the component. This also takes care of making clicking on a suggestion work, since otherwise if canOpen is set to false in the blur handler, no click event will fire. */
 	inputBlurHandler,
+	/** A focus handler for the input that controls the component. */
+	inputFocusHandler,
 })
 
 </script>
@@ -339,12 +175,13 @@ type RealProps =
 	& LabelProps
 	& BaseInteractiveProps
 	& MultiValueProps
-	& SuggestionsProps
 	& {
-		canOpen?: boolean
-		values?: string[]
 		/** Return true to prevent the keydown event from being handled. */
 		filterKeydown?: (e: KeyboardEvent) => boolean
+		/** Return true to prevent the blur event from being handled. */
+		filterBlur?: (e: MouseEvent) => boolean
+		/** Return true to prevent the focus event from being handled. */
+		filterFocus?: (e: FocusEvent) => boolean
 	}
 
 interface Props

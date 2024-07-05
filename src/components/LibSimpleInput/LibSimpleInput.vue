@@ -101,7 +101,7 @@ const modelValue = defineModel<T>({ required: true })
 
 const emits = defineEmits<{
 	/* User presses enter.*/
-	(e: "submit", val: any): void
+	(e: "submit", val: T): void
 	(e: "input", val: InputEvent): void
 }>()
 const $attrs = useAttrs()

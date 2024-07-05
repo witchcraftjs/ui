@@ -1,18 +1,19 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { StoryObj } from "@storybook/vue3"
-import { ref } from "vue"
+import { computed, onMounted, ref } from "vue"
 
 import LibSuggestions from "./LibSuggestions.vue"
 
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
+import { playBasicClickSelect,playBasicKeyboardSelect, playBasicSelect } from "../shared/storyHelpers/playSuggestions.js"
 
 
 const meta = {
 	component: LibSuggestions,
 	args: {
 		id: "some-id",
-		modelValue: "A",
+		modelValue: "",
 		label: "Some Label",
 		border: true,
 		suggestions: ["A", "AB", "ABC", "B", "BC", "C", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"],
@@ -22,34 +23,37 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof LibSuggestions> // & StoryObj<typeof extraArgs>
 
-
 /**
  * The suggestions component is just the dropdown part.
  *
- * Here it is decoupled from the input and forced open.
+ * Here it is decoupled from the input.
  *
- * More example can be found in the input component.
+ * More examples can be found in the input component.
  */
 export const Primary: Story = {
 	render: args => ({
 		components: { ...components, LibSuggestions },
+		
 		setup: () => {
 			const inputValue = ref(args.modelValue)
 			const modelValue = ref(args.modelValue)
-			const drawer = ref<typeof LibSuggestions | null>(null)
+			const drawer = ref<InstanceType<typeof LibSuggestions> | null>(null)
 			const keydownHandler = (e: KeyboardEvent): void => {
 				drawer.value?.inputKeydownHandler(e)
 			}
+			const suggestions = computed(() => drawer.value?.suggestions)
 			const blurHandler = (e: MouseEvent) => {
 				drawer.value?.inputBlurHandler(e)
-				args.canOpen = false
 			}
+			onMounted(() => {
+				drawer.value.suggestions.open()
+			})
 			return {
 				args,
 				inputValue,
 				modelValue,
-				canOpen: ref(true),
 				isOpen: ref(false),
+				suggestions,
 				drawer,
 				keydownHandler,
 				blurHandler,
@@ -59,18 +63,22 @@ export const Primary: Story = {
 		template: `
 			<div class="flex flex-col gap-3">
 			Temporary Value: {{inputValue}}
-			Value Selected: {{modelValue}}
+			<br/>
+			Model Value (Final Value): <span class="inline-block" data-testid="model-value">{{modelValue}}</span>\n
+			
+<br/>
+			Selected: {{suggestions?.filtered[suggestions.active]}}
 				<lib-simple-input
 					:class="isOpen ? 'open' : ''"
 					v-model="inputValue"
-					@focus="args.canOpen=true"
+					@focus="suggestions.open()"
 					@blur="blurHandler"
 					@keydown="keydownHandler"
 				></lib-simple-input>
 				<lib-suggestions
 					ref="drawer"
 					v-bind="{...args}"
-					:canOpen="true"
+					@update:isOpen="isOpen = $event"
 					v-model="modelValue"
 					v-model:inputValue="inputValue"
 				>
@@ -81,16 +89,21 @@ export const Primary: Story = {
 			</div>
 		`,
 	}),
-	args: {
-	},
+	play: async context => {
+		await playBasicSelect(context)
+		await playBasicKeyboardSelect(context)
+		await playBasicClickSelect(context)
+	}
 }
 
-export const RestrictToSuggestions = {
+export const RestrictToSuggestions: Story = {
 	...Primary,
 	args: {
 		...Primary.args,
 		restrictToSuggestions: true,
 	},
+	
+	
 }
 export const AlwaysShowAllSuggestions = {
 	...Primary,
@@ -99,6 +112,7 @@ export const AlwaysShowAllSuggestions = {
 		restrictToSuggestions: true,
 		suggestionsFilter: (_input: string, items: string[]) => items,
 	},
+
 }
 export const AlwaysShowAllSuggestionsAndNoRestrictToSuggestions = {
 	...Primary,
@@ -107,6 +121,7 @@ export const AlwaysShowAllSuggestionsAndNoRestrictToSuggestions = {
 		restrictToSuggestions: false,
 		suggestionsFilter: (_input: string, items: string[]) => items,
 	},
+
 }
 export const CustomSuggestionsObject = {
 	...Primary,
@@ -119,10 +134,7 @@ export const CustomSuggestionsObject = {
 			{ label: "ABC", other: "some data ABC" },
 			{ label: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", other: "some data ABCDEFGHIJKLMNOPQRSTUVWXYZ" },
 		],
-		suggestionLabel: (item: any) => item.label,
 	},
+
 }
-// export const MultipleValuesWithAutosuggest = TemplateWAutosuggest.bind({})
-// MultipleValuesWithAutosuggest.args = {
-// 	values: ["a", "b", "c"],
-// }
+

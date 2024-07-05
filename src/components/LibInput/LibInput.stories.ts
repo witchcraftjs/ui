@@ -13,12 +13,12 @@ import { createRecorderHandler, createRecorderWatchEffect } from "../../helpers/
 import Icon from "../Icon/Icon.vue"
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
+import { playBasicClickSelect,playBasicKeyboardSelect, playBasicSelect } from "../shared/storyHelpers/playSuggestions.js"
 
 
 const meta = {
 	component: LibInput as any,
 	args: {
-		modelValue: "A",
 		border: true,
 		label: "Some Label",
 	},
@@ -36,29 +36,36 @@ const allComponents = {
 	IconFaSolidTags,
 }
 
+const playAutosuggestSelectLike = async (context: { canvasElement: HTMLElement, args: any }) => {
+	await playBasicSelect(context)
+	await playBasicKeyboardSelect(context)
+	await playBasicClickSelect(context)
+}
+
+const setupModelValue = (args: any) => ({
+	modelValue: ref(args.modelValue ?? ""),
+})
+
+const setupModelValues = (args: any) => ({
+	values: ref(args.values ?? []),
+})
+
 export const Primary: Story = {
 	render: args => ({
 		components: allComponents,
 		setup: () => ({
+			...setupModelValue(args),
+			...setupModelValues(args),
 			args,
-		})
-		,
+		}),
 
 		template: `
-			<div> Value: {{args.modelValue}}</div>
+			Model Value: <span class="inline-block" data-testid="model-value">{{modelValue}}</span>\n
 			<lib-input
 				v-bind="args"
-				v-model:values="args.values"
-				v-model="args.modelValue"
+				v-model:values="values"
+				v-model="modelValue"
 			>
-			Some Label
-			</lib-input>
-			<lib-input
-				v-bind="args"
-				v-model:values="args.values"
-				v-model="args.modelValue"
-			>
-			Some Label
 			</lib-input>
 		`,
 	}),
@@ -102,12 +109,6 @@ export const AttrsNumber: Story = {
 	} as any,
 }
 
-export const WithAutosuggest = {
-	...Primary,
-	args: {
-		suggestions: ["A", "AB", "ABC", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"],
-	},
-}
 export const Borderless = {
 	...Primary,
 	args: {
@@ -116,12 +117,20 @@ export const Borderless = {
 	},
 }
 
+export const WithAutosuggest = {
+	...Primary,
+	args: {
+		suggestions: ["A", "AB", "ABC", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"],
+	},
+	play: playAutosuggestSelectLike
+}
 export const AutosuggestSelectLike = {
 	...WithAutosuggest,
 	args: {
 		...WithAutosuggest.args,
 		restrictToSuggestions: true,
 	},
+	play: playAutosuggestSelectLike
 }
 export const AutosuggestSelectLikeShowAllUnrestricted = {
 	...WithAutosuggest,
@@ -130,6 +139,7 @@ export const AutosuggestSelectLikeShowAllUnrestricted = {
 		restrictToSuggestions: false,
 		suggestionsFilter: (_input: string, items: string[]) => items,
 	},
+	play: playAutosuggestSelectLike
 }
 export const AutosuggestObjectOptions = {
 	...WithAutosuggest,
@@ -144,23 +154,25 @@ export const AutosuggestObjectOptions = {
 		],
 		suggestionLabel: (item: any) => item.label,
 	},
+	play: playAutosuggestSelectLike
 }
 
 export const Slots: Story = {
 	render: args => ({
 		components: allComponents,
 		setup: () => ({
+			...setupModelValue(args),
+			...setupModelValues(args),
 			args,
 		})
 		,
-
 		template: `
-			<div> Value: {{args.modelValue}}</div>
+			Model Value: <span class="inline-block" data-testid="model-value">{{modelValue}}</span>\n
 
 			<lib-input
 				v-bind="args"
-				v-model="args.modelValue"
-				v-model:values="args.values"
+				v-model="modelValue"
+				v-model:values="values"
 			>
 				<template #label>
 					Custom Label Slot
@@ -184,16 +196,19 @@ export const WithMultipleValues: Story = {
 	render: args => ({
 		components: allComponents,
 		setup: () => ({
+			...setupModelValue(args),
+			...setupModelValues(args),
 			args,
 		})
 		,
 
 		template: `
-			<div> Value: {{args.modelValue}}</div>
+			Model Value: <span class="inline-block" data-testid="model-value">{{modelValue}}</span>\n
+
 			<lib-input
 				v-bind="args"
-				v-model="args.modelValue"
-				v-model:values="args.values"
+				v-model="modelValue"
+				v-model:values="values"
 			>
 				<template #left>
 					<lib-button class="px-0" :border="false">
@@ -214,6 +229,7 @@ export const WithMultipleValuesWithSuggestions = {
 		...WithMultipleValues.args,
 		suggestions: ["A", "AB", "ABC", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"],
 	},
+	play: playAutosuggestSelectLike
 }
 export const WithMultipleValuesDisabled = {
 	...WithMultipleValues,
@@ -237,7 +253,7 @@ export const InputSlotReplacement: Story = {
 			const recording = ref(false)
 			const recordingValue = ref("")
 			const modelValue = ref("K E Y S")
-			const values = ref(args.values ?? [])
+			const values = ref<string[]>((args.values as any) ?? [])
 			const recorderEl = ref(null)
 			const recorder = createRecorderHandler(recordingValue, recording, modelValue, recorderEl)
 			watchEffect(createRecorderWatchEffect(recordingValue, recording, modelValue, values as any))
@@ -254,7 +270,9 @@ export const InputSlotReplacement: Story = {
 		,
 
 		template: `
-			<div> Value: {{modelValue}} {{values}} {{recording}}</div>
+			Model Value: <span class="inline-block" data-testid="model-value">{{modelValue}}</span>\n
+			Values: <span class="inline-block" data-testid="values">{{values}}</span>\n
+			Recording: <span class="inline-block" data-testid="recording">{{recording}}</span>\n
 			<lib-input
 				v-bind="args"
 				v-model="modelValue"
@@ -289,6 +307,8 @@ export const NextToButton: Story = {
 	render: args => ({
 		components: allComponents,
 		setup: () => ({
+			...setupModelValue(args),
+			...setupModelValues(args),
 			args,
 		}),
 
@@ -296,8 +316,8 @@ export const NextToButton: Story = {
 		<div class="flex gap-2 items-center">
 			<lib-input
 				v-bind="args"
-				v-model:values="args.values"
-				v-model="args.modelValue"
+				v-model:values="values"
+				v-model="modelValue"
 :label="undefined"
 			>
 			</lib-input>

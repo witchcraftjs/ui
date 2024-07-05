@@ -17,7 +17,7 @@ export interface LabelProps {
 	label?: string
 }
 
-export type SuggestionsProps = {
+export type SuggestionsProps<T = any> = {
 	/**
 	 * A list of autocomplete suggestions. Can be a simple list of strings, or more complicated, like a list of objects. In the case of objects, you'll want to specify `suggestionsLabel`.
 	 *
@@ -28,9 +28,9 @@ export type SuggestionsProps = {
 	 * </div>
 	 * ```
 	 */
-	suggestions?: any[]
+	suggestions?: T[]
 	/** A function that specifies how to extract the label from a suggestion when it's an object, e.g. `(item) => item.label`. By default, if none is passed, it's assumed suggestions is a list of strings. */
-	suggestionLabel?: (item: any) => string
+	suggestionLabel?: (item: T) => string
 	/**
 	 * Whether to restrict the value to the suggestions list or merely use it to suggest values. Default is false.
 	 *
@@ -44,9 +44,25 @@ export type SuggestionsProps = {
 	 */
 	restrictToSuggestions?: boolean
 	/** A function to filter the suggestions based on the current input. If none is given, will attempt to filter by the label using a basic case insensitive `includes` search. */
-	suggestionsFilter?: (input: string | number, items: any[]) => any[]
+	suggestionsFilter?: (input: string | number, items: T[]) => any[]
 	/** Allows opening the input dropdown when it's empty. Default is true. */
 	allowOpenEmpty?: boolean
+	/** Whether the suggestions dropdown can be opened. Default is true. */
+	canOpen?: boolean
+	/** Whether the input is valid. Default is true. */
+	isValid?: boolean
+	/**
+	 * A function to determine which selection to auto select. By default, the start of the string must match and the longest match is used. If the input is 0 length, the first element is selected.
+	 *
+	 * You can implement custom behavior here like fuzzy matching. Note that an exactly matching selection is always picked (the function will not be called).
+	 */
+	suggestionSelector?: (suggestions: T[], input: string) => number
+}
+export type SuggestionsOptions<T> = SuggestionsProps<T> & MultiValueProps
+export interface SuggestionsEmits {
+	(e: "submit", val: string): void
+	(e: "update:isOpen", val: boolean): void
+	(e: "update:activeSuggestion", val: number): void
 }
 
 
@@ -84,6 +100,8 @@ export type MultiValueProps = {
 	 * Default is true.
 	 */
 	preventDuplicateValues?: boolean
+	/** The selected values.*/
+	values?: string[]
 }
 
 /**

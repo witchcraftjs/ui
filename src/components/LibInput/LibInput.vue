@@ -12,7 +12,7 @@
 	)"
 	tabindex="-1"
 	v-bind="{...$.wrapperAttrs, class:undefined}"
-	@blur="canOpen = false"
+	ref="inputWrapperEl"
 >
 	<slot name="label" v-bind="{ ...slotProps, label }">
 		<lib-label v-if="label || $slots.default"
@@ -152,9 +152,10 @@
 <script setup lang="ts">
 import { pushIfNotIn } from "@alanscodelog/utils/pushIfNotIn.js"
 import type { MakeRequired } from "@alanscodelog/utils/types"
-import { computed, defineProps,type HTMLAttributes,type InputHTMLAttributes, type PropType, ref, useSlots, watch,withDefaults } from "vue"
+import { computed, defineProps,type HTMLAttributes,type InputHTMLAttributes, nextTick, type PropType, ref, toRef, useSlots, watch,withDefaults } from "vue"
 
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
+import { useSuggestionsInputAria } from "../../composables/useSuggestions.js"
 import { hasModifiers } from "../../helpers/hasModifiers.js"
 import { twMerge } from "../../helpers/twMerge.js"
 import LibLabel from "../LibLabel/LibLabel.vue"
@@ -176,6 +177,7 @@ const emit = defineEmits<{
 	(e: "keydown", val: KeyboardEvent): void
 	(e: "blur", val: FocusEvent): void
 	(e: "focus", val: FocusEvent): void
+	(e: "indicatorClick", val: MouseEvent): void
 }>()
 
 const fallbackId = getFallbackId()
@@ -192,6 +194,7 @@ const $ = useDivideAttrs(["wrapper", "inner-wrapper", "suggestions", "multivalue
 const $values = defineModel<string[] | undefined>("values", { default: undefined })
 const $modelValue = defineModel<string>({ required: true })
 
+const fullId = computed(() => props.id ?? fallbackId)
 
 const inputValue = ref<any>($modelValue.value)
 const canEdit = computed(() => !props.disabled && !props.readonly)
@@ -200,68 +203,65 @@ const activeSuggestion = ref(0)
 watch(() => $modelValue.value, () => {
 	inputValue.value = $modelValue.value
 })
-
 const inputWrapperEl = ref<HTMLElement | null>(null)
 const isOpen = ref(false)
-const canOpen = ref(false)
-const isValid = ref(true)
-const isActuallyValid = computed(() => props.valid ?? isValid.value)
 
-
-const updateIsValid = (e: boolean) => {
-	isValid.value = e
-}
-
-const suggestionsIndicatorClickHandler = () => {
-	canOpen.value = !canOpen.value
-	if (canOpen.value) {
-		const inputEl = inputWrapperEl.value?.querySelector("input, .input") as HTMLElement | null
-		inputEl?.focus()
-	}
+const suggestionsIndicatorClickHandler = (e: MouseEvent) => {
+	nextTick(() => {
+		if (props.suggestions) {
+			(suggestionsComponent.value as any)?.suggestions.toggle()
+		}
+	})
+	emit("indicatorClick", e)
 }
 const handleInput = (e: InputEvent) => {
 	if (canEdit.value) {
-		if (!props.restrictToSuggestions) {
+		if (!props.suggestions) {
 			$modelValue.value = (e.target as any)?.value
 		} // else suggestions will handle updating modelvalue
-		canOpen.value = true
+		emit("input", e)
 	}
-	emit("input", e)
 }
 
 const handleKeydown = (e: KeyboardEvent) => {
-	if (props.suggestions)(suggestionsComponent.value as any)?.inputKeydownHandler?.(e)
+	if (props.suggestions) {
+		(suggestionsComponent.value as any)?.inputKeydownHandler?.(e)
+	}
 
-	if ($values.value && e.key === "Enter" && !hasModifiers(e)) {
+	if (!props.suggestions && $values.value && e.key === "Enter" && !hasModifiers(e)) {
 		props.preventDuplicateValues
 			? pushIfNotIn($values.value, [inputValue.value])
 			: $values.value.push(inputValue.value)
 	}
-	if ($values.value && e.key === "Escape" && !hasModifiers(e)) {
-		canOpen.value = false
-	}
+	
 	emit("keydown", e)
 }
 const handleBlur = (e: FocusEvent) => {
 	if (props.suggestions) {
 		(suggestionsComponent.value as any)?.inputBlurHandler?.(e)
 	}
-	canOpen.value = false
-	inputValue.value = $modelValue.value
 	emit("blur", e)
 }
 const handleFocus = (e: FocusEvent) => {
-	canOpen.value = true
+	if (props.suggestions) {
+		(suggestionsComponent.value as any)?.inputFocusHandler?.(e)
+	}
 	emit("focus", e)
 }
 
-// todo emitting of value changes for isvalid
+const suggestions = toRef(props, "suggestions")
+const inputAriaProps = useSuggestionsInputAria(
+	fullId,
+	isOpen,
+	activeSuggestion,
+	suggestions,
+)
 const inputProps = computed(() => ({
-	id: props.id ?? fallbackId,
+	id: fullId.value,
 	border: false,
 	disabled: props.disabled,
 	readonly: props.readonly,
-	valid: isActuallyValid.value,
+	isValid: props.valid,
 	onInput: handleInput,
 	onKeydown: handleKeydown,
 	onBlur: handleBlur,
@@ -274,29 +274,24 @@ const inputProps = computed(() => ({
 		if (!props.restrictToSuggestions) {
 			$modelValue.value = e
 		}
-		isOpen.value = false
 		emit("submit", e)
 	},
-	"aria-autocomplete": props.suggestions !== undefined ? "both" as const : undefined,
-	"aria-controls": props.suggestions !== undefined ? `suggestions-${props.id ?? fallbackId}` : undefined,
-	role: props.suggestions ? "combobox" : undefined,
-	"aria-expanded": props.suggestions !== undefined ? isOpen.value : undefined,
-	"aria-activedescendant": isOpen.value ? `suggestion-${props.id ?? fallbackId}-${activeSuggestion.value}` : undefined,
+	...inputAriaProps.value,
 	canEdit: canEdit.value,
 	...$.value.attrs,
 	class: undefined,
 }))
 
 const slotProps = computed(() => ({
-	id: props.id ?? fallbackId,
+	id: fullId.value,
 	isOpen: isOpen.value,
-	isValid: props.valid ?? isValid.value,
+	valid: props.valid,
 	disabled: props.disabled,
 	readonly: props.readonly,
 }))
 
 const suggestionProps = computed(() => ({
-	id: props.id ?? fallbackId,
+	id: fullId.value,
 	suggestions: props.suggestions,
 	allowOpenEmpty: props.allowOpenEmpty,
 	restrictToSuggestions: props.restrictToSuggestions,
@@ -304,16 +299,14 @@ const suggestionProps = computed(() => ({
 	suggestionsFilter: props.suggestionsFilter,
 	modelValue: $modelValue.value.toString(),
 	inputValue: inputValue.value,
-	canOpen: canOpen.value,
+	isValid: props.isValid,
+	"onUpdate:inputValue": (e: string) => inputValue.value = e,
 	onSubmit: (e: string) => {
 		$modelValue.value = e
-		canOpen.value = false
 		emit("submit", e)
 	},
 	"onUpdate:isOpen": (e: boolean) => { isOpen.value = e },
-	"onUpdate:isValid": updateIsValid,
-	"onUpdate:activeSuggestions": (e: number) => activeSuggestion.value = e,
-	"onUpdate:inputValue": (e: string) => inputValue.value = e,
+	"onUpdate:activeSuggestion": (e: number) => activeSuggestion.value = e,
 	...$.value.suggestionsAttrs,
 	class: undefined,
 }))
@@ -329,6 +322,7 @@ const multivaluesProps = computed(() => ({
 	...$.value.multivaluesAttrs,
 	class: undefined,
 }))
+
 </script>
 <script lang="ts">
 
