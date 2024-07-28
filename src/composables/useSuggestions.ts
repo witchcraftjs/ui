@@ -17,7 +17,7 @@ export function useSuggestions<TSuggestion>(
 	$modelValue: Ref<string>,
 	emit: SuggestionsEmits,
 	opts: SuggestionsOptions<TSuggestion>,
-	debug: boolean = true
+	debug: boolean = false
 ) {
 	if (typeof opts.suggestions?.[0] === "object" && !opts.suggestionLabel && !opts.suggestionsFilter) {
 		throw new Error("`suggestionLabel` or `suggestionsFilter` must be passed if suggestions are objects.")
