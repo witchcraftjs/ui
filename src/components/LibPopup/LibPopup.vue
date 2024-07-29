@@ -44,6 +44,7 @@ import { onMounted, type PropType, ref, useAttrs, watch , type HTMLAttributes } 
 import { getFallbackId, type LinkableByIdProps,type TailwindClassProp } from "../shared/props.js"
 
 import { twMerge } from "../../helpers/twMerge.js"
+import { castType } from "@alanscodelog/utils"
 
 const fallbackId = getFallbackId()
 // eslint-disable-next-line no-use-before-define
@@ -86,22 +87,33 @@ const getVeilBoundingRect = (el: HTMLElement): Omit<DOMRect, "toJSON"> => {
 }
 const recompute = (): void => {
 	requestAnimationFrame(() => {
-		if (!buttonEl.value || !popupEl.value || !dialogEl.value) {
+		const allAreCenterScreen = props.preferredHorizontal[0] === "center-screen" && props.preferredVertical[0] === "center-screen"
+		if ((!buttonEl.value && !allAreCenterScreen) || !popupEl.value || !dialogEl.value) {
 			pos.value = {} as any
 			return
 		}
 		const finalPos: { x: number, y: number, maxWidth?: number, maxHeight?: number } = {} as any
 
-		const el = buttonEl.value.getBoundingClientRect()
+		const el = buttonEl.value?.getBoundingClientRect()
 		const veil = getVeilBoundingRect(props.useBackdrop ? dialogEl.value : document.body)
 		const popup = popupEl.value.getBoundingClientRect()
 
-		const spaceLeft = (el.x + el.width) - veil.x
-		const spaceRight = (veil.x + veil.width) - el.x
-		const spaceLeftFromCenter = (el.x + (el.width / 2)) - veil.x
-		const spaceRightFromCenter = (veil.x + veil.width) - (el.x + (el.width / 2))
-		const spaceTop = el.y - veil.y
-		const spaceBottom = (veil.y + veil.height) - (el.y + el.height)
+		const space = {
+			left: 0,
+			right: 0,
+			leftFromCenter: 0,
+			rightFromCenter: 0,
+			top: 0,
+			bottom: 0,
+		}
+		if (el) {
+			space.left = (el.x + el.width) - veil.x
+			space.right = (veil.x + veil.width) - (el.x + el.width)
+			space.leftFromCenter = (el.x + (el.width / 2)) - veil.x
+			space.rightFromCenter = (veil.x + veil.width) - (el.x + (el.width / 2))
+			space.top = el.y - veil.y
+			space.bottom = (veil.y + veil.height) - (el.y + el.height)
+		}
 
 		const { preferredHorizontal, preferredVertical } = props
 		let maxWidth: number | undefined
@@ -119,29 +131,33 @@ const recompute = (): void => {
 					}
 					break
 				case "center":
-					if (spaceLeftFromCenter >= (popup.width / 2) &&
-						spaceRightFromCenter >= (popup.width / 2)) {
+					castType<DOMRect>(el)
+					if (space.leftFromCenter >= (popup.width / 2) &&
+						space.rightFromCenter >= (popup.width / 2)) {
 						finalPos.x = el.x + (el.width / 2) - (popup.width / 2)
 						break outerloop
 					}
 					// todo temp fix when it's too wide, will prefer left
-					if (((spaceRightFromCenter + spaceLeftFromCenter) <= popup.width)) {
+					if (((space.rightFromCenter + space.leftFromCenter) <= popup.width)) {
 						finalPos.x = 0
 						break outerloop
 					}
 					break
 				case "right":
-					if (spaceRight >= popup.width) {
+					castType<DOMRect>(el)
+					if (space.right >= popup.width) {
 						finalPos.x = el.x; break outerloop
 					}
 					break
 				case "left":
-					if (spaceLeft >= popup.width) {
+					castType<DOMRect>(el)
+					if (space.left >= popup.width) {
 						finalPos.x = (el.x + el.width) - popup.width; break outerloop
 					}
 					break
 				case "either": {
-					if (spaceRight >= spaceLeft) {
+					castType<DOMRect>(el)
+					if (space.right >= space.left) {
 						finalPos.x = el.x; break outerloop
 					} else { finalPos.x = (el.x + el.width) - popup.width; break outerloop }
 				}
@@ -159,17 +175,20 @@ const recompute = (): void => {
 					}
 					break
 				case "top":
-					if (spaceTop >= popup.height) {
+					castType<DOMRect>(el)
+					if (space.top >= popup.height) {
 						finalPos.y = el.y - popup.height; break outerloop
 					}
 					break
 				case "bottom":
-					if (spaceBottom >= popup.height) {
+					castType<DOMRect>(el)
+					if (space.bottom >= popup.height) {
 						finalPos.y = el.y + el.height; break outerloop
 					}
 					break
 				case "either": {
-					if (spaceTop >= spaceBottom) {
+					castType<DOMRect>(el)
+					if (space.top >= space.bottom) {
 						finalPos.y = el.y - popup.height; break outerloop
 					} else { finalPos.y = el.y + el.height; break outerloop }
 				}
@@ -212,7 +231,7 @@ const unbindListeners = () => {
 	window.removeEventListener("resize", recompute)
 }
 
-watch([() => modelValue.value, () => popupEl.value], () => {
+watch([modelValue, popupEl], () => {
 	if (modelValue.value) {
 		show()
 		recompute()
