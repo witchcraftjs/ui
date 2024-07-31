@@ -326,6 +326,12 @@ const multivaluesProps = computed(() => ({
 	class: undefined,
 }))
 
+
+defineExpose({
+	suggestionsComponent,
+	el: inputWrapperEl,
+	inputValue
+})
 </script>
 <script lang="ts">
 
