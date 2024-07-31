@@ -187,6 +187,7 @@ const fallbackId = getFallbackId()
 const props = withDefaults(defineProps<Props>(), {
 	valid: true,
 	suggestions: undefined,
+	updateOnlyOnSubmit: false,
 	...baseInteractivePropsDefaults,
 })
 
@@ -201,7 +202,7 @@ const inputValue = ref<any>($modelValue.value)
 const canEdit = computed(() => !props.disabled && !props.readonly)
 const suggestionsComponent = ref<ComponentExposed<typeof LibSuggestions> | null>(null)
 const activeSuggestion = ref(0)
-watch(() => $modelValue.value, () => {
+watch($modelValue, () => {
 	inputValue.value = $modelValue.value
 })
 const inputWrapperEl = ref<HTMLElement | null>(null)
@@ -215,14 +216,7 @@ const suggestionsIndicatorClickHandler = (e: MouseEvent) => {
 	})
 	emit("indicatorClick", e)
 }
-const handleInput = (e: InputEvent) => {
-	if (canEdit.value) {
-		if (!props.suggestions) {
-			$modelValue.value = (e.target as any)?.value
-		} // else suggestions will handle updating modelvalue
-		emit("input", e)
-	}
-}
+
 
 const handleKeydown = (e: KeyboardEvent) => {
 	if (props.suggestions) {
@@ -263,19 +257,24 @@ const inputProps = computed(() => ({
 	disabled: props.disabled,
 	readonly: props.readonly,
 	isValid: props.valid,
-	onInput: handleInput,
 	onKeydown: handleKeydown,
 	onBlur: handleBlur,
 	onFocus: handleFocus,
 	modelValue: inputValue.value,
 	"onUpdate:modelValue": (e: string) => {
 		inputValue.value = e
-	},
-	onSubmit: (e: string) => {
-		if (!props.restrictToSuggestions) {
+		if (!props.suggestions && !props.updateOnlyOnSubmit) {
 			$modelValue.value = e
 		}
-		emit("submit", e)
+	},
+	onSubmit: (e: string) => {
+		if (!props.suggestions) {
+			$modelValue.value = e
+			emit("submit", e)
+		}
+		if ($values.value) {
+			$values.value.push(e)
+		}
 	},
 	...inputAriaProps.value,
 	canEdit: canEdit.value,
@@ -305,6 +304,9 @@ const suggestionProps = computed(() => ({
 	onSubmit: (e: string) => {
 		$modelValue.value = e
 		emit("submit", e)
+		if ($values.value) {
+			$values.value.push(e)
+		}
 	},
 	"onUpdate:isOpen": (e: boolean) => { isOpen.value = e },
 	"onUpdate:activeSuggestion": (e: number) => activeSuggestion.value = e,

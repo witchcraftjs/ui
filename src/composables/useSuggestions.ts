@@ -93,7 +93,7 @@ export function useSuggestions<TSuggestion>(
 		activeSuggestion.value = -1
 	}
 	const openSuggestions = (): void => {
-		if (debug) console.log("openSuggestions")
+		if (debug) console.log("openSuggestions", { openable: openable.value })
 		if (!openable.value) return
 		if (activeSuggestion.value === -1) {
 			if (exactlyMatchingSuggestion.value) {
@@ -120,7 +120,12 @@ export function useSuggestions<TSuggestion>(
 
 	const enterSelected = (): void => {
 		if (activeSuggestion.value === -1) {
-			if (debug) console.log("enterSelected, no active suggestion, ignoring")
+			if (!opts.restrictToSuggestions) {
+				if (debug) console.log("enterSelected, unrestricted, emitting submit")
+				emit("submit", $inputValue.value)
+			} else {
+				if (debug) console.log("enterSelected, no active suggestion, ignoring")
+			}
 			return
 		}
 		if (debug) console.log("enterSelected")
@@ -218,6 +223,7 @@ export function useSuggestions<TSuggestion>(
 	}
 
 	watch($inputValue, () => {
+		if (debug) console.log("input changed:", $inputValue.value, "modelValue:", $modelValue.value)
 		if ($modelValue.value === $inputValue.value) return
 
 		if (suggestionAvailable.value) {

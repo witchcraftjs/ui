@@ -56,7 +56,10 @@ export const Primary: Story = {
 		setup: () => ({
 			...setupModelValue(args),
 			...setupModelValues(args),
-			args,
+			args: {
+				...args,
+				updateOnlyOnSubmit: args.suggestions !== undefined,
+			},
 		}),
 
 		template: `
@@ -65,6 +68,7 @@ export const Primary: Story = {
 				v-bind="args"
 				v-model:values="values"
 				v-model="modelValue"
+				@submit="modelValue = $event"
 			>
 			</lib-input>
 		`,
@@ -117,6 +121,7 @@ export const Borderless = {
 	},
 }
 
+
 export const WithAutosuggest = {
 	...Primary,
 	args: {
@@ -124,7 +129,13 @@ export const WithAutosuggest = {
 	},
 	play: playAutosuggestSelectLike
 }
-export const AutosuggestSelectLike = {
+export const WithInstantAutosuggest = {
+	...Primary,
+	args: {
+		suggestions: ["A", "AB", "ABC", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"],
+	},
+}
+export const AutosuggestRestricted = {
 	...WithAutosuggest,
 	args: {
 		...WithAutosuggest.args,
@@ -163,7 +174,10 @@ export const Slots: Story = {
 		setup: () => ({
 			...setupModelValue(args),
 			...setupModelValues(args),
-			args,
+			args: {
+				...args,
+				updateOnlyOnSubmit: args.suggestions !== undefined,
+			},
 		})
 		,
 		template: `

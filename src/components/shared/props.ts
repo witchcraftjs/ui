@@ -43,6 +43,15 @@ export type SuggestionsProps<T = any> = {
 	 * Additionally when the input is invalid, the user can open the dropdown menu (it won't auto open) to view all the suggestions.
 	 */
 	restrictToSuggestions?: boolean
+	/**
+	 * Usually when using autosuggest, we only want to update the modelValue when the user submits the input.
+	 * This happens by default if using `restrictToSuggestions`, but not if not restricting them.
+	 *
+	 * This can be worked around by listening a bit differently to events, but this is a common use case so there's now an option that automatically does this.
+	 *
+	 * By default it's false.
+	 */
+	updateOnlyOnSubmit?: boolean
 	/** A function to filter the suggestions based on the current input. If none is given, will attempt to filter by the label using a basic case insensitive `includes` search. */
 	suggestionsFilter?: (input: string | number, items: T[]) => any[]
 	/** Allows opening the input dropdown when it's empty. Default is true. */

@@ -11,24 +11,35 @@ export const playBasicSelect = async ({ canvasElement, args }: { canvasElement: 
 	// partial match
 	await expect(canvas.queryByRole("option", { name: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", selected: true })).toBeInTheDocument()
 	await userEvent.keyboard("{Enter}")
+
+	await expect(canvas.getByTestId("model-value")).toHaveTextContent("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 	// should be closed after enter
 	await expect(canvas.queryByRole("listbox")).toBeNull()
 	await userEvent.keyboard("{Backspace}")
 	await expect(canvas.queryByRole("option",{ selected: true })).toBeInTheDocument()
 	await userEvent.clear(input)
 	await userEvent.type(input, "unmatched")
-	await expect(canvas.queryAllByRole("option", { selected: true })).toEqual([])
+	if (!args.suggestionsFilter) {
+		await expect(canvas.queryAllByRole("option", { selected: true })).toEqual([])
+	}
 	await userEvent.clear(input)
+
 	// first match should be selected if input is empty
 	await expect(await canvas.findByRole("option", { name: "A", selected: true })).toBeInTheDocument()
+	if (args.restrictToSuggestions) {
+		// should still equal last selected
+		await expect(canvas.getByTestId("model-value")).toHaveTextContent("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+	}
+
 	await userEvent.keyboard("{Enter}")
+	await expect(canvas.getByTestId("model-value")).toHaveTextContent("A")
 	await userEvent.clear(input)
 	await userEvent.keyboard("{Escape}")
 	await expect(canvas.queryByRole("listbox")).toBeNull()
 	if (args.restrictToSuggestions) {
 		await expect(canvas.getByTestId("model-value")).toHaveTextContent("A")
 	} else {
-		await expect(canvas.getByTestId("model-value")).toHaveTextContent("")
+		await expect(canvas.getByTestId("model-value")).toHaveTextContent("A")
 	}
 }
 
