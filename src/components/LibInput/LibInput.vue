@@ -153,6 +153,7 @@
 import { pushIfNotIn } from "@alanscodelog/utils/pushIfNotIn.js"
 import type { MakeRequired } from "@alanscodelog/utils/types"
 import { computed, defineProps,type HTMLAttributes,type InputHTMLAttributes, nextTick, type PropType, ref, toRef, useSlots, watch,withDefaults } from "vue"
+import type { ComponentExposed } from "vue-component-type-helpers"
 
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
 import { useSuggestionsInputAria } from "../../composables/useSuggestions.js"
@@ -198,7 +199,7 @@ const fullId = computed(() => props.id ?? fallbackId)
 
 const inputValue = ref<any>($modelValue.value)
 const canEdit = computed(() => !props.disabled && !props.readonly)
-const suggestionsComponent = ref<typeof LibSuggestions | null>(null)
+const suggestionsComponent = ref<ComponentExposed<typeof LibSuggestions> | null>(null)
 const activeSuggestion = ref(0)
 watch(() => $modelValue.value, () => {
 	inputValue.value = $modelValue.value
