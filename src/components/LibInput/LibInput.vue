@@ -173,7 +173,7 @@ defineOptions({
 })
 const $slots = useSlots()
 const emit = defineEmits<{
-	(e: "submit", val: string): void
+	(e: "submit", val: string, suggestion?: any): void
 	(e: "input", val: InputEvent): void
 	(e: "keydown", val: KeyboardEvent): void
 	(e: "blur", val: FocusEvent): void
@@ -301,9 +301,9 @@ const suggestionProps = computed(() => ({
 	inputValue: inputValue.value,
 	isValid: props.isValid,
 	"onUpdate:inputValue": (e: string) => inputValue.value = e,
-	onSubmit: (e: string) => {
+	onSubmit: (e: string, suggestion: any) => {
 		$modelValue.value = e
-		emit("submit", e)
+		emit("submit", e, suggestion)
 		if ($values.value) {
 			$values.value.push(e)
 		}

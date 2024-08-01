@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { isBlank } from "@alanscodelog/utils/isBlank.js"
 import { isObject } from "@alanscodelog/utils/isObject.js"
-import { computed, type Ref, ref, watch } from "vue"
+import { computed, type Ref, ref, toRaw, watch } from "vue"
 
 import { type SuggestionsEmits,type SuggestionsOptions } from "../components/shared/props.js"
 
@@ -110,12 +110,13 @@ export function useSuggestions<TSuggestion>(
 		if (debug) console.log("enterSuggestion", num)
 		if (filteredSuggestions.value === undefined) return
 	
-		const val = suggestionLabel.value(filteredSuggestions.value[num])
+		const suggestion = filteredSuggestions.value[num]
+		const val = suggestionLabel.value(suggestion)
 
 		$modelValue.value = val
 		$inputValue.value = val
 		closeSuggestions()
-		emit("submit", $modelValue.value)
+		emit("submit", val, toRaw(suggestion))
 	}
 
 	const enterSelected = (): void => {

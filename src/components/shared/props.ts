@@ -69,7 +69,7 @@ export type SuggestionsProps<T = any> = {
 }
 export type SuggestionsOptions<T> = SuggestionsProps<T> & MultiValueProps
 export interface SuggestionsEmits {
-	(e: "submit", val: string): void
+	(e: "submit", val: string, suggestion?: any): void
 	(e: "update:isOpen", val: boolean): void
 	(e: "update:activeSuggestion", val: number): void
 }
