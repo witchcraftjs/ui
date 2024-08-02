@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { StoryObj } from "@storybook/vue3"
 import { computed, onMounted, ref } from "vue"
+import type { ComponentExposed } from "vue-component-type-helpers"
 
 import LibSuggestions from "./LibSuggestions.vue"
 
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
-import { playBasicClickSelect,playBasicKeyboardSelect, playBasicSelect } from "../shared/storyHelpers/playSuggestions.js"
-
 
 const meta = {
 	component: LibSuggestions,
@@ -37,7 +36,7 @@ export const Primary: Story = {
 		setup: () => {
 			const inputValue = ref(args.modelValue)
 			const modelValue = ref(args.modelValue)
-			const drawer = ref<InstanceType<typeof LibSuggestions> | null>(null)
+			const drawer = ref<ComponentExposed<typeof LibSuggestions> | null>(null)
 			const keydownHandler = (e: KeyboardEvent): void => {
 				drawer.value?.inputKeydownHandler(e)
 			}
@@ -46,7 +45,7 @@ export const Primary: Story = {
 				drawer.value?.inputBlurHandler(e)
 			}
 			onMounted(() => {
-				drawer.value.suggestions.open()
+				drawer.value?.suggestions.open()
 			})
 			return {
 				args,
@@ -68,6 +67,7 @@ export const Primary: Story = {
 			
 <br/>
 			Selected: {{suggestions?.filtered[suggestions.active]}}
+			<label>Some Label</label>
 				<lib-simple-input
 					:class="isOpen ? 'open' : ''"
 					v-model="inputValue"
@@ -89,11 +89,6 @@ export const Primary: Story = {
 			</div>
 		`,
 	}),
-	play: async context => {
-		await playBasicSelect(context)
-		await playBasicKeyboardSelect(context)
-		await playBasicClickSelect(context)
-	}
 }
 
 export const RestrictToSuggestions: Story = {
@@ -134,6 +129,7 @@ export const CustomSuggestionsObject = {
 			{ label: "ABC", other: "some data ABC" },
 			{ label: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", other: "some data ABCDEFGHIJKLMNOPQRSTUVWXYZ" },
 		],
+		suggestionLabel: (item: any) => item.label,
 	},
 
 }

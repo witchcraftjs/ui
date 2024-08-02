@@ -9,6 +9,7 @@ import IconFaChevronRight from "~icons/fa6-solid/chevron-right"
 import IconFaSolidKeyboard from "~icons/fa6-solid/keyboard"
 import IconFaSolidTags from "~icons/fa6-solid/tags"
 
+import { vExtractRootEl } from "../../directives/vExtractRootEl.js"
 import { createRecorderHandler, createRecorderWatchEffect } from "../../helpers/storybook.js"
 import Icon from "../Icon/Icon.vue"
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
@@ -55,7 +56,7 @@ const setupModelValue = (args: any) => ({
 })
 
 const setupModelValues = (args: any) => ({
-	values: ref(args.values ?? []),
+	values: ref(args.values ?? undefined),
 })
 
 const Base: Story = {
@@ -89,45 +90,45 @@ export const Primary: Story = {
 }
 
 export const Disabled: Story = {
-	...Primary,
+	...Base,
 	args: {
 		disabled: true,
 	},
 }
 export const Readonly: Story = {
-	...Primary,
+	...Base,
 	args: {
 		readonly: true,
 	},
 }
 export const Invalid: Story = {
-	...Primary,
+	...Base,
 	args: {
 		valid: false,
 	},
 }
 
 export const AttrsPassword: Story = {
-	...Primary,
+	...Base,
 	args: {
 		type: "password",
 	} as any,
 }
 export const AttrsDate: Story = {
-	...Primary,
+	...Base,
 	args: {
 		type: "date",
 	} as any,
 }
 export const AttrsNumber: Story = {
-	...Primary,
+	...Base,
 	args: {
 		type: "number",
 	} as any,
 }
 
 export const Borderless = {
-	...Primary,
+	...Base,
 	args: {
 		border: false,
 		suggestions: ["A", "AB", "ABC", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"],
@@ -136,14 +137,14 @@ export const Borderless = {
 
 
 export const WithAutosuggest = {
-	...Primary,
+	...Base,
 	args: {
 		suggestions: ["A", "AB", "ABC", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"],
 	},
 	play: playAutosuggestSelectLike
 }
 export const WithInstantAutosuggest = {
-	...Primary,
+	...Base,
 	args: {
 		suggestions: ["A", "AB", "ABC", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"],
 	},
@@ -282,6 +283,7 @@ export const WithMultipleValuesReadonly = {
 export const InputSlotReplacement: Story = {
 	render: args => ({
 		components: allComponents,
+		directives: { vExtractRootEl },
 		setup: () => {
 			const recording = ref(false)
 			const recordingValue = ref("")

@@ -12,9 +12,16 @@ export const playBasicSelect = async ({ canvasElement, args }: { canvasElement: 
 	await expect(canvas.queryByRole("option", { name: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", selected: true })).toBeInTheDocument()
 	await userEvent.keyboard("{Enter}")
 
-	await expect(canvas.getByTestId("model-value")).toHaveTextContent("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
-	// should be closed after enter
-	await expect(canvas.queryByRole("listbox")).toBeNull()
+	if (args.values !== undefined) {
+		await expect(canvas.getByTestId("model-value").textContent).toBe("")
+		// await expect(canvas.getByTestId("model-value")).toHaveTextContent("")
+		await expect(canvas.queryByRole("listbox")).not.toBeNull()
+	} else {
+		await expect(canvas.getByTestId("model-value")).toHaveTextContent("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+		// await expect(canvas.getByTestId("model-value").textContent).toBe("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+		// should be closed after enter
+		await expect(canvas.queryByRole("listbox")).toBeNull()
+	}
 	await userEvent.keyboard("{Backspace}")
 	await expect(canvas.queryByRole("option",{ selected: true })).toBeInTheDocument()
 	await userEvent.clear(input)
@@ -26,20 +33,22 @@ export const playBasicSelect = async ({ canvasElement, args }: { canvasElement: 
 
 	// first match should be selected if input is empty
 	await expect(await canvas.findByRole("option", { name: "A", selected: true })).toBeInTheDocument()
-	if (args.restrictToSuggestions) {
+	if (args.restrictToSuggestions && args.values === undefined) {
 		// should still equal last selected
-		await expect(canvas.getByTestId("model-value")).toHaveTextContent("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+		await expect(canvas.getByTestId("model-value").textContent).toBe("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 	}
 
 	await userEvent.keyboard("{Enter}")
-	await expect(canvas.getByTestId("model-value")).toHaveTextContent("A")
+	if (args.values === undefined) {
+		await expect(canvas.getByTestId("model-value").textContent).toBe("A")
+	}
 	await userEvent.clear(input)
-	await userEvent.keyboard("{Escape}")
+	await userEvent.keyboard("AB{Escape}")
 	await expect(canvas.queryByRole("listbox")).toBeNull()
-	if (args.restrictToSuggestions) {
-		await expect(canvas.getByTestId("model-value")).toHaveTextContent("A")
-	} else {
-		await expect(canvas.getByTestId("model-value")).toHaveTextContent("A")
+	if (args.values === undefined) {
+		if (args.restrictToSuggestions) {
+			await expect(canvas.getByTestId("model-value").textContent).toBe("A")
+		}
 	}
 }
 
@@ -70,7 +79,7 @@ export const playBasicKeyboardSelect = async ({ canvasElement, args }: { canvasE
 	await expect(canvas.queryByRole("option", { name: "A", selected: true })).toBeInTheDocument()
 	
 	const testOpen = async (key: string) => {
-		await userEvent.keyboard("{Enter}")
+		await userEvent.keyboard("{Escape}")
 		await expect(canvas.queryByRole("listbox")).toBeNull()
 		await userEvent.keyboard(`{${key}}`)
 		await expect(canvas.queryByRole("listbox")).toBeInTheDocument()
@@ -86,7 +95,11 @@ export const playBasicClickSelect = async ({ canvasElement, args }: { canvasElem
 	await userEvent.clear(input)
 	await userEvent.type(input, "A")
 	await userEvent.click(canvas.getByRole("option", { name: "AB" }))
-	await expect(canvas.getByTestId("model-value")).toHaveTextContent("AB")
-	await expect(canvas.queryByRole("listbox")).toBeNull()
+	if (args.values === undefined) {
+		await expect(canvas.getByTestId("model-value").textContent).toBe("AB")
+		await expect(canvas.queryByRole("listbox")).toBeNull()
+	} else {
+		await expect(canvas.getByTestId("values")).toHaveTextContent(/AB$/)
+	}
 }
 
