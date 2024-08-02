@@ -16,3 +16,5 @@ todo.md
 
 *storybook.log
 components.d.ts
+.direnv
+.devenv
