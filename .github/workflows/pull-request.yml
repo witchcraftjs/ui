@@ -30,7 +30,7 @@ jobs:
       name: Setting Up Node.js (${{ matrix.node-version }})
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'pnpm'
+        cache: ${{ env.USE_LOCKFILE == 'true' && 'pnpm' || '' }}
 
     - run: pnpm install --frozen-lockfile
       if: "env.USE_LOCKFILE == 'true'"
