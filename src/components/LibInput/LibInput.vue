@@ -150,6 +150,7 @@
 </div>
 </template>
 <script setup lang="ts">
+import { isBlank } from "@alanscodelog/utils/isBlank.js"
 import { pushIfNotIn } from "@alanscodelog/utils/pushIfNotIn.js"
 import type { MakeRequired } from "@alanscodelog/utils/types"
 import { computed, defineProps,type HTMLAttributes,type InputHTMLAttributes, nextTick, type PropType, ref, toRef, useSlots, watch,withDefaults } from "vue"
@@ -222,12 +223,6 @@ const handleKeydown = (e: KeyboardEvent) => {
 	if (props.suggestions) {
 		(suggestionsComponent.value as any)?.inputKeydownHandler?.(e)
 	}
-
-	if (!props.suggestions && $values.value && e.key === "Enter" && !hasModifiers(e)) {
-		props.preventDuplicateValues
-			? pushIfNotIn($values.value, [inputValue.value])
-			: $values.value.push(inputValue.value)
-	}
 	
 	emit("keydown", e)
 }
@@ -244,6 +239,15 @@ const handleFocus = (e: FocusEvent) => {
 	emit("focus", e)
 }
 
+function addValue(val: string) {
+	if ($values.value === undefined) return
+	if (isBlank(val)) return
+	props.preventDuplicateValues
+		? pushIfNotIn($values.value, [val])
+		: $values.value.push(val)
+	inputValue.value = ""
+	$modelValue.value = ""
+}
 const suggestions = toRef(props, "suggestions")
 const inputAriaProps = useSuggestionsInputAria(
 	fullId,
@@ -271,9 +275,9 @@ const inputProps = computed(() => ({
 		if (!props.suggestions) {
 			$modelValue.value = e
 			emit("submit", e)
-		}
-		if ($values.value) {
-			$values.value.push(e)
+			if ($values.value) {
+				addValue(e)
+			}
 		}
 	},
 	...inputAriaProps.value,
@@ -305,7 +309,7 @@ const suggestionProps = computed(() => ({
 		$modelValue.value = e
 		emit("submit", e, suggestion)
 		if ($values.value) {
-			$values.value.push(e)
+			addValue(e)
 		}
 	},
 	"onUpdate:isOpen": (e: boolean) => { isOpen.value = e },

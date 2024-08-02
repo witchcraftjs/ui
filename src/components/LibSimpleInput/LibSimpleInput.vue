@@ -62,8 +62,8 @@
 	:readonly="readonly"
 	v-model="modelValue"
 	v-bind="{...$attrs, class:undefined, ...ariaLabel}"
-	@keydown.enter="emits('submit', modelValue)"
-	@input="emits('input', $event as InputEvent)"
+	@keydown="handleKeydown"
+	@input="emit('input', $event as InputEvent)"
 >
 </template>
 
@@ -76,6 +76,7 @@ import { castType } from "@alanscodelog/utils/utils"
 import { getCurrentInstance, type InputHTMLAttributes, type InputTypeHTMLAttribute,toRef,useAttrs,withDefaults } from "vue"
 
 import { useAriaLabel } from "../../composables/useAriaLabel.js"
+import { hasModifiers } from "../../helpers/hasModifiers.js"
 import { twMerge } from "../../helpers/twMerge.js"
 import { type BaseInteractiveProps, baseInteractivePropsDefaults, getFallbackId,type LabelProps, type LinkableByIdProps, type TailwindClassProp } from "../shared/props.js"
 
@@ -99,13 +100,19 @@ const props = withDefaults(defineProps<Props>(), {
 
 const modelValue = defineModel<T>({ required: true })
 
-const emits = defineEmits<{
+const emit = defineEmits<{
 	/* User presses enter.*/
 	(e: "submit", val: T): void
 	(e: "input", val: InputEvent): void
 }>()
 const $attrs = useAttrs()
 const ariaLabel = useAriaLabel(props, fallbackId)
+
+function handleKeydown(e: KeyboardEvent) {
+	if (e.key === "Enter" && !hasModifiers(e)) {
+		emit("submit", modelValue.value)
+	}
+}
 
 </script>
 

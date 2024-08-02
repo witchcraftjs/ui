@@ -52,6 +52,7 @@ import { computed, type HTMLAttributes,type PropType, reactive, ref, toRef, toRe
 
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
 import { useSuggestions } from "../../composables/useSuggestions.js"
+import { hasModifiers } from "../../helpers/hasModifiers.js"
 import { twMerge } from "../../helpers/twMerge.js"
 import { type BaseInteractiveProps, baseInteractiveProps, baseInteractivePropsDefaults, getFallbackId,type LabelProps, type LinkableByIdProps, type MultiValueProps, type SuggestionsEmits, type SuggestionsProps, type WrapperProps } from "../shared/props.js"
 
@@ -104,6 +105,7 @@ const suggestions = reactive(useSuggestions(
 
 const inputKeydownHandler = (e: KeyboardEvent): void => {
 	if (props.filterKeydown?.(e)) return
+	if (hasModifiers(e)) return
 	if (e.key === "Enter") {
 		suggestions.enterSelected()
 		e.preventDefault()

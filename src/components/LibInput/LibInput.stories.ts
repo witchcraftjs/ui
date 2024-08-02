@@ -13,8 +13,15 @@ import { createRecorderHandler, createRecorderWatchEffect } from "../../helpers/
 import Icon from "../Icon/Icon.vue"
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
-import { playBasicClickSelect,playBasicKeyboardSelect, playBasicSelect } from "../shared/storyHelpers/playSuggestions.js"
-
+import {
+	playBasicVModel,
+	playMultipleValues
+} from "../shared/storyHelpers/playInput.js"
+import {
+	playBasicClickSelect,
+	playBasicKeyboardSelect,
+	playBasicSelect,
+} from "../shared/storyHelpers/playSuggestions.js"
 
 const meta = {
 	component: LibInput as any,
@@ -36,6 +43,7 @@ const allComponents = {
 	IconFaSolidTags,
 }
 
+
 const playAutosuggestSelectLike = async (context: { canvasElement: HTMLElement, args: any }) => {
 	await playBasicSelect(context)
 	await playBasicKeyboardSelect(context)
@@ -50,7 +58,7 @@ const setupModelValues = (args: any) => ({
 	values: ref(args.values ?? []),
 })
 
-export const Primary: Story = {
+const Base: Story = {
 	render: args => ({
 		components: allComponents,
 		setup: () => ({
@@ -73,6 +81,11 @@ export const Primary: Story = {
 			</lib-input>
 		`,
 	}),
+}
+
+export const Primary: Story = {
+	...Base,
+	play: playBasicVModel
 }
 
 export const Disabled: Story = {
@@ -205,8 +218,7 @@ export const Slots: Story = {
 		`,
 	}),
 }
-/** Press enter to add a value. */
-export const WithMultipleValues: Story = {
+const MultipleValuesBase: Story = {
 	render: args => ({
 		components: allComponents,
 		setup: () => ({
@@ -218,7 +230,8 @@ export const WithMultipleValues: Story = {
 
 		template: `
 			Model Value: <span class="inline-block" data-testid="model-value">{{modelValue}}</span>\n
-
+			<br/>
+			Values: <span class="inline-block" data-testid="values">{{values.join(", ")}}</span>\n
 			<lib-input
 				v-bind="args"
 				v-model="modelValue"
@@ -235,27 +248,33 @@ export const WithMultipleValues: Story = {
 	args: {
 		values: ["A", "B", "C"],
 	},
+	
+}
+/** Press enter to add a value. */
+export const WithMultipleValues: Story = {
+	...MultipleValuesBase,
+	play: playMultipleValues
 }
 
 export const WithMultipleValuesWithSuggestions = {
-	...WithMultipleValues,
+	...MultipleValuesBase,
 	args: {
-		...WithMultipleValues.args,
+		...MultipleValuesBase.args,
 		suggestions: ["A", "AB", "ABC", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"],
 	},
 	play: playAutosuggestSelectLike
 }
 export const WithMultipleValuesDisabled = {
-	...WithMultipleValues,
+	...MultipleValuesBase,
 	args: {
-		...WithMultipleValues.args,
+		...MultipleValuesBase.args,
 		disabled: true,
 	},
 }
 export const WithMultipleValuesReadonly = {
-	...WithMultipleValues,
+	...MultipleValuesBase,
 	args: {
-		...WithMultipleValues.args,
+		...MultipleValuesBase.args,
 		readonly: true,
 	},
 }
@@ -285,7 +304,9 @@ export const InputSlotReplacement: Story = {
 
 		template: `
 			Model Value: <span class="inline-block" data-testid="model-value">{{modelValue}}</span>\n
-			Values: <span class="inline-block" data-testid="values">{{values}}</span>\n
+			<br/>
+			Values: <span class="inline-block" data-testid="values">{{values.join(", ")}}</span>\n
+			<br/>
 			Recording: <span class="inline-block" data-testid="recording">{{recording}}</span>\n
 			<lib-input
 				v-bind="args"
