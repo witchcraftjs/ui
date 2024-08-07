@@ -1,5 +1,8 @@
 import { reactive, type Ref, ref } from "vue"
 
+import type { ScrollNearContainerEdgesOptions } from "../types.js"
+
+
 /**
  * Creates a function `scrollContainer` that allows scrolling a container manually when the coordinates are near it's edges.
  * Supports scrolling faster the closer one is to the edge, and configuing an inner and outer margin.
@@ -9,7 +12,7 @@ import { reactive, type Ref, ref } from "vue"
  * By default it sets a setInterval timer to continue scrolling even when the user does not move.
  * An `endScroll` function is provided which should be called on the *up event to cleanup the timer and variables properly (there is also the individual `clearScrollInterval` and `resetCanScroll` functions.
  *
- * It also provides an `isScrolling` ref and a `scrollIndicator` reactive object for styling the element. They can be force cleared with the `resetCanScroll` function.
+ * It also provides an `isScrolling` ref and a `scrollIndicator` reactive object for knowing which direction the user is scrolling in to be able to style the element. They can be force cleared with the `resetCanScroll` function.
  *
  * ```ts
  * const {
@@ -30,11 +33,26 @@ import { reactive, type Ref, ref } from "vue"
  * 		return
  * 	}
  * 	//...
- *}
+ * }
  * const onPointerUp = (_e: PointerEvent): void => {
  * 	endScroll()
  * 	//...
  * }
+ * ```
+ * Styling example with tailwind and tailwind-merge:
+ *
+ * ```vue
+ * <div
+ * 	:class="twMerge(
+ * 		isScrolling && `relative after:content-[''] after:absolute after:inset after:border-2 after:border-transparent`,
+ * 		scrollIndicator.right && `after:border-r-accent-500/60`,
+ * 		scrollIndicator.down && `after:border-b-accent-500/60`,
+ * 		scrollIndicator.left && `after:border-l-accent-500/60`,
+ * 		scrollIndicator.up && `after:border-t-accent-500/60`,
+ * 	)"
+ * >
+ * 	<div class="overflow-auto" ref="containerEl" >
+ * </div>
  * ```
  */
  
@@ -42,17 +60,11 @@ export const useScrollNearContainerEdges = ({
 	containerEl,
 	scrollMargin = 10,
 	outerScrollMargin,
-	fastPixelAmount = 2,
+	fastPixelMultiplier = 1,
+	fastPixelAmount,
 	useTimer = true,
 	timerInterval = 1,
-}: {
-	containerEl: Ref< HTMLElement | null>
-	scrollMargin?: number
-	outerScrollMargin?: number
-	fastPixelAmount?: number
-	useTimer?: boolean
-	timerInterval?: number
-}): {
+}: ScrollNearContainerEdgesOptions): {
 		scrollEdges: (clientX: number, clientY: number, overrideUseTimer?: boolean) => void
 		/** Reactive. */
 		scrollIndicator: { left: boolean, right: boolean, down: boolean, up: boolean }
@@ -61,6 +73,7 @@ export const useScrollNearContainerEdges = ({
 		isScrolling: Ref<boolean>
 		endScroll: () => void
 	} => {
+	fastPixelMultiplier = fastPixelAmount !== undefined ? fastPixelAmount * 2 : fastPixelMultiplier
 	const scrollIndicator = reactive({ left: false, right: false, down: false, up: false })
 	const isScrolling = ref(false)
 	const resetScrollIndicator = (): void => {
@@ -121,6 +134,7 @@ export const useScrollNearContainerEdges = ({
 		const topBottomLimit = topLimit + m
 		const bottomTopLimit = bottomLimit - m
 		const bottomBottomLimit = bottomLimit + M
+		const t = m + M
 
 		resetScrollIndicator()
 		resetMove()
@@ -128,27 +142,27 @@ export const useScrollNearContainerEdges = ({
 		if (x > leftLeftLimit && x < leftRightLimit) {
 			const leftSpace = el.scrollLeft
 			if (leftSpace > 0) {
-				const edgeOffset = ((leftLimit + m) - x) / m
-				move.x = -edgeOffset * fastPixelAmount
+				const edgeOffset = ((leftLimit + m) - x) / t
+				move.x = -edgeOffset * fastPixelMultiplier
 			}
 		} else if (x > rightLeftLimit && x < rightRightLimit) {
 			const rightSpace = (el.scrollWidth - el.scrollLeft) - Math.round(box.width)
 			if (rightSpace > 0) {
-				const edgeOffset = (x - (rightLimit - m)) / m
-				move.x = edgeOffset * fastPixelAmount
+				const edgeOffset = (x - (rightLimit - m)) / t
+				move.x = edgeOffset * fastPixelMultiplier
 			}
 		}
 		if (y > topTopLimit && y < topBottomLimit) {
 			const topSpace = el.scrollTop
 			if (topSpace > 0) {
-				const edgeOffset = ((topLimit + m) - y) / m
-				move.y = -edgeOffset * fastPixelAmount
+				const edgeOffset = ((topLimit + m) - y) / t
+				move.y = -edgeOffset * fastPixelMultiplier
 			}
 		} else if (y > bottomTopLimit && y < bottomBottomLimit) {
 			const bottomSpace = (el.scrollHeight - el.scrollTop) - Math.round(box.height)
 			if (bottomSpace > 0) {
-				const edgeOffset = (y - (bottomLimit - m)) / m
-				move.y = edgeOffset * fastPixelAmount
+				const edgeOffset = (y - (bottomLimit - m)) / t
+				move.y = edgeOffset * fastPixelMultiplier
 			}
 		}
 		if (move.x !== 0 || move.y !== 0) {

@@ -53,3 +53,22 @@ export type FileInputError = ErrorW<{ file: File, isValidMimeType: boolean, isVa
 export type HsvaColor = { h: number, s: number, v: number, a?: number }
 export type RgbaColor = { r: number, g: number, b: number, a?: number }
 
+export type ScrollNearContainerEdgesOptions = {
+	containerEl: Ref< HTMLElement | null>
+	/** Margin inside contianer that allows scrolling. 10 by default. */
+	scrollMargin?: number
+	/** Margin around container that still allows scrolling. 0 by defualt. */
+	outerScrollMargin?: number
+	/**
+		* Controls the scrolling speed.
+		*
+		*  Scroll happens faster the nearer to the outer edge the cursor.
+		*
+		* This is calculated as a percent (0 near the inner edge, and 1 near the outer edge), which is then multiplied by this multiplier, since moving by less than 1 pixel is quite slow. The default is 4.
+		*/
+	fastPixelMultiplier?: number
+	/** @deprecated Use fastPixelMultiplier instead. */
+	fastPixelAmount?: number
+	useTimer?: boolean
+	timerInterval?: number
+}

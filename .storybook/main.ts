@@ -4,7 +4,7 @@ const config: StorybookConfig = {
 	stories: [
     {
       // 👇 Sets the directory containing your stories
-      directory: '../src/components',
+      directory: '../src/',
       // 👇 Storybook will load all files that match this glob
       files: '**/*.stories.*',
       // 👇 Used when generating automatic titles for your stories
