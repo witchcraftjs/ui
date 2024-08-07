@@ -9,7 +9,8 @@
 		"outDir": "dist",
 		"types": [
 			"node",
-			"unplugin-icons/types/vue"
+			"unplugin-icons/types/vue",
+			"vite/client"
 		],
 		"lib": [
 			"dom",
@@ -42,9 +43,6 @@
 		// Tell ts-node CLI to install the --loader automatically, explained below
 		"esm": true
 	},
-	"types": [
-		"vite/client"
-	],
 	"vueCompilerOptions": {
 		"strictTemplates": true,
 	}
