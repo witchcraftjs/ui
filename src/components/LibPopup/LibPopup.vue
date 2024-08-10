@@ -114,20 +114,27 @@ const recompute = (force: boolean = false): void => {
 		const space = {
 			left: 0,
 			right: 0,
+			leftLeft: 0,
+			rightRight: 0,
 			leftFromCenter: 0,
 			rightFromCenter: 0,
+			topFromCenter: 0,
+			bottomFromCenter: 0,
 			top: 0,
 			bottom: 0,
 		}
 		if (el) {
 			space.left = (el.x + el.width) - veil.x
+			space.leftLeft = el.x - veil.x
 			space.right = (veil.x + veil.width) - (el.x + el.width)
+			space.rightRight = veil.x + veil.width - el.x
 			space.leftFromCenter = (el.x + (el.width / 2)) - veil.x
 			space.rightFromCenter = (veil.x + veil.width) - (el.x + (el.width / 2))
+			space.topFromCenter = (el.y + (el.height / 2)) - veil.y
+			space.bottomFromCenter = (veil.y + veil.height) - (el.y + (el.height / 2))
 			space.top = el.y - veil.y
 			space.bottom = (veil.y + veil.height) - (el.y + el.height)
 		}
-
 		const { preferredHorizontal, preferredVertical } = props
 		let maxWidth: number | undefined
 		let maxHeight: number | undefined
@@ -143,6 +150,7 @@ const recompute = (force: boolean = false): void => {
 						maxWidth = finalPos.x
 					}
 					break
+				case "center-most":
 				case "center":
 					castType<DOMRect>(el)
 					if (space.leftFromCenter >= (popup.width / 2) &&
@@ -155,7 +163,29 @@ const recompute = (force: boolean = false): void => {
 						finalPos.x = 0
 						break outerloop
 					}
+					if (type === "center-most") {
+						if (space.leftFromCenter < space.rightFromCenter) {
+							finalPos.x = el.x + (el.width / 2) - space.leftFromCenter; break outerloop
+						} else {
+							finalPos.x = el.x + (el.width / 2) + space.rightFromCenter - popup.width; break outerloop
+						}
+					}
 					break
+				case "left-most":
+					castType<DOMRect>(el)
+					if (space.left >= popup.width) {
+						finalPos.x = el.x - popup.width; break outerloop
+					} else {
+						finalPos.x = 0; break outerloop
+					}
+				case "right-most":
+					castType<DOMRect>(el)
+					if (space.right >= popup.width) {
+						finalPos.x = el.x + el.width; break outerloop
+					} else {
+						finalPos.x = veil.x + veil.width - popup.width; break outerloop
+					}
+				
 				case "right":
 					castType<DOMRect>(el)
 					if (space.right >= popup.width) {
@@ -172,7 +202,10 @@ const recompute = (force: boolean = false): void => {
 					castType<DOMRect>(el)
 					if (space.right >= space.left) {
 						finalPos.x = el.x; break outerloop
-					} else { finalPos.x = (el.x + el.width) - popup.width; break outerloop }
+					} else {
+						finalPos.x = (el.x + el.width) - popup.width
+						break outerloop
+					}
 				}
 			}
 		}
@@ -197,6 +230,41 @@ const recompute = (force: boolean = false): void => {
 					castType<DOMRect>(el)
 					if (space.bottom >= popup.height) {
 						finalPos.y = el.y + el.height; break outerloop
+					}
+					break
+				case "top-most":
+					castType<DOMRect>(el)
+					if (space.top >= popup.height) {
+						finalPos.y = el.y - popup.height; break outerloop
+					} else {
+						finalPos.y = 0; break outerloop
+					}
+				case "bottom-most":
+					castType<DOMRect>(el)
+					if (space.bottom >= popup.height) {
+						finalPos.y = el.y + el.height; break outerloop
+					} else {
+						finalPos.y = veil.y + veil.height - popup.height; break outerloop
+					}
+				case "center-most":
+				case "center":
+					castType<DOMRect>(el)
+					if (space.topFromCenter >= (popup.height / 2) &&
+						space.bottomFromCenter >= (popup.height / 2)) {
+						finalPos.y = el.y + (el.height / 2) - (popup.height / 2)
+						break outerloop
+					}
+					// todo temp fix when it's too wide, will prefer the top
+					if (((space.bottomFromCenter + space.topFromCenter) <= popup.height)) {
+						finalPos.y = 0
+						break outerloop
+					}
+					if (type === "center-most") {
+						if (space.topFromCenter < space.bottomFromCenter) {
+							finalPos.y = el.y + (el.height / 2) - space.topFromCenter; break outerloop
+						} else {
+							finalPos.y = el.y + (el.height / 2) + space.bottomFromCenter - popup.height; break outerloop
+						}
 					}
 					break
 				case "either": {
@@ -282,9 +350,42 @@ type RealProps =
 & LinkableByIdProps
 & {
 	useBackdrop?: boolean
-	preferredHorizontal?: ("center" | "right" | "left" | "either" | "center-screen")[]
-	preferredVertical?: ("top" | "bottom" | "either" | "center-screen")[]
 	/**
+	 * The preferred horizontal positioning of the popup. The first position in the array to fit is used.
+	 *
+	 * The positions `right`/`left`/`top`/`bottom` are relative to the opposite side of the button element so as to try not to cover the triggering button.
+	 *
+	 * So positioning `right` and `left` look like this:
+	 *
+	 * ```
+	 * // right
+	 *         [button]
+	 *         [----popup----]
+	 *
+	 * // left
+	 *         [button]
+	 *  [----popup----]
+	 * ```
+	 *
+	 * Positions `*-most` try to position the popup as close to that side of the screen as possible, otherwise limiting the popup to that edge. For example:
+	 *
+	 * ```
+	 * [--------------screen---------------]
+	 * // right-most
+	 *           [button]
+	 *                   [----popup----]
+	 * // near the edge:
+	 *                 [button]
+	 *                      [----popup----]
+	 * ```
+	 *
+	 * There is also the `center-screen` position, which centers the popup on the screen.
+	 *
+	 * These last two (`*-most` and `center-screen`) are greedy, they will always find a position that fits. Positions listed after are ignored.
+	 */
+	preferredHorizontal?: ("center" | "right" | "left" | "either" | "center-screen" | "right-most" | "left-most" | "center-most")[]
+	/** See `preferredHorizontal`. */
+	preferredVertical?: ("top" | "bottom" | "center" | "either" | "center-screen" | "top-most" | "bottom-most" | "center-most")[]
 	/**
 	 * When the user scrolls or resizes, normally the entire popup position is recomputed, taking into account the preferred positioning.
 	 *
