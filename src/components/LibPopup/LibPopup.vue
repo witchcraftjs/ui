@@ -275,8 +275,8 @@ const recompute = (force: boolean = false): void => {
 				}
 			}
 		}
-		finalPos.maxWidth = maxWidth ?? veil.width - finalPos.x
-		finalPos.maxHeight = maxHeight ?? veil.height - finalPos.y
+		finalPos.maxWidth = maxWidth ?? undefined
+		finalPos.maxHeight = maxHeight ?? undefined
 		/* eslint-enable no-labels */
 		pos.value = finalPos
 		lastButtonElPos = el
