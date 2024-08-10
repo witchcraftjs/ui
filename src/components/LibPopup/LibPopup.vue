@@ -235,7 +235,6 @@ const unbindListeners = () => {
 watch([modelValue, popupEl], () => {
 	if (modelValue.value) {
 		show()
-		recompute()
 		bindListeners()
 	} else {
 		close()
