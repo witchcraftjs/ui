@@ -74,19 +74,17 @@ export const Primary: Story = {
 			</div>
 			<div class="test" style="display:grid;height:80vh;padding:50px;border:1px solid black;">
 
-			<lib-popup
-				v-model="value"
-				v-bind="{
-					preferredHorizontal:args.preferredHorizontal, 
-					preferredVertical:args.preferredVertical
-				}"
-			>
+			<lib-popup v-model="value" v-bind="{ ...args, width:undefined, }" >
 			{{value}}
 				<template #button="{extractEl}">
 					<lib-button :style="buttonStyle" @click="value = !value" v-extract-root-el="extractEl">Toggle Popup</lib-button>
 				</template>
 				<template #popup="{position, extractEl}">
-					<lib-debug v-extract-root-el="extractEl" :style="args.width ? 'width: ${args.width};' : ''" class="bg-bg dark:bg-fg">
+					<lib-debug
+						v-extract-root-el="extractEl"
+						:style="(args.width ? \`width: \${args.width};\` : '') + (args.height ? \`height: \${args.height};\` : '')"
+						class="bg-bg dark:bg-fg"
+					>
 						{{ position }}
 					</lib-debug>
 				</template>
@@ -95,20 +93,64 @@ export const Primary: Story = {
 			`,
 	}),
 }
+export const PopupNoShift = {
+	...Primary,
+	args: {
+		avoidRepositioning: true,
+		
+	}
+}
 /** When the popup is too wide, it's positioned to the left and overflow scroll is set with an invisible scrollbar. */
 export const PopupTooBig = {
 	...Primary,
 	args: {
-		...Primary,
 		width: "110vw",
 	},
 }
 export const PopupCenterScreen = {
 	...Primary,
 	args: {
-		...Primary,
 		width: "500px",
+		height: "500px",
 		preferredHorizontal: ["center-screen"],
 		preferredVertical: ["center-screen"],
+	},
+}
+export const PopupRightBottomMost = {
+	...Primary,
+	args: {
+		width: "500px",
+		height: "500px",
+		preferredHorizontal: [ "right-most"],
+		preferredVertical: [ "bottom-most"],
+	},
+}
+export const PopupLeftTopMost = {
+	...Primary,
+	args: {
+		width: "500px",
+		height: "500px",
+		preferredHorizontal: ["left-most"],
+		preferredVertical: ["top-most"],
+	},
+}
+
+export const PopupCenterMost = {
+	...Primary,
+	args: {
+		width: "500px",
+		height: "500px",
+		preferredHorizontal: ["center-most"],
+		preferredVertical: ["center-most"],
+	},
+}
+export const LeftMenuShapeExample = {
+	...Primary,
+	args: {
+		width: "300px",
+		height: "500px",
+		preferredHorizontal: ["left-most"],
+		preferredVertical: ["center-most"],
+		avoidRepositioning: true,
 	},
 }
