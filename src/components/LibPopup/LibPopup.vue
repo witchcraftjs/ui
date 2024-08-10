@@ -56,10 +56,11 @@ const props = withDefaults(defineProps<Props>(), {
 const $attrs = useAttrs()
 defineOptions({ name: "lib-popup" })
 
+type ElementLike = { getBoundingClientRect: () => DOMRect }
 // todo, can we have transitions?
 const dialogEl = ref<HTMLDialogElement | null>(null)
-const popupEl = ref<HTMLElement | null>(null)
-const buttonEl = ref<HTMLElement | null>(null)
+const popupEl = ref<ElementLike | null>(null)
+const buttonEl = ref<ElementLike | null>(null)
 
 const pos = ref<{ x: number, y: number, maxWidth?: number, maxHeight?: number }>({} as any)
 const modelValue = defineModel<boolean>({ default: false })
@@ -253,6 +254,9 @@ onMounted(() => {
 
 defineExpose({
 	recompute,
+	setReference: (el: IPopupReference | null) => {
+		buttonEl.value = el
+	}
 })
 
 </script>
