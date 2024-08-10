@@ -20,7 +20,7 @@
 	@mousedown.self="handleMouseup"
 >
 	<div v-if="useBackdrop || modelValue"
-		class="scrollbar-hidden fixed overflow-scroll"
+		:class="`scrollbar-hidden fixed overflow-scroll ${props.onlyShiftIfOpen ? 'transition-position' : ''}`"
 		:style="`
 		top:${pos.y}px;
 		left:${pos.x}px;
@@ -52,6 +52,7 @@ const props = withDefaults(defineProps<Props>(), {
 	useBackdrop: true,
 	preferredHorizontal: () => ["center", "right", "left", "either"],
 	preferredVertical: () => ["top", "bottom", "either"],
+	onlyShiftIfOpen: false,
 })
 const $attrs = useAttrs()
 defineOptions({ name: "lib-popup" })
@@ -86,7 +87,8 @@ const getVeilBoundingRect = (el: HTMLElement): Omit<DOMRect, "toJSON"> => {
 		right: 0,
 	}
 }
-const recompute = (): void => {
+let lastButtonElPos: DOMRect | undefined
+const recompute = (force: boolean = false): void => {
 	requestAnimationFrame(() => {
 		const allAreCenterScreen = props.preferredHorizontal[0] === "center-screen" && props.preferredVertical[0] === "center-screen"
 		if ((!buttonEl.value && !allAreCenterScreen) || !popupEl.value || !dialogEl.value) {
@@ -98,6 +100,16 @@ const recompute = (): void => {
 		const el = buttonEl.value?.getBoundingClientRect()
 		const veil = getVeilBoundingRect(props.useBackdrop ? dialogEl.value : document.body)
 		const popup = popupEl.value.getBoundingClientRect()
+
+		if (!force && modelValue.value && props.onlyShiftIfOpen && buttonEl.value && lastButtonElPos) {
+			const shiftX = buttonEl.value.getBoundingClientRect().x - lastButtonElPos.x
+			const shiftY = buttonEl.value.getBoundingClientRect().y - lastButtonElPos.y
+
+			pos.value.x += shiftX
+			pos.value.y += shiftY
+			lastButtonElPos = el
+			return
+		}
 
 		const space = {
 			left: 0,
@@ -199,6 +211,7 @@ const recompute = (): void => {
 		finalPos.maxHeight = maxHeight ?? veil.height - finalPos.y
 		/* eslint-enable no-labels */
 		pos.value = finalPos
+		lastButtonElPos = el
 	})
 }
 
@@ -207,7 +220,7 @@ const show = () => {
 		isOpen = true
 		modelValue.value = isOpen
 		if (props.useBackdrop) dialogEl.value?.showModal()
-		recompute()
+		recompute(true)
 	}
 }
 
@@ -225,11 +238,15 @@ const toggle = () => {
 	else close()
 }
 
+const recomputeListener = () => recompute()
+
 const bindListeners = () => {
-	window.addEventListener("resize", recompute)
+	window.addEventListener("resize", recomputeListener)
+	window.addEventListener("scroll", recomputeListener)
 }
 const unbindListeners = () => {
-	window.removeEventListener("resize", recompute)
+	window.removeEventListener("resize", recomputeListener)
+	window.removeEventListener("scroll", recomputeListener)
 }
 
 watch([modelValue, popupEl], () => {
@@ -267,6 +284,15 @@ type RealProps =
 	useBackdrop?: boolean
 	preferredHorizontal?: ("center" | "right" | "left" | "either" | "center-screen")[]
 	preferredVertical?: ("top" | "bottom" | "either" | "center-screen")[]
+	/**
+	/**
+	 * When the user scrolls or resizes, normally the entire popup position is recomputed, taking into account the preferred positioning.
+	 *
+	 * This can cause it to shift around.
+	 *
+	 * Set this to true to only shift the popup depending on how much the button element moved and avoid recalculating the best position.
+	 */
+	avoidRepositioning?: boolean
 }
 
 interface Props
