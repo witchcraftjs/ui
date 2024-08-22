@@ -44,26 +44,29 @@ import { onMounted, type PropType, ref, useAttrs, watch , type HTMLAttributes } 
 import { getFallbackId, type LinkableByIdProps,type TailwindClassProp } from "../shared/props.js"
 
 import { twMerge } from "../../helpers/twMerge.js"
-import { castType } from "@alanscodelog/utils"
+import { castType } from "@alanscodelog/utils/castType.js"
+import { isArray } from "@alanscodelog/utils/isArray.js"
+import type { IPopupReference, PopupPosition, PopupPositioner, PopupPositionModifier, PopupSpaceInfo } from "../../types.js"
 
 const fallbackId = getFallbackId()
 // eslint-disable-next-line no-use-before-define
 const props = withDefaults(defineProps<Props>(), {
 	useBackdrop: true,
-	preferredHorizontal: () => ["center", "right", "left", "either"],
-	preferredVertical: () => ["top", "bottom", "either"],
+	// vue is getting confused when the prop type can also be a function
+	preferredHorizontal: () => ["center", "right", "left", "either"] as any as ["center", "right", "left", "either"],
+	preferredVertical: () => ["top", "bottom", "either"] as any as ["top", "bottom", "either"],
 	onlyShiftIfOpen: false,
 })
 const $attrs = useAttrs()
 defineOptions({ name: "lib-popup" })
 
-type ElementLike = { getBoundingClientRect: () => DOMRect }
+
 // todo, can we have transitions?
 const dialogEl = ref<HTMLDialogElement | null>(null)
-const popupEl = ref<ElementLike | null>(null)
-const buttonEl = ref<ElementLike | null>(null)
+const popupEl = ref<IPopupReference | null>(null)
+const buttonEl = ref<IPopupReference | null>(null)
 
-const pos = ref<{ x: number, y: number, maxWidth?: number, maxHeight?: number }>({} as any)
+const pos = ref<PopupPosition>({} as any)
 const modelValue = defineModel<boolean>({ default: false })
 let isOpen = false
 
@@ -87,19 +90,28 @@ const getVeilBoundingRect = (el: HTMLElement): Omit<DOMRect, "toJSON"> => {
 		right: 0,
 	}
 }
-let lastButtonElPos: DOMRect | undefined
+let lastButtonElPos: ReturnType<IPopupReference["getBoundingClientRect"]> | undefined
 const recompute = (force: boolean = false): void => {
 	requestAnimationFrame(() => {
-		const allAreCenterScreen = props.preferredHorizontal[0] === "center-screen" && props.preferredVertical[0] === "center-screen"
-		if ((!buttonEl.value && !allAreCenterScreen) || !popupEl.value || !dialogEl.value) {
+		const horzHasCenterScreen = isArray(props.preferredHorizontal)
+		&& props.preferredHorizontal[0] === "center-screen"
+		const vertHasCenterScreen = isArray(props.preferredVertical)
+		&& props.preferredVertical[0] === "center-screen"
+		
+		const canBePositionedWithoutButton =
+		(horzHasCenterScreen || typeof props.preferredHorizontal === "function")
+		&& (vertHasCenterScreen || typeof props.preferredVertical === "function")
+
+		if (!popupEl.value || !dialogEl.value || (!buttonEl.value && !canBePositionedWithoutButton)) {
 			pos.value = {} as any
 			return
 		}
-		const finalPos: { x: number, y: number, maxWidth?: number, maxHeight?: number } = {} as any
-
 		const el = buttonEl.value?.getBoundingClientRect()
 		const veil = getVeilBoundingRect(props.useBackdrop ? dialogEl.value : document.body)
 		const popup = popupEl.value.getBoundingClientRect()
+
+		let finalPos: { x: number, y: number, maxWidth?: number, maxHeight?: number } = {} as any
+
 
 		if (!force && modelValue.value && props.onlyShiftIfOpen && buttonEl.value && lastButtonElPos) {
 			const shiftX = buttonEl.value.getBoundingClientRect().x - lastButtonElPos.x
@@ -138,146 +150,157 @@ const recompute = (force: boolean = false): void => {
 		const { preferredHorizontal, preferredVertical } = props
 		let maxWidth: number | undefined
 		let maxHeight: number | undefined
-		/* eslint-disable no-labels */
-		outerloop:
-		for (const type of preferredHorizontal) {
-			switch (type) {
-				case "center-screen":
-					if (popup.width < veil.width) {
-						finalPos.x = (veil.width / 2) - (popup.width / 2)
-					} else {
-						finalPos.x = 0
-						maxWidth = finalPos.x
-					}
-					break
-				case "center-most":
-				case "center":
-					castType<DOMRect>(el)
-					if (space.leftFromCenter >= (popup.width / 2) &&
-						space.rightFromCenter >= (popup.width / 2)) {
-						finalPos.x = el.x + (el.width / 2) - (popup.width / 2)
-						break outerloop
-					}
-					// todo temp fix when it's too wide, will prefer left
-					if (((space.rightFromCenter + space.leftFromCenter) <= popup.width)) {
-						finalPos.x = 0
-						break outerloop
-					}
-					if (type === "center-most") {
-						if (space.leftFromCenter < space.rightFromCenter) {
-							finalPos.x = el.x + (el.width / 2) - space.leftFromCenter; break outerloop
+		if (typeof preferredHorizontal === "function") {
+			finalPos.x = preferredHorizontal(el, popup, veil, space)
+		} else {
+			/* eslint-disable no-labels */
+			outerloop:
+			for (const type of preferredHorizontal) {
+				switch (type) {
+					case "center-screen":
+						if (popup.width < veil.width) {
+							finalPos.x = (veil.width / 2) - (popup.width / 2)
 						} else {
-							finalPos.x = el.x + (el.width / 2) + space.rightFromCenter - popup.width; break outerloop
+							finalPos.x = 0
+							maxWidth = finalPos.x
 						}
-					}
-					break
-				case "left-most":
-					castType<DOMRect>(el)
-					if (space.left >= popup.width) {
-						finalPos.x = el.x - popup.width; break outerloop
-					} else {
-						finalPos.x = 0; break outerloop
-					}
-				case "right-most":
-					castType<DOMRect>(el)
-					if (space.right >= popup.width) {
-						finalPos.x = el.x + el.width; break outerloop
-					} else {
-						finalPos.x = veil.x + veil.width - popup.width; break outerloop
-					}
+						break
+					case "center-most":
+					case "center":
+						castType<DOMRect>(el)
+						if (space.leftFromCenter >= (popup.width / 2) &&
+						space.rightFromCenter >= (popup.width / 2)) {
+							finalPos.x = el.x + (el.width / 2) - (popup.width / 2)
+							break outerloop
+						}
+						// todo temp fix when it's too wide, will prefer left
+						if (((space.rightFromCenter + space.leftFromCenter) <= popup.width)) {
+							finalPos.x = 0
+							break outerloop
+						}
+						if (type === "center-most") {
+							if (space.leftFromCenter < space.rightFromCenter) {
+								finalPos.x = el.x + (el.width / 2) - space.leftFromCenter; break outerloop
+							} else {
+								finalPos.x = el.x + (el.width / 2) + space.rightFromCenter - popup.width; break outerloop
+							}
+						}
+						break
+					case "left-most":
+						castType<DOMRect>(el)
+						if (space.left >= popup.width) {
+							finalPos.x = el.x - popup.width; break outerloop
+						} else {
+							finalPos.x = 0; break outerloop
+						}
+					case "right-most":
+						castType<DOMRect>(el)
+						if (space.right >= popup.width) {
+							finalPos.x = el.x + el.width; break outerloop
+						} else {
+							finalPos.x = veil.x + veil.width - popup.width; break outerloop
+						}
 				
-				case "right":
-					castType<DOMRect>(el)
-					if (space.right >= popup.width) {
-						finalPos.x = el.x; break outerloop
-					}
-					break
-				case "left":
-					castType<DOMRect>(el)
-					if (space.left >= popup.width) {
-						finalPos.x = (el.x + el.width) - popup.width; break outerloop
-					}
-					break
-				case "either": {
-					castType<DOMRect>(el)
-					if (space.right >= space.left) {
-						finalPos.x = el.x; break outerloop
-					} else {
-						finalPos.x = (el.x + el.width) - popup.width
-						break outerloop
+					case "right":
+						castType<DOMRect>(el)
+						if (space.right >= popup.width) {
+							finalPos.x = el.x; break outerloop
+						}
+						break
+					case "left":
+						castType<DOMRect>(el)
+						if (space.left >= popup.width) {
+							finalPos.x = (el.x + el.width) - popup.width; break outerloop
+						}
+						break
+					case "either": {
+						castType<DOMRect>(el)
+						if (space.right >= space.left) {
+							finalPos.x = el.x; break outerloop
+						} else {
+							finalPos.x = (el.x + el.width) - popup.width
+							break outerloop
+						}
 					}
 				}
 			}
 		}
-		outerloop:
-		for (const type of preferredVertical) {
-			switch (type) {
-				case "center-screen":
-					if (popup.height < veil.height) {
-						finalPos.y = (veil.height / 2) - (popup.height / 2)
-					} else {
-						finalPos.y = 0
-						maxHeight = finalPos.y
-					}
-					break
-				case "top":
-					castType<DOMRect>(el)
-					if (space.top >= popup.height) {
-						finalPos.y = el.y - popup.height; break outerloop
-					}
-					break
-				case "bottom":
-					castType<DOMRect>(el)
-					if (space.bottom >= popup.height) {
-						finalPos.y = el.y + el.height; break outerloop
-					}
-					break
-				case "top-most":
-					castType<DOMRect>(el)
-					if (space.top >= popup.height) {
-						finalPos.y = el.y - popup.height; break outerloop
-					} else {
-						finalPos.y = 0; break outerloop
-					}
-				case "bottom-most":
-					castType<DOMRect>(el)
-					if (space.bottom >= popup.height) {
-						finalPos.y = el.y + el.height; break outerloop
-					} else {
-						finalPos.y = veil.y + veil.height - popup.height; break outerloop
-					}
-				case "center-most":
-				case "center":
-					castType<DOMRect>(el)
-					if (space.topFromCenter >= (popup.height / 2) &&
-						space.bottomFromCenter >= (popup.height / 2)) {
-						finalPos.y = el.y + (el.height / 2) - (popup.height / 2)
-						break outerloop
-					}
-					// todo temp fix when it's too wide, will prefer the top
-					if (((space.bottomFromCenter + space.topFromCenter) <= popup.height)) {
-						finalPos.y = 0
-						break outerloop
-					}
-					if (type === "center-most") {
-						if (space.topFromCenter < space.bottomFromCenter) {
-							finalPos.y = el.y + (el.height / 2) - space.topFromCenter; break outerloop
+		if (typeof preferredVertical === "function") {
+			finalPos.y = preferredVertical(el, popup, veil, space)
+		} else {
+			outerloop:
+			for (const type of preferredVertical) {
+				switch (type) {
+					case "center-screen":
+						if (popup.height < veil.height) {
+							finalPos.y = (veil.height / 2) - (popup.height / 2)
 						} else {
-							finalPos.y = el.y + (el.height / 2) + space.bottomFromCenter - popup.height; break outerloop
+							finalPos.y = 0
+							maxHeight = finalPos.y
 						}
+						break
+					case "top":
+						castType<DOMRect>(el)
+						if (space.top >= popup.height) {
+							finalPos.y = el.y - popup.height; break outerloop
+						}
+						break
+					case "bottom":
+						castType<DOMRect>(el)
+						if (space.bottom >= popup.height) {
+							finalPos.y = el.y + el.height; break outerloop
+						}
+						break
+					case "top-most":
+						castType<DOMRect>(el)
+						if (space.top >= popup.height) {
+							finalPos.y = el.y - popup.height; break outerloop
+						} else {
+							finalPos.y = 0; break outerloop
+						}
+					case "bottom-most":
+						castType<DOMRect>(el)
+						if (space.bottom >= popup.height) {
+							finalPos.y = el.y + el.height; break outerloop
+						} else {
+							finalPos.y = veil.y + veil.height - popup.height; break outerloop
+						}
+					case "center-most":
+					case "center":
+						castType<DOMRect>(el)
+						if (space.topFromCenter >= (popup.height / 2) &&
+						space.bottomFromCenter >= (popup.height / 2)) {
+							finalPos.y = el.y + (el.height / 2) - (popup.height / 2)
+							break outerloop
+						}
+						// todo temp fix when it's too wide, will prefer the top
+						if (((space.bottomFromCenter + space.topFromCenter) <= popup.height)) {
+							finalPos.y = 0
+							break outerloop
+						}
+						if (type === "center-most") {
+							if (space.topFromCenter < space.bottomFromCenter) {
+								finalPos.y = el.y + (el.height / 2) - space.topFromCenter; break outerloop
+							} else {
+								finalPos.y = el.y + (el.height / 2) + space.bottomFromCenter - popup.height; break outerloop
+							}
+						}
+						break
+					case "either": {
+						castType<DOMRect>(el)
+						if (space.top >= space.bottom) {
+							finalPos.y = el.y - popup.height; break outerloop
+						} else { finalPos.y = el.y + el.height; break outerloop }
 					}
-					break
-				case "either": {
-					castType<DOMRect>(el)
-					if (space.top >= space.bottom) {
-						finalPos.y = el.y - popup.height; break outerloop
-					} else { finalPos.y = el.y + el.height; break outerloop }
 				}
 			}
 		}
 		finalPos.maxWidth = maxWidth ?? undefined
 		finalPos.maxHeight = maxHeight ?? undefined
 		/* eslint-enable no-labels */
+		if (props.modifyPosition) {
+			finalPos = props.modifyPosition(finalPos, el, popup, veil, space)
+		}
 		pos.value = finalPos
 		lastButtonElPos = el
 	})
@@ -382,10 +405,14 @@ type RealProps =
 	 * There is also the `center-screen` position, which centers the popup on the screen.
 	 *
 	 * These last two (`*-most` and `center-screen`) are greedy, they will always find a position that fits. Positions listed after are ignored.
+	 *
+	 * You can also specify a function instead which is given some additional information regarding the space around the button reference element. It should a number for the x position (or y, if preferredVertical).
+	 *
+	 * If you only need to slightn	the position, you can use the `modifyPosition` option instead.
 	 */
-	preferredHorizontal?: ("center" | "right" | "left" | "either" | "center-screen" | "right-most" | "left-most" | "center-most")[]
+	preferredHorizontal?: ("center" | "right" | "left" | "either" | "center-screen" | "right-most" | "left-most" | "center-most")[] | PopupPositioner
 	/** See `preferredHorizontal`. */
-	preferredVertical?: ("top" | "bottom" | "center" | "either" | "center-screen" | "top-most" | "bottom-most" | "center-most")[]
+	preferredVertical?: ("top" | "bottom" | "center" | "either" | "center-screen" | "top-most" | "bottom-most" | "center-most")[] | PopupPositioner
 	/**
 	 * When the user scrolls or resizes, normally the entire popup position is recomputed, taking into account the preferred positioning.
 	 *
@@ -394,6 +421,10 @@ type RealProps =
 	 * Set this to true to only shift the popup depending on how much the button element moved and avoid recalculating the best position.
 	 */
 	avoidRepositioning?: boolean
+	/**
+	 * Allows modifying the calculated position, to for example, clamp it.
+	 */
+	modifyPosition?: PopupPositionModifier
 }
 
 interface Props

@@ -72,3 +72,36 @@ export type ScrollNearContainerEdgesOptions = {
 	useTimer?: boolean
 	timerInterval?: number
 }
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export type SimpleDOMRect = Omit<DOMRect, "toJSON">
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export interface IPopupReference { getBoundingClientRect: () => SimpleDOMRect }
+export type PopupPosition = { x: number, y: number, maxWidth?: number, maxHeight?: number }
+export type PopupSpaceInfo = {
+	left: number
+	right: number
+	leftLeft: number
+	rightRight: number
+	leftFromCenter: number
+	rightFromCenter: number
+	topFromCenter: number
+	bottomFromCenter: number
+	top: number
+	bottom: number
+}
+export type PopupPositioner = (
+	/** Reference is only undefined, if you did not specify a button element or use the exposed setReference. The function is still called, because there are other ways you might want to still position the popup (e.g. center-screen or some similar variation). */
+	reference: SimpleDOMRect | undefined,
+	popup: SimpleDOMRect | DOMRect,
+	veil: SimpleDOMRect | DOMRect,
+	space: PopupSpaceInfo
+) => number
+
+export type PopupPositionModifier = (
+	pos: PopupPosition,
+/** This will only be called with the reference element as undefined when one of the preferred positions is center-screen or it's a function. */
+	reference: SimpleDOMRect | undefined,
+	popup: SimpleDOMRect | DOMRect,
+	veil: SimpleDOMRect | DOMRect,
+	space: PopupSpaceInfo
+) => PopupPosition
