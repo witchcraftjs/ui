@@ -20,7 +20,7 @@
 	@mousedown.self="handleMouseup"
 >
 	<div v-if="useBackdrop || modelValue"
-		:class="`scrollbar-hidden fixed overflow-scroll ${props.onlyShiftIfOpen ? 'transition-position' : ''}`"
+		:class="`fixed ${props.onlyShiftIfOpen ? 'transition-position' : ''}`"
 		:style="`
 		top:${pos.y}px;
 		left:${pos.x}px;
