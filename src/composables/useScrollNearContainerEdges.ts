@@ -60,7 +60,7 @@ export const useScrollNearContainerEdges = ({
 	containerEl,
 	scrollMargin = 10,
 	outerScrollMargin,
-	fastPixelMultiplier = 1,
+	fastPixelMultiplier = 4,
 	fastPixelAmount,
 	useTimer = true,
 	timerInterval = 1,
