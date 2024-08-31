@@ -20,7 +20,7 @@
 	@mousedown.self="handleMouseup"
 >
 	<div v-if="useBackdrop || modelValue"
-		:class="`fixed ${props.onlyShiftIfOpen ? 'transition-position' : ''}`"
+		:class="`fixed ${props.avoidRepositioning ? 'transition-[top,left]' : ''}`"
 		:style="`
 		top:${pos.y}px;
 		left:${pos.x}px;
@@ -55,7 +55,7 @@ const props = withDefaults(defineProps<Props>(), {
 	// vue is getting confused when the prop type can also be a function
 	preferredHorizontal: () => ["center", "right", "left", "either"] as any as ["center", "right", "left", "either"],
 	preferredVertical: () => ["top", "bottom", "either"] as any as ["top", "bottom", "either"],
-	onlyShiftIfOpen: false,
+	avoidRepositioning: false,
 })
 const $attrs = useAttrs()
 defineOptions({ name: "lib-popup" })
@@ -113,7 +113,7 @@ const recompute = (force: boolean = false): void => {
 		let finalPos: { x: number, y: number, maxWidth?: number, maxHeight?: number } = {} as any
 
 
-		if (!force && modelValue.value && props.onlyShiftIfOpen && buttonEl.value && lastButtonElPos) {
+		if (!force && modelValue.value && props.avoidRepositioning && buttonEl.value && lastButtonElPos) {
 			const shiftX = buttonEl.value.getBoundingClientRect().x - lastButtonElPos.x
 			const shiftY = buttonEl.value.getBoundingClientRect().y - lastButtonElPos.y
 
