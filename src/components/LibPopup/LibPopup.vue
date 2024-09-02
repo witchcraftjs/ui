@@ -46,7 +46,7 @@ import { getFallbackId, type LinkableByIdProps,type TailwindClassProp } from "..
 import { twMerge } from "../../helpers/twMerge.js"
 import { castType } from "@alanscodelog/utils/castType.js"
 import { isArray } from "@alanscodelog/utils/isArray.js"
-import type { IPopupReference, PopupPosition, PopupPositioner, PopupPositionModifier, PopupSpaceInfo } from "../../types.js"
+import type { IPopupReference, PopupPosition, PopupPositioner, PopupPositionModifier, PopupSpaceInfo, SimpleDOMRect } from "../../types.js"
 
 const fallbackId = getFallbackId()
 // eslint-disable-next-line no-use-before-define
@@ -65,6 +65,7 @@ defineOptions({ name: "lib-popup" })
 const dialogEl = ref<HTMLDialogElement | null>(null)
 const popupEl = ref<IPopupReference | null>(null)
 const buttonEl = ref<IPopupReference | null>(null)
+const backgroundEl = ref<IPopupReference | null>(null)
 
 const pos = ref<PopupPosition>({} as any)
 const modelValue = defineModel<boolean>({ default: false })
@@ -72,12 +73,11 @@ let isOpen = false
 
 
 /**
- * We don't have access to the dialog backdrop and without extra styling, it's of 0 width/height,
- * positioned in the center of the screen, with margins taking up all the space.
+ * We don't have access to the dialog backdrop and without extra styling, it's of 0 width/height, positioned in the center of the screen, with margins taking up all the space.
  *
- * This returns a modified rect that makes more logical sense. It's also available when we aren't using the dialog element.
+ * This returns a modified rect that makes more logical sense.
  */
-const getVeilBoundingRect = (el: HTMLElement): Omit<DOMRect, "toJSON"> => {
+const getDialogBoundingRect = (el: HTMLElement): SimpleDOMRect => {
 	const rect = el.getBoundingClientRect()
 	return {
 		x: 0,
@@ -90,7 +90,7 @@ const getVeilBoundingRect = (el: HTMLElement): Omit<DOMRect, "toJSON"> => {
 		right: 0,
 	}
 }
-let lastButtonElPos: ReturnType<IPopupReference["getBoundingClientRect"]> | undefined
+let lastButtonElPos: SimpleDOMRect | undefined
 const recompute = (force: boolean = false): void => {
 	requestAnimationFrame(() => {
 		const horzHasCenterScreen = isArray(props.preferredHorizontal)
@@ -107,7 +107,11 @@ const recompute = (force: boolean = false): void => {
 			return
 		}
 		const el = buttonEl.value?.getBoundingClientRect()
-		const veil = getVeilBoundingRect(props.useBackdrop ? dialogEl.value : document.body)
+		const bg = backgroundEl.value?.getBoundingClientRect() ?? (
+			props.useBackdrop
+				? getDialogBoundingRect(dialogEl.value)
+				: document.body.getBoundingClientRect()
+		)
 		const popup = popupEl.value.getBoundingClientRect()
 
 		let finalPos: { x: number, y: number, maxWidth?: number, maxHeight?: number } = {} as any
@@ -136,30 +140,30 @@ const recompute = (force: boolean = false): void => {
 			bottom: 0,
 		}
 		if (el) {
-			space.left = (el.x + el.width) - veil.x
-			space.leftLeft = el.x - veil.x
-			space.right = (veil.x + veil.width) - (el.x + el.width)
-			space.rightRight = veil.x + veil.width - el.x
-			space.leftFromCenter = (el.x + (el.width / 2)) - veil.x
-			space.rightFromCenter = (veil.x + veil.width) - (el.x + (el.width / 2))
-			space.topFromCenter = (el.y + (el.height / 2)) - veil.y
-			space.bottomFromCenter = (veil.y + veil.height) - (el.y + (el.height / 2))
-			space.top = el.y - veil.y
-			space.bottom = (veil.y + veil.height) - (el.y + el.height)
+			space.left = (el.x + el.width) - bg.x
+			space.leftLeft = el.x - bg.x
+			space.right = (bg.x + bg.width) - (el.x + el.width)
+			space.rightRight = bg.x + bg.width - el.x
+			space.leftFromCenter = (el.x + (el.width / 2)) - bg.x
+			space.rightFromCenter = (bg.x + bg.width) - (el.x + (el.width / 2))
+			space.topFromCenter = (el.y + (el.height / 2)) - bg.y
+			space.bottomFromCenter = (bg.y + bg.height) - (el.y + (el.height / 2))
+			space.top = el.y - bg.y
+			space.bottom = (bg.y + bg.height) - (el.y + el.height)
 		}
 		const { preferredHorizontal, preferredVertical } = props
 		let maxWidth: number | undefined
 		let maxHeight: number | undefined
 		if (typeof preferredHorizontal === "function") {
-			finalPos.x = preferredHorizontal(el, popup, veil, space)
+			finalPos.x = preferredHorizontal(el, popup, bg, space)
 		} else {
 			/* eslint-disable no-labels */
 			outerloop:
 			for (const type of preferredHorizontal) {
 				switch (type) {
 					case "center-screen":
-						if (popup.width < veil.width) {
-							finalPos.x = (veil.width / 2) - (popup.width / 2)
+						if (popup.width < bg.width) {
+							finalPos.x = (bg.width / 2) - (popup.width / 2)
 						} else {
 							finalPos.x = 0
 							maxWidth = finalPos.x
@@ -198,7 +202,7 @@ const recompute = (force: boolean = false): void => {
 						if (space.right >= popup.width) {
 							finalPos.x = el.x + el.width; break outerloop
 						} else {
-							finalPos.x = veil.x + veil.width - popup.width; break outerloop
+							finalPos.x = bg.x + bg.width - popup.width; break outerloop
 						}
 				
 					case "right":
@@ -226,14 +230,14 @@ const recompute = (force: boolean = false): void => {
 			}
 		}
 		if (typeof preferredVertical === "function") {
-			finalPos.y = preferredVertical(el, popup, veil, space)
+			finalPos.y = preferredVertical(el, popup, bg, space)
 		} else {
 			outerloop:
 			for (const type of preferredVertical) {
 				switch (type) {
 					case "center-screen":
-						if (popup.height < veil.height) {
-							finalPos.y = (veil.height / 2) - (popup.height / 2)
+						if (popup.height < bg.height) {
+							finalPos.y = (bg.height / 2) - (popup.height / 2)
 						} else {
 							finalPos.y = 0
 							maxHeight = finalPos.y
@@ -263,7 +267,7 @@ const recompute = (force: boolean = false): void => {
 						if (space.bottom >= popup.height) {
 							finalPos.y = el.y + el.height; break outerloop
 						} else {
-							finalPos.y = veil.y + veil.height - popup.height; break outerloop
+							finalPos.y = bg.y + bg.height - popup.height; break outerloop
 						}
 					case "center-most":
 					case "center":
@@ -299,7 +303,7 @@ const recompute = (force: boolean = false): void => {
 		finalPos.maxHeight = maxHeight ?? undefined
 		/* eslint-enable no-labels */
 		if (props.modifyPosition) {
-			finalPos = props.modifyPosition(finalPos, el, popup, veil, space)
+			finalPos = props.modifyPosition(finalPos, el, popup, bg, space)
 		}
 		pos.value = finalPos
 		lastButtonElPos = el
@@ -363,7 +367,11 @@ defineExpose({
 	recompute,
 	setReference: (el: IPopupReference | null) => {
 		buttonEl.value = el
-	}
+	},
+	setBackground: (el: IPopupReference | null) => {
+		backgroundEl.value = el
+	},
+
 })
 
 </script>
