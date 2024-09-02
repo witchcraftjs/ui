@@ -333,11 +333,11 @@ const recomputeListener = () => recompute()
 
 const bindListeners = () => {
 	window.addEventListener("resize", recomputeListener)
-	window.addEventListener("scroll", recomputeListener)
+	window.addEventListener("scroll", recomputeListener, true)
 }
 const unbindListeners = () => {
 	window.removeEventListener("resize", recomputeListener)
-	window.removeEventListener("scroll", recomputeListener)
+	window.removeEventListener("scroll", recomputeListener, true)
 }
 
 watch([modelValue, popupEl], () => {
