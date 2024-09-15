@@ -23,6 +23,8 @@ Everything can just be done from the config. Nuxt will automatically import the 
 You can also configure which directives the vue plugin auto-imports with the witchcraftComponents key (the lib will soon be renamed).
 
 ```ts
+import { unpluginIconViteOptions } from "@alanscodelog/vue-components/helpers/unpluginIconViteOptions.js"
+//...
 	modules: [
 		[
 			"@alanscodelog/vue-components/nuxt",
@@ -39,9 +41,24 @@ You can also configure which directives the vue plugin auto-imports with the wit
 				defineModel: true,
 			},
 		}
+		plugins: [
+			Components({
+				resolvers: [
+					IconsResolver({}),
+				],
+			}),
+			// https://github.com/unplugin/unplugin-icons#custom-icons
+			// these opts can be imported from "@alanscodelog/vue-components/helpers/unpluginIconViteOptions.js"
+			// changes the default styling slightly
+			Icons(unpluginIconViteOptions),
+		]
 	}
-
 ```
+
+## Icons
+
+This library uses unplugin-icons to provide icons. You will need to install `@iconify/json` or install the used icon packs (various are used, depending on the component).
+
 
 # Usage with Vite
 
@@ -62,15 +79,11 @@ createApp(App)
 	.use(VueComponentsPlugin) //use plugin
 
 ```
-In the vite config, vue will require the experimental defineModel:
+In the vite config, vue will require the experimental defineModel and the unplugin icons config:
 
 ```
 	plugins: [
-		vue({
-			script: {
-				defineModel: true,
-			},
-		}),
+		// see nuxt's vite config above
 	],
 ```
 

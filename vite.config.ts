@@ -12,6 +12,7 @@ import { externalizeDeps } from "vite-plugin-externalize-deps"
 
 // @ts-expect-error .
 import postcss from "./postcss.config.js"
+import { unpluginIconViteOptions } from "./src/helpers/unpluginIconViteOptions.js"
 
 
 const folders = fs.readdirSync("src", { withFileTypes: true })
@@ -48,14 +49,7 @@ export default async ({ mode }: { mode: string }) => defineConfig({
 				}),
 			],
 		}),
-		Icons({
-			// makes this work like fontawesome
-			scale: 0, // removes the scale
-			defaultClass: "icon",
-			// note that we can't use tailwind classes
-			// i mean we could, but we have to tell it to include them manually (pain)
-			defaultStyle: "vertical-align: -0.125em; height: 1em; display: inline-block;",
-		})
+		Icons(unpluginIconViteOptions)
 	],
 	build: {
 		outDir: "dist",
