@@ -1,4 +1,4 @@
-import { computed, onMounted, type Ref,ref, watch } from "vue"
+import { computed, type InjectionKey, onMounted, provide, type Ref,ref, watch } from "vue"
 export type DarkModeOptions = {
 	/* Whether to save the manual dark mode to local storage. Uses the key "prefersColorSchemeDark" by default. You can pass a key instead of true to use that as the key instead. */
 	useLocalStorage?: boolean | string
@@ -8,7 +8,20 @@ export type DarkModeOptions = {
 
 const defaultLocalStorageKey = "prefersColorSchemeDark"
 const defaultOrder = ["system", "dark", "light"] as const
+const injectionKey = Symbol("isDarkMode") as InjectionKey<Ref<boolean>>
 
+/**
+ * A composable for managing dark mode that automatically takes care of saving the user's preference.
+ *
+ * See the returned utilities for more details.
+ *
+ * It also provides `isDarkModeInjectonKey` with a ref so it can be accessed in deep nested components if needed.
+ *
+ * ```ts
+ * import { isDarkModeInjectionKey } from "@alanscodelog/vue-components/composables/useDarkMode.js"
+ * const isDarkMode = inject(isDarkModeInjectionKey)
+ * ```
+ */
 export const useDarkMode = ({
 	useLocalStorage,
 	darkModeOrder = defaultOrder
@@ -78,6 +91,7 @@ export const useDarkMode = ({
 			}
 		}
 	})
+	provide(injectionKey, darkMode)
 
 	return {
 		darkMode,
@@ -89,3 +103,5 @@ export const useDarkMode = ({
 	}
 }
 export const defaultDarkModeOrder = defaultOrder
+
+export const isDarkModeInjectionKey = injectionKey
