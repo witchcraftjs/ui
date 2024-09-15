@@ -1,10 +1,4 @@
 import { computed, type InjectionKey, onMounted, provide, type Ref,ref, watch } from "vue"
-export type DarkModeOptions = {
-	/* Whether to save the manual dark mode to local storage. Uses the key "prefersColorSchemeDark" by default. You can pass a key instead of true to use that as the key instead. */
-	useLocalStorage?: boolean | string
-	/* The order of the string dark modes when using `cycleDarkMode`. Defaults to `["system", "dark", "light"]` */
-	darkModeOrder?: readonly ("system" | "dark" | "light")[]
-}
 
 const defaultLocalStorageKey = "prefersColorSchemeDark"
 const defaultOrder = ["system", "dark", "light"] as const
@@ -105,3 +99,10 @@ export const useDarkMode = ({
 export const defaultDarkModeOrder = defaultOrder
 
 export const isDarkModeInjectionKey = injectionKey
+
+export type DarkModeOptions = {
+	/* Whether to save the manual dark mode to local storage. Uses the key "prefersColorSchemeDark" by default. You can pass a key instead of true to use that as the key instead. */
+	useLocalStorage?: boolean | string
+	/* The order of the string dark modes when using `cycleDarkMode`. Defaults to `["system", "dark", "light"]` */
+	darkModeOrder?: readonly ("system" | "dark" | "light")[]
+}

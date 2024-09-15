@@ -1,6 +1,6 @@
 import { extendTailwindMerge } from "tailwind-merge"
 
-export const twMergeExtend = {
+const _twMergeExtend = {
 	extend: {
 		classGroups: {
 			"focus-outline": [{ "focus-outline": ["", "no-offset", "none"]}],
@@ -8,4 +8,6 @@ export const twMergeExtend = {
 	}
 } satisfies Parameters<typeof extendTailwindMerge>[0]
 
-export const twMerge = extendTailwindMerge<"focus-outline">(twMergeExtend)
+export const twMerge = extendTailwindMerge<"focus-outline">(_twMergeExtend)
+
+export const twMergeExtend = _twMergeExtend
