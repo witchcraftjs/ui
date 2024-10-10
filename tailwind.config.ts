@@ -1,4 +1,4 @@
-import { config } from "./src/tailwind/config.js"
+import { config } from "./src/runtime/tailwind/config.js"
 
 
 export default config

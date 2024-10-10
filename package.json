@@ -1,92 +1,102 @@
 {
-	"name": "@alanscodelog/vue-components",
+	"name": "@witchcraft/ui",
 	"version": "0.0.0",
+	"description": "Vue component library.",
 	"type": "module",
-	"main": "./dist/main.lib.js",
+	"main": "./dist/runtime/main.lib.js",
 	"types": "./types/index.d.ts",
 	"sideEffects": false,
 	"exports": {
 		".": {
 			"types": "./types/index.d.ts",
-			"import": "./dist/main.lib.js"
+			"import": "./dist/runtime/main.lib.js"
 		},
 		"./*": {
-			"import": "./dist/*",
-			"types": "./dist/*"
+			"import": "./dist/runtime/*",
+			"types": "./dist/runtime/*"
 		},
 		"./components": {
-			"types": "./dist/components/index.d.ts",
-			"import": "./dist/components/index.js"
+			"types": "./dist/runtime/components/index.d.ts",
+			"import": "./dist/runtime/components/index.js"
 		},
 		"./components/*": {
-			"types": "./dist/components/*/*.vue.d.ts",
-			"import": "./dist/components/*/*.vue.js"
+			"types": "./dist/runtime/components/*/*.vue.d.ts",
+			"import": "./dist/runtime/components/*/*.vue"
 		},
 		"./composables/*": {
-			"types": "./dist/composables/*",
-			"import": "./dist/composables/*"
+			"types": "./dist/runtime/composables/*",
+			"import": "./dist/runtime/composables/*"
 		},
 		"./composables": {
-			"types": "./dist/composables/index.d.ts",
-			"import": "./dist/composables/index.js"
+			"types": "./dist/runtime/composables/index.d.ts",
+			"import": "./dist/runtime/composables/index.js"
 		},
 		"./directives": {
-			"types": "./dist/directives/index.d.ts",
-			"import": "./dist/directives/index.js"
+			"types": "./dist/runtime/directives/index.d.ts",
+			"import": "./dist/runtime/directives/index.js"
 		},
 		"./directives/*": {
-			"types": "./dist/directives/*",
-			"import": "./dist/directives/*"
+			"types": "./dist/runtime/directives/*",
+			"import": "./dist/runtime/directives/*"
 		},
 		"./helpers": {
-			"types": "./dist/helpers/index.d.ts",
-			"import": "./dist/helpers/index.js"
+			"types": "./dist/runtime/helpers/index.d.ts",
+			"import": "./dist/runtime/helpers/index.js"
 		},
 		"./helpers/*": {
-			"types": "./dist/helpers/*",
-			"import": "./dist/helpers/*"
+			"types": "./dist/runtime/helpers/*",
+			"import": "./dist/runtime/helpers/*"
+		},
+		"./build/*": {
+			"types": "./dist/runtime/build/*.d.ts",
+			"import": "./dist/runtime/build/*"
 		},
 		"./tailwind": {
-			"types": "./dist/tailwind/index.d.ts",
-			"import": "./dist/tailwind/index.js"
+			"types": "./dist/runtime/tailwind/index.d.ts",
+			"import": "./dist/runtime/tailwind/index.js"
+		},
+		"./tailwind/*": {
+			"types": "./dist/runtime/tailwind/*.d.ts",
+			"import": "./dist/runtime/tailwind/*"
 		},
 		"./base.css": {
-			"import": "./src/assets/base.css"
-		},
-		"./style.css": {
-			"import": "./dist/style.css"
-		},
-		"./utilities.css": {
-			"import": "./src/assets/utilities.css"
+			"import": "./src/runtime/assets/base.css"
 		},
 		"./nuxt": {
-			"import": "./nuxt.ts"
+			"import": "./dist/module.mjs",
+			"require": "./dist/module.cjs"
+		},
+		"./types": {
+			"types": "./src/types/index.d.ts",
+			"import": "./src/types/index.js"
 		},
 		"./tailwind-colors.config.ts": "./tailwind-colors.config.ts",
 		"./tailwind.config.ts": "./tailwind.config.ts"
 	},
+	"unbuild": {
+		"failOnWarn": false
+	},
 	"scripts": {
-		"build": "vite build",
-		"dev": "vite --config vite.playground.config.ts",
-		"build:dev": "vite build --mode development",
-		"build:watch": "vite build --watch --mode production",
-		"build:types": "vue-tsc --emitDeclarationOnly -p tsconfig.types.json",
-		"dev:build": "nuxi build playground",
+		"//prepare": "echo Needed so that if we pull the package from git it will get built and installed properly.",
+		"prepare": "husky && pnpm build",
+		"build": "nuxt-module-build prepare && nuxt-module-build build && nuxi generate playground",
 		"dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
+		"dev": "nuxi dev playground",
 		"storybook": "BROWSER=none storybook dev -p 6006",
 		"storybook:clear-cache": "BROWSER=none storybook dev -p 6006 --no-manager-cache",
 		"storybook:build": "storybook build -o docs/storybook",
 		"storybook:test": "pnpm storybook:build && pnpm concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"pnpm http-server docs/storybook --port 6006 --silent\" \"pnpm wait-on tcp:6006 && pnpm test-storybook\"",
 		"test": "pnpm storybook:test",
-		"doc": "pnpm run storybook:build",
-		"doc:dev": "pnpm run storybook",
-		"lint:eslint": "eslint \"{src,tests}/**/*.{js,ts,vue,cjs}\" \"*.{js,ts}\" --max-warnings=0 --report-unused-disable-directives",
-		"lint:types": "vue-tsc --noEmit --pretty --project tsconfig.types.json",
+		"test:types": "vue-tsc --noEmit && cd playground && vue-tsc --noEmit",
+		"doc": "pnpm test && pnpm storybook:build",
+		"doc:dev": "pnpm storybook",
+		"lint:eslint": "eslint \"{src,test,playground/app}/**/*.{js,ts,vue,cjs}\" \"*.{js,ts}\" --max-warnings=0 --report-unused-disable-directives",
+		"lint:types": "vue-tsc --noEmit --pretty --project tsconfig.types.json && pnpm test:types",
 		"lint:commits": "commitlint --from $(git rev-list --max-parents=0 HEAD) --to HEAD --verbose",
 		"lint:imports": "madge --circular --extensions ts ./src",
-		"lint": "npm run lint:types && npm run lint:eslint && npm run lint:imports",
-		"prepare": "husky && npm run build",
-		"actions:debug": "act -r -v -j build",
+		"lint": "pnpm lint:types && pnpm lint:eslint && pnpm lint:imports",
+		"//actions:debug": "echo For debugging github build action locally with nektos/act. Requires act and docker. Note: Cache will never work locally because of https://github.com/nektos/act/issues/285",
+		"actions:debug": "act -r -v -j release",
 		"gen:exports": "indexit update --ignore **.d.ts **.stories.ts **.vue -o '${path}.js'"
 	},
 	"peerDependencies": {
@@ -106,10 +116,18 @@
 		}
 	},
 	"dependencies": {
-		"@alanscodelog/utils": "^4.0.0",
+		"@witchcraft/nuxt-utils": "^0.0.0",
+		"@alanscodelog/utils": "^4.1.0",
+		"@iconify/json": "^2.2.221",
+		"@nuxt/kit": "^3.11.2",
+		"@nuxt/schema": "^3.11.2",
+		"@nuxt/types": "^2.17.3",
+		"@nuxtjs/tailwindcss": "^6.12.0",
 		"colord": "^2.9.3",
 		"colorjs.io": "^0.4.3",
 		"metamorphosis": "^0.2.3",
+		"defu": "^6.1.4",
+		"fast-glob": "^3.3.2",
 		"tailwind-merge": "^2.3.0",
 		"unplugin-icons": "^0.19.0",
 		"unplugin-vue-components": "^0.27.0",
@@ -122,11 +140,7 @@
 		"@alanscodelog/tsconfigs": "^5.0.0",
 		"@chromatic-com/storybook": "^1.5.0",
 		"@commitlint/cli": "^19.3.0",
-		"@iconify/json": "^2.2.221",
-		"@nuxt/kit": "^3.11.2",
-		"@nuxt/schema": "^3.11.2",
-		"@nuxt/types": "^2.17.3",
-		"@nuxtjs/tailwindcss": "^6.12.0",
+		"@nuxt/eslint-config": "^0.5.7",
 		"@rollup/plugin-node-resolve": "^15.2.3",
 		"@storybook/addon-a11y": "^8.1.10",
 		"@storybook/addon-actions": "^8.1.10",
@@ -141,7 +155,6 @@
 		"@storybook/vue3": "^8.1.10",
 		"@storybook/vue3-vite": "^8.1.10",
 		"@types/node": "^20.12.12",
-		"@vitejs/plugin-legacy": "^5.4.0",
 		"@vitejs/plugin-vue": "^5.0.4",
 		"@vue/runtime-core": "^3.4.27",
 		"@vue/runtime-dom": "^3.4.27",
@@ -149,8 +162,6 @@
 		"@vueuse/core": "^10.10.0",
 		"autoprefixer": "^10.4.19",
 		"concurrently": "^8.2.2",
-		"defu": "^6.1.4",
-		"fast-glob": "^3.3.2",
 		"http-server": "^14.1.1",
 		"husky": "^9.0.11",
 		"indexit": "2.1.0-beta.3",
@@ -171,7 +182,6 @@
 		"vite-plugin-externalize-deps": "^0.8.0",
 		"vite-tsconfig-paths": "^4.3.2",
 		"vue": "^3.2.47",
-		"vue-loader": "^17.4.2",
 		"vue-tsc": "^2.0.19",
 		"wait-on": "^7.2.0"
 	},
@@ -182,7 +192,6 @@
 		"src",
 		"dist",
 		"types",
-		"nuxt.ts",
 		"tailwind.config.ts",
 		"tailwind-colors.config.ts"
 	],
@@ -198,14 +207,6 @@
 	},
 	"engines": {
 		"node": ">=20.0.0"
-	},
-	"@comments": {
-		"scripts": {
-			"lint:commits": "Lints all unpushed commits in the active branch.",
-			"lint:imports": "This is limited to ts files, but still useful.",
-			"prepare": "Needed so that if we pull the package from git it will get built and installed properly.",
-			"actions:debug": "For debugging github build action locally with nektos/act. Requires act and docker. Note: Cache will never work locally because of https://github.com/nektos/act/issues/285"
-		}
 	},
 	"publishConfig": {
 		"access": "public"

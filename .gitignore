@@ -1,12 +1,25 @@
-**/*.log*
-*lock*
 .vscode
 node_modules
-worktree*/**/*
-docs
-coverage
+playground/node_modules
+*.log*
 
 dist
+.nuxt
+.output
+.data
+.build-*
+docs
+
+.env
+
+# Testing
+reports
+coverage
+*.lcov
+.nyc_output
+
+worktree*/**/*
+
 !flake.lock
 .direnv
 src/assets/variables.scss

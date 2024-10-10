@@ -7,7 +7,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    Icon: typeof import('./../src/components/Icon/Icon.vue')['default']
     IFa6RegularCopy: typeof import('~icons/fa6-regular/copy')['default']
     IFa6RegularFile: typeof import('~icons/fa6-regular/file')['default']
     IFa6SolidArrowUpFromBracket: typeof import('~icons/fa6-solid/arrow-up-from-bracket')['default']
@@ -16,5 +15,7 @@ declare module 'vue' {
     IFa6SolidXmark: typeof import('~icons/fa6-solid/xmark')['default']
     IFaSolidMoon: typeof import('~icons/fa-solid/moon')['default']
     IPhSunBold: typeof import('~icons/ph/sun-bold')['default']
+    RouterLink: typeof import('vue-router')['RouterLink']
+    RouterView: typeof import('vue-router')['RouterView']
   }
 }
