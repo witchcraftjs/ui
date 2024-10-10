@@ -71,6 +71,8 @@
 		"build:dev": "vite build --mode development",
 		"build:watch": "vite build --watch --mode production",
 		"build:types": "vue-tsc --emitDeclarationOnly -p tsconfig.types.json",
+		"dev:build": "nuxi build playground",
+		"dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
 		"storybook": "BROWSER=none storybook dev -p 6006",
 		"storybook:clear-cache": "BROWSER=none storybook dev -p 6006 --no-manager-cache",
 		"storybook:build": "storybook build -o docs/storybook",
@@ -114,10 +116,10 @@
 		"vue-component-type-helpers": "^2.0.29"
 	},
 	"devDependencies": {
-		"@alanscodelog/commitlint-config": "^3.0.1",
-		"@alanscodelog/eslint-config": "5.0.0-beta.3",
-		"@alanscodelog/semantic-release-config": "^4.2.0",
-		"@alanscodelog/tsconfigs": "^4.0.1",
+		"@alanscodelog/commitlint-config": "^3.0.2",
+		"@alanscodelog/eslint-config": "^5.0.0",
+		"@alanscodelog/semantic-release-config": "^5.0.1",
+		"@alanscodelog/tsconfigs": "^5.0.0",
 		"@chromatic-com/storybook": "^1.5.0",
 		"@commitlint/cli": "^19.3.0",
 		"@iconify/json": "^2.2.221",

@@ -2,47 +2,23 @@
 {
 	// ./node_modules/@alanscodelog/tsconfigs/tsconfig.json
 	// https://github.com/AlansCodeLog/tsconfigs
-	"extends": "@alanscodelog/tsconfigs",
+	"extends": [
+		"./.nuxt/tsconfig.json",
+		"@alanscodelog/tsconfigs"
+	],
 	"compilerOptions": {
-		"module": "ESNext",
-		"target": "ESNext",
-		"outDir": "dist",
 		"types": [
 			"node",
-			"unplugin-icons/types/vue",
+			"unplugin-icons/types/vue3",
 			"vite/client"
 		],
-		"lib": [
-			"dom",
-			"esnext",
-			"dom.iterable"
-		],
-		"importsNotUsedAsValues": "remove", // todo - workaround for https://github.com/microsoft/TypeScript/issues/53302 - must remove from main config package
-		"moduleResolution": "bundler", //https://github.com/vuejs/language-tools/issues/1542 ?
-		// see https://github.com/qmhc/vite-plugin-dts#type-errors-that-are-unable-to-infer-types-from-packages-in-node_modules
-		// awaiting https://github.com/microsoft/TypeScript/issues/42873
-		"baseUrl": ".", // DO NOT USE baseUrl imports, this is just until the above is fixed, even with relative paths, only also adding baseUrl works
-		"paths": {
-			"metamorphosis/*": [
-				"./node_modules/metamorphosis/*"
-			],
-			"@alanscodelog/utils/*": [
-				"./node_modules/@alanscodelog/utils/*"
-			]
-		}
 	},
 	"include": [
-		"**/*.js",
-		"**/*.cjs",
-		"**/*.ts",
-		"**/*.d.ts",
-		"**/*.tsx",
-		"**/*.vue"
+		"src/**/*.ts",
+		"src/**/*.vue",
+		"src/**/*.js",
+		"*.ts"
 	],
-	"ts-node": {
-		// Tell ts-node CLI to install the --loader automatically, explained below
-		"esm": true
-	},
 	"vueCompilerOptions": {
 		"strictTemplates": true,
 	}
