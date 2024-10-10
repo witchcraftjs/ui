@@ -48,12 +48,12 @@
 </template>
 <script setup lang="ts">
 import { removeIfIn } from "@alanscodelog/utils/removeIfIn.js"
-import { type HTMLAttributes,nextTick, onBeforeUnmount, type PropType, ref, shallowReactive,withDefaults } from "vue"
+import { type HTMLAttributes,nextTick, onBeforeUnmount, type PropType, ref, shallowReactive } from "vue"
 
 import LibNotification from "./LibNotification.vue"
 
 import { type NotificationEntry, NotificationHandler } from "../../helpers/NotificationHandler.js"
-import { twMerge } from "../../helpers/twMerge.js"
+import { twMerge } from "../../utils/twMerge.js"
 import type { LinkableByIdProps, TailwindClassProp } from "../shared/props.js"
 
 defineOptions({

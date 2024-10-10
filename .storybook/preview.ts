@@ -1,5 +1,5 @@
 import { Preview,Parameters } from '@storybook/vue3';
-import TestWrapper from "../src/TestWrapper.vue"
+import TestWrapper from "../src/testUtils/TestWrapper.vue"
 import {vExtractRootEl} from "../src/directives/vExtractRootEl.js"
 import "../src/assets/style.css"
 

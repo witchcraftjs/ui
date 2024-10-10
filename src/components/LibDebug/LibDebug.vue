@@ -28,7 +28,7 @@
 
 
 <script setup lang="ts">
-import { type PropType, useSlots,withDefaults } from "vue"
+import { type PropType, useSlots } from "vue"
 
 import LibButton from "../LibButton/LibButton.vue"
 

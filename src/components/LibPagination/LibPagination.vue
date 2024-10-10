@@ -106,9 +106,9 @@
 </nav>
 </template>
 <script setup lang="ts">
-import { computed, type HTMLAttributes,type PropType, useAttrs,watch,withDefaults } from "vue"
+import { computed, type HTMLAttributes,type PropType, useAttrs,watch } from "vue"
 
-import { twMerge } from "../../helpers/twMerge.js"
+import { twMerge } from "../../utils/twMerge.js"
 import { type TailwindClassProp } from "../shared/props.js"
 
 const commonClasses = `

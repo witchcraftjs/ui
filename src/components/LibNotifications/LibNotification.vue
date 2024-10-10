@@ -70,11 +70,11 @@
 </div>
 </template>
 <script setup lang="ts">
-import { computed, type HTMLAttributes,type PropType, ref, useAttrs,withDefaults } from "vue"
+import { computed, type HTMLAttributes,type PropType, ref, useAttrs } from "vue"
 
 import { copy } from "../../helpers/copy.js"
 import { type NotificationEntry, NotificationHandler } from "../../helpers/NotificationHandler.js"
-import { twMerge } from "../../helpers/twMerge.js"
+import { twMerge } from "../../utils/twMerge.js"
 import LibButton from "../LibButton/LibButton.vue"
 import type { BaseInteractiveProps, LabelProps, LinkableByIdProps, TailwindClassProp } from "../shared/props.js"
 

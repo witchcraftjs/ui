@@ -68,7 +68,7 @@ import { keys } from "@alanscodelog/utils/keys.js"
 import { computed, type HTMLAttributes ,onBeforeUnmount, onMounted, type PropType, ref, watch, watchPostEffect } from "vue"
 
 import { useAriaLabel } from "../../composables/useAriaLabel.js"
-import { twMerge } from "../../helpers/twMerge.js"
+import { twMerge } from "../../utils/twMerge.js"
 import { type BaseInteractiveProps, baseInteractivePropsDefaults, getFallbackId, type LabelProps, type LinkableByIdProps,type TailwindClassProp } from "../shared/props.js"
 
 defineOptions({

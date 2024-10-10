@@ -42,7 +42,8 @@
 import { type ButtonHTMLAttributes,onMounted,useAttrs, watch, watchEffect } from "vue"
 
 import { type DarkModeOptions,defaultDarkModeOrder,useDarkMode } from "../../composables/useDarkMode.js"
-import { twMerge } from "../../helpers/twMerge.js"
+import { twMerge } from "../../utils/twMerge.js"
+import Icon from "../Icon/Icon.vue"
 import LibButton from "../LibButton/LibButton.vue"
 import type { TailwindClassProp } from "../shared/props.js"
 

@@ -97,8 +97,8 @@ import { keys } from "@alanscodelog/utils/keys.js"
 import { computed, type PropType, ref, type TableHTMLAttributes } from "vue"
 
 import { vResizableCols } from "../../directives/vResizableCols.js"
-import { twMerge } from "../../helpers/twMerge.js"
 import type { ResizableOptions, TableColConfig } from "../../types.js"
+import { twMerge } from "../../utils/twMerge.js"
 import type { TailwindClassProp } from "../shared/props.js"
 
 

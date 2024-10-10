@@ -93,7 +93,7 @@
 <script setup  lang="ts">
 import { type HTMLAttributes,type PropType, ref, watch } from "vue"
 
-import { twMerge } from "../../helpers/twMerge.js"
+import { twMerge } from "../../utils/twMerge.js"
 import { type BaseInteractiveProps, baseInteractivePropsDefaults,getFallbackId,type LabelProps, type LinkableByIdProps, type TailwindClassProp } from "../shared/props.js"
 
 // TODO move to utils

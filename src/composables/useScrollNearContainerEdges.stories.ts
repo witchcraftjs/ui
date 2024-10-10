@@ -3,7 +3,7 @@ import { onMounted, ref } from "vue"
 
 import { useScrollNearContainerEdges } from "./useScrollNearContainerEdges.js"
 
-import { twMerge } from "../helpers/twMerge.js"
+import { twMerge } from "../utils/twMerge.js"
 
 const meta = { }
 

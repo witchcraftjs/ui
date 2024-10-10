@@ -43,7 +43,7 @@
 import { onMounted, type PropType, ref, useAttrs, watch , type HTMLAttributes } from "vue"
 import { getFallbackId, type LinkableByIdProps,type TailwindClassProp } from "../shared/props.js"
 
-import { twMerge } from "../../helpers/twMerge.js"
+import { twMerge } from "../../utils/twMerge.js"
 import { castType } from "@alanscodelog/utils/castType.js"
 import { isArray } from "@alanscodelog/utils/isArray.js"
 import type { IPopupReference, PopupPosition, PopupPositioner, PopupPositionModifier, PopupSpaceInfo, SimpleDOMRect } from "../../types.js"

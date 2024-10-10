@@ -1,9 +1,7 @@
 import type Icons from "unplugin-icons/vite"
 
-// @ts-expect-error not sure why only failing with lint
 export const unpluginIconViteOptions: Parameters<typeof Icons>[0] = {
 	scale: 0, // removes the scale
-	// @ts-expect-error .
 	iconCustomizer: async (_, __, props) => {
 		props.width = "unset"
 	},

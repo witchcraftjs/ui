@@ -1,5 +1,6 @@
-import { ControlVar, type Theme,Units } from "metamorphosis"
+import { ControlVar, Units } from "metamorphosis"
 import { baseTheme } from "metamorphosis/BaseTheme"
+import type { Theme } from "metamorphosis/Theme"
 
 
 export const theme = baseTheme as Theme

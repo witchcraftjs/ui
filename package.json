@@ -1,8 +1,8 @@
 {
 	"name": "@alanscodelog/vue-components",
 	"version": "0.0.0",
-	"module": "./dist/main.lib.js",
 	"type": "module",
+	"main": "./dist/main.lib.js",
 	"types": "./types/index.d.ts",
 	"sideEffects": false,
 	"exports": {

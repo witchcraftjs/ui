@@ -20,9 +20,9 @@
 
 <script setup  lang="ts">
 import type { MakeRequired } from "@alanscodelog/utils/types"
-import { type LabelHTMLAttributes,toRef,useAttrs ,withDefaults } from "vue"
+import { type LabelHTMLAttributes,toRef,useAttrs } from "vue"
 
-import { twMerge } from "../../helpers/twMerge.js"
+import { twMerge } from "../../utils/twMerge.js"
 import { type BaseInteractiveProps, baseInteractivePropsDefaults, getFallbackId, type LabelProps, type LinkableByIdProps, type TailwindClassProp } from "../shared/props.js"
 
 

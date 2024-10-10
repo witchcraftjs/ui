@@ -1,8 +1,8 @@
-import { getCurrentInstance, type PropType } from "vue"
+import { type PropType,useId } from "vue"
 
 export interface LinkableByIdProps {
 	/**
-	 * The id for the input. Uses vue's uid (`getCurrentInstance().uid`) if none provided.
+	 * The id for the input. Uses vue's useId if none provided.
 	 *
 	 * For components that are not inputs, the id passed to inputs should be shared with the corresponding label/suggestions/etc component to connect them.
 	 */
@@ -10,7 +10,7 @@ export interface LinkableByIdProps {
 	id?: string
 }
 
-export const getFallbackId = (): string => getCurrentInstance()!.uid.toString()
+export const getFallbackId = (): string => useId()
 
 export interface LabelProps {
 /** For the label. Note the component might or might not support an actual label element. If none is supported, this is used for the `aria-label`. */

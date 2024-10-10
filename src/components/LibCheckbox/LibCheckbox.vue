@@ -68,10 +68,10 @@ import { keys } from "@alanscodelog/utils/keys.js"
 import { omit } from "@alanscodelog/utils/omit.js"
 import { pick } from "@alanscodelog/utils/pick.js"
 import type { MakeRequired } from "@alanscodelog/utils/types"
-import { computed, type HTMLAttributes, type InputHTMLAttributes,type PropType, ref, useAttrs, useSlots,withDefaults } from "vue"
+import { computed, type HTMLAttributes, type InputHTMLAttributes,type PropType, ref, useAttrs, useSlots } from "vue"
 
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
-import { twMerge } from "../../helpers/twMerge.js"
+import { twMerge } from "../../utils/twMerge.js"
 import { type BaseInteractiveProps, baseInteractivePropsDefaults, getFallbackId,type LabelProps, type LinkableByIdProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
 
 defineOptions({

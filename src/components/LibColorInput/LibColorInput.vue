@@ -56,11 +56,11 @@
 
 <script setup lang="ts">
 import { colord } from "colord"
-import { type ButtonHTMLAttributes,computed, type PropType, ref, useAttrs,withDefaults } from "vue"
+import { type ButtonHTMLAttributes,computed, type PropType, ref, useAttrs } from "vue"
 
 import { vExtractRootEl } from "../../directives/vExtractRootEl.js"
-import { twMerge } from "../../helpers/twMerge.js"
 import type { HsvaColor, RgbaColor } from "../../types.js"
+import { twMerge } from "../../utils/twMerge.js"
 import LibButton from "../LibButton/LibButton.vue"
 import LibColorPicker from "../LibColorPicker/LibColorPicker.vue"
 import LibPopup from "../LibPopup/LibPopup.vue"

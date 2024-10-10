@@ -12,7 +12,7 @@ import { externalizeDeps } from "vite-plugin-externalize-deps"
 
 // @ts-expect-error .
 import postcss from "./postcss.config.js"
-import { unpluginIconViteOptions } from "./src/helpers/unpluginIconViteOptions.js"
+import { unpluginIconViteOptions } from "./src/build/unpluginIconViteOptions.js"
 
 
 const folders = fs.readdirSync("src", { withFileTypes: true })

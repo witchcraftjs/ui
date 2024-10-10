@@ -1,10 +1,38 @@
+<template>
+<!-- Workaround to create global style component for tests that is
+	accessible from the storybook preview decorator. See theme callback
+	above. -->
+<component :is="'style'" ref="styleEl"/>
+<div id="app"
+	tabindex="-1"
+	:class="(showOutline ? 'group outlined outlined-visible' : '[&_*]:outline-none') +
+		(darkMode ? ' dark' : '') "
+	ref="el"
+>
+	<div class="flex gap-2 absolute right-0 top-0 m-1 dark:text-white">
+		<div>Wrapper Controls:</div>
+		<div class="outline-indicator">{{ showOutline ? "Outline Enabled" : "Outline Disabled" }}</div>
+		<lib-dark-mode-switcher @update:dark-mode="darkMode = $event"/>
+	</div>
+	<div
+		class="
+			p-10
+			dark:bg-neutral-900
+			dark:text-white
+		"
+	>
+		<slot/>
+	</div>
+</div>
+</template>
+
 <script setup lang="ts">
 import { cssObjectToString } from "metamorphosis/utils"
 import { computed, onBeforeUnmount, onMounted, type PropType, ref } from "vue"
 
-import LibDarkModeSwitcher from "./components/LibDarkModeSwitcher/LibDarkModeSwitcher.vue"
-import { useAccesibilityOutline } from "./composables/index.js"
-import { theme } from "./theme.js"
+import { useAccesibilityOutline } from "../../composables/useAccesibilityOutline.js"
+import { theme } from "../../theme.js"
+import LibDarkModeSwitcher from "../LibDarkModeSwitcher/LibDarkModeSwitcher.vue"
 
 defineOptions({ name: "test-wrapper" })
 const props = defineProps({
@@ -35,32 +63,4 @@ onBeforeUnmount(() => {
 })
 const darkMode = ref(false)
 </script>
-
-<template>
-<!-- Workaround to create global style component for tests that is
-	accessible from the storybook preview decorator. See theme callback
-	above. -->
-<component :is="'style'" ref="styleEl"/>
-<div id="app"
-	tabindex="-1"
-	:class="(showOutline ? 'group outlined outlined-visible' : '[&_*]:outline-none') +
-		(darkMode ? ' dark' : '') "
-	ref="el"
->
-	<div class="flex gap-2 absolute right-0 top-0 m-1 dark:text-white">
-		<div>Wrapper Controls:</div>
-		<div class="outline-indicator">{{ showOutline ? "Outline Enabled" : "Outline Disabled" }}</div>
-		<lib-dark-mode-switcher @update:dark-mode="darkMode = $event"/>
-	</div>
-	<div
-		class="
-			p-10
-			dark:bg-neutral-900
-			dark:text-white
-		"
-	>
-		<slot/>
-	</div>
-</div>
-</template>
 

@@ -12,7 +12,7 @@
  
 import { computed, getCurrentInstance, type HTMLAttributes, onBeforeUnmount, onMounted, type PropType, reactive, type Ref, ref, watch } from "vue"
 
-import { twMerge } from "../../helpers/twMerge.js"
+import { twMerge } from "../../utils/twMerge.js"
 import { baseInteractiveProps, type TailwindClassProp } from "../shared/props.js"
 
 
