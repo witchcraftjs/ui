@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 // @ts-expect-error .
 import flatten from "tailwindcss/lib/util/flattenColorPalette.js"
-import tailwindPlugin from "tailwindcss/plugin.js"
-
+import { default as tailwindPlugin } from "tailwindcss/plugin.js"
 
 export const plugin: ReturnType<typeof tailwindPlugin> = tailwindPlugin(({
 	addVariant,
@@ -98,13 +96,13 @@ export const plugin: ReturnType<typeof tailwindPlugin> = tailwindPlugin(({
 				`repeating-linear-gradient(
 				var(--bars-angle),
 				var(--bars-bg-color),
-				var(--bars-bg-color) var(--bars-1-pos), 
+				var(--bars-bg-color) var(--bars-1-pos),
 				var(--bars-fg-color) var(--bars-1-pos),
 				var(--bars-fg-color) var(--bars-2-pos),
 				var(--bars-bg-color) var(--bars-2-pos),
 				var(--bars-bg-color) var(--bars-3-pos),
 				var(--bars-fg-color) var(--bars-3-pos),
-				var(--bars-fg-color) 
+				var(--bars-fg-color)
 				)`,
 		},
 	})
