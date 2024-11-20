@@ -27,17 +27,20 @@ export function useSuggestions<TSuggestion>(
 	const activeSuggestion = ref(-1)
 	watch(isOpen, val => { emit("update:isOpen", val) })
 	watch(activeSuggestion, val => { emit("update:activeSuggestion", val) })
-	const defaultSuggestionsLabel = (item: any): string => {
+	const suggestionKey = (item: any): string => {
 		if (isObject<any>(item)) {
+			if (opts.suggestionLabel) {
+				return opts.suggestionLabel(item)
+			}
 			throw new Error("`suggestionLabel` must be passed if suggestions are objects.")
 		}
 		return item
 	}
-	const suggestionLabel = computed(() => opts.suggestionLabel ?? defaultSuggestionsLabel)
+	const getSuggestionLabel = (item: any): string => opts.suggestionLabel?.(item) ?? suggestionKey(item) ?? ""
 
 	const defaultSuggestionsFilter = (input: string, items: TSuggestion[]): TSuggestion[] => input === ""
 		? [...items]
-		: items.filter(item => suggestionLabel.value(item).toLowerCase().includes(input.toLowerCase()))
+		: items.filter(item => getSuggestionLabel(item).toLowerCase().includes(input.toLowerCase()))
 	const suggestionsFilter = computed(() => opts.suggestionsFilter ?? defaultSuggestionsFilter)
 
 	const suggestionsList = computed(() => {
@@ -56,7 +59,7 @@ export function useSuggestions<TSuggestion>(
 
 	const exactlyMatchingSuggestion = computed(() =>
 		opts.suggestions?.find(suggestion =>
-			$inputValue.value === suggestionLabel.value(suggestion)))
+			$inputValue.value === getSuggestionLabel(suggestion)))
 
 	const isValidSuggestion = computed(() =>
 		((!opts.restrictToSuggestions && opts.isValid) || suggestionAvailable.value))
@@ -77,7 +80,7 @@ export function useSuggestions<TSuggestion>(
 
 			if (opts.restrictToSuggestions && !isValidSuggestion.value) return res
 			if (opts.preventDuplicateValues && opts.values) {
-				return res.filter(suggestion => !opts.values!.includes(suggestionLabel.value(suggestion)))
+				return res.filter(suggestion => !opts.values!.includes(suggestionKey(suggestion)))
 			}
 			return res
 		}
@@ -111,10 +114,9 @@ export function useSuggestions<TSuggestion>(
 		if (filteredSuggestions.value === undefined) return
 	
 		const suggestion = filteredSuggestions.value[num]
-		const val = suggestionLabel.value(suggestion)
-
+		const val = suggestionKey(suggestion)
 		$modelValue.value = val
-		$inputValue.value = val
+		$inputValue.value = getSuggestionLabel(suggestion)
 		closeSuggestions()
 		emit("submit", val, toRaw(suggestion))
 	}
@@ -172,7 +174,7 @@ export function useSuggestions<TSuggestion>(
 	
 	const cancel = (): void => {
 		if (debug) console.log("cancel")
-		$inputValue.value = $modelValue.value
+		$inputValue.value = getSuggestionLabel($modelValue.value)
 		closeSuggestions()
 	}
 
@@ -201,7 +203,7 @@ export function useSuggestions<TSuggestion>(
 	// sync vmodels and vmodel effects
 	
 	watch($modelValue, () => {
-		$inputValue.value = $modelValue.value
+		$inputValue.value = getSuggestionLabel($modelValue.value)
 		if (debug) console.log("modelValue changed")
 	})
 
@@ -211,7 +213,7 @@ export function useSuggestions<TSuggestion>(
 		let ii = -1
 		for (let i = 0; i < suggestions.length; i++) {
 			const suggestion = suggestions[i]
-			const label = suggestionLabel.value(suggestion)
+			const label = getSuggestionLabel(suggestion)
 			const labelPart = label.slice(0, input.length)
 			if (labelPart === input) {
 				if (label.length > (longestMatch?.[0]?.length ?? 0)) {
@@ -225,7 +227,7 @@ export function useSuggestions<TSuggestion>(
 
 	watch($inputValue, () => {
 		if (debug) console.log("input changed:", $inputValue.value, "modelValue:", $modelValue.value)
-		if ($modelValue.value === $inputValue.value) return
+		if (getSuggestionLabel($modelValue.value) === $inputValue.value) return
 
 		if (suggestionAvailable.value) {
 			if (debug) console.log("input changed, suggestion available, opening suggestions")
@@ -261,7 +263,7 @@ export function useSuggestions<TSuggestion>(
 		/** Whether there is a valid suggestion that can be submitted. If `restrictToSuggestions` is true, this will be true if isValid is true, otherwise this is considered to be true if suggestions are available. */
 		hasValidSuggestion: isValidSuggestion,
 		openable,
-		getLabel: suggestionLabel,
+		getLabel: getSuggestionLabel,
 		isOpen,
 		open: openSuggestions,
 		close: closeSuggestions,
