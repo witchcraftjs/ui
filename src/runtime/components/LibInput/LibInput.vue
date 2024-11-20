@@ -200,12 +200,13 @@ const $modelValue = defineModel<string>({ required: true })
 
 const fullId = computed(() => props.id ?? fallbackId)
 
-const inputValue = ref<any>($modelValue.value)
+const $inputValue = ref<any>($modelValue.value)
+
 const canEdit = computed(() => !props.disabled && !props.readonly)
 const suggestionsComponent = ref<ComponentExposed<typeof LibSuggestions> | null>(null)
 const activeSuggestion = ref(0)
 watch($modelValue, () => {
-	inputValue.value = $modelValue.value
+	$inputValue.value = $modelValue.value
 })
 const inputWrapperEl = ref<HTMLElement | null>(null)
 const isOpen = ref(false)
@@ -246,7 +247,7 @@ function addValue(val: string) {
 	props.preventDuplicateValues
 		? pushIfNotIn($values.value, [val])
 		: $values.value.push(val)
-	inputValue.value = ""
+	$inputValue.value = ""
 	$modelValue.value = ""
 }
 const suggestions = toRef(props, "suggestions")
@@ -265,10 +266,10 @@ const inputProps = computed(() => ({
 	onKeydown: handleKeydown,
 	onBlur: handleBlur,
 	onFocus: handleFocus,
-	modelValue: inputValue.value,
+	modelValue: $inputValue.value,
 	"onUpdate:modelValue": (e: string) => {
-		inputValue.value = e
-		if (!props.suggestions && !props.updateOnlyOnSubmit) {
+		$inputValue.value = e
+		if (!props.updateOnlyOnSubmit && !props.restrictToSuggestions) {
 			$modelValue.value = e
 		}
 	},
@@ -303,9 +304,9 @@ const suggestionProps = computed(() => ({
 	suggestionLabel: props.suggestionLabel,
 	suggestionsFilter: props.suggestionsFilter,
 	modelValue: $modelValue.value.toString(),
-	inputValue: inputValue.value,
+	inputValue: $inputValue.value,
 	isValid: props.isValid,
-	"onUpdate:inputValue": (e: string) => inputValue.value = e,
+	"onUpdate:inputValue": (e: string) => $inputValue.value = e,
 	onSubmit: (e: string, suggestion: any) => {
 		$modelValue.value = e
 		emit("submit", e, suggestion)
@@ -335,7 +336,7 @@ const multivaluesProps = computed(() => ({
 defineExpose({
 	suggestionsComponent,
 	el: inputWrapperEl,
-	inputValue
+	inputValue, $inputValue
 })
 </script>
 <script lang="ts">
