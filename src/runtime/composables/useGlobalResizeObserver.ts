@@ -5,6 +5,12 @@ import { globalResizeObserver } from "../globalResizeObserver.js"
 
 
 export const useGlobalResizeObserver = (el: Ref<HTMLElement | null>, cb: AnyFunction): void => {
+	let wasMounted = false
+	// in case we accidentally use it in an onMounted hook or somewhere where the element already exists
+	if (el.value) {
+		wasMounted = true
+		globalResizeObserver.observe(el.value, cb)
+	}
 	onMounted(() => {
 		watch(el, (_newval, oldval) => {
 			if (el.value) {
@@ -14,9 +20,11 @@ export const useGlobalResizeObserver = (el: Ref<HTMLElement | null>, cb: AnyFunc
 					globalResizeObserver.unobserve(oldval, cb)
 				}
 			}
-		}, { immediate: true })
+		})
+		if (el.value && !wasMounted) {
+			globalResizeObserver.observe(el.value, cb)
+		}
 	})
-	// todo is this needed?
 	onBeforeUnmount(() => {
 		if (el.value) {
 			globalResizeObserver.unobserve(el.value, cb)
