@@ -288,12 +288,16 @@ const inputProps = computed(() => ({
 	class: undefined,
 }))
 
+function slotSubmit (val: any): void {
+	emit("submit", val)
+}
 const slotProps = computed(() => ({
 	id: fullId.value,
 	isOpen: isOpen.value,
 	valid: props.valid,
 	disabled: props.disabled,
 	readonly: props.readonly,
+	emitSubmit: slotSubmit
 }))
 
 const suggestionProps = computed(() => ({
@@ -336,7 +340,7 @@ const multivaluesProps = computed(() => ({
 defineExpose({
 	suggestionsComponent,
 	el: inputWrapperEl,
-	inputValue, $inputValue
+	inputValue: $inputValue
 })
 </script>
 <script lang="ts">
