@@ -3,17 +3,19 @@ import { computed, type InjectionKey, onMounted, provide, type Ref,ref, watch } 
 const defaultLocalStorageKey = "prefersColorSchemeDark"
 const defaultOrder = ["system", "dark", "light"] as const
 const injectionKey = Symbol("isDarkMode") as InjectionKey<Ref<boolean>>
+const manualInjectionKey = Symbol("manualDarkMode") as InjectionKey<Ref<boolean | undefined>>
 
 /**
  * A composable for managing dark mode that automatically takes care of saving the user's preference.
  *
  * See the returned utilities for more details.
  *
- * It also provides `isDarkModeInjectonKey` with a ref so it can be accessed in deep nested components if needed.
+ * It also provides injection keys with a ref so it can be accessed in deep nested components if needed.
  *
  * ```ts
- * import { isDarkModeInjectionKey } from "@witchcraft/ui/composables/useDarkMode.js"
+ * import { isDarkModeInjectionKey, manualDarkModeInjectionKey } from "@witchcraft/ui/composables/useDarkMode.js"
  * const isDarkMode = inject(isDarkModeInjectionKey)
+ * const manualDarkMode = inject(manualDarkModeInjectionKey)
  * ```
  */
 export const useDarkMode = ({
@@ -86,6 +88,7 @@ export const useDarkMode = ({
 		}
 	})
 	provide(injectionKey, darkMode)
+	provide(manualInjectionKey, manualDarkMode)
 
 	return {
 		darkMode,
@@ -99,6 +102,8 @@ export const useDarkMode = ({
 export const defaultDarkModeOrder = defaultOrder
 
 export const isDarkModeInjectionKey = injectionKey
+
+export const manualDarkModeInjectionKey = manualInjectionKey
 
 export type DarkModeOptions = {
 	/* Whether to save the manual dark mode to local storage. Uses the key "prefersColorSchemeDark" by default. You can pass a key instead of true to use that as the key instead. */
