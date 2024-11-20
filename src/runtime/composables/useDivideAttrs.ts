@@ -32,13 +32,16 @@ export const useDivideAttrs = <T extends readonly string[]>(divisionKeys: T): Re
 	const unseen = keys(attrs)
 	for (const key of divisionKeys) {
 		res[`${key}Attrs`] = {}
-		for (const attrKey of unseen) {
+		for (let i = 0; i < unseen.length; i++) {
+			const attrKey = unseen[i]
 			if (attrKey.startsWith(`${key}-`)) {
 				res[`${key}Attrs`][attrKey.slice(key.length + 1)] = attrs[attrKey]
-				unseen.splice(unseen.indexOf(attrKey), 1)
+				unseen.splice(i, 1)
+				i--
 			} else if (attrKey.startsWith(key)) {
 				res[`${key}Attrs`][attrKey.slice(key.length)] = attrs[attrKey]
-				unseen.splice(unseen.indexOf(attrKey), 1)
+				unseen.splice(i, 1)
+				i--
 			}
 		}
 	}
