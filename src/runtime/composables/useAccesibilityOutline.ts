@@ -45,7 +45,6 @@ export function useAccesibilityOutline(
 	target: Ref<HTMLElement | null>,
 	enable: Ref<boolean> = ref(true),
 ): Record<"outline" | "control", Ref<boolean>> {
-	
 	const outline = ref(false)
 	const awaitingFocus = ref(false)
 	const keydown = (_e: KeyboardEvent): void => {
@@ -67,6 +66,7 @@ export function useAccesibilityOutline(
 	const attach = (): void => {
 		if (!canAttach) return
 		castType<Ref<HTMLElement>>(target.value)
+		if (!target.value) return
 		target.value.addEventListener("focusin", focusin)
 		target.value.addEventListener("keydown", keydown)
 		target.value.addEventListener("mousedown", mousedown)
