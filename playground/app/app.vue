@@ -1,7 +1,8 @@
 <template>
-<WTestWrapper>
+<WRoot>
 	<WButton>Hello</WButton>
-</WTestWrapper>
+	<a href="">Link</a>
+</WRoot>
 </template>
 
 <script lang="ts" setup>
