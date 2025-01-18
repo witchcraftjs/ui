@@ -26,6 +26,7 @@
 		border && `
 			transition-all
 			bg-neutral-100
+			dark:bg-neutral-900
 			shadow-[0_1px_1px_0]
 			shadow-neutral-950/20
 			hover:shadow-[0_1px_3px_0]
