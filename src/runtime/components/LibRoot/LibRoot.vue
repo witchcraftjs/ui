@@ -4,14 +4,18 @@
 	:class="twMerge(
 		(showOutline ? 'group outlined outlined-visible' : '[&_*]:outline-none'),
 		darkMode && ' dark',
-		`min-h-screen`
-	)
-	"
+		($attrs['wrapperAttrs'] as any)?.class
+	)"
+	v-bind="{ ...$attrs['wrapperAttrs'], class: undefined }"
 	ref="el"
 >
+	<!-- id root is useful for teleports, so they are at the topmost level where they can still be styled -->
 	<div
-		class="
+		id="root"
+		v-bind="{ ...$attrs, class: undefined, wrapperAttrs: undefined }"
+		:class="twMerge(`
 			min-h-screen
+			min-w-screen
 			dark:bg-fg
 			dark:text-bg
 			bg-bg
@@ -19,7 +23,7 @@
 			flex
 			flex-col
 			items-center
-		"
+		`, ($attrs as any).attrs?.class)"
 	>
 		<slot/>
 	</div>
@@ -30,17 +34,20 @@
 import { computed, onBeforeUnmount, onMounted, type PropType, ref } from "vue"
 
 import { useAccesibilityOutline } from "../../composables/useAccesibilityOutline.js"
-import { useDarkMode } from "../../composables/useDarkMode.js"
+import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
+import { useSetupDarkMode } from "../../composables/useSetupDarkMode.js"
 import { useShowDevOnlyKey } from "../../composables/useShowDevOnlyKey.js"
 import { theme } from "../../theme.js"
 import { twMerge } from "../../utils/twMerge.js"
+
+const $attrs = useDivideAttrs(["inner-wrapper"])
 
 defineOptions({ name: "root" })
 const props = withDefaults(defineProps<{
 	outline?: boolean
 	forceOutline?: boolean
 }>(), {
-	outline: false,
+	outline: true,
 	forceOutline: false,
 })
 
@@ -64,11 +71,13 @@ if ((process as any).client) {
 	})
 }
 
-const {
-	darkMode,
-	manualDarkMode
-} = useDarkMode()
+const darkModeSetup = useSetupDarkMode()
+const darkMode = darkModeSetup.darkMode
 
 useShowDevOnlyKey()
+
+defineExpose({
+	darkMode: darkModeSetup,
+})
 </script>
 
