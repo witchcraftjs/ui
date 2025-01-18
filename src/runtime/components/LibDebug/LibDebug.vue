@@ -8,6 +8,7 @@
 		border
 		border-danger-500
 		p-2
+		overflow-auto
 	"
 >
 	<div class="flex justify-between">
@@ -18,7 +19,7 @@
 	</div>
 	<pre v-if="value"
 		:class="`
-		[tab-size:${tab}]
+			[tab-size:${tab}]
 		`
 		"
 	>{{ getStringValue(value) }}</pre>
