@@ -1,17 +1,20 @@
 <template>
 <DevOnly>
-	<div v-show="doShow"
+	<slot v-if="doShow && $attrs?.['as-child'] !== undefined"/>
+	<div v-else-if="doShow"
+
+
 		:class="twMerge(`
-		border
-		border-dashed
-		border-red-500
-		px-2
-		py-1
-		never-packaged
+			border
+			border-dashed
+			border-red-500
+			px-2
+			py-1
+			never-packaged
 		`,
 			$attrs.class
 		)"
-		v-bind="{...$attrs.attrs, class: undefined}"
+		v-bind="{...$attrs, class: undefined}"
 	>
 		<slot/>
 	</div>
@@ -33,4 +36,10 @@ const props = withDefaults(defineProps<{
 const injectedShow = inject(showDevOnlyInjectionKey, ref(false))
 const doShow = computed(() => props.show || injectedShow.value)
 
+</script>
+<script lang="ts">
+interface Props {
+	show?: boolean
+	asChild?: boolean
+}
 </script>
