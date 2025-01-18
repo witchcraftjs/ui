@@ -70,9 +70,9 @@
 		</tr>
 	</thead>
 	<tbody>
-		<template v-for="item, i of values" :key="item[itemKey]">
+		<template v-for="item, i of values" :key="typeof itemKey === 'function' ? itemKey(item) : item[itemKey]">
 			<tr>
-				<template v-for="col, j of cols" :key="item[itemKey as keyof typeof item] + col.toString()">
+				<template v-for="col, j of cols" :key="(typeof itemKey === 'function' ? itemKey(item) : item[itemKey]) + col.toString()">
 					<slot
 						:name="col"
 						:item="item"
@@ -160,7 +160,7 @@ type T = any
 type RealProps = {
 	resizable: Partial<ResizableOptions>
 	values: T[]
-	itemKey: keyof T
+	itemKey?: keyof T | ((item: T) => string)
 	/** Let's the table know the shape of the data since values might be empty. */
 	cols: (keyof T)[]
 	rounded: boolean
