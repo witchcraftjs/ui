@@ -158,16 +158,16 @@ const extraClasses = computed(() => Object.fromEntries([...Array(props.values.le
 type T = any
 	
 type RealProps = {
-	resizable: Partial<ResizableOptions>
-	values: T[]
+	resizable?: Partial<ResizableOptions>
+	values?: T[]
 	itemKey?: keyof T | ((item: T) => string)
 	/** Let's the table know the shape of the data since values might be empty. */
-	cols: (keyof T)[]
-	rounded: boolean
-	border: boolean
-	cellBorder: boolean
-	header: boolean
-	colConfig: TableColConfig<T>
+	cols?: (keyof T)[]
+	rounded?: boolean
+	border?: boolean
+	cellBorder?: boolean
+	header?: boolean
+	colConfig?: TableColConfig<T>
 }
 interface Props
 	extends
