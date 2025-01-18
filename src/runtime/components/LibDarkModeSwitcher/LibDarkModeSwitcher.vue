@@ -1,7 +1,7 @@
 <template>
 <lib-button
 	v-bind="{...$attrs, class:undefined}"
-	:class="twMerge(`
+	:class="!$attrs.unstyle && twMerge(`
 			rounded-full
 			after:rounded-full
 		`,
