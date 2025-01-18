@@ -35,6 +35,7 @@
 			w-12
 			placeholder:text-transparent
 			appearance-none
+			pr-0
 		`,
 		border && `
 			border
