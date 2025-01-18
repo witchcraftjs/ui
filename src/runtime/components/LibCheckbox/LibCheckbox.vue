@@ -50,7 +50,7 @@
 				checked:after:bg-accent-700
 				disabled:border-neutral-500
 				disabled:checked:after:bg-neutral-700
-			`, !disabled && `after:cursor-pointer`,
+			`, !disabled && `cursor-pointer`,
 				($.attrs as any).class
 			)"
 			type="checkbox"
