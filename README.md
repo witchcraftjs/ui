@@ -27,7 +27,8 @@ The module automatically installs `@nuxtjs/tailwindcss` and registers it's tailw
 
 Optionally add the base css to your styles (see more below):
 ```css [~/assets/css/tailwind.css]
-@import "@witchcraft/ui/base.css"; 
+@import "@witchcraft/ui/style.css"; /* required */
+@import "@witchcraft/ui/base.css"; /* optional */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -118,6 +119,7 @@ See [@witchcraft/editor/vite.config.dev.ts] and it's postcss config for a full e
 Optionally import `@witchcraft/ui/base.css` in your css file. 
 
 ```css
+@import "@witchcraft/ui/style.css"; /* required */
 @import "@witchcraft/ui/base.css";
 @tailwind base;
 @tailwind components;

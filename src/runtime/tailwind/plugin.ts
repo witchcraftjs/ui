@@ -16,7 +16,7 @@ export const plugin: ReturnType<typeof tailwindPlugin> = tailwindPlugin(({
 					[`${prefix}h-screen`, { [`${prefix.slice(1)}height`]: ["100vh /* fallback */", "100dvh"]}]
 				)
 				)
-		)
+		),
 	)
 	addVariant("outlined", [`:merge(.group).outlined &:focus-visible`, `:merge(.group).outlined-visible &:focus-visible`])
 	addVariant("outlined-focus", [`:merge(.group).outlined &:focus`])

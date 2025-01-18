@@ -1,0 +1,11 @@
+@import "@witchcraft/ui/style.css"; 
+@import "@witchcraft/ui/base.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.test2 {
+	@apply link-like bg-transparency-squares;
+}
+
+

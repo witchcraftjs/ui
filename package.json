@@ -62,6 +62,9 @@
 		"./base.css": {
 			"import": "./src/runtime/assets/base.css"
 		},
+		"./style.css": {
+			"import": "./src/runtime/assets/style.css"
+		},
 		"./nuxt": {
 			"import": "./dist/module.mjs",
 			"require": "./dist/module.cjs"
