@@ -14,7 +14,8 @@ export const useNotificationHandler = (handler?: NotificationHandler): Notificat
 			throw new Error("You must set the notification handler to use at least once before using it.")
 		}
 	} else if (handler) {
-		throw new Error("You can only set the notification handler once.")
+		// eslint-disable-next-line no-console
+		console.warn("You can only set the notification handler once. (Note that there might be false positive during HMR).")
 	}
 	return notificationHandler
 }
