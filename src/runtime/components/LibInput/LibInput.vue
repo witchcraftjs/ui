@@ -200,7 +200,8 @@ const $modelValue = defineModel<string>({ required: true })
 
 const fullId = computed(() => props.id ?? fallbackId)
 
-const $inputValue = ref<any>($modelValue.value)
+const $inputValue = defineModel<string>("inputValue")
+$inputValue.value = $modelValue.value ?? ""
 
 const canEdit = computed(() => !props.disabled && !props.readonly)
 const suggestionsComponent = ref<ComponentExposed<typeof LibSuggestions> | null>(null)
@@ -269,7 +270,7 @@ const inputProps = computed(() => ({
 	modelValue: $inputValue.value,
 	"onUpdate:modelValue": (e: string) => {
 		$inputValue.value = e
-		if (!props.updateOnlyOnSubmit && !props.restrictToSuggestions) {
+		if (!props.suggestions && !props.updateOnlyOnSubmit && !props.restrictToSuggestions) {
 			$modelValue.value = e
 		}
 	},
@@ -288,7 +289,7 @@ const inputProps = computed(() => ({
 	class: undefined,
 }))
 
-function slotSubmit (val: any): void {
+function slotSubmit(val: any): void {
 	emit("submit", val)
 }
 const slotProps = computed(() => ({
@@ -340,7 +341,6 @@ const multivaluesProps = computed(() => ({
 defineExpose({
 	suggestionsComponent,
 	el: inputWrapperEl,
-	inputValue: $inputValue
 })
 </script>
 <script lang="ts">
