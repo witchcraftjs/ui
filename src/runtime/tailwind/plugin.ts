@@ -1,6 +1,6 @@
 // @ts-expect-error .
 import flatten from "tailwindcss/lib/util/flattenColorPalette.js"
-import { default as tailwindPlugin } from "tailwindcss/plugin.js"
+import tailwindPlugin from "tailwindcss/plugin.js"
 
 export const plugin: ReturnType<typeof tailwindPlugin> = tailwindPlugin(({
 	addVariant,

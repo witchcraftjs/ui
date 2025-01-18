@@ -17,7 +17,6 @@
 		"src/**/*.ts",
 		"src/**/*.vue",
 		"src/**/*.js",
-		"*.ts"
 	],
 	"vueCompilerOptions": {
 		"strictTemplates": true,
