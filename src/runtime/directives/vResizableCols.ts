@@ -16,10 +16,10 @@ type Data = {
 	colCount: number
 	grips: Map<HTMLElement, number>
 	isDragging: boolean
-	mouseDownHandler: (e: MouseEvent) => void
-	mouseUpHandler: (e: MouseEvent) => void
-	mouseLeaveHandler: (e: MouseEvent) => void
-	mouseMoveHandler: (e: MouseEvent) => void
+	pointerDownHandler: (e: PointerEvent) => void
+	pointerUpHandler: (e: PointerEvent) => void
+	pointerLeaveHandler: (e: PointerEvent) => void
+	pointerMoveHandler: (e: PointerEvent) => void
 	target?: HTMLElement
 	offset?: number
 	widths: Ref<string[]>
@@ -110,13 +110,16 @@ export const vResizableCols: Directive = {
 	},
 	updated(el: ResizableElement, { value: opts = {} }: RawOpts) {
 		const options = override({ ...defaultOpts }, opts) as ResizableOptions
-		const hasGrips = elMap.has(el) && elMap.get(el)!.grips
-		if (hasGrips && !options.enabled) {
+		const info = el && getElInfo(el)
+		const hasGrips = el && elMap.get(el)!.grips
+		// todo, we should probably check by name
+		const colsNotEqual = (info && info.colCount !== options.colCount)
+		if ((hasGrips && !options.enabled) || colsNotEqual) {
 			teardownColumns(el)
 			observer.unobserve(el, throttledCallback)
 		}
 
-		if (!hasGrips && options.enabled) {
+		if ((!hasGrips && options.enabled) || colsNotEqual) {
 			setupColumns(el, options)
 			observer.observe(el, throttledCallback)
 		}
@@ -171,7 +174,7 @@ const getCols = (el: ResizableElement): { col: HTMLElement | null, colNext: HTML
 	return { col, colNext }
 }
 
-const createMouseDownHandler = (el: ResizableElement) => (e: MouseEvent) => {
+const createPointerDownHandler = (el: ResizableElement) => (e: PointerEvent) => {
 	const $el = getElInfo(el)
 	if (!$el.isDragging) {
 		castType<HTMLElement>(e.target)
@@ -184,17 +187,17 @@ const createMouseDownHandler = (el: ResizableElement) => (e: MouseEvent) => {
 		if (col === null || colNext === null) {
 			el.classList.add("resizable-cols-error")
 		} else {
-			document.addEventListener("mousemove", $el.mouseMoveHandler)
+			document.addEventListener("pointermove", $el.pointerMoveHandler)
 		}
 		const box = getBox(col!)
 		if (box) {
 			$el.offset = e.pageX - (box.x + box.width)
 		}
 
-		document.addEventListener("mouseup", $el.mouseUpHandler)
+		document.addEventListener("pointerup", $el.pointerUpHandler)
 	}
 }
-const createMouseMoveHandler = (el: ResizableElement) => (e: MouseEvent) => {
+const createPointerMoveHandler = (el: ResizableElement) => (e: PointerEvent) => {
 	const $el = getElInfo(el)
 	if ($el.isDragging) {
 		e.preventDefault()
@@ -238,7 +241,7 @@ const createMouseMoveHandler = (el: ResizableElement) => (e: MouseEvent) => {
 	}
 }
 
-const createMouseUpHandler = (el: ResizableElement) => (e: MouseEvent) => {
+const createPointerUpHandler = (el: ResizableElement) => (e: PointerEvent) => {
 	const $el = getElInfo(el)
 	if ($el.isDragging) {
 		e.preventDefault()
@@ -246,10 +249,10 @@ const createMouseUpHandler = (el: ResizableElement) => (e: MouseEvent) => {
 		el.classList.remove("resizable-cols-error")
 		$el.offset = 0
 		delete $el.target
-		document.removeEventListener("mousemove", $el.mouseMoveHandler)
-		document.removeEventListener("mouseup", $el.mouseUpHandler)
+		document.removeEventListener("pointermove", $el.pointerMoveHandler)
+		document.removeEventListener("pointerup", $el.pointerUpHandler)
 		// unfortunately does not work with iframes in storybook but otherwise does work
-		document.removeEventListener("mouseleave", $el.mouseLeaveHandler)
+		document.removeEventListener("pointerleave", $el.pointerLeaveHandler)
 	}
 }
 
@@ -292,10 +295,10 @@ const setupColumns = (el: ResizableElement, opts: ResizableOptions): void => {
 	const $el: Data = {
 		grips: new Map(),
 		isDragging: false,
-		mouseDownHandler: createMouseDownHandler(el),
-		mouseMoveHandler: createMouseMoveHandler(el),
-		mouseUpHandler: createMouseUpHandler(el),
-		mouseLeaveHandler: createMouseUpHandler(el),
+		pointerDownHandler: createPointerDownHandler(el),
+		pointerMoveHandler: createPointerMoveHandler(el),
+		pointerUpHandler: createPointerUpHandler(el),
+		pointerLeaveHandler: createPointerUpHandler(el),
 		fitWidth: opts.fitWidth,
 		margin: opts.margin === "dynamic" ? gripWidth : opts.margin,
 		colCount: opts.colCount,
@@ -314,7 +317,7 @@ const setupColumns = (el: ResizableElement, opts: ResizableOptions): void => {
 		if (opts.fitWidth && i === len - 1) continue
 
 		const grip: HTMLElement = createGrip()
-		grip.addEventListener("mousedown", $el.mouseDownHandler)
+		grip.addEventListener("pointerdown", $el.pointerDownHandler)
 		el.appendChild(grip)
 		$el.grips.set(grip, i)
 	}
@@ -363,9 +366,9 @@ const setColWidths = (el: ResizableElement, children?: Element[]): void => {
 const teardownColumns = (el: ResizableElement): void => {
 	const $el = getElInfo(el)
 
-	el.removeEventListener("mousedown", $el.mouseDownHandler)
-	document.removeEventListener("mousemove", $el.mouseMoveHandler)
-	document.removeEventListener("mouseup", $el.mouseUpHandler)
+	el.removeEventListener("pointerdown", $el.pointerDownHandler)
+	document.removeEventListener("pointermove", $el.pointerMoveHandler)
+	document.removeEventListener("pointerup", $el.pointerUpHandler)
 	for (const key of Object.keys($el)) {
 		delete $el[key as keyof typeof $el]
 	}
