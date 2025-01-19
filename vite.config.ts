@@ -6,7 +6,7 @@ import Components from "unplugin-vue-components/vite"
 
 // workaround for esm/ts import issues
 import postcss from "./postcss.config.js"
-import { unpluginIconViteOptions } from "./src/build/unpluginIconViteOptions.js"
+import { unpluginIconViteOptions } from "./src/runtime/build/unpluginIconViteOptions.js"
 
 export default defineConfig({
 	entryGlobs: [
