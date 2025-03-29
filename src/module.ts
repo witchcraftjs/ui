@@ -12,6 +12,7 @@ import {
 import { addImportsCustom, addTailwindContents , globFiles } from "@witchcraft/nuxt-utils/utils"
 import { defu } from "defu"
 import fs from "fs"
+import { createTailwindPlugin } from "metamorphosis/tailwind"
 import { join } from "path"
 import { type Config as TwConfig } from "tailwindcss"
 import IconsResolver from "unplugin-icons/resolver"
@@ -21,15 +22,14 @@ import ViteComponents from "unplugin-vue-components/vite"
 
 import { unpluginIconViteOptions } from "./runtime/build/unpluginIconViteOptions.js"
 import { config as twConfig } from "./runtime/tailwind/config.js"
-import { theme } from "./runtime/theme.js"
-import { createTailwindPlugin } from "metamorphosis/tailwind"
 import { themePluginOpts } from "./runtime/tailwind/themePluginOpts.js"
+import { theme } from "./runtime/theme.js"
 const knownDirectives = ["vExtractRootEl", "vResizableCols", "vResizeObserver", "vResizableCols"] as const
 
 const { resolve } = createResolver(import.meta.url)
 
 const componentsInfo: { name: string, filepath: string }[] = globFiles([
-	`${resolve("runtime/components")}/**/*.vue*`,
+	`${resolve("./runtime/components")}/**/*.vue*`,
 	`!**/Template/**.vue`,
 ],[], (filepath: string, name: string) => ({
 	name: name.startsWith("Lib") ? name.replace("Lib", "PREFIX") : `PREFIX${name}`,
