@@ -7,7 +7,7 @@
 			cursor-pointer
 			items-center
 			justify-center
-			rounded
+			rounded-sm
 			px-1
 			hover:cursor-pointer
 			[&:hover_*]:cursor-pointer
@@ -35,7 +35,7 @@
 
 			relative
 			after:absolute
-			after:rounded
+			after:rounded-sm
 			after:inset-0
 			after:content
 			after:shadow-[0_1px_0_0_inset]
@@ -223,7 +223,6 @@ const autoTitle = computed(() => ({
 </script>
 
 <script lang="ts">
-
 type RealProps =
 	& LinkableByIdProps
 	& LabelProps

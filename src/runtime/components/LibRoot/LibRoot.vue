@@ -2,20 +2,19 @@
 <div id="app"
 	tabindex="-1"
 	:class="twMerge(
-		(showOutline ? 'group outlined outlined-visible' : '[&_*]:outline-none'),
+		(showOutline ? 'group outlined outlined-visible' : '[&_*]:outline-hidden'),
 		darkMode && ' dark',
 		($attrs['wrapperAttrs'] as any)?.class
 	)"
-	v-bind="{ ...$attrs['wrapperAttrs'], class: undefined }"
+	v-bind="{ ...($attrs['wrapperAttrs']), class: undefined }"
 	ref="el"
 >
 	<!-- id root is useful for teleports, so they are at the topmost level where they can still be styled -->
 	<div
 		id="root"
 		v-bind="{ ...$attrs, class: undefined, wrapperAttrs: undefined }"
-		:class="twMerge(`
-			min-h-screen
-			min-w-screen
+		:class="twMerge( `
+			min-w-dvw
 			dark:bg-fg
 			dark:text-bg
 			bg-bg
@@ -40,7 +39,7 @@ import { useShowDevOnlyKey } from "../../composables/useShowDevOnlyKey.js"
 import { theme } from "../../theme.js"
 import { twMerge } from "../../utils/twMerge.js"
 
-const $attrs = useDivideAttrs(["inner-wrapper"])
+const $attrs = useDivideAttrs(["wrapper"])
 
 defineOptions({ name: "root" })
 const props = withDefaults(defineProps<{
@@ -72,6 +71,7 @@ if ((process as any).client) {
 }
 
 const darkModeSetup = useSetupDarkMode()
+
 const darkMode = darkModeSetup.darkMode
 
 useShowDevOnlyKey()

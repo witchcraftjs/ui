@@ -2,7 +2,7 @@
 <div :id="id ?? fallbackId"
 	aria-label="color picker"
 	:class="twMerge(`color-picker
-			[--slider-size:var(--spacing-4)]
+			[--slider-size:calc(var(--spacing)_*_4)]
 			[--contrast-dark:var(--color-neutral-100)]
 			[--contrast-light:var(--color-neutral-800)]
 			[--fg:rgb(var(--contrast-dark))]
@@ -19,7 +19,7 @@
 			[--bg:rgb(var(--contrast-dark))]
 		`,
 		border && `
-			border rounded border-neutral-600
+			border rounded-sm border-neutral-600
 		`
 	)"
 >
@@ -30,13 +30,16 @@
 			aspect-square
 			relative
 			flex
-			rounded
+			rounded-sm
 			focus:border-accent-500
 		`"
 		@pointerdown="slider.pointerdown($event, 'picker')"
 		@pointerleave="slider.pointerleave($event)"
 	>
-		<canvas ref="pickerEl"/>
+		<canvas
+			class="size-full shadow-xs shadow-black/50 rounded-sm"
+			ref="pickerEl"
+		/>
 		<div
 			aria-live="assertive"
 			:aria-description="ariaDescription"
@@ -61,7 +64,10 @@
 		:class="`hue-slider ${sliderClasses}`"
 		@pointerdown="slider.pointerdown($event, 'hue')"
 	>
-		<canvas ref="hueSliderEl"/>
+		<canvas
+			class="size-full shadow-xs shadow-black/50 rounded-sm"
+			ref="hueSliderEl"
+		/>
 		<div
 			role="slider"
 			:aria-valuenow="`${localColor.percent.h}`"
@@ -82,7 +88,10 @@
 		@keydown="slider.keydown($event, 'alpha')"
 		@pointerdown="slider.pointerdown($event, 'alpha')"
 	>
-		<canvas class="bg-transparency-squares" ref="alphaSliderEl"/>
+		<canvas
+			class="size-full shadow-xs shadow-black/50 rounded-sm bg-transparency-squares"
+			ref="alphaSliderEl"
+		/>
 		<div
 			role="slider"
 			aria-label="alpha slider"
@@ -102,7 +111,7 @@
 				aspect-square
 				h-[calc(var(--slider-size)*3)]
 				rounded-full
-				shadow-sm
+				shadow-xs
 			"
 		>
 			<!-- <input class="color-input" :value="localColorString" @input="parseInput"> -->
@@ -171,13 +180,13 @@ const sliderClasses = `
 const handleClasses = `
 	h-[var(--slider-size)]
 	w-[var(--slider-size)]
-	shadow-sm
+	shadow-xs
 	shadow-black/50
 	border-2 border-neutral-700
 	rounded-full
 	absolute
 	cursor-pointer
-	outline-none
+	outline-hidden
 	focus:border-accent-500
 	active:border-accent-500
 	hover:border-accent-500
@@ -266,8 +275,8 @@ const updatePicker = (el: HTMLCanvasElement, hue: number): void => {
 	gradient.addColorStop(0, "white")
 	gradient.addColorStop(1, "black")
 	const gradientColor = ctx.createLinearGradient(0, 0, width, 0)
-	gradientColor.addColorStop(0, `hsla(${hue},100%,50%,0)`)
-	gradientColor.addColorStop(1, `hsla(${hue},100%,50%,1)`)
+	gradientColor.addColorStop(0, `hsla(${hue} 100% 50% / 0)`)
+	gradientColor.addColorStop(1, `hsla(${hue} 100% 50% /1)`)
 
 
 	ctx.fillStyle = gradient
@@ -385,7 +394,7 @@ const update = (_: HsvaColor, { updatePosition = true, updateValue = true }: { u
 		const hsl1 = hsl.alpha(1).toHslString()
 		updateSlider(alphaSliderEl.value, [hsl0, hsl1])
 	}
-	updateSlider(hueSliderEl.value!, i => `hsl(${i},100%,50%)`)
+	updateSlider(hueSliderEl.value!, i => `hsl(${i} 100% 50%)`)
 	updatePicker(pickerEl.value!, _.h)
 	if (updatePosition) {
 		localColor.percent.h = Math.round((_.h / 360) * 10000) / 100
@@ -434,10 +443,3 @@ const save = (): void => {
 
 const invertColors = computed(() => !!(localColor.percent.v < 50 || (localColor.val.a === undefined || localColor.val.a < 0.5)))
 </script>
-
-<style lang="postcss" scoped>
-canvas {
-	@apply size-full shadow-sm shadow-black/50 rounded;
-}
-</style>
-

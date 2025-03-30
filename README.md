@@ -20,19 +20,17 @@ This is unfortunately not true styleless since the tailwind classes are still in
 
 Modules, composables, and directives should work out of the box without auto imports. 
 
-## Tailwind 
+## Tailwind (V4)
 
-The module automatically installs `@nuxtjs/tailwindcss` and registers it's tailwind config and provides the necessary custom colors to the tailwind theme viewer.
+The module automatically sets up tailwind v4 and generates a custom `witchcraft-ui.css` file with the proper imports, just add it in your tailwind css file.
 
+It does not install "@nuxtjs/tailwindcss" for now since it's not compatible with v4. See [#919](https://github.com/nuxt-modules/tailwindcss/issues/919).
 
-Optionally add the base css to your styles (see more below):
 ```css [~/assets/css/tailwind.css]
-@import "@witchcraft/ui/style.css"; /* required */
-@import "@witchcraft/ui/base.css"; /* optional */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "@tailwindcss";
+@import "../../../.nuxt/witchcraft-ui.css";
 ```
+
 
 ## Icons
 
@@ -77,9 +75,6 @@ Most slots where possible are passed all properties needed to replace them excep
 ```ts
 import { defineConfig } from "vite"
 
-// this is so we can have an esm postcss config (since the library's tailwind config is also esm)
-import postcss from "./postcss.config.mjs"
-
 import { WitchcraftUiResolver } from "@witchcraft/ui/build/WitchcraftUiResolver.js"
 import IconsResolver from "unplugin-icons/resolver"
 import Icons from "unplugin-icons/vite"
@@ -106,82 +101,27 @@ export default defineConfig({
 		// style the icons correctly
 		Icons(unpluginIconViteOptions)
 	],
-	css: { postcss },
 })
 ```
 
-See [@witchcraft/editor/vite.config.dev.ts] and it's postcss config for a full example.
+See [@witchcraft/editor/vite.config.dev.ts].
 
 ### Setting up Tailwind
 
 #### Extra Classes
 
-Optionally import `@witchcraft/ui/base.css` in your css file. 
-
 ```css
-@import "@witchcraft/ui/style.css"; /* required */
+@import "@witchcraft/ui/style.css"; /* tailwind v4 style utils - required */
 @import "@witchcraft/ui/base.css";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@source "@witchcraft/ui/src/runtime/components";
 ```
-
-Base just contains animation keyframes and basic styles for vue animations. They are not "layered", i.e. they will get imported regardless of whether they are used since otherwise tailwind does not detect they are being used.
+Base just contains animation keyframes and basic styles for vue animations. They will get imported regardless of whether they are used since otherwise tailwind does not detect they are being used.
 
 
 #### Tailwind Configuration
 
-You can use the exported config and merge it with your own if needed.
+This module does everything v4 style, so no configuration is needed.
 
-```ts
-// tailwind.config.js
-import { config } from "@witchcraft/ui/tailwind/config.js"
-
-export default  {
-	...config,
-	content: [
-		...config.content,
-		"./index.html",
-		"./src/**/*.{vue,js,ts,jsx,tsx}",
-		// be sure to add this or tailwind will not include the classes in the component library
-		"./node_modules/@witchcraft/ui/**/*.{vue,js,ts,jsx,tsx}",
-	],
-	plugins: [
-		...config.plugins
-	]
-}
-
-```
-
-If you need to setup the config completely from scratch the package provides a plugin `@witchcraft/ui/tailwind/plugin.js` that sets up a few utility classes\*. It also requires setting up the theming library. The options it uses are exported for easy re-use.
-
-```ts
-import { type Config } from "tailwindcss"
-import { createTailwindPlugin } from "metamorphosis/tailwind.js"
-// you can also use your own metamorphosis theme so long as the necessary colors are provided ( warning/ok/danger/accent, neutral is also used, but that is already provided by tailwind )
-import { theme } from "@witchcraft/ui/theme.js"
-import {
-	plugin as libraryPlugin,
-	config as componentsConfig,
-	themePluginOpts,
-} from "@witchcraft/ui/tailwind"
-
-const config = {
-	darkMode: "class",
-	content: [/* ... */],
-	plugins: [
-		// integration with my theme library
-		createTailwindPlugin(theme, themePluginOpts),
-		libraryPlugin,
-		// .... your plugins
-	],
-	// ... your opts
-} satisfies Config
-
-export default config
-```
-
-\* Note that it overrides the h-screen utility to use dvh units by default, with vh as a fallback.
 
 #### tailwind-merge
 

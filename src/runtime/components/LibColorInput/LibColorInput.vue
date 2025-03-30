@@ -24,7 +24,7 @@
 				<slot>Pick Color</slot>
 			</span>
 			<div :class="`color-swatch
-						rounded-sm
+						rounded-xs
 						px-1
 						flex-1
 						h-4

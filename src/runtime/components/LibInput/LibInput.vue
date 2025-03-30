@@ -42,7 +42,7 @@
 				flex-1
 				basis-[100%]
 				flex-wrap
-				rounded
+				rounded-sm
 				gap-2
 				px-2
 			`,
@@ -128,13 +128,13 @@
 						absolute
 						-inset-x-px
 						z-10
-						rounded-b
+						rounded-b-sm
 						border-accent-500
 						border
 						top-full
 					`,
 					!border && `
-						rounded
+						rounded-sm
 					`,
 					($.suggestionsAttrs as any)?.class,
 				)"

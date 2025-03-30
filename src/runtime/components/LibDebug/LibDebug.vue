@@ -4,7 +4,7 @@
 		dark:text-bg
 		flex
 		flex-col
-		rounded
+		rounded-sm
 		border
 		border-danger-500
 		p-2

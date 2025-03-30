@@ -5,7 +5,7 @@
 			input
 			flex-1
 			grow-[999999]
-			rounded
+			rounded-sm
 			px-1
 			focus-outline
 			min-w-[2rem]

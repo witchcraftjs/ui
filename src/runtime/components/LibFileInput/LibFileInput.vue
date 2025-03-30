@@ -9,7 +9,7 @@
 		focus-outline-within
 		transition-[border-color,box-shadow]
 		ease-out`,
-		compact && `rounded`,
+		compact && `rounded-sm`,
 		!compact && `flex w-full flex-col items-center gap-2 rounded-xl  p-2 `,
 		errors.length > 0 && errorFlashing && `border-danger-400`,
 		( $.wrapperAttrs as any ).class
@@ -88,8 +88,8 @@
 				flex-initial
 				flex-wrap
 				items-center
-				gap-2 rounded border border-neutral-400
-				shadow-sm
+				gap-2 rounded-sm border border-neutral-400
+				shadow-xs
 				shadow-neutral-800/20
 			"
 			v-for="entry of files"
@@ -124,7 +124,7 @@
 					<icon><i-fa6-regular-file class="text-4xl opacity-50"/></icon>
 				</div>
 			</div>
-			<div class="filename min-w-0 flex-1 basis-0 truncate break-all rounded p-1 text-sm" :title="entry.file.name">{{ entry.file.name }}</div>
+			<div class="filename min-w-0 flex-1 basis-0 truncate break-all rounded-sm p-1 text-sm" :title="entry.file.name">{{ entry.file.name }}</div>
 		</div>
 
 		<div class="flex-1"/>
@@ -264,4 +264,3 @@ interface Props
 	Partial<WrapperTypes>,
 	RealProps { }
 </script>
-

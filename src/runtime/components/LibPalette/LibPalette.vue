@@ -3,13 +3,13 @@
 	<div class="container mx-auto ">
 		<div class="grid grid-cols-11 gap-2 gap-y-10 px-10">
 			<template v-for="color, i in colors" :key="color">
-				<div :class="`h-10 ${color} rounded flex items-center justify-center text-fg dark:text-bg`">{{ [5, 16, 27, 38, 49].includes(i) ? 'Text':'' }}</div>
+				<div :class="`h-10 ${color} rounded-sm flex items-center justify-center text-fg dark:text-bg`">{{ [5, 16, 27, 38, 49].includes(i) ? 'Text':'' }}</div>
 			</template>
 		</div>
 		<!-- <div class="flex flex-col">
 				<template v-for="color in ['green', 'yellow', 'red', 'blue', 'neutral']" :key="color">
 					<div class="grid grid-cols-11 gap-2 gap-y-10 px-10">
-						<div :class="`h-10 bg-${color}-${num} rounded`" v-for="num in ['50', '100', '200', '300', '400', '500', '600', '700', '800', '900', '950']" :key="num"/>
+						<div :class="`h-10 bg-${color}-${num} rounded-sm`" v-for="num in ['50', '100', '200', '300', '400', '500', '600', '700', '800', '900', '950']" :key="num"/>
 					</div>
 				</template>
 			</div> -->

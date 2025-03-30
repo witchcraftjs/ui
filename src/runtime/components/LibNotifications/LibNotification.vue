@@ -7,7 +7,7 @@
 		dark:text-bg
 		border
 		border-neutral-400
-		rounded
+		rounded-sm
 		focus-outline
 		flex-flex-col
 		gap-2
@@ -24,7 +24,7 @@
 			tabindex="0"
 			class="title
 				focus-outline flex
-				rounded
+				rounded-sm
 				font-bold
 			"
 		>

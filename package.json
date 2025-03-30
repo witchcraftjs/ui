@@ -51,20 +51,8 @@
 			"types": "./dist/runtime/build/*.d.ts",
 			"import": "./dist/runtime/build/*"
 		},
-		"./tailwind": {
-			"types": "./dist/runtime/tailwind/index.d.ts",
-			"import": "./dist/runtime/tailwind/index.js"
-		},
-		"./tailwind/*": {
-			"types": "./dist/runtime/tailwind/*.d.ts",
-			"import": "./dist/runtime/tailwind/*"
-		},
-		"./base.css": {
-			"import": "./src/runtime/assets/base.css"
-		},
-		"./style.css": {
-			"import": "./src/runtime/assets/style.css"
-		},
+		"./style.css": "./src/runtime/assets/style.css",
+		"./base.css": "./src/runtime/assets/base.css",
 		"./nuxt": {
 			"import": "./dist/module.mjs",
 			"require": "./dist/module.cjs"
@@ -72,16 +60,14 @@
 		"./types": {
 			"types": "./src/types/index.d.ts",
 			"import": "./src/types/index.js"
-		},
-		"./tailwind-colors.config.ts": "./tailwind-colors.config.ts",
-		"./tailwind.config.ts": "./tailwind.config.ts"
+		}
 	},
 	"unbuild": {
 		"failOnWarn": false
 	},
 	"scripts": {
 		"//prepare": "echo Needed so that if we pull the package from git it will get built and installed properly.",
-		"prepare": "husky && pnpm build",
+		"prepare": "husky && pnpm gen:theme && pnpm build",
 		"build": "nuxt-module-build prepare && nuxt-module-build build && nuxi generate playground",
 		"dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
 		"dev": "nuxi dev playground",
@@ -100,17 +86,14 @@
 		"lint": "pnpm lint:types && pnpm lint:eslint && pnpm lint:imports",
 		"//actions:debug": "echo For debugging github build action locally with nektos/act. Requires act and docker. Note: Cache will never work locally because of https://github.com/nektos/act/issues/285",
 		"actions:debug": "act -r -v -j release",
-		"gen:exports": "indexit update --ignore **.d.ts **.stories.ts **.vue -o '${path}.js'"
+		"gen:exports": "indexit update --ignore **.d.ts **.stories.ts **.vue -o '${path}.js'",
+		"gen:theme": "bun src/runtime/build/generateTheme.ts"
 	},
 	"peerDependencies": {
-		"@nuxtjs/tailwindcss": "^6.7.0",
-		"tailwindcss": "^3.3.2",
+		"tailwindcss": "^4.0.17",
 		"vue": "^3.2.47"
 	},
 	"peerDependenciesMeta": {
-		"@nuxtjs/tailwindcss": {
-			"optional": true
-		},
 		"tailwindcss": {
 			"optional": true
 		},
@@ -120,17 +103,18 @@
 	},
 	"dependencies": {
 		"@alanscodelog/utils": "^4.1.0",
+		"@egoist/vue-to-react": "^1.2.0",
 		"@iconify/json": "^2.2.221",
 		"@nuxt/kit": "^3.11.2",
 		"@nuxt/schema": "^3.11.2",
 		"@nuxt/types": "^2.17.3",
-		"@nuxtjs/tailwindcss": "^6.12.0",
+		"@tailwindcss/vite": "^4.1.0",
 		"@witchcraft/nuxt-utils": "^0.0.0",
 		"colord": "^2.9.3",
-		"colorjs.io": "^0.4.3",
+		"colorjs.io": "0.6.0-alpha.1",
 		"defu": "^6.1.4",
 		"fast-glob": "^3.3.2",
-		"metamorphosis": "^0.4.0",
+		"metamorphosis": "^0.4.1",
 		"tailwind-merge": "^2.3.0",
 		"unplugin-icons": "^0.19.0",
 		"unplugin-vue-components": "^0.27.0",
@@ -146,19 +130,20 @@
 		"@commitlint/cli": "^19.3.0",
 		"@nuxt/eslint-config": "^0.5.7",
 		"@rollup/plugin-node-resolve": "^15.2.3",
-		"@storybook/addon-a11y": "^8.1.10",
-		"@storybook/addon-actions": "^8.1.10",
-		"@storybook/addon-essentials": "^8.1.10",
-		"@storybook/addon-interactions": "^8.1.10",
-		"@storybook/addon-links": "^8.1.10",
-		"@storybook/addon-storysource": "^8.1.10",
-		"@storybook/blocks": "^8.1.10",
-		"@storybook/manager-api": "^8.1.10",
-		"@storybook/test": "^8.1.10",
+		"@storybook/addon-a11y": "^8.6.11",
+		"@storybook/addon-actions": "^8.6.11",
+		"@storybook/addon-essentials": "^8.6.11",
+		"@storybook/addon-interactions": "^8.6.11",
+		"@storybook/addon-links": "^8.6.11",
+		"@storybook/addon-storysource": "^8.6.11",
+		"@storybook/blocks": "^8.6.11",
+		"@storybook/manager-api": "^8.6.11",
+		"@storybook/test": "^8.6.11",
 		"@storybook/test-runner": "^0.19.1",
-		"@storybook/vue3": "^8.1.10",
-		"@storybook/vue3-vite": "^8.1.10",
-		"@types/node": "^20.12.12",
+		"@storybook/vue3": "^8.6.11",
+		"@storybook/vue3-vite": "^8.6.11",
+		"@tailwindcss/postcss": "^4.1.2",
+		"@types/node": "^22.13.17",
 		"@vitejs/plugin-vue": "^5.0.4",
 		"@vue/runtime-core": "^3.4.27",
 		"@vue/runtime-dom": "^3.4.27",
@@ -170,15 +155,9 @@
 		"husky": "^9.0.11",
 		"indexit": "2.1.0-beta.3",
 		"madge": "^8.0.0",
-		"postcss": "^8.4.38",
-		"postcss-comment": "^2.0.0",
-		"postcss-import": "^16.1.0",
-		"postcss-nesting": "^12.1.5",
-		"react": "^18.3.1",
-		"react-dom": "^18.3.1",
 		"semantic-release": "^24.1.2",
-		"storybook": "^8.1.10",
-		"tailwindcss": "^3.4.3",
+		"storybook": "^8.6.11",
+		"tailwindcss": "^4.1.0",
 		"ts-node": "^10.9.2",
 		"typescript": "^5.4.5",
 		"vite": "^6.0.2",
@@ -194,9 +173,7 @@
 	"files": [
 		"src",
 		"dist",
-		"types",
-		"tailwind.config.ts",
-		"tailwind-colors.config.ts"
+		"types"
 	],
 	"release": {
 		"extends": [

@@ -117,7 +117,7 @@ const commonClasses = `
 	border-b-2
 	border-transparent
 	transition-all
-	outlined:rounded
+	outlined:rounded-sm
 `
 const pageClasses = `
 	${commonClasses}

@@ -32,10 +32,10 @@
 			[&_td.first-col]:border-l
 		`,
 	rounded &&`
-			[&_td.br]:rounded-br
-			[&_td.bl]:rounded-bl
-			[&_td.tr]:rounded-tr
-			[&_td.tl]:rounded-tl
+			[&_td.br]:rounded-br-sm
+			[&_td.bl]:rounded-bl-sm
+			[&_td.tr]:rounded-tr-sm
+			[&_td.tl]:rounded-tl-sm
 		`
 	, ($attrs as any).class)"
 	v-resizable-cols="resizableOptions"

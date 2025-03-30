@@ -11,7 +11,7 @@
 			px-2
 			grow-[999999]
 			focus-outline-no-offset
-			rounded
+			rounded-sm
 		`,
 		border &&`
 			border border-neutral-500

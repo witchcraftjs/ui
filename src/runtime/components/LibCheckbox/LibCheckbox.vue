@@ -34,7 +34,7 @@
 				appearance-none
 				border
 				border-accent-600
-				rounded
+				rounded-sm
 				aspect-square
 				relative
 				checked:after:content
@@ -44,7 +44,7 @@
 				checked:after:border-2
 				checked:after:border-bg
 				dark:checked:after:border-fg
-				checked:after:rounded
+				checked:after:rounded-sm
 				checked:after:top-0
 				checked:after:left-0
 				checked:after:bg-accent-700

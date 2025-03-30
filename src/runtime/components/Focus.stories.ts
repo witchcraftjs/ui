@@ -17,11 +17,11 @@ const meta: Meta = {
 const template = `
 			<div class="focus-outline-no-offset border border-accent-600" tabindex="0">focus-outline-no-offset (outlined i.e. outlined-focus-visible)</div>
 			<div class="focus-outline border border-accent-600" tabindex="0">focus-outline (outlined i.e. outlined-focus-visible)</div>
-			<div class="outline-none outlined-focus:border-danger-500 border border-accent-600" tabindex="0">outlined-focus</div>
-			<div class="outline-none outlined-within:border-danger-500 border border-accent-600" >
+			<div class="outline-hidden outlined-focus:border-danger-500 border border-accent-600" tabindex="0">outlined-focus</div>
+			<div class="outline-hidden outlined-within:border-danger-500 border border-accent-600" >
 				outlined-within<div tabindex="0">Inner</div>
 			</div>
-			<div class="outline-none focus:border-danger-500 border border-accent-600" tabindex="0">Has Manual Focus Classes</div>
+			<div class="outline-hidden focus:border-danger-500 border border-accent-600" tabindex="0">Has Manual Focus Classes</div>
 		`
 export default meta
 type Story = StoryObj<typeof NAME>

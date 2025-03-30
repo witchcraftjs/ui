@@ -7,7 +7,7 @@
 			whitespace-nowrap
 			overflow-x-scroll
 			scrollbar-hidden
-			rounded
+			rounded-sm
 			flex
 			text-fg
 			relative
@@ -24,11 +24,8 @@
 			after:transition-all
 			before:shadow-inner
 			before:shadow-black/50
-			before:rounded
+			before:rounded-sm
 			before:bg-bars-gradient
-			before:bars-bg-accent-700
-			before:bars-fg-accent-800
-			before:bars-angle-[-45deg]
 			before:animate-[slide_10s_linear_infinite]
 			before:[background-size:15px_15px]
 			before:absolute

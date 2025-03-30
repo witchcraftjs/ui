@@ -5,7 +5,6 @@ import Icons from "unplugin-icons/vite"
 import Components from "unplugin-vue-components/vite"
 
 // workaround for esm/ts import issues
-import postcss from "./postcss.config.js"
 import { unpluginIconViteOptions } from "./src/runtime/build/unpluginIconViteOptions.js"
 
 export default defineConfig({
@@ -38,7 +37,6 @@ export default defineConfig({
 		emptyOutDir: false,
 	},
 },{
-	css: { postcss },
 	server: {
 		port: 3001,
 	},

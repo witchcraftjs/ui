@@ -39,7 +39,7 @@
 				group-focus:text-accent-500
 				focus:text-accent-500`,
 			border && `
-				rounded
+				rounded-sm
 				border-neutral-400
 				border
 				focus:border-accent-400

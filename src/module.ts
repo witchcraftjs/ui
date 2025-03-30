@@ -1,4 +1,4 @@
-import { crop, type DeepPartial } from "@alanscodelog/utils"
+import { crop, indent } from "@alanscodelog/utils"
 import {
 	addComponent,
 	addImports,
@@ -9,10 +9,11 @@ import {
 	installModule,
 	useLogger,
 } from "@nuxt/kit"
+import tailwindcss from "@tailwindcss/vite"
 import { addImportsCustom, addTailwindContents , globFiles } from "@witchcraft/nuxt-utils/utils"
 import { defu } from "defu"
 import fs from "fs"
-import { createTailwindPlugin } from "metamorphosis/tailwind"
+import { themeAsTailwindCss } from "metamorphosis/tailwind"
 import { join } from "path"
 import { type Config as TwConfig } from "tailwindcss"
 import IconsResolver from "unplugin-icons/resolver"
@@ -21,12 +22,11 @@ import Icons from "unplugin-icons/vite"
 import ViteComponents from "unplugin-vue-components/vite"
 
 import { unpluginIconViteOptions } from "./runtime/build/unpluginIconViteOptions.js"
-import { config as twConfig } from "./runtime/tailwind/config.js"
-import { themePluginOpts } from "./runtime/tailwind/themePluginOpts.js"
+import { themeConvertionOpts } from "./runtime/tailwind/themeConvertionOpts.js"
 import { theme } from "./runtime/theme.js"
 const knownDirectives = ["vExtractRootEl", "vResizableCols", "vResizeObserver", "vResizableCols"] as const
 
-const { resolve } = createResolver(import.meta.url)
+const { resolve, resolvePath } = createResolver(import.meta.url)
 
 const componentsInfo: { name: string, filepath: string }[] = globFiles([
 	`${resolve("./runtime/components")}/**/*.vue*`,
@@ -59,6 +59,10 @@ export interface ModuleOptions {
 	 */
 	componentPrefix: string
 	debug?: boolean
+	/**
+	 * @default "~/assets/css/tailwind.css"
+	 */
+	mainCssFile?: string
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -68,12 +72,13 @@ export default defineNuxtModule<ModuleOptions>({
 	},
 	defaults: {
 		includeUnpluginIconsPlugins: true,
-		directives: [...knownDirectives],
+		directives: [ ...knownDirectives ],
 		globalComponents: [
 			...componentsInfo.map(_ => _.name.slice("PREFIX".length)),
 		],
 		componentPrefix: "W",
-		debug: true
+		debug: true,
+		mainCssFile: "~/assets/css/tailwind.css",
 	},
 	async setup(options, nuxt) {
 		const moduleName = "@witchcraft/ui"
@@ -100,57 +105,21 @@ export default defineNuxtModule<ModuleOptions>({
 			}
 		)
 
-		
-		nuxt.hook("tailwindcss:config" as any, async (config: DeepPartial<TwConfig>) => {
-			config.darkMode = twConfig.darkMode
-			config.theme ??= {}
-			config.theme.configViewer = {
-			// https://github.com/rogden/tailwind-config-viewer/issues/84
-				themeReplacements: Object.fromEntries(
-					Object.entries(theme.css)
-						.map(([key, value]) => [`rgb(var(${key}) / <alpha-value>)`, `rgb(${value as string})`]),
-				),
-			}
-			const contents = [
-				...componentsInfo.map(_ => _.filepath)
-			]
-			logger.info(`Adding Tailwind Contents:\n${contents.join("\n")}`)
-			addTailwindContents(config, contents)
-		})
 
-		// nuxt.options.css.push(resolve("runtime/assets/style.css"))
-		// nuxt.options.css.push(resolve("runtime/assets/base.css"))
-		const customTailwindConfigTemplate = addTemplate({
-			filename: "custom-tailwind.config.mjs",
+		const contents = [
+			...componentsInfo.map(_ => _.filepath)
+		]
+		addTemplate({
+			filename: "witchcraft-ui.css",
 			write: true,
-			getContents: () => `
-			import { plugin as libraryPlugin } from ${JSON.stringify(resolve("./runtime/tailwind/plugin"))}
-
-			export default {
-				plugins: [
-					libraryPlugin,
-				],
-			}
+			getContents: () => crop`
+				${indent(themeAsTailwindCss(theme, themeConvertionOpts), 4)}
+				@import "@witchcraft/ui/style.css";
+				@import "@witchcraft/ui/base.css";
+				${indent(contents.map(_ => `@source "${_}";`).join("\n"), 4)}
 			`,
 		})
-
-		await installModule(
-			"@nuxtjs/tailwindcss",
-			defu(
-				{
-					config: {
-						// cannot for the life of me get this to work imported directly from the config
-						// it complain about not finding a dependency which it should be able to find (maybe it's because it's esm)
-						theme: createTailwindPlugin(theme, themePluginOpts).config!.theme
-					},
-					configPath: [
-						customTailwindConfigTemplate.dst,
-						join(nuxt.options.rootDir, "tailwind.config"),
-					],
-				},
-				(nuxt.options as any).tailwindcss
-			)
-		)
+		
 		
 		await Promise.all(filteredComponentsInfo
 			.map(async entry => addComponent({
@@ -190,13 +159,15 @@ export default defineNuxtModule<ModuleOptions>({
 					Icons({
 						...unpluginIconViteOptions,
 					}),
+					tailwindcss() as any,
 					...config.plugins,
 				]
 			}
 		})
+		nuxt.options.css.push(await resolvePath(options.mainCssFile!, nuxt.options.alias))
 		// we need to hook in first before it does, otherwise the plugins don't load correctly
 		await installModule("unplugin-icons/nuxt")
-				
+
 		// todo make names more specific
 		// addImportsDir(resolve("helpers"))
 		nuxt.options.alias["#witchcraft-ui"] = resolve("runtime")
