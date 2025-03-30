@@ -1,34 +1,41 @@
-import { Preview,Parameters } from '@storybook/vue3';
-import TestWrapper from "../src/testUtils/TestWrapper.vue"
-import {vExtractRootEl} from "../src/directives/vExtractRootEl.js"
-import "../src/assets/style.css"
+import "../src/runtime/assets/tailwind.css"
+
+// import toReact from "@egoist/vue-to-react"
+import { type Parameters,type Preview } from "@storybook/vue3"
+
+import TestWrapper from "../src/runtime/components/TestWrapper/TestWrapper.vue"
+import { vExtractRootEl } from "../src/runtime/directives/vExtractRootEl.js"
 
 
-export const parameters:Parameters = {
-	// actions: { argTypesRegex: "^on[A-Z].*" },
+export const parameters: Parameters = {
+	docs: {
+	},
 	controls: {
+		matchers: {
+			color: /(background|color)$/i,
+			date: /Date$/i,
+		},
 		controls: { expanded: true },
 	},
 	layout: "fullscreen",
 	backgrounds: {
-		default: 'default',
+		default: "default",
 		values: [
 			{
-				name: 'light',
-				value: 'var(--cGray0)',
+				name: "light",
+				value: "var(--cGray0)",
 			},
 			{
-				name: 'dark',
-				value: 'var(--cGray10)',
+				name: "dark",
+				value: "var(--cGray10)",
 			},
 			{
 				name: "default",
-				value: 'var(--cBg)',
+				value: "var(--cBg)",
 			},
 		],
 	},
 }
-
 
 
 const preview: Preview = {
@@ -38,17 +45,18 @@ const preview: Preview = {
 		},
 	},
 	decorators: [(story, { args }) => ({
-	directives: {vExtractRootEl},
-	components: { TestWrapper, story },
-	setup: () => ({ args }),
-	template: `
+		directives: { vExtractRootEl },
+		components: { TestWrapper, story },
+		setup: () => ({ args }),
+		template: `
 			<test-wrapper :outline="args.outline"><story/></test-wrapper>
 		`,
 	})],
 	args: {
-		outline:true,
+		outline: true,
 	},
 
-	tags: ["autodocs"]
-};
-export default preview;
+	// not working right, prepareForInline not working either, and neither is inlineStories false
+	// tags: ["autodocs"]
+}
+export default preview

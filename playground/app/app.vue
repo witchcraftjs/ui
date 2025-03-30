@@ -5,6 +5,7 @@
 	<div class="test">Test</div>
 	<div class="test2">Test</div>
 	<div class="bg-transparency-squares">Test</div>
+	<WColorPicker/>
 </WRoot>
 </template>
 

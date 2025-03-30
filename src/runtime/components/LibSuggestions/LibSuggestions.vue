@@ -45,16 +45,13 @@
 
 <script setup lang="ts" generic="TSuggestion extends string | object">
 
-import { isBlank } from "@alanscodelog/utils/isBlank.js"
-import { isObject } from "@alanscodelog/utils/isObject.js"
-import type { MakeRequired } from "@alanscodelog/utils/types"
-import { computed, type HTMLAttributes,type PropType, reactive, ref, toRef, toRefs, useAttrs, watch, watchPostEffect } from "vue"
+import { type HTMLAttributes,reactive, ref } from "vue"
 
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
 import { useSuggestions } from "../../composables/useSuggestions.js"
 import { hasModifiers } from "../../helpers/hasModifiers.js"
 import { twMerge } from "../../utils/twMerge.js"
-import { type BaseInteractiveProps, baseInteractiveProps, baseInteractivePropsDefaults, getFallbackId,type LabelProps, type LinkableByIdProps, type MultiValueProps, type SuggestionsEmits, type SuggestionsProps, type WrapperProps } from "../shared/props.js"
+import { type BaseInteractiveProps, baseInteractivePropsDefaults, getFallbackId,type LabelProps, type LinkableByIdProps, type MultiValueProps, type SuggestionsEmits, type SuggestionsProps, type WrapperProps } from "../shared/props.js"
 
 defineOptions({
 	name: "lib-suggestions",
