@@ -1,7 +1,7 @@
 <template>
 <lib-button
 	v-bind="{...$attrs, class:undefined}"
-	:class="!$attrs.unstyle && twMerge(`
+	:class="!($attrs as any).unstyle && twMerge(`
 			rounded-full
 			after:rounded-full
 		`,
@@ -93,6 +93,7 @@ interface Props
 	& TailwindClassProp
 	& {
 		disabled?: boolean
+		unstyle?: boolean
 	}>,
 	RealProps
 { }

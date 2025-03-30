@@ -1,7 +1,7 @@
 <template>
 <button
 	:id="id ?? fallbackId"
-	:class="!unstyle && twMerge(`
+	:class="!($attrs as any).unstyle && twMerge(`
 			button
 			flex
 			cursor-pointer

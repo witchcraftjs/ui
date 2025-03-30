@@ -25,7 +25,7 @@
 	>
 		<input
 			:id="id ?? fallbackId"
-			:class="!unstyle && twMerge(`
+			:class="!($attrs as any).unstyle && twMerge(`
 				focus-outline-no-offset
 				m-0
 				p-[0.4em]

@@ -2,7 +2,7 @@
 <!-- we use data-disabled because labels have no disabled property technically -->
 <label
 	:id="`label-${id ?? fallbackId}`"
-	:class="!unstyled && twMerge(`
+	:class="!($attrs as any).unstyle && twMerge(`
 			pr-0
 			text-sm
 		`,
