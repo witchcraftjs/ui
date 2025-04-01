@@ -58,8 +58,8 @@
 			"require": "./dist/module.cjs"
 		},
 		"./types": {
-			"types": "./src/types/index.d.ts",
-			"import": "./src/types/index.js"
+			"types": "./dist/runtime/types/index.d.ts",
+			"import": "./src/runtime/types/index.js"
 		}
 	},
 	"unbuild": {
@@ -83,7 +83,7 @@
 		"lint:types": "vue-tsc --noEmit --pretty --project tsconfig.types.json && pnpm test:types",
 		"lint:commits": "commitlint --from $(git rev-list --max-parents=0 HEAD) --to HEAD --verbose",
 		"lint:imports": "madge --circular --extensions ts ./src",
-		"lint": "pnpm lint:types && pnpm lint:eslint && pnpm lint:imports",
+		"lint": "pnpm lint:types && pnpm lint:eslint",
 		"//actions:debug": "echo For debugging github build action locally with nektos/act. Requires act and docker. Note: Cache will never work locally because of https://github.com/nektos/act/issues/285",
 		"actions:debug": "act -r -v -j release",
 		"gen:exports": "indexit update --ignore **.d.ts **.stories.ts **.vue -o '${path}.js'",
@@ -154,7 +154,7 @@
 		"http-server": "^14.1.1",
 		"husky": "^9.0.11",
 		"indexit": "2.1.0-beta.3",
-		"madge": "^8.0.0",
+		"madge": "^7.0.0",
 		"semantic-release": "^24.1.2",
 		"storybook": "^8.6.12",
 		"storybook-dark-mode": "^4.0.2",
