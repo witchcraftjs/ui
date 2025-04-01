@@ -47,10 +47,10 @@
                     enterShell = ''
                       export NPM_TOKEN=$(cat $SECRETS_DIR/NPM_TOKEN)
                       export GH_TOKEN=$(cat $SECRETS_DIR/GH_TOKEN)
-                      echo "node `${pkgs.nodejs}/bin/node --version`"
+                      echo "node `${pkgs.nodejs_23}/bin/node --version`"
                       echo "pnpm `${pkgs.nodePackages.pnpm}/bin/pnpm --version`"
-echo PLAYWRIGHT_BROWSERS_PATH $PLAYWRIGHT_BROWSERS_PATH;
-echo PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH $PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH;
+                      echo PLAYWRIGHT_BROWSERS_PATH $PLAYWRIGHT_BROWSERS_PATH;
+                      echo PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH $PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH;
                     '';
                   }
                 ];
