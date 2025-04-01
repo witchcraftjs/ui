@@ -3,7 +3,7 @@ import "../src/runtime/assets/tailwind.css"
 // import toReact from "@egoist/vue-to-react"
 import { type Parameters,type Preview } from "@storybook/vue3"
 
-import TestWrapper from "../src/runtime/components/TestWrapper/TestWrapper.vue"
+import LibRoot from "../src/runtime/components/LibRoot/LibRoot.vue"
 import { vExtractRootEl } from "../src/runtime/directives/vExtractRootEl.js"
 
 
@@ -52,10 +52,10 @@ const preview: Preview = {
 	},
 	decorators: [(story, { args }) => ({
 		directives: { vExtractRootEl },
-		components: { TestWrapper, story },
+		components: { LibRoot, story },
 		setup: () => ({ args }),
 		template: `
-			<test-wrapper :outline="args.outline"><story/></test-wrapper>
+			<lib-root :test-wrapper-mode="true" :outline="args.outline"><story/></lib-root>
 		`,
 	})],
 	args: {
