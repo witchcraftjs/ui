@@ -73,7 +73,7 @@ export const Primary: Story = {
 				<label>Auto Rotate Position</label>
 				<input type="checkbox" v-model="autoRotatePos">
 			</div>
-			<div class="test" style="display:grid;height:80vh;padding:50px;border:1px solid black;">
+			<div class="test bg-transparency-squares" style="display:grid;height:80vh;padding:50px;border:1px solid black;">
 
 			<lib-popup v-model="value" v-bind="{ ...args, width:undefined, }" >
 			{{value}}
@@ -81,13 +81,13 @@ export const Primary: Story = {
 					<lib-button :style="buttonStyle" @click="value = !value" v-extract-root-el="extractEl">Toggle Popup</lib-button>
 				</template>
 				<template #popup="{position, extractEl}">
-					<lib-debug
-						v-extract-root-el="extractEl"
-						:style="(args.width ? \`width: \${args.width};\` : '') + (args.height ? \`height: \${args.height};\` : '')"
-						class="bg-bg dark:bg-fg"
-					>
-						{{ position }}
-					</lib-debug>
+						<lib-debug
+							v-extract-root-el="extractEl"
+							:style="(args.width ? \`width: \${args.width};\` : '') + (args.height ? \`height: \${args.height};\` : '')"
+							class="bg-bg dark:bg-fg w-[500px]"
+						>
+							{{ position }}
+						</lib-debug>
 				</template>
 			</lib-popup>
 			</div>

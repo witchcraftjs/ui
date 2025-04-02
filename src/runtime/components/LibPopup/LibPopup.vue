@@ -40,28 +40,27 @@
 
 <script setup lang="ts">
 // eslint-disable-next-line simple-import-sort/imports
-import { onMounted, type PropType, ref, useAttrs, watch , type HTMLAttributes } from "vue"
+import { onMounted, nextTick, ref, useAttrs, watch , type HTMLAttributes } from "vue"
 import { getFallbackId, type LinkableByIdProps,type TailwindClassProp } from "../shared/props.js"
 
 import { twMerge } from "../../utils/twMerge.js"
 import { castType } from "@alanscodelog/utils/castType.js"
 import { isArray } from "@alanscodelog/utils/isArray.js"
-import type { IPopupReference, PopupPosition, PopupPositioner, PopupPositionModifier, PopupSpaceInfo, SimpleDOMRect } from "../../types/index.js"
+import type { IPopupReference, PopupPosition, PopupPositioner, PopupPositionModifier, SimpleDOMRect } from "../../types/index.js"
 
 const fallbackId = getFallbackId()
 // eslint-disable-next-line no-use-before-define
 const props = withDefaults(defineProps<Props>(), {
 	useBackdrop: true,
 	// vue is getting confused when the prop type can also be a function
-	preferredHorizontal: () => ["center", "right", "left", "either"] as any as ["center", "right", "left", "either"],
-	preferredVertical: () => ["top", "bottom", "either"] as any as ["top", "bottom", "either"],
+	preferredHorizontal: () => ["center-most", "either"] satisfies Props["preferredHorizontal"],
+	preferredVertical: () => ["top", "bottom", "either"] satisfies Props["preferredVertical"] ,
 	avoidRepositioning: false,
 })
 const $attrs = useAttrs()
 defineOptions({ name: "lib-popup" })
 
 
-// todo, can we have transitions?
 const dialogEl = ref<HTMLDialogElement | null>(null)
 const popupEl = ref<IPopupReference | null>(null)
 const buttonEl = ref<IPopupReference | null>(null)
@@ -77,19 +76,16 @@ let isOpen = false
  *
  * This returns a modified rect that makes more logical sense.
  */
-const getDialogBoundingRect = (el: HTMLElement): SimpleDOMRect => {
-	const rect = el.getBoundingClientRect()
-	return {
-		x: 0,
-		y: 0,
-		width: rect.left + rect.right,
-		height: rect.top + rect.bottom,
-		top: 0,
-		bottom: 0,
-		left: 0,
-		right: 0,
-	}
-}
+const getDialogBoundingRect = (): SimpleDOMRect => ({
+	x: 0,
+	y: 0,
+	width: window.innerWidth,
+	height: window.innerHeight,
+	top: 0,
+	bottom: 0,
+	left: 0,
+	right: 0,
+})
 let lastButtonElPos: SimpleDOMRect | undefined
 const recompute = (force: boolean = false): void => {
 	requestAnimationFrame(() => {
@@ -109,7 +105,7 @@ const recompute = (force: boolean = false): void => {
 		const el = buttonEl.value?.getBoundingClientRect()
 		const bg = backgroundEl.value?.getBoundingClientRect() ?? (
 			props.useBackdrop
-				? getDialogBoundingRect(dialogEl.value)
+				? getDialogBoundingRect()
 				: document.body.getBoundingClientRect()
 		)
 		const popup = popupEl.value.getBoundingClientRect()
@@ -384,6 +380,8 @@ type RealProps =
 	/**
 	 * The preferred horizontal positioning of the popup. The first position in the array to fit is used.
 	 *
+	 * All elements need to have box-sizing: border-box set. Also note that while the component should work with dynamic popup sizes, in practice there's issues with the positioning being slightly off. Giving the popup element a static size is better. If you need margins around the popup, this can be done with a wrapper element + padding.
+	 *
 	 * The positions `right`/`left`/`top`/`bottom` are relative to the opposite side of the button element so as to try not to cover the triggering button.
 	 *
 	 * So positioning `right` and `left` look like this:
@@ -416,7 +414,7 @@ type RealProps =
 	 *
 	 * You can also specify a function instead which is given some additional information regarding the space around the button reference element. It should a number for the x position (or y, if preferredVertical).
 	 *
-	 * If you only need to slightn	the position, you can use the `modifyPosition` option instead.
+	 * If you only need to slightly modify	the position, you can use the `modifyPosition` option instead.
 	 */
 	preferredHorizontal?: ("center" | "right" | "left" | "either" | "center-screen" | "right-most" | "left-most" | "center-most")[] | PopupPositioner
 	/** See `preferredHorizontal`. */
