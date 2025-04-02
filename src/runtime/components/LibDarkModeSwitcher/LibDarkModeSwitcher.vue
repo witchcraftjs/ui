@@ -54,7 +54,7 @@ const emit = defineEmits<{
 const $attrs = useAttrs()
 
 // eslint-disable-next-line no-use-before-define
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
 	autoLabel: () => ({
 		light: "Light Mode",
 		system: "System Mode",
@@ -80,11 +80,10 @@ onMounted(() => {
 export default {
 	name: "lib-dark-mode-switcher"
 }
-type RealProps =
- {
- 	/** The auto labels are shown by default. You can disable them by passing false or pass an object with your own labels. */
- 	autoLabel?: false | Record<"system" | "dark" | "light", string>
- }
+type RealProps = {
+	/** The auto labels are shown by default. You can disable them by passing false or pass an object with your own labels. */
+	autoLabel?: false | Record<"system" | "dark" | "light", string>
+}
 
 interface Props
 	extends

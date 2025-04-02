@@ -6,7 +6,7 @@ export default defineNuxtConfig({
 	},
 	modules: [
 		"../src/module"
-		// or "@witchcraft/ui", // either work
+		// "@witchcraft/ui/nuxt", // either work
 	],
 	witchcraftUi: {
 	},

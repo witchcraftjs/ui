@@ -28,7 +28,7 @@ export const useDarkMode = ({
 	const systemDarkMode = ref(false)
 	const manualDarkMode = ref<boolean | undefined>(undefined)
 	
-	if (useLocalStorage && import.meta.client) {
+	if (useLocalStorage && (import.meta as any).client) {
 		watch(manualDarkMode, () => {
 			localStorage.setItem(defaultLocalStorageKey, manualDarkMode.value ? "true" : "false")
 		})
@@ -122,11 +122,13 @@ export type DarkModeOptions = {
 	darkModeOrder?: readonly ("system" | "dark" | "light")[]
 }
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export interface DarkModeCommands {
 	setDarkMode: (value: "dark" | "light" | "system") => void
 	cycleDarkMode: () => void
 }
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export interface DarkModeState {
 	/** Whether the dark mode should be enabled or not */
 	darkMode: Ref<boolean>

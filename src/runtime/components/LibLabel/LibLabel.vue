@@ -32,8 +32,8 @@ defineOptions({
 
 const fallbackId = getFallbackId()
 
-// eslint-disable-next-line no-use-before-define
-const props = withDefaults(defineProps<Props>(), {
+ 
+withDefaults(defineProps<Props>(), {
 	id: "",
 	unstyled: undefined,
 	valid: true,
@@ -61,3 +61,6 @@ interface Props
 {}
 </script>
 
+<script lang="ts">
+
+</script>

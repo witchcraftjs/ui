@@ -1,22 +1,16 @@
-declare module "@vue/runtime-dom" {
-	// eslint-disable-next-line @typescript-eslint/naming-convention
-	export interface HTMLAttributes {
+/* eslint-disable @typescript-eslint/consistent-indexed-object-style */
+/* eslint-disable @typescript-eslint/naming-convention */
+export {}
+
+declare module "vue" {
+	interface HTMLAttributes {
 		// allow any data-* attr
 		[key: `data-${string}`]: any
 	}
-	export interface AriaAttributes {
+	interface AriaAttributes {
 		// some aria attributes are missing...
-		// eslint-disable-next-line @typescript-eslint/naming-convention
 		"aria-description"?: string
 	}
+	// interface ComponentCustomProps {
+	// }
 }
-
-declare module "@vue/runtime-core" {
-	// eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
-	export interface AllowedComponentProps {
-		// allow any data-* attr
-		[key: `data-${string}`]: any
-	}
-}
-
-export {}

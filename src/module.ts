@@ -10,14 +10,11 @@ import {
 	useLogger,
 } from "@nuxt/kit"
 import tailwindcss from "@tailwindcss/vite"
-import { addImportsCustom, addTailwindContents , globFiles } from "@witchcraft/nuxt-utils/utils"
+import { addImportsCustom, globFiles } from "@witchcraft/nuxt-utils/utils"
 import { defu } from "defu"
 import fs from "fs"
 import { themeAsTailwindCss } from "metamorphosis/tailwind"
-import { join } from "path"
-import { type Config as TwConfig } from "tailwindcss"
 import IconsResolver from "unplugin-icons/resolver"
-import resolver from "unplugin-icons/resolver"
 import Icons from "unplugin-icons/vite"
 import ViteComponents from "unplugin-vue-components/vite"
 
@@ -37,11 +34,13 @@ const componentsInfo: { name: string, filepath: string }[] = globFiles([
 }))
 
 declare module "@nuxt/schema" {
+	// eslint-disable-next-line @typescript-eslint/naming-convention
 	interface PublicRuntimeConfig {
 		witchcraftUi: Pick<ModuleOptions, "directives">
 	}
 }
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export interface ModuleOptions {
 /**
  * Whether to include the vite unplugin-icons plugins (pre-configured with the ui module's defaults.

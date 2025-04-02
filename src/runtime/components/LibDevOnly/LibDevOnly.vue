@@ -12,7 +12,7 @@
 			py-1
 			never-packaged
 		`,
-			$attrs.class
+			($attrs.class as string)
 		)"
 		v-bind="{...$attrs, class: undefined}"
 	>
@@ -41,5 +41,13 @@ const doShow = computed(() => props.show || injectedShow.value)
 interface Props {
 	show?: boolean
 	asChild?: boolean
+}
+
+// Not sure why nuxt's types aren't correctly getting detected
+// This should be enough to bypass the type lint error.
+declare module "vue" {
+	export interface GlobalComponents {
+		DevOnly: any
+	}
 }
 </script>

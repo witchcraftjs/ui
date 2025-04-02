@@ -1,5 +1,4 @@
 import { isArray } from "@alanscodelog/utils/isArray.js"
-import type { NuxtApp } from "@nuxt/schema"
 
 import { defineNuxtPlugin, useRuntimeConfig } from "#imports"
 
@@ -8,9 +7,9 @@ import { registerDirectives } from "../../vue/registerDirectives.js"
 
 export default defineNuxtPlugin({
 	name: "components-plugin",
-	async setup(nuxtApp: NuxtApp) {
-		const config = useRuntimeConfig().public.witchcraftComponents
-		const app = (nuxtApp as any).vueApp
+	async setup(nuxtApp): Promise<void> {
+		const config = useRuntimeConfig().public.witchcraftUi
+		const app = nuxtApp.vueApp
 		const directives = (isArray(config?.directives)
 		? (await Promise.all(config.directives.map(async (name: string) => (import(`../../directives/${name}.ts`))))).map((_: any) => Object.values(_)[0])
 		// @ts-expect-error ts filetype needed for nuxt

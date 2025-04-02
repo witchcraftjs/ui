@@ -44,6 +44,7 @@ export type ResizableOptions = {
 	/** The selector to use for the cells. "tr > td" by default. */
 	selector: string
 }
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export type TableColConfig<T = {}> = Record<keyof T, { name?: string, resizable?: boolean }>
 
 export type ResizeCallback = (_rect: DOMRectReadOnly, el: Element) => void
@@ -74,7 +75,7 @@ export type ScrollNearContainerEdgesOptions = {
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export type SimpleDOMRect = Omit<DOMRect, "toJSON">
-// eslint-disable-next-line @typescript-eslint/naming-convention
+ 
 export interface IPopupReference { getBoundingClientRect: () => SimpleDOMRect }
 export type PopupPosition = { x: number, y: number, maxWidth?: number, maxHeight?: number }
 export type PopupSpaceInfo = {

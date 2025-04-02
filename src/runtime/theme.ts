@@ -1,4 +1,3 @@
-import { ControlVar, Units } from "metamorphosis"
 import { baseTheme } from "metamorphosis/BaseTheme.js"
 import type { Theme } from "metamorphosis/Theme.js"
 

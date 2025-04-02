@@ -2,6 +2,7 @@
 import type { Meta, StoryObj } from "@storybook/vue3"
 
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 const meta: Meta<{}> = {
 	title: "Other/Reset",
 	args: {
@@ -10,6 +11,7 @@ const meta: Meta<{}> = {
 }
 
 export default meta
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 type Story = StoryObj<{}>
 
 

@@ -1,4 +1,4 @@
-import { onBeforeUnmount, onMounted, provide, type Ref,ref } from "vue"
+import { onBeforeUnmount, onMounted, provide, ref } from "vue"
 
 const injectionKey = Symbol("showDevOnly")
 /**
@@ -7,11 +7,11 @@ const injectionKey = Symbol("showDevOnly")
 	* Communicates with the dev only component to show/hide it depending on a keypress (single key, no modifiers, `F1` by default). 	*
 	*/
 export function useShowDevOnlyKey(key: string = "F1"): void {
-	if (!import.meta.dev) return
+	if (!(import.meta as any).dev) return
 	const showDevOnly = ref(false)
 	provide(injectionKey, showDevOnly)
 
-	const listener = (e: KeyboardEvent) => {
+	const listener = (e: KeyboardEvent): void => {
 		if (e.key === key && !e.ctrlKey && !e.metaKey && !e.altKey) {
 			showDevOnly.value = !showDevOnly.value
 			e.preventDefault()

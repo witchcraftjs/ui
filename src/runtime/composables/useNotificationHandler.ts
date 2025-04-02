@@ -1,11 +1,9 @@
-import { watchEffect } from "vue"
-
 import type { NotificationHandler } from "../helpers/NotificationHandler.js"
 
 let first = true
 let notificationHandler: NotificationHandler
 export const useNotificationHandler = (handler?: NotificationHandler): NotificationHandler => {
-	if (!import.meta.client) return undefined as any
+	if (!(import.meta as any).client) return undefined as any
 	if (first) {
 		first = false
 		if (handler) {

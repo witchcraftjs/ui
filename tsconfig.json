@@ -3,17 +3,11 @@
 	// ./node_modules/@alanscodelog/tsconfigs/tsconfig.json
 	// https://github.com/AlansCodeLog/tsconfigs
 	"extends": [
-		"./.nuxt/tsconfig.json",
-		"@alanscodelog/tsconfigs"
+		"@alanscodelog/tsconfigs",
+		"./.nuxt/tsconfig.json"
 	],
-	"compilerOptions": {
-		"types": [
-			"node",
-			"unplugin-icons/types/vue3",
-			"vite/client"
-		],
-	},
 	"include": [
+		"types/**/*.d.ts",
 		"src/**/*.ts",
 		"src/**/*.vue",
 		"src/**/*.js",

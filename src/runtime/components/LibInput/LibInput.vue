@@ -200,7 +200,7 @@ const $modelValue = defineModel<string>({ required: true })
 
 const fullId = computed(() => props.id ?? fallbackId)
 
-const $inputValue = defineModel<string>("inputValue")
+const $inputValue = defineModel<string>("inputValue", { default: "" })
 $inputValue.value = $modelValue.value ?? ""
 
 const canEdit = computed(() => !props.disabled && !props.readonly)

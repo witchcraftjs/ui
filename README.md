@@ -26,11 +26,10 @@ The module automatically sets up tailwind v4 and generates a custom `witchcraft-
 
 It does not install "@nuxtjs/tailwindcss" for now since it's not compatible with v4. See [#919](https://github.com/nuxt-modules/tailwindcss/issues/919).
 
-```css [~/assets/css/tailwind.css]
+```css[~/assets/css/tailwind.css]
 @import "@tailwindcss";
 @import "../../../.nuxt/witchcraft-ui.css";
 ```
-
 
 ## Icons
 
@@ -134,7 +133,7 @@ This library uses unplugin-icons to provide icons. It installs as a dependency t
 
 ### Getting Proper Types
 
-While components should be correctly typed, the library internally extends vue's `AllowedComponentProps` and `HTMLAttributes` interface to allow data-* attributes and also some missing attributes (like `aria-description`).
+While components should be correctly typed, the library internally extends vue's interfaces to allow data-* attributes and also some missing aria attributes (like `aria-description`).
 
 You might need to customize these by adding the following in a global d.ts.
 
@@ -142,25 +141,25 @@ You might need to customize these by adding the following in a global d.ts.
 // to make the component types globally available you can do:
 import { GlobalComponentTypes } from "@witchcraft/ui"
 declare module "@vue/runtime-core" {
-	export interface GlobalComponents extends GlobalComponentTypes { }
+	interface GlobalComponents extends GlobalComponentTypes { }
 }
 
-// to extend HTMLAttributes and AllowedComponentProps yourself you can do:
-declare module "@vue/runtime-dom" {
-	export interface HTMLAttributes {
+// to add more attributes yourself you can do:
+declare module "vue" {
+	interface HTMLAttributes {
 		// ...
 	}
-}
-
-declare module "@vue/runtime-core" {
-	export interface AllowedComponentProps {
+	interface AriaAttributes {
+		// ...
+	}
+	interface ComponentCustomProps {
 		// ...
 	}
 }
 export {}
 ```
 
-Note that using the strictTemplates compiler option causes weird issues with fallthrough props.
+Note that using the strictTemplates compiler option can cause weird issues with fallthrough props.
 
 
 # Development

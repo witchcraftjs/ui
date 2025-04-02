@@ -1,4 +1,5 @@
 import { globSync as glob } from "fast-glob"
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { defineBuildConfig } from "unbuild"
 
 const components = glob(["./src/runtime/components/*/**"], { onlyDirectories: true }).map(_ => _.slice("./src/".length))
