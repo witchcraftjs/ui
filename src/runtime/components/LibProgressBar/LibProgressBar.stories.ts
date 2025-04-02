@@ -10,6 +10,7 @@ import * as components from "../index.js"
 
 const meta: Meta<typeof LibProgressBar> = {
 	component: LibProgressBar,
+	title: "Components/ProgressBar",
 	args: {
 		label: "Label",
 		// @ts-expect-error .

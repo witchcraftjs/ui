@@ -11,6 +11,7 @@ import * as components from "../index.js"
 
 const meta: Meta<typeof LibPopup> = {
 	component: LibPopup,
+	title: "Components/Popup",
 	args: {
 
 	},

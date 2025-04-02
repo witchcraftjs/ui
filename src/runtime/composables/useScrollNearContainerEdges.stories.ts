@@ -5,7 +5,9 @@ import { useScrollNearContainerEdges } from "./useScrollNearContainerEdges.js"
 
 import { twMerge } from "../utils/twMerge.js"
 
-const meta = { }
+const meta = {
+	title: "Composables/ScrollNearContainerEdges",
+}
 
 export default meta
 type Story = StoryObj // & StoryObj<typeof extraArgs>
@@ -59,6 +61,10 @@ export const Primary: Story = {
 		},
 
 		template: `
+		<div>
+			<p>Scroll the container by dragging the red box (which represents the dragging mouse position).</p>
+			<p>It should drag slow, then faster as the mouse nears the edges and scroll indicators should appear on the scrolling edges.</p>
+		</div>
 		<div 
 			:class="twMerge(
 				'relative flex flex-col max-h-[300px] max-w-[300px] border-2 border-red-500',
@@ -78,7 +84,7 @@ export const Primary: Story = {
 				<div
 					@mousedown="startDrag" 
 					:style="\`top:\${pos.y}px; left:\${pos.x}px;\`"
-					class="h-[20px] w-[20px] bg-red-500 cursor-move fixed"
+					class="h-[20px] w-[20px] -ml-[10px] -mt-[10px] bg-red-500 cursor-move fixed"
 				></div>
 			</div>
 		</div>

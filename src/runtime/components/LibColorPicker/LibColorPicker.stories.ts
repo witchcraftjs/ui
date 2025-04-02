@@ -10,8 +10,9 @@ import * as components from "../index.js"
 
 const meta: Meta<typeof LibColorPicker> = {
 	component: LibColorPicker,
+	title: "Components/ColorPicker",
 	args: {
-
+		
 	},
 }
 

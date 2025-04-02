@@ -26,6 +26,7 @@ import {
 
 const meta = {
 	component: LibInput as any,
+	title: "Components/Input",
 	args: {
 		border: true,
 		label: "Some Label",

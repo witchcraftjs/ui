@@ -7,6 +7,7 @@ import * as components from "../index.js"
 
 const meta = {
 	component: components.LibCheckbox,
+	title: "Components/Checkbox",
 	args: {
 		modelValue: true,
 		label: "Label",

@@ -39,10 +39,16 @@ export const parameters: Parameters = {
 
 
 const preview: Preview = {
-	globalTypes: {
-		darkMode: {
-			// defaultValue: true, // Enable dark mode by default on all stories
+	parameters: {
+		options: {
+			storySort: {
+				order: ["Components", "Composables", "Other"],
+			},
 		},
+		// for dark mode addon
+		darkMode: {
+			current: 'dark'
+		}
 	},
 	decorators: [(story, { args }) => ({
 		directives: { vExtractRootEl },

@@ -10,6 +10,7 @@ import * as components from "../index.js"
 
 const meta: Meta<typeof LibFileInput> = {
 	component: LibFileInput,
+	title: "Components/FileInput",
 	args: {
 
 	},

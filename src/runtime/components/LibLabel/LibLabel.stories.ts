@@ -9,6 +9,7 @@ import * as components from "../index.js"
 
 const meta: Meta<typeof Label> = {
 	component: Label,
+	title: "Components/Label",
 	args: {
 		slot: "label",
 	},
@@ -25,19 +26,12 @@ export const Primary: Story = {
 		template: `
 				<lib-label v-bind="args">{{args.slot}}</lib-label>
 				<br/>
-				In flex group with input:
-				<div class="flex flex-wrap">
+				In flex col with input:
+				<div class="flex flex-col">
 					<lib-label v-bind="args">{{args.slot}}</lib-label>
 					<lib-simple-input modelValue="some input"></lib-simple-input>
 				</div>
 		`,
 	}),
-}
-export const TopStyle: Story = {
-	...Primary,
-	args: {
-		...Primary.args,
-		type: "top",
-	},
 }
 

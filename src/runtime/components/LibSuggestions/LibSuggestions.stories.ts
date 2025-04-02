@@ -10,6 +10,7 @@ import * as components from "../index.js"
 
 const meta = {
 	component: LibSuggestions,
+	title: "Components/Suggestions",
 	args: {
 		id: "some-id",
 		modelValue: "",

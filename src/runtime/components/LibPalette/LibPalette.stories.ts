@@ -10,6 +10,7 @@ import * as components from "../index.js"
 
 const meta: Meta<typeof LibPalette> = {
 	component: LibPalette,
+	title: "Components/Palette",
 	args: {
 		// theme,
 	},

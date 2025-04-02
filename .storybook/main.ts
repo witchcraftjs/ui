@@ -7,8 +7,6 @@ const config: StorybookConfig = {
 			directory: "../src/runtime/",
 			// 👇 Storybook will load all files that match this glob
 			files: "**/*.stories.*",
-			// 👇 Used when generating automatic titles for your stories
-			titlePrefix: "MyComponents",
 		},
 	],
 	addons: [
@@ -16,6 +14,9 @@ const config: StorybookConfig = {
 		"@storybook/addon-essentials",
 		"@chromatic-com/storybook",
 		"@storybook/addon-interactions",
+		// just for storybook, should not affect the theme of the compoenents
+		// which can be controlled by the test controls
+		"storybook-dark-mode"
 	],
 	framework: {
 		name: "@storybook/vue3-vite",

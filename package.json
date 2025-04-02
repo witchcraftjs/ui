@@ -157,6 +157,7 @@
 		"madge": "^8.0.0",
 		"semantic-release": "^24.1.2",
 		"storybook": "^8.6.12",
+		"storybook-dark-mode": "^4.0.2",
 		"tailwindcss": "^4.1.2",
 		"ts-node": "^10.9.2",
 		"typescript": "^5.4.5",

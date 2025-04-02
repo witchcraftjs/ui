@@ -10,6 +10,7 @@ import * as components from "../index.js"
 
 const meta: Meta<typeof LibPagination> = {
 	component: LibPagination,
+	title: "Components/Pagination",
 	args: {
 		total: 10,
 	},

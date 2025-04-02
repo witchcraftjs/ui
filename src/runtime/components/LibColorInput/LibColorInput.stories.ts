@@ -10,8 +10,9 @@ import * as components from "../index.js"
 
 const meta: Meta<typeof LibColorInput> = {
 	component: LibColorInput,
+	title: "Components/ColorInput",
 	args: {
-
+		
 	},
 }
 

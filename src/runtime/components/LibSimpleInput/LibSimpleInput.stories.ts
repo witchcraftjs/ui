@@ -7,6 +7,7 @@ import * as components from "../index.js"
 
 const meta = {
 	component: components.LibSimpleInput,
+	title: "Components/SimpleInput",
 	args: {
 		modelValue: "Value",
 		placeholder: "Placeholder",

@@ -10,9 +10,11 @@ import * as components from "../index.js"
 
 const meta: Meta<typeof components.LibButton> = {
 	component: components.LibButton,
+	title: "Components/Button",
 	args: {
 		label: "Label",
-		iconBefore: true,
+		// @ts-expect-error - custom prop for story
+		_iconAfter: true,
 	},
 }
 
@@ -40,12 +42,7 @@ export const Primary: Story = {
 		<div class="flex flex-col gap-4 pt-10">
 			<template v-for="type of [false, 'ok', 'warning', 'danger', 'primary', 'secondary']">
 				<lib-button v-bind="{...args, color: type , label: !args.label ? undefined : args.label + ' ' + capitalize(type || 'false') }">
-					${args.iconBefore ? `
-					<template #icon=>
-						<icon class="w-[1em]"><icon-fa-solid-bell /></icon>
-					</template>
-					` : ``}
-					${args.iconAfter ? `
+					${args._iconAfter ? `
 						<template #icon-after>
 							<icon class="w-[1em]"><icon-fa-solid-bell /></icon>
 						</template>
@@ -61,8 +58,8 @@ export const IconAfter: Story = {
 	...Primary,
 	args: {
 		...Primary.args,
-		iconAfter: true,
-		iconBefore: false,
+		// @ts-expect-error - .
+		_iconAfter: true,
 	},
 }
 

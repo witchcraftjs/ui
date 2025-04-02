@@ -14,6 +14,7 @@ import * as components from "../index.js"
  */
 const meta: Meta<typeof components.LibRecorder> = {
 	component: components.LibRecorder,
+	title: "Components/Recorder",
 	args: {
 		label: "Some Label",
 		recordingTitle: "Recording. Press enter or click away to accept. Press escape to cancel.",

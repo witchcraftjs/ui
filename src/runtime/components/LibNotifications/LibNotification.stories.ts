@@ -12,6 +12,7 @@ const handler = new NotificationHandler()
 
 const meta: Meta<typeof LibNotification> = {
 	component: LibNotification,
+	title: "Components/Notification",
 	args: {
 
 	},

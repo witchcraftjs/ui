@@ -10,6 +10,7 @@ import * as components from "../index.js"
 
 const meta: Meta<typeof LibTable> = {
 	component: LibTable,
+	title: "Components/Table",
 }
 
 export default meta

@@ -11,6 +11,7 @@ import * as components from "../index.js"
 
 const meta: Meta<typeof LibNotifications> = {
 	component: LibNotifications,
+	title: "Components/Notifications",
 	args: {
 	// @ts-expect-error story only arg
 		withTitle: true,

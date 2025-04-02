@@ -10,6 +10,7 @@ import * as components from "../index.js"
 
 const meta: Meta<typeof LibDebug> = {
 	component: LibDebug,
+	title: "Components/Debug",
 	args: {
 		value: { any: ["any", { value: "any" }]},
 	},

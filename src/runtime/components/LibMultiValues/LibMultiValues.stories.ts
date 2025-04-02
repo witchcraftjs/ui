@@ -10,10 +10,12 @@ import * as components from "../index.js"
 
 const meta = {
 	component: LibMultiValues as any,
+	title: "Components/MultiValues",
 	args: {
 		values: ["A", "B", "C"],
 		border: true,
 	},
+	tags: ["!test"],
 } satisfies Meta<typeof LibMultiValues> & Meta<{ custom: string }>
 
 export default meta
@@ -46,18 +48,21 @@ export const Primary: Story = {
 		,
 
 		template: `
-			Press enter to add value.
+			<p>Simple Input connected to multi-value.</p>
+			<p> Press enter to add value:</p>
 			<lib-simple-input
 				v-model="inputValue"
 				@keydown="onKeydownEnter"
 			>
 			</lib-simple-input>
-			<lib-multi-values
-				ref="multiValueEl"
-				v-bind="args"
-				v-model:values="args.values"
-			>
-			</lib-multi-values>
+			<p>Multi-value component: </p>
+			<div class="flex justify-start">
+				<lib-multi-values
+					ref="multiValueEl"
+					v-bind="args"
+					v-model:values="args.values"
+				/>
+			</div>
 		`,
 	}),
 }

@@ -11,6 +11,7 @@ import * as components from "../index.js"
 
 const meta: Meta<typeof LibDarkModeSwitcher> = {
 	component: LibDarkModeSwitcher,
+	title: "Components/DarkModeSwitcher",
 	args: {
 
 	},
