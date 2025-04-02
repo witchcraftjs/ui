@@ -48,7 +48,6 @@ import { useSetupDarkMode } from "../../composables/useSetupDarkMode.js"
 import { useShowDevOnlyKey } from "../../composables/useShowDevOnlyKey.js"
 import { theme as defaultTheme } from "../../theme.js"
 import { twMerge } from "../../utils/twMerge.js"
-import {type Theme} from "metamorphosis"
 import TestControls from "../TestControls/TestControls.vue"
 
 const $attrs = useDivideAttrs(["wrapper"])
@@ -62,6 +61,8 @@ const props = withDefaults(defineProps<{
 	id?: string
 	/** You can set a ref to the root element by passing :getRef="_ => el = _" */
 	getRef?: (el: HTMLElement | null) => void
+	/** True by default, should be passed import.meta.client if using nuxt, or false when running server side. */
+	isClientSide?: boolean
 }>(), {
 	theme: undefined,
 	testWrapperMode: false,
@@ -69,6 +70,7 @@ const props = withDefaults(defineProps<{
 	forceOutline: false,
 	id: "app",
 	getRef: undefined,
+	isClientSide: true
 })
 
 const el = ref<HTMLElement | null>(null)
@@ -87,7 +89,7 @@ const theme = computed(() => props.theme ?? defaultTheme)
 const themeCb = (): void => {
 	toRaw(theme.value).attach(el.value!)
 }
-if (import.meta.client) {
+if (props.isClientSide) {
 	onMounted(() => {
 		toRaw(theme.value).on("change", themeCb)
 		themeCb()
@@ -97,7 +99,7 @@ if (import.meta.client) {
 	})
 }
 
-const darkModeSetup = useSetupDarkMode()
+const darkModeSetup = useSetupDarkMode({ isClientSide: props.isClientSide })
 
 const darkMode = darkModeSetup.darkMode
 

@@ -23,12 +23,14 @@ const stateInjectionKey = Symbol("darkModeState") as InjectionKey<DarkModeState>
  */
 export const useDarkMode = ({
 	useLocalStorage = true,
-	darkModeOrder = defaultOrder
+	darkModeOrder = defaultOrder,
+	/** True by default, should be passed import.meta.client if using nuxt, or false when running server side. */
+	isClientSide = true
 }: DarkModeOptions = {}): DarkModeState & DarkModeCommands => {
 	const systemDarkMode = ref(false)
 	const manualDarkMode = ref<boolean | undefined>(undefined)
 	
-	if (useLocalStorage && (import.meta as any).client) {
+	if (useLocalStorage && isClientSide) {
 		watch(manualDarkMode, () => {
 			localStorage.setItem(defaultLocalStorageKey, manualDarkMode.value ? "true" : "false")
 		})
@@ -120,6 +122,8 @@ export type DarkModeOptions = {
 	useLocalStorage?: boolean | string
 	/* The order of the string dark modes when using `cycleDarkMode`. Defaults to `["system", "dark", "light"]` */
 	darkModeOrder?: readonly ("system" | "dark" | "light")[]
+	/** True by default, should be passed import.meta.client if using nuxt, or false when running server side. */
+	isClientSide?: boolean
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
