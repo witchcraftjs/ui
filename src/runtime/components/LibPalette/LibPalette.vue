@@ -3,7 +3,12 @@
 	<div class="container mx-auto ">
 		<div class="grid grid-cols-11 gap-2 gap-y-10 px-10">
 			<template v-for="color, i in colors" :key="color">
-				<div :class="`h-10 ${color} rounded-sm flex items-center justify-center text-fg dark:text-bg`">{{ [5, 16, 27, 38, 49].includes(i) ? 'Text':'' }}</div>
+				<div
+					:style="`background-color: var(${color});`"
+					:class="`h-10 rounded-sm flex items-center justify-center text-fg dark:text-bg`"
+				>
+					{{ [5, 16, 27, 38, 49].includes(i) ? 'Text':'' }}
+				</div>
 			</template>
 		</div>
 		<!-- <div class="flex flex-col">
@@ -24,9 +29,8 @@ export default { name: "lib-palette" }
 <script setup  lang="ts">
 import { keys } from "@alanscodelog/utils/keys.js"
 import { type Theme } from "metamorphosis"
-import { type PropType } from "vue"
 
-import { type BaseInteractiveProps, baseInteractiveProps, baseInteractivePropsDefaults,type LinkableByIdProps } from "../shared/props.js"
+import { type BaseInteractiveProps, baseInteractivePropsDefaults,type LinkableByIdProps } from "../shared/props.js"
 
 
 const props = withDefaults(defineProps<
@@ -40,6 +44,6 @@ const props = withDefaults(defineProps<
 })
 
 const exclude = ["--color-bg", "--color-fg"]
-const colors = keys(props.theme.css).filter(key => key.startsWith("--color") && !exclude.includes(key)).map(key => key.replace("--color-", "bg-"))
+const colors = keys(props.theme.css).filter(key => key.startsWith("--color") && !exclude.includes(key))
 
 </script>
