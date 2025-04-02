@@ -182,19 +182,19 @@ const createPointerDownHandler = (el: ResizableElement) => (e: PointerEvent) => 
 		$el.isDragging = true
 		e.preventDefault()
 
+		// in case any errors happen, we want the pointer up to still be called
+		document.addEventListener("pointerup", $el.pointerUpHandler)
 
 		const { col, colNext } = getCols(el)
 		if (col === null || colNext === null) {
 			el.classList.add("resizable-cols-error")
 		} else {
 			document.addEventListener("pointermove", $el.pointerMoveHandler)
+			const box = getBox(col!)
+			if (box) {
+				$el.offset = e.pageX - (box.x + box.width)
+			}
 		}
-		const box = getBox(col!)
-		if (box) {
-			$el.offset = e.pageX - (box.x + box.width)
-		}
-
-		document.addEventListener("pointerup", $el.pointerUpHandler)
 	}
 }
 const createPointerMoveHandler = (el: ResizableElement) => (e: PointerEvent) => {
