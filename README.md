@@ -1,11 +1,9 @@
 ### 🚧 WORK IN PROGRESS 🚧
-[![Docs](https://github.com/witchcraft/ui/workflows/Docs/badge.svg)](https://github.com/witchcraft/ui/actions/workflows/docs.yml)
-[![Build](https://github.com/witchcraft/ui/actions/workflows/build.yml/badge.svg)](https://github.com/witchcraft/ui/actions/workflows/build.yml)
-[![Release](https://github.com/witchcraft/ui/actions/workflows/release.yml/badge.svg)](https://github.com/witchcraft/ui/actions/workflows/release.yml)
-[![NPM Version (with latest tag)](https://img.shields.io/npm/v/%40alanscodelog%2Fvue-components/latest)](https://www.npmjs.com/package/@witchcraft/ui/v/latest)
-[![NPM Version (with beta tag)](https://img.shields.io/npm/v/%40alanscodelog%2Fvue-components/beta)](https://www.npmjs.com/package/@witchcraft/ui/v/beta)
+[![Docs](https://github.com/witchcraftjs/ui/workflows/Docs/badge.svg)](https://github.com/witchcraftjs/ui/actions/workflows/docs.yml)
+[![Release](https://github.com/witchcraftjs/ui/actions/workflows/release.yml/badge.svg)](https://github.com/witchcraftjs/ui/actions/workflows/release.yml)
+[![NPM Version (with latest tag)](https://img.shields.io/npm/v/%40witchcraft%2Fui/latest)](https://www.npmjs.com/package/@witchcraft/ui/v/latest)
 
-Opinionated, batteries included, vue component library + some related utils.
+Opinionated, batteries included, vue/nuxt component library + some related utils.
 
 - Built with accessibility in mind.
 - Themable via [metamorphosis](https://github.com/alanscodelog/metamorphosis) which allows providing a custom set of tailwind variables for easier application theming (e.g. \*-fg, \*-bg, \*-accent). No regular tailwind colors are used except neutral.
@@ -14,7 +12,7 @@ Opinionated, batteries included, vue component library + some related utils.
 
 This is unfortunately not true styleless since the tailwind classes are still in the build output.
 
-# [Storybook](https://alanscodelog.github.io/vue-components/storybook)
+# [Storybook](https://witchcraftjs.github.io/ui/storybook)
 
 # Usage with Nuxt
 

@@ -169,7 +169,7 @@
 		"wait-on": "^8.0.3"
 	},
 	"author": "Alan <alanscodelog@gmail.com>",
-	"repository": "https://github.com/alanscodelog/vue-components",
+	"repository": "https://github.com/witchcraftjs/ui",
 	"license": "MIT",
 	"files": [
 		"src",
