@@ -1,6 +1,5 @@
 import { defineBuildConfig } from "unbuild"
 
-const components = glob(["./src/runtime/components/*/**"], { onlyDirectories: true }).map(_ => _.slice("./src/".length))
 export default defineBuildConfig({
 	entries: [
 		"src/module.ts",
@@ -9,20 +8,7 @@ export default defineBuildConfig({
 			input: "./src/runtime/",
 			outDir: "./dist/runtime/",
 			ext: "js",
+			pattern: "**/*",
 		},
-		{
-			builder: "mkdist",
-			input: "./src/runtime/components/",
-			outDir: "./dist/runtime/components/",
-			ext: "js",
-		},
-		...components.map(folder => ({
-			builder: "mkdist" as const,
-			input: `./src/${folder}`,
-			outDir: `./dist/${folder}`,
-			ext: "js",
-			format: "esm",
-		}))
-
 	]
 })
