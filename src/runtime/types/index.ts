@@ -107,3 +107,10 @@ export type PopupPositionModifier = (
 	bg: SimpleDOMRect | DOMRect,
 	space: PopupSpaceInfo
 ) => PopupPosition
+
+export type SingleDate = Date | undefined
+
+export type RangeDate = {
+	start?: SingleDate
+	end?: SingleDate
+}
