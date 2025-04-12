@@ -3,12 +3,12 @@
 	"name": "@witchcraft/ui-playground",
 	"type": "module",
 	"scripts": {
+		"link:module": "pnpm link ../",
 		"dev": "nuxi dev",
 		"build": "nuxi build",
 		"generate": "nuxi generate"
 	},
 	"dependencies": {
-		"@witchcraft/ui": "^0.0.0",
 		"nuxt": "^3.16.2"
 	}
 }

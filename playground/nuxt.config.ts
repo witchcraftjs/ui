@@ -5,8 +5,8 @@ export default defineNuxtConfig({
 		compatibilityVersion: 4 as const
 	},
 	modules: [
+		// "@witchcraft/ui/nuxt"
 		"../src/module"
-		// "@witchcraft/ui/nuxt", // either work
 	],
 	witchcraftUi: {
 	},

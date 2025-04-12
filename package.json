@@ -68,7 +68,8 @@
 	"scripts": {
 		"//prepare": "echo Needed so that if we pull the package from git it will get built and installed properly.",
 		"prepare": "husky && pnpm gen:theme && pnpm build",
-		"build": "nuxt-module-build prepare && nuxt-module-build build && nuxi generate playground",
+		"build": "nuxt-module-build prepare && nuxt-module-build build && pnpm build:playground",
+		"build:playground": "cd playground && pnpm link:module && pnpm generate",
 		"dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
 		"dev": "nuxi dev playground",
 		"storybook": "BROWSER=none storybook dev -p 6006",
