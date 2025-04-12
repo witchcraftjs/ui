@@ -1,9 +1,7 @@
 import { crop, indent } from "@alanscodelog/utils"
 import {
 	addComponent,
-	addImports,
-	addTemplate,
-	addTypeTemplate,
+	addImports, addTemplate, addTypeTemplate,
 	createResolver,
 	defineNuxtModule,
 	installModule,
@@ -34,13 +32,12 @@ const componentsInfo: { name: string, filepath: string }[] = globFiles([
 }))
 
 declare module "@nuxt/schema" {
-	// eslint-disable-next-line @typescript-eslint/naming-convention
 	interface PublicRuntimeConfig {
 		witchcraftUi: Pick<ModuleOptions, "directives">
 	}
 }
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
+ 
 export interface ModuleOptions {
 /**
  * Whether to include the vite unplugin-icons plugins (pre-configured with the ui module's defaults.

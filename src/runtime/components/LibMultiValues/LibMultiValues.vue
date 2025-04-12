@@ -73,15 +73,14 @@
 
 <script setup lang="ts" generic="T extends string | number">
 import { removeIfIn } from "@alanscodelog/utils/removeIfIn.js"
-import type { MakeRequired } from "@alanscodelog/utils/types"
-import { computed, type HTMLAttributes,useAttrs } from "vue"
+import { computed, type HTMLAttributes } from "vue"
 
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
 import { copy } from "../../helpers/copy.js"
 import { twMerge } from "../../utils/twMerge.js"
 import Icon from "../Icon/Icon.vue"
 import LibButton from "../LibButton/LibButton.vue"
-import { type BaseInteractiveProps, baseInteractiveProps, baseInteractivePropsDefaults,type LabelProps, type MultiValueProps, type SuggestionsProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
+import { type BaseInteractiveProps, baseInteractivePropsDefaults,type LabelProps, type MultiValueProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
 
 
 defineOptions({

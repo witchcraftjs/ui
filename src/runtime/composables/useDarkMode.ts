@@ -126,13 +126,13 @@ export type DarkModeOptions = {
 	isClientSide?: boolean
 }
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
+ 
 export interface DarkModeCommands {
 	setDarkMode: (value: "dark" | "light" | "system") => void
 	cycleDarkMode: () => void
 }
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
+ 
 export interface DarkModeState {
 	/** Whether the dark mode should be enabled or not */
 	darkMode: Ref<boolean>

@@ -76,6 +76,7 @@ export type ScrollNearContainerEdgesOptions = {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export type SimpleDOMRect = Omit<DOMRect, "toJSON">
  
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export interface IPopupReference { getBoundingClientRect: () => SimpleDOMRect }
 export type PopupPosition = { x: number, y: number, maxWidth?: number, maxHeight?: number }
 export type PopupSpaceInfo = {

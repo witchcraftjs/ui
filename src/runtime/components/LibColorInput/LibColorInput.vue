@@ -65,16 +65,15 @@ import { twMerge } from "../../utils/twMerge.js"
 import LibButton from "../LibButton/LibButton.vue"
 import LibColorPicker from "../LibColorPicker/LibColorPicker.vue"
 import LibPopup from "../LibPopup/LibPopup.vue"
-import { getFallbackId,type LabelProps, type LinkableByIdProps, type TailwindClassProp } from "../shared/props.js"
+import { getFallbackId, type LabelProps, type LinkableByIdProps, type TailwindClassProp } from "../shared/props.js"
+
 
 defineOptions({
 	name: "lib-color-input",
 })
 
-// todo move to types
-
-
 const fallbackId = getFallbackId()
+
 const t = useInjectedI18n()
 // eslint-disable-next-line no-use-before-define
 const props = withDefaults(defineProps<Props>(), {

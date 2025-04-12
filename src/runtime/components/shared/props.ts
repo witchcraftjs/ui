@@ -1,6 +1,6 @@
 import { type PropType,useId } from "vue"
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
+ 
 export interface LinkableByIdProps {
 	/**
 	 * The id for the input. Uses vue's useId if none provided.
@@ -13,7 +13,7 @@ export interface LinkableByIdProps {
 
 export const getFallbackId = (): string => useId()
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
+ 
 export interface LabelProps {
 /** For the label. Note the component might or might not support an actual label element. If none is supported, this is used for the `aria-label`. */
 	label?: string
@@ -70,7 +70,7 @@ export type SuggestionsProps<T = any> = {
 	suggestionSelector?: (suggestions: T[], input: string) => number
 }
 export type SuggestionsOptions<T> = SuggestionsProps<T> & MultiValueProps
-// eslint-disable-next-line @typescript-eslint/naming-convention
+ 
 export interface SuggestionsEmits {
 	(e: "submit", val: string, suggestion?: any): void
 	(e: "update:isOpen", val: boolean): void
