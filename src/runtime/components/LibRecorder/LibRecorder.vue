@@ -59,7 +59,9 @@
 		ref="recorderIndicatorEl"
 	/>
 	<div class="recorder-value before:content-vertical-holder truncate">
-		{{ recording ? recordingValue : tempValue }}
+		{{ recording
+			? recordingValue ?? t("recorder.recording")
+			: tempValue }}
 	</div>
 </div>
 </template>
@@ -68,6 +70,7 @@ import { keys } from "@alanscodelog/utils/keys.js"
 import { computed, type HTMLAttributes ,onBeforeUnmount, onMounted, type PropType, ref, watch, watchPostEffect } from "vue"
 
 import { useAriaLabel } from "../../composables/useAriaLabel.js"
+import { useInjectedI18n } from "../../composables/useInjectedI18n.js"
 import { twMerge } from "../../utils/twMerge.js"
 import { type BaseInteractiveProps, baseInteractivePropsDefaults, getFallbackId, type LabelProps, type LinkableByIdProps,type TailwindClassProp } from "../shared/props.js"
 
@@ -75,6 +78,7 @@ defineOptions({
 	name: "lib-recorder",
 	inheritAttrs: false,
 })
+const t = useInjectedI18n()
 
 const emits = defineEmits<{
 	/** Recorder is blurred */
@@ -87,7 +91,6 @@ const emits = defineEmits<{
 const fallbackId = getFallbackId()
 // eslint-disable-next-line no-use-before-define
 const props = withDefaults(defineProps<Props>(), {
-	recordingValue: "Recording",
 	recordingTitle: "",
 	id: undefined,
 	binders: undefined,
@@ -209,7 +212,7 @@ type RealProps =
 & LabelProps
 & {
 	border?: boolean
-	/** A value to display while recording. */
+	/** A value to display while recording, if none given the i18n `recorder.recording` key is used. */
 	recordingValue?: string
 	/** A title to display on the input div while recording. Is also used as the aria-description. */
 	recordingTitle?: string

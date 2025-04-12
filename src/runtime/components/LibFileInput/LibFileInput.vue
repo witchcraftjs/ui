@@ -35,14 +35,20 @@
 			</slot>
 			<slot name="label">
 				{{
-					(compact ? 'Choose File' : 'Drag & Drop File') +
-						(multiple ? 's' :'')
+					(compact
+						? multiple
+							? t("file-input.compact-choose-file-plural")
+							: t("file-input.compact-choose-file")
+						: multiple
+							? t("file-input.non-compact-choose-file-plural")
+							: t("file-input.non-compact-choose-file")
+					)
 				}}
 			</slot>
 			<span v-if="compact && multiple">{{ ` (${files.length})` }}</span>
 		</label>
 		<label v-if="!compact && formats?.length > 0" class="flex flex-col items-center text-sm">
-			<slot name="formats">Accepted Formats: </slot>
+			<slot name="formats">{{ t("file-input.accepted-formats") }}: </slot>
 			<div class="">
 				{{ extensions.join(", ") }}
 			</div>
@@ -135,13 +141,14 @@
 import { computed, type HTMLAttributes, type InputHTMLAttributes,ref, shallowReactive, watch } from "vue"
 
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
+import { useInjectedI18n } from "../../composables/useInjectedI18n.js"
 import { type FileInputError } from "../../types/index.js"
 import { twMerge } from "../../utils/twMerge.js"
 import Icon from "../Icon/Icon.vue"
 import LibButton from "../LibButton/LibButton.vue"
 import { getFallbackId,type LinkableByIdProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
 
-
+const t = useInjectedI18n()
 const el = ref<null | HTMLInputElement>(null)
 type Entry = { file: File, isImg: boolean }
 

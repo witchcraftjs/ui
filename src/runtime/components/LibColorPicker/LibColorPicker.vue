@@ -1,6 +1,6 @@
 <template>
 <div :id="id ?? fallbackId"
-	aria-label="color picker"
+	:aria-label="t('color-picker.aria')"
 	:class="twMerge(`color-picker
 			[--slider-size:calc(var(--spacing)_*_4)]
 			[--contrast-dark:var(--color-neutral-100)]
@@ -57,7 +57,7 @@
 				`"
 			@keydown="slider.keydown($event, 'picker')"
 		>
-			<aria :value="`saturation: ${localColor.percent.s}, value: ${localColor.percent.s}`"/>
+			<aria :value="`${t('color-picker.aria.saturation')}: ${localColor.percent.s}, ${t('color-picker.aria.value')}: ${localColor.percent.s}`"/>
 		</div>
 	</div>
 	<div
@@ -73,7 +73,7 @@
 			:aria-valuenow="`${localColor.percent.h}`"
 			:aria-valuemin="0"
 			:aria-valuemax="100"
-			aria-label="hue slider"
+			:aria-label="t('color-picker.aria.hue')"
 			:aria-description="ariaDescription"
 			tabindex="0"
 			:class="`handle ${handleClasses} bg-neutral-50`"
@@ -94,7 +94,7 @@
 		/>
 		<div
 			role="slider"
-			aria-label="alpha slider"
+			:aria-label="t('color-picker.aria.alpha-slider')"
 			:aria-valuenow="`${localColor.percent.h}`"
 			:aria-valuemin="0"
 			:aria-valuemax="100"
@@ -133,7 +133,7 @@
 					:model-value="localColorString"
 					@input="parseInput"
 				/>
-				<lib-button aria-label="'copy'" @click="copy()">
+				<lib-button :aria-label="t('copy')" @click="copy()">
 					<icon><i-fa6-regular-copy/></icon>
 				</lib-button>
 			</slot>
@@ -142,8 +142,8 @@
 	</div>
 	<slot name="buttons">
 		<div class="save-cancel-group flex w-full items-center justify-center gap-2">
-			<lib-button @click="save()">Save</lib-button>
-			<lib-button @click="emits('cancel')">Cancel</lib-button>
+			<lib-button @click="save()">{{ t("save") }}</lib-button>
+			<lib-button @click="emits('cancel')">{{ t("cancel") }}</lib-button>
 		</div>
 	</slot>
 </div>
@@ -156,6 +156,7 @@ import { isArray } from "@alanscodelog/utils/isArray.js"
 import { colord } from "colord"
 import { computed, onMounted, type PropType, reactive, type Ref, ref, type UnwrapRef,watch } from "vue"
 
+import { useInjectedI18n } from "../../composables/useInjectedI18n.js"
 import type { HsvaColor, RgbaColor } from "../../types/index.js"
 import { twMerge } from "../../utils/twMerge.js"
 import aria from "../Aria/Aria.vue"
@@ -167,6 +168,8 @@ import { getFallbackId, type LabelProps , type LinkableByIdProps } from "../shar
 defineOptions({
 	name: "lib-color-picker",
 })
+
+const t = useInjectedI18n()
 
 const sliderClasses = `
 	slider
@@ -193,7 +196,7 @@ const handleClasses = `
 `
 
 
-const ariaDescription = "Use the arrow keys to move the handle, or use shift to move in 10 pixel increments."
+const ariaDescription = t("color-picker.aria.description")
 
 const $value = defineModel<RgbaColor>({ required: false, default: () => ({ r: 0, g: 0, b: 0 }) })
 

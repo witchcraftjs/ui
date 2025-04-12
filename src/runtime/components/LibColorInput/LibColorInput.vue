@@ -21,7 +21,7 @@
 					pr-2
 				"
 			>
-				<slot>Pick Color</slot>
+				<slot>{{ t("color-picker.pick-color") }}</slot>
 			</span>
 			<div :class="`color-swatch
 						rounded-xs
@@ -58,6 +58,7 @@
 import { colord } from "colord"
 import { type ButtonHTMLAttributes,computed, type PropType, ref, useAttrs } from "vue"
 
+import { useInjectedI18n } from "../../composables/useInjectedI18n.js"
 import { vExtractRootEl } from "../../directives/vExtractRootEl.js"
 import type { HsvaColor, RgbaColor } from "../../types/index.js"
 import { twMerge } from "../../utils/twMerge.js"
@@ -74,6 +75,7 @@ defineOptions({
 
 
 const fallbackId = getFallbackId()
+const t = useInjectedI18n()
 // eslint-disable-next-line no-use-before-define
 const props = withDefaults(defineProps<Props>(), {
 	allowAlpha: true,

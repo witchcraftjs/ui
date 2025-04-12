@@ -7,9 +7,9 @@
 		`,
 		($attrs as any)?.class
 	)"
-	:title="`Switch dark mode type (current: ${darkModeState})`"
-	:label="autoLabel
-		? autoLabel[darkModeState]
+	:title="`${t('dark-mode-switcher.title')}${t(`dark-mode-switcher.${darkModeState}`)}`"
+	:label="showLabel
+		? t(`dark-mode-switcher.${darkModeState}`)
 		: ''
 	"
 	@click="cycleDarkMode"
@@ -37,13 +37,16 @@
 </lib-button>
 </template>
 <script lang="ts" setup>
-import { type ButtonHTMLAttributes,onMounted,useAttrs, watch, watchEffect } from "vue"
+import { type ButtonHTMLAttributes,onMounted,useAttrs, watch } from "vue"
 
 import { useInjectedDarkMode } from "../../composables/useInjectedDarkMode.js"
+import { useInjectedI18n } from "../../composables/useInjectedI18n.js"
 import { twMerge } from "../../utils/twMerge.js"
 import Icon from "../Icon/Icon.vue"
 import LibButton from "../LibButton/LibButton.vue"
 import type { TailwindClassProp } from "../shared/props.js"
+
+const t = useInjectedI18n()
 
 const emit = defineEmits<{
 	/** Emits whether dark mode should be enabled. */
@@ -54,13 +57,7 @@ const emit = defineEmits<{
 const $attrs = useAttrs()
 
 // eslint-disable-next-line no-use-before-define
-withDefaults(defineProps<Props>(), {
-	autoLabel: () => ({
-		light: "Light Mode",
-		system: "System Mode",
-		dark: "Dark Mode",
-	}) ,
-})
+withDefaults(defineProps<Props>(), { })
 
 
 const {
@@ -81,8 +78,7 @@ export default {
 	name: "lib-dark-mode-switcher"
 }
 type RealProps = {
-	/** The auto labels are shown by default. You can disable them by passing false or pass an object with your own labels. */
-	autoLabel?: false | Record<"system" | "dark" | "light", string>
+	showLabel?: boolean
 }
 
 interface Props
