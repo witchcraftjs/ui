@@ -40,6 +40,10 @@
 		`, ($attrs as any).class)"
 		:data-value="progress"
 		:title="label"
+		role="progressbar"
+		:aria-valuenow="clampVal(progress, clamp[0] ?? 0, clamp[1] ?? 100)"
+		:aria-valuemin="clamp[0] ?? 0"
+		:aria-valuemax="clamp[1] ?? 100"
 		v-bind="{...$attrs, class:undefined}"
 		:style="`--progress: ${clampVal(progress, clamp[0] ?? 0, clamp[1] ?? 100)}%;`"
 	>
