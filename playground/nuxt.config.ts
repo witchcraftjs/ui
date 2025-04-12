@@ -10,4 +10,14 @@ export default defineNuxtConfig({
 	],
 	witchcraftUi: {
 	},
+	vite: {
+		build: {
+			rollupOptions: {
+				output: {
+					// #awaiting https://github.com/nuxt/nuxt/issues/31326
+					sanitizeFileName: true,
+				},
+			},
+		},
+	},
 })
