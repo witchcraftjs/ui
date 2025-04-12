@@ -4,7 +4,7 @@
 >
 	<template #button="{extractEl}">
 		<lib-button
-			:id="id"
+			:id="id ?? fallbackId"
 			:class="twMerge(`
 				flex flex-nowrap
 			`,
@@ -43,7 +43,7 @@
 	</template>
 	<template #popup="{extractEl}">
 		<lib-color-picker v-if="showPopup"
-			:id="id"
+			:id="id ?? fallbackId"
 			:allow-alpha="allowAlpha"
 			v-model="tempValue"
 			v-extract-root-el="extractEl"
