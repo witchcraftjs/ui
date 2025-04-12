@@ -59,7 +59,7 @@
 		},
 		"./types": {
 			"types": "./dist/runtime/types/index.d.ts",
-			"import": "./src/runtime/types/index.js"
+			"import": "./dist/runtime/types/index.js"
 		}
 	},
 	"unbuild": {
@@ -85,9 +85,9 @@
 		"lint:imports": "madge --circular --extensions ts ./src",
 		"lint": "pnpm lint:types && pnpm lint:eslint",
 		"//actions:debug": "echo For debugging github build action locally with nektos/act. Requires act and docker. Note: Cache will never work locally because of https://github.com/nektos/act/issues/285",
-		"actions:debug": "act -r -v -j release",
+		"actions:debug": "act -r -j release",
 		"gen:exports": "indexit update --ignore **.d.ts **.stories.ts **.vue -o '${path}.js'",
-		"gen:theme": "bun src/runtime/build/generateTheme.ts"
+		"gen:theme": "echo src/runtime/build/generateTheme.ts"
 	},
 	"peerDependencies": {
 		"tailwindcss": "^4.0.17",
