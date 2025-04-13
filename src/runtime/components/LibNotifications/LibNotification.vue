@@ -47,7 +47,7 @@
 		{{ notification.message }}
 	</div>
 	<div class="bottom flex items-end justify-between">
-		<div v-if="notification.code" class="code text-xs text-neutral-700">
+		<div v-if="notification.code" class="code text-xs text-neutral-700 dark:text-neutral-300">
 			Code: {{ notification.code }}
 		</div>
 		<div class="flex-1 py-1"/>
