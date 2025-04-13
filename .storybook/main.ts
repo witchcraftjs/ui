@@ -24,5 +24,6 @@ const config: StorybookConfig = {
 				docgen: 'vue-component-meta',
 		},
 	},
+	typescript: { check: false }
 }
 export default config
