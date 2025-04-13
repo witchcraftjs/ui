@@ -9,8 +9,8 @@
 			[--bg:rgb(var(--contrast-light))]
 			max-w-[300px]
 			flex flex-col items-center justify-center
-			bg-bg
-			dark:bg-fg
+			bg-neutral-50
+			dark:bg-neutral-950
 			gap-3
 			p-3
 		`,

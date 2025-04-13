@@ -14,16 +14,20 @@
 			rounded-sm
 		`,
 		border &&`
-			border border-neutral-500
+			border
+			border-neutral-500
 			focus:border-accent-500
 		`,
 
 		(disabled || readonly) && `
 			text-neutral-400
+			dark:text-neutral-600
 		`,
 		(disabled || readonly) && border && `
 			bg-neutral-50
+			dark:bg-neutral-950
 			border-neutral-400
+			dark:border-neutral-600
 		`
 		, ($attrs as any).class)"
 	:aria-disabled="disabled"
