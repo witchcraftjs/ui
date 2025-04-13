@@ -1,0 +1,281 @@
+import { DatePickerArrow, DatePickerCalendar, DatePickerCell, DatePickerCellTrigger, DatePickerContent, DatePickerField, DatePickerGrid, DatePickerGridBody, DatePickerGridHead, DatePickerGridRow, DatePickerHeadCell, DatePickerHeader, DatePickerHeading, DatePickerInput, DatePickerNext, DatePickerPrev, DatePickerRoot, DatePickerTrigger } from "radix-vue";
+import type { SingleDate } from "../../types/index.js";
+import { twMerge } from "../../utils/twMerge.js";
+import Icon from "../Icon/Icon.vue";
+declare const attrs: {
+    [x: string]: unknown;
+};
+type __VLS_Props = {
+    useTime?: boolean;
+    id: string;
+    fallbackDate?: Date;
+    timeZone?: string;
+    updateInterval?: number;
+};
+declare const locale: import("vue").Ref<string, string>;
+declare const date: import("vue").ModelRef<SingleDate, string, SingleDate, SingleDate>;
+declare const tempDate: import("vue").Ref<{
+    readonly calendar: {
+        identifier: import("@internationalized/date").CalendarIdentifier;
+        fromJulianDay: (jd: number) => import("@internationalized/date").CalendarDate;
+        toJulianDay: (date: import("@internationalized/date").AnyCalendarDate) => number;
+        getDaysInMonth: (date: import("@internationalized/date").AnyCalendarDate) => number;
+        getMonthsInYear: (date: import("@internationalized/date").AnyCalendarDate) => number;
+        getYearsInEra: (date: import("@internationalized/date").AnyCalendarDate) => number;
+        getEras: () => string[];
+        getMinimumMonthInYear?: ((date: import("@internationalized/date").AnyCalendarDate) => number) | undefined;
+        getMinimumDayInMonth?: ((date: import("@internationalized/date").AnyCalendarDate) => number) | undefined;
+        getFormattableMonth?: ((date: import("@internationalized/date").AnyCalendarDate) => import("@internationalized/date").CalendarDate) | undefined;
+        isEqual?: ((calendar: import("@internationalized/date").Calendar) => boolean) | undefined;
+        balanceDate?: ((date: import("@internationalized/date").AnyCalendarDate) => void) | undefined;
+        balanceYearMonth?: ((date: import("@internationalized/date").AnyCalendarDate, previousDate: import("@internationalized/date").AnyCalendarDate) => void) | undefined;
+        constrainDate?: ((date: import("@internationalized/date").AnyCalendarDate) => void) | undefined;
+        isInverseEra?: ((date: import("@internationalized/date").AnyCalendarDate) => boolean) | undefined;
+    };
+    readonly era: string;
+    readonly year: number;
+    readonly month: number;
+    readonly day: number;
+    copy: () => import("@internationalized/date").CalendarDate;
+    add: (duration: import("@internationalized/date").DateDuration) => import("@internationalized/date").CalendarDate;
+    subtract: (duration: import("@internationalized/date").DateDuration) => import("@internationalized/date").CalendarDate;
+    set: (fields: import("@internationalized/date").DateFields) => import("@internationalized/date").CalendarDate;
+    cycle: (field: import("@internationalized/date").DateField, amount: number, options?: import("@internationalized/date").CycleOptions) => import("@internationalized/date").CalendarDate;
+    toDate: (timeZone: string) => Date;
+    toString: () => string;
+    compare: (b: import("@internationalized/date").AnyCalendarDate) => number;
+} | {
+    readonly calendar: {
+        identifier: import("@internationalized/date").CalendarIdentifier;
+        fromJulianDay: (jd: number) => import("@internationalized/date").CalendarDate;
+        toJulianDay: (date: import("@internationalized/date").AnyCalendarDate) => number;
+        getDaysInMonth: (date: import("@internationalized/date").AnyCalendarDate) => number;
+        getMonthsInYear: (date: import("@internationalized/date").AnyCalendarDate) => number;
+        getYearsInEra: (date: import("@internationalized/date").AnyCalendarDate) => number;
+        getEras: () => string[];
+        getMinimumMonthInYear?: ((date: import("@internationalized/date").AnyCalendarDate) => number) | undefined;
+        getMinimumDayInMonth?: ((date: import("@internationalized/date").AnyCalendarDate) => number) | undefined;
+        getFormattableMonth?: ((date: import("@internationalized/date").AnyCalendarDate) => import("@internationalized/date").CalendarDate) | undefined;
+        isEqual?: ((calendar: import("@internationalized/date").Calendar) => boolean) | undefined;
+        balanceDate?: ((date: import("@internationalized/date").AnyCalendarDate) => void) | undefined;
+        balanceYearMonth?: ((date: import("@internationalized/date").AnyCalendarDate, previousDate: import("@internationalized/date").AnyCalendarDate) => void) | undefined;
+        constrainDate?: ((date: import("@internationalized/date").AnyCalendarDate) => void) | undefined;
+        isInverseEra?: ((date: import("@internationalized/date").AnyCalendarDate) => boolean) | undefined;
+    };
+    readonly era: string;
+    readonly year: number;
+    readonly month: number;
+    readonly day: number;
+    readonly hour: number;
+    readonly minute: number;
+    readonly second: number;
+    readonly millisecond: number;
+    readonly timeZone: string;
+    readonly offset: number;
+    copy: () => import("@internationalized/date").ZonedDateTime;
+    add: (duration: import("@internationalized/date").DateTimeDuration) => import("@internationalized/date").ZonedDateTime;
+    subtract: (duration: import("@internationalized/date").DateTimeDuration) => import("@internationalized/date").ZonedDateTime;
+    set: (fields: import("@internationalized/date").DateFields & import("@internationalized/date").TimeFields, disambiguation?: import("@internationalized/date").Disambiguation) => import("@internationalized/date").ZonedDateTime;
+    cycle: (field: import("@internationalized/date").DateField | import("@internationalized/date").TimeField, amount: number, options?: import("@internationalized/date").CycleTimeOptions) => import("@internationalized/date").ZonedDateTime;
+    toDate: () => Date;
+    toString: () => string;
+    toAbsoluteString: () => string;
+    compare: (b: import("@internationalized/date").CalendarDate | import("@internationalized/date").CalendarDateTime | import("@internationalized/date").ZonedDateTime) => number;
+}, import("@internationalized/date").CalendarDate | import("@internationalized/date").ZonedDateTime | {
+    readonly calendar: {
+        identifier: import("@internationalized/date").CalendarIdentifier;
+        fromJulianDay: (jd: number) => import("@internationalized/date").CalendarDate;
+        toJulianDay: (date: import("@internationalized/date").AnyCalendarDate) => number;
+        getDaysInMonth: (date: import("@internationalized/date").AnyCalendarDate) => number;
+        getMonthsInYear: (date: import("@internationalized/date").AnyCalendarDate) => number;
+        getYearsInEra: (date: import("@internationalized/date").AnyCalendarDate) => number;
+        getEras: () => string[];
+        getMinimumMonthInYear?: ((date: import("@internationalized/date").AnyCalendarDate) => number) | undefined;
+        getMinimumDayInMonth?: ((date: import("@internationalized/date").AnyCalendarDate) => number) | undefined;
+        getFormattableMonth?: ((date: import("@internationalized/date").AnyCalendarDate) => import("@internationalized/date").CalendarDate) | undefined;
+        isEqual?: ((calendar: import("@internationalized/date").Calendar) => boolean) | undefined;
+        balanceDate?: ((date: import("@internationalized/date").AnyCalendarDate) => void) | undefined;
+        balanceYearMonth?: ((date: import("@internationalized/date").AnyCalendarDate, previousDate: import("@internationalized/date").AnyCalendarDate) => void) | undefined;
+        constrainDate?: ((date: import("@internationalized/date").AnyCalendarDate) => void) | undefined;
+        isInverseEra?: ((date: import("@internationalized/date").AnyCalendarDate) => boolean) | undefined;
+    };
+    readonly era: string;
+    readonly year: number;
+    readonly month: number;
+    readonly day: number;
+    copy: () => import("@internationalized/date").CalendarDate;
+    add: (duration: import("@internationalized/date").DateDuration) => import("@internationalized/date").CalendarDate;
+    subtract: (duration: import("@internationalized/date").DateDuration) => import("@internationalized/date").CalendarDate;
+    set: (fields: import("@internationalized/date").DateFields) => import("@internationalized/date").CalendarDate;
+    cycle: (field: import("@internationalized/date").DateField, amount: number, options?: import("@internationalized/date").CycleOptions) => import("@internationalized/date").CalendarDate;
+    toDate: (timeZone: string) => Date;
+    toString: () => string;
+    compare: (b: import("@internationalized/date").AnyCalendarDate) => number;
+} | {
+    readonly calendar: {
+        identifier: import("@internationalized/date").CalendarIdentifier;
+        fromJulianDay: (jd: number) => import("@internationalized/date").CalendarDate;
+        toJulianDay: (date: import("@internationalized/date").AnyCalendarDate) => number;
+        getDaysInMonth: (date: import("@internationalized/date").AnyCalendarDate) => number;
+        getMonthsInYear: (date: import("@internationalized/date").AnyCalendarDate) => number;
+        getYearsInEra: (date: import("@internationalized/date").AnyCalendarDate) => number;
+        getEras: () => string[];
+        getMinimumMonthInYear?: ((date: import("@internationalized/date").AnyCalendarDate) => number) | undefined;
+        getMinimumDayInMonth?: ((date: import("@internationalized/date").AnyCalendarDate) => number) | undefined;
+        getFormattableMonth?: ((date: import("@internationalized/date").AnyCalendarDate) => import("@internationalized/date").CalendarDate) | undefined;
+        isEqual?: ((calendar: import("@internationalized/date").Calendar) => boolean) | undefined;
+        balanceDate?: ((date: import("@internationalized/date").AnyCalendarDate) => void) | undefined;
+        balanceYearMonth?: ((date: import("@internationalized/date").AnyCalendarDate, previousDate: import("@internationalized/date").AnyCalendarDate) => void) | undefined;
+        constrainDate?: ((date: import("@internationalized/date").AnyCalendarDate) => void) | undefined;
+        isInverseEra?: ((date: import("@internationalized/date").AnyCalendarDate) => boolean) | undefined;
+    };
+    readonly era: string;
+    readonly year: number;
+    readonly month: number;
+    readonly day: number;
+    readonly hour: number;
+    readonly minute: number;
+    readonly second: number;
+    readonly millisecond: number;
+    readonly timeZone: string;
+    readonly offset: number;
+    copy: () => import("@internationalized/date").ZonedDateTime;
+    add: (duration: import("@internationalized/date").DateTimeDuration) => import("@internationalized/date").ZonedDateTime;
+    subtract: (duration: import("@internationalized/date").DateTimeDuration) => import("@internationalized/date").ZonedDateTime;
+    set: (fields: import("@internationalized/date").DateFields & import("@internationalized/date").TimeFields, disambiguation?: import("@internationalized/date").Disambiguation) => import("@internationalized/date").ZonedDateTime;
+    cycle: (field: import("@internationalized/date").DateField | import("@internationalized/date").TimeField, amount: number, options?: import("@internationalized/date").CycleTimeOptions) => import("@internationalized/date").ZonedDateTime;
+    toDate: () => Date;
+    toString: () => string;
+    toAbsoluteString: () => string;
+    compare: (b: import("@internationalized/date").CalendarDate | import("@internationalized/date").CalendarDateTime | import("@internationalized/date").ZonedDateTime) => number;
+}>;
+type __VLS_PublicProps = __VLS_Props & {
+    modelValue: SingleDate;
+};
+declare const __VLS_ctx: InstanceType<__VLS_PickNotAny<typeof __VLS_self, new () => {}>>;
+declare var __VLS_125: {
+    tempValue: {
+        readonly calendar: {
+            identifier: import("@internationalized/date").CalendarIdentifier;
+            fromJulianDay: (jd: number) => import("@internationalized/date").CalendarDate;
+            toJulianDay: (date: import("@internationalized/date").AnyCalendarDate) => number;
+            getDaysInMonth: (date: import("@internationalized/date").AnyCalendarDate) => number;
+            getMonthsInYear: (date: import("@internationalized/date").AnyCalendarDate) => number;
+            getYearsInEra: (date: import("@internationalized/date").AnyCalendarDate) => number;
+            getEras: () => string[];
+            getMinimumMonthInYear?: ((date: import("@internationalized/date").AnyCalendarDate) => number) | undefined;
+            getMinimumDayInMonth?: ((date: import("@internationalized/date").AnyCalendarDate) => number) | undefined;
+            getFormattableMonth?: ((date: import("@internationalized/date").AnyCalendarDate) => import("@internationalized/date").CalendarDate) | undefined;
+            isEqual?: ((calendar: import("@internationalized/date").Calendar) => boolean) | undefined;
+            balanceDate?: ((date: import("@internationalized/date").AnyCalendarDate) => void) | undefined;
+            balanceYearMonth?: ((date: import("@internationalized/date").AnyCalendarDate, previousDate: import("@internationalized/date").AnyCalendarDate) => void) | undefined;
+            constrainDate?: ((date: import("@internationalized/date").AnyCalendarDate) => void) | undefined;
+            isInverseEra?: ((date: import("@internationalized/date").AnyCalendarDate) => boolean) | undefined;
+        };
+        readonly era: string;
+        readonly year: number;
+        readonly month: number;
+        readonly day: number;
+        copy: () => import("@internationalized/date").CalendarDate;
+        add: (duration: import("@internationalized/date").DateDuration) => import("@internationalized/date").CalendarDate;
+        subtract: (duration: import("@internationalized/date").DateDuration) => import("@internationalized/date").CalendarDate;
+        set: (fields: import("@internationalized/date").DateFields) => import("@internationalized/date").CalendarDate;
+        cycle: (field: import("@internationalized/date").DateField, amount: number, options?: import("@internationalized/date").CycleOptions) => import("@internationalized/date").CalendarDate;
+        toDate: (timeZone: string) => Date;
+        toString: () => string;
+        compare: (b: import("@internationalized/date").AnyCalendarDate) => number;
+    } | {
+        readonly calendar: {
+            identifier: import("@internationalized/date").CalendarIdentifier;
+            fromJulianDay: (jd: number) => import("@internationalized/date").CalendarDate;
+            toJulianDay: (date: import("@internationalized/date").AnyCalendarDate) => number;
+            getDaysInMonth: (date: import("@internationalized/date").AnyCalendarDate) => number;
+            getMonthsInYear: (date: import("@internationalized/date").AnyCalendarDate) => number;
+            getYearsInEra: (date: import("@internationalized/date").AnyCalendarDate) => number;
+            getEras: () => string[];
+            getMinimumMonthInYear?: ((date: import("@internationalized/date").AnyCalendarDate) => number) | undefined;
+            getMinimumDayInMonth?: ((date: import("@internationalized/date").AnyCalendarDate) => number) | undefined;
+            getFormattableMonth?: ((date: import("@internationalized/date").AnyCalendarDate) => import("@internationalized/date").CalendarDate) | undefined;
+            isEqual?: ((calendar: import("@internationalized/date").Calendar) => boolean) | undefined;
+            balanceDate?: ((date: import("@internationalized/date").AnyCalendarDate) => void) | undefined;
+            balanceYearMonth?: ((date: import("@internationalized/date").AnyCalendarDate, previousDate: import("@internationalized/date").AnyCalendarDate) => void) | undefined;
+            constrainDate?: ((date: import("@internationalized/date").AnyCalendarDate) => void) | undefined;
+            isInverseEra?: ((date: import("@internationalized/date").AnyCalendarDate) => boolean) | undefined;
+        };
+        readonly era: string;
+        readonly year: number;
+        readonly month: number;
+        readonly day: number;
+        readonly hour: number;
+        readonly minute: number;
+        readonly second: number;
+        readonly millisecond: number;
+        readonly timeZone: string;
+        readonly offset: number;
+        copy: () => import("@internationalized/date").ZonedDateTime;
+        add: (duration: import("@internationalized/date").DateTimeDuration) => import("@internationalized/date").ZonedDateTime;
+        subtract: (duration: import("@internationalized/date").DateTimeDuration) => import("@internationalized/date").ZonedDateTime;
+        set: (fields: import("@internationalized/date").DateFields & import("@internationalized/date").TimeFields, disambiguation?: import("@internationalized/date").Disambiguation) => import("@internationalized/date").ZonedDateTime;
+        cycle: (field: import("@internationalized/date").DateField | import("@internationalized/date").TimeField, amount: number, options?: import("@internationalized/date").CycleTimeOptions) => import("@internationalized/date").ZonedDateTime;
+        toDate: () => Date;
+        toString: () => string;
+        toAbsoluteString: () => string;
+        compare: (b: import("@internationalized/date").CalendarDate | import("@internationalized/date").CalendarDateTime | import("@internationalized/date").ZonedDateTime) => number;
+    };
+};
+type __VLS_Slots = __VLS_PrettifyGlobal<__VLS_OmitStringIndex<typeof __VLS_ctx.$slots> & {
+    default?: (props: typeof __VLS_125) => any;
+}>;
+declare const __VLS_self: import("vue").DefineComponent<__VLS_PublicProps, {
+    DatePickerArrow: typeof DatePickerArrow;
+    DatePickerCalendar: typeof DatePickerCalendar;
+    DatePickerCell: typeof DatePickerCell;
+    DatePickerCellTrigger: typeof DatePickerCellTrigger;
+    DatePickerContent: typeof DatePickerContent;
+    DatePickerField: typeof DatePickerField;
+    DatePickerGrid: typeof DatePickerGrid;
+    DatePickerGridBody: typeof DatePickerGridBody;
+    DatePickerGridHead: typeof DatePickerGridHead;
+    DatePickerGridRow: typeof DatePickerGridRow;
+    DatePickerHeadCell: typeof DatePickerHeadCell;
+    DatePickerHeader: typeof DatePickerHeader;
+    DatePickerHeading: typeof DatePickerHeading;
+    DatePickerInput: typeof DatePickerInput;
+    DatePickerNext: typeof DatePickerNext;
+    DatePickerPrev: typeof DatePickerPrev;
+    DatePickerRoot: typeof DatePickerRoot;
+    DatePickerTrigger: typeof DatePickerTrigger;
+    twMerge: typeof twMerge;
+    Icon: typeof Icon;
+    attrs: typeof attrs;
+    locale: typeof locale;
+    date: typeof date;
+    tempDate: typeof tempDate;
+}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {
+    "update:modelValue": (value: SingleDate) => any;
+}, string, import("vue").PublicProps, Readonly<__VLS_PublicProps> & Readonly<{
+    "onUpdate:modelValue"?: ((value: SingleDate) => any) | undefined;
+}>, {
+    timeZone: string;
+    fallbackDate: Date;
+    useTime: boolean;
+    updateInterval: number;
+}, {}, {}, {}, string, import("vue").ComponentProvideOptions, false, {}, any>;
+declare const __VLS_component: import("vue").DefineComponent<__VLS_PublicProps, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {
+    "update:modelValue": (value: SingleDate) => any;
+}, string, import("vue").PublicProps, Readonly<__VLS_PublicProps> & Readonly<{
+    "onUpdate:modelValue"?: ((value: SingleDate) => any) | undefined;
+}>, {
+    timeZone: string;
+    fallbackDate: Date;
+    useTime: boolean;
+    updateInterval: number;
+}, {}, {}, {}, string, import("vue").ComponentProvideOptions, false, {}, any>;
+declare const _default: __VLS_WithSlots<typeof __VLS_component, __VLS_Slots>;
+export default _default;
+type __VLS_WithSlots<T, S> = T & {
+    new (): {
+        $slots: S;
+    };
+};
+//# sourceMappingURL=LibSingleDatePicker.vue.d.ts.map
