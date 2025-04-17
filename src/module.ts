@@ -23,10 +23,15 @@ const knownDirectives = ["vExtractRootEl", "vResizableCols", "vResizeObserver", 
 
 const { resolve, resolvePath } = createResolver(import.meta.url)
 
-const componentsInfo: { name: string, filepath: string }[] = globFiles([
+const componentsInfo: {
+	name: string ,
+	originalName: string,
+	filepath: string;
+}[] = globFiles([
 	`${resolve("./runtime/components")}/**/*.vue*`,
 	`!**/Template/**.vue`,
 ],[], (filepath: string, name: string) => ({
+	originalName: name,
 	name: name.startsWith("Lib") ? name.replace("Lib", "PREFIX") : `PREFIX${name}`,
 	filepath,
 }))
@@ -59,6 +64,8 @@ export interface ModuleOptions {
 	 * @default "~/assets/css/tailwind.css"
 	 */
 	mainCssFile?: string
+	/** @internal */
+	_playgroundWorkaround?: boolean
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -75,6 +82,7 @@ export default defineNuxtModule<ModuleOptions>({
 		componentPrefix: "W",
 		debug: true,
 		mainCssFile: "~/assets/css/tailwind.css",
+		_playgroundWorkaround: false,
 	},
 	async setup(options, nuxt) {
 		const moduleName = "@witchcraft/ui"
@@ -102,18 +110,22 @@ export default defineNuxtModule<ModuleOptions>({
 		)
 
 
-		const contents = [
-			...componentsInfo.map(_ => _.filepath)
-		]
 		addTemplate({
 			filename: "witchcraft-ui.css",
 			write: true,
-			getContents: () => crop`
-				${indent(themeAsTailwindCss(theme, themeConvertionOpts), 4)}
-				@import "@witchcraft/ui/style.css";
-				@import "@witchcraft/ui/base.css";
-				${indent(contents.map(_ => `@source "${_}";`).join("\n"), 4)}
-			`,
+			getContents: () => options._playgroundWorkaround
+				? crop`
+					${indent(themeAsTailwindCss(theme, themeConvertionOpts), 5)}
+					@import "${resolve("runtime/assets/base.css")}";
+					@import "${resolve("runtime/assets/style.css")}";
+					${indent(filteredComponentsInfo.map(_ => `@source "${_.filepath}";`).join("\n"), 5)}
+				`
+				: crop`
+					${indent(themeAsTailwindCss(theme, themeConvertionOpts), 5)}
+					@import "@witchcraft/ui/base.css";
+					@import "@witchcraft/ui/style.css";
+					${indent(filteredComponentsInfo.map(_ => `@source "${_.filepath}";`).join("\n"), 5)}
+				`
 		})
 		
 		

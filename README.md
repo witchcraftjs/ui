@@ -24,8 +24,8 @@ The module automatically sets up tailwind v4 and generates a custom `witchcraft-
 
 It does not install "@nuxtjs/tailwindcss" for now since it's not compatible with v4. See [#919](https://github.com/nuxt-modules/tailwindcss/issues/919).
 
-```css[~/assets/css/tailwind.css]
-@import "@tailwindcss";
+```css [~/assets/css/tailwind.css]
+@import "@tailwindcss" source("../../../app");
 @import "../../../.nuxt/witchcraft-ui.css";
 ```
 
@@ -108,17 +108,11 @@ See [@witchcraft/editor/vite.config.dev.ts].
 #### Extra Classes
 
 ```css
-@import "@witchcraft/ui/style.css"; /* tailwind v4 style utils - required */
+@import "@witchcraft/ui/utils.css";
 @import "@witchcraft/ui/base.css";
-@source "@witchcraft/ui/src/runtime/components";
+@source "/path/to/node_modules/@witchcraft/ui/src/runtime/components";
 ```
-Base just contains animation keyframes and basic styles for vue animations. They will get imported regardless of whether they are used since otherwise tailwind does not detect they are being used.
-
-
-#### Tailwind Configuration
-
-This module does everything v4 style, so no configuration is needed.
-
+Base just contains animation keyframes, basic styles for vue animations, and some basic global styles. They will get imported regardless of whether they are used since otherwise tailwind does not detect they are being used.
 
 #### tailwind-merge
 

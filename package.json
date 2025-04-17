@@ -68,8 +68,7 @@
 	"scripts": {
 		"//prepare": "echo Needed so that if we pull the package from git it will get built and installed properly.",
 		"prepare": "husky && pnpm gen:theme && pnpm build",
-		"build": "nuxt-module-build prepare && nuxt-module-build build && pnpm build:playground",
-		"build:playground": "cd playground && pnpm link:module && pnpm generate",
+		"build": "nuxt-module-build prepare && nuxt-module-build build && nuxi generate playground",
 		"dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
 		"dev": "nuxi dev playground",
 		"storybook": "BROWSER=none storybook dev -p 6006",
@@ -163,7 +162,7 @@
 		"husky": "^9.0.11",
 		"indexit": "2.1.0-beta.3",
 		"madge": "^7.0.0",
-		"nuxt": "^3.16.2",
+		"nuxt": "~3.15.0",
 		"radix-vue": "^1.9.11",
 		"semantic-release": "^24.1.2",
 		"storybook": "^8.6.12",
