@@ -117,13 +117,13 @@ export default defineNuxtModule<ModuleOptions>({
 				? crop`
 					${indent(themeAsTailwindCss(theme, themeConvertionOpts), 5)}
 					@import "${resolve("runtime/assets/base.css")}";
-					@import "${resolve("runtime/assets/style.css")}";
+					@import "${resolve("runtime/assets/utils.css")}";
 					${indent(filteredComponentsInfo.map(_ => `@source "${_.filepath}";`).join("\n"), 5)}
 				`
 				: crop`
 					${indent(themeAsTailwindCss(theme, themeConvertionOpts), 5)}
 					@import "@witchcraft/ui/base.css";
-					@import "@witchcraft/ui/style.css";
+					@import "@witchcraft/ui/utils.css";
 					${indent(filteredComponentsInfo.map(_ => `@source "${_.filepath}";`).join("\n"), 5)}
 				`
 		})

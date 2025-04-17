@@ -29,7 +29,7 @@ It does not install "@nuxtjs/tailwindcss" for now since it's not compatible with
 @import "../../../.nuxt/witchcraft-ui.css";
 
 // without Nuxt:
-@import "@witchcraft/ui/style.css";
+@import "@witchcraft/ui/utils.css";
 @import "@witchcraft/ui/base.css";
 // source used components
 @source "@witchcraft/ui/components";

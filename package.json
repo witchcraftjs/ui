@@ -51,7 +51,7 @@
 			"types": "./dist/runtime/build/*.d.ts",
 			"import": "./dist/runtime/build/*"
 		},
-		"./style.css": "./src/runtime/assets/style.css",
+		"./utils.css": "./src/runtime/assets/utils.css",
 		"./base.css": "./src/runtime/assets/base.css",
 		"./nuxt": {
 			"import": "./dist/module.mjs",
