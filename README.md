@@ -16,7 +16,7 @@ This is unfortunately not true styleless since the tailwind classes are still in
 
 # Usage with Nuxt
 
-Modules, composables, and directives should work out of the box without auto imports. 
+Modules, composables, and directives should work out of the box without auto imports. The module also installs the `radix-vue/nuxt` module.
 
 ## Tailwind (V4)
 
@@ -27,6 +27,13 @@ It does not install "@nuxtjs/tailwindcss" for now since it's not compatible with
 ```css [~/assets/css/tailwind.css]
 @import "@tailwindcss" source("../../../app");
 @import "../../../.nuxt/witchcraft-ui.css";
+
+// without Nuxt:
+@import "@witchcraft/ui/style.css";
+@import "@witchcraft/ui/base.css";
+// source used components
+@source "@witchcraft/ui/components";
+
 ```
 
 ## Icons
