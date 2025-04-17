@@ -30,6 +30,7 @@ const meta = {
 	args: {
 		border: true,
 		label: "Some Label",
+		_template: undefined,
 	},
 } satisfies Meta<typeof LibInput> & Meta<{ custom: string }>
 
@@ -54,6 +55,7 @@ const playAutosuggestSelectLike = async (context: { canvasElement: HTMLElement, 
 
 const setupModelValue = (args: any) => ({
 	modelValue: ref(args.modelValue ?? ""),
+	inputValue: ref(args.inputValue ?? ""),
 })
 
 const setupModelValues = (args: any) => ({
@@ -64,6 +66,7 @@ const Base: Story = {
 	render: args => ({
 		components: allComponents,
 		setup: () => ({
+			
 			...setupModelValue(args),
 			...setupModelValues(args),
 			args: {
@@ -72,11 +75,12 @@ const Base: Story = {
 			},
 		}),
 
-		template: `
+		template: (args as any)._template ?? `
 			Model Value: <span class="inline-block" data-testid="model-value">{{modelValue}}</span>\n
 			<lib-input
 				v-bind="args"
 				v-model:values="values"
+				v-model:inputValue="inputValue"
 				v-model="modelValue"
 				@submit="modelValue = $event"
 			>
@@ -144,6 +148,15 @@ export const WithAutosuggest = {
 	},
 	play: playAutosuggestSelectLike
 }
+
+export const WithAutosuggestNoLabel = {
+	...Base,
+	args: {
+		label: undefined,
+		suggestions: ["A", "AB", "ABC", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"],
+	},
+	play: playAutosuggestSelectLike
+}
 export const WithInstantAutosuggest = {
 	...Base,
 	args: {
@@ -157,6 +170,27 @@ export const AutosuggestRestricted = {
 		restrictToSuggestions: true,
 	},
 	play: playAutosuggestSelectLike
+}
+export const AutosuggestRestrictedWithClearOnClick = {
+	...WithAutosuggest,
+	args: {
+		...WithAutosuggest.args,
+		restrictToSuggestions: true,
+		_template: `
+				Model Value: <span class="inline-block" data-testid="model-value">{{modelValue}}</span>\n
+				Temp Value: <span class="inline-block" data-testid="temp-value">{{inputValue}}</span>\n
+				<lib-input
+					v-bind="args"
+					v-model:values="values"
+					v-model:inputValue="inputValue"
+					v-model="modelValue"
+					@submit="modelValue = $event"
+					@click="inputValue = ''"
+				>
+				</lib-input>
+			`
+	},
+	play: null,
 }
 export const AutosuggestSelectLikeShowAllUnrestricted = {
 	...WithAutosuggest,
@@ -356,7 +390,7 @@ export const NextToButton: Story = {
 				v-bind="args"
 				v-model:values="values"
 				v-model="modelValue"
-:label="undefined"
+				:label="undefined"
 			>
 			</lib-input>
 			<lib-button>Button</lib-button>
