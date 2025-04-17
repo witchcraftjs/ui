@@ -45,7 +45,7 @@ export const WithoutLabel: Story = {
 	...Primary,
 	args: {
 		...Primary.args,
-		autoLabel: false,
+		showLabel: false,
 	},
 }
 

@@ -8,31 +8,33 @@
 		($attrs as any)?.class
 	)"
 	:title="`${t('dark-mode-switcher.title')}${t(`dark-mode-switcher.${darkModeState}`)}`"
-	:label="showLabel
-		? t(`dark-mode-switcher.${darkModeState}`)
-		: ''
-	"
 	@click="cycleDarkMode"
 >
+	<!-- content-vertical-holder will keep the icon the height of a text line regardless of the svg used -->
 	<template #icon>
 		<icon
 			v-if="darkModeState==='dark'"
-			class="w-[1em] flex items-center"
+			class="w-[1em] flex items-center content-vertical-holder"
 		>
 			<i-fa-solid-moon/>
 		</icon>
 		<icon
 			v-else-if="darkModeState==='light'"
-			class="w-[1em]"
+			class="w-[1em] content-vertical-holder"
 		>
 			<i-ph-sun-bold/>
 		</icon>
 		<icon
 			v-else
-			class="w-[1em]"
+			class="w-[1em] content-vertical-holder"
 		>
 			<i-fa6-solid-circle-half-stroke/>
 		</icon>
+	</template>
+	<template #default v-if="showLabel">
+		<div class="pr-[2px]">
+			{{ t(`dark-mode-switcher.${darkModeState}`) }}
+		</div>
 	</template>
 </lib-button>
 </template>
@@ -57,7 +59,7 @@ const emit = defineEmits<{
 const $attrs = useAttrs()
 
 // eslint-disable-next-line no-use-before-define
-withDefaults(defineProps<Props>(), { })
+withDefaults(defineProps<Props>(), { showLabel: true })
 
 
 const {
