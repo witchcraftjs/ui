@@ -65,3 +65,12 @@ animations can be calculated correctly. */
 a {
 	@apply link-like;
 }
+
+* {
+	 @apply styled-scrollbar;
+}
+
+textarea {
+	@apply styled-resizer;
+}
+

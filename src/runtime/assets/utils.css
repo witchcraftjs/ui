@@ -125,6 +125,88 @@
 		display: none;
 	}
 }
+@utility styled-scrollbar {
+	/* local defaults */
+	--_scrollbar_width: var(--scrollbar-width, calc(3 * var(--spacing)));
+	--_scrollbar_border_width: var(--scrollbar-border-width, calc(var(--spacing)/2));
+	--_scrollbar_color: var(--scrollbar-color, --alpha(var(--color-accent-500) / 40%));
+	--_scrollbar_hover_color: var(--scrollbar-hover-color, --alpha(var(--color-accent-500) / 80%));
+	--_scrollbar_bg_color: var(--scrollbar-bg-color, var(--color-bg));
+
+	.dark & {
+		--_scrollbar_bg_color: var(--scrollbar-bg-color, var(--color-fg));
+	}
+	/* Chrome, Edge and Safari */
+	&::-webkit-scrollbar {
+		width: var(--_scrollbar_width);	
+		height: var(--_scrollbar_width);
+	}
+	&::-webkit-scrollbar-corner {
+		background-color: transparent;
+	}
+	&::-webkit-scrollbar-track {
+		border-radius: var(--_scrollbar_width);
+		background-color: transparent;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		border-radius: var(--_scrollbar_width);
+		background-color: var(--_scrollbar_color);
+		border: var(--_scrollbar_border_width) solid var(--_scrollbar_bg_color);
+	}
+
+	&::-webkit-scrollbar-thumb:hover {
+		border-radius: var(--_scrollbar_width);
+		background-color: var(--_scrollbar_hover_color);
+		cursor: pointer;
+	}
+
+	&::-webkit-scrollbar-thumb:active {
+		border-radius: var(--_scrollbar_width);
+		background-color: var(--_scrollbar_hover_color);
+	}
+}
+
+@utility styled-scrollbar-w-* {
+	--scrollbar-width: --value(integer);
+}
+
+@utility styled-scrollbar-border-w-* {
+	--scrollbar-border-width: --value(integer);
+}
+
+@utility styled-scrollbar-* {
+	--scrollbar-color: --value(--color-*);
+}
+@utility styled-scrollbar-bg-* {
+	--scrollbar-bg-color: --value(--color-*);
+}
+
+/** only for textareas */
+@utility styled-resizer {
+	--_resizer_width: var(--resizer-width, 8px);
+	--_resizer_color: var(--resizer-color, var(--color-neutral-300));
+	.dark & {
+		--_resizer_color: var(--resizer-color, var(--color-neutral-700));
+	}
+	&::-webkit-resizer {
+		border-width: var(--_resizer_width);
+		border-style: solid;
+		border-top-color: transparent;
+		border-right-color: var(--_resizer_color);
+		border-bottom-color: var(--_resizer_color);
+		border-left-color: transparent;
+	}
+}
+
+@utility styled-resizer-w-* {
+	--resizer-width: --value(integer);
+}
+@utility styled-resizer-color-* {
+	--resizer-color: --value(--color-*);
+}
+
+
 @utility content-vertical-holder {
 	--tw-content: "\200b";
 	content: var(--tw-content);
