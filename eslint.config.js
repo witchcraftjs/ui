@@ -36,6 +36,7 @@ export default createConfigForNuxt({
 				"jsdoc/check-tag-names": ["warn", {
 					definedTags: [
 						"vue-ignore",
+						"experimental"
 					]
 				}]
 			}

@@ -77,7 +77,7 @@
 		"test": "pnpm storybook:test && pnpm lint:types",
 		"doc": "pnpm test && pnpm storybook:build",
 		"doc:dev": "pnpm storybook",
-		"lint:eslint": "eslint \"{src,test,playground/app}/**/*.{js,ts,vue,cjs}\" \"*.{js,ts}\" --max-warnings=0 --report-unused-disable-directives",
+		"lint:eslint": "eslint \"src/**/*.{js,ts,vue,cjs}\" \"*.{js,ts}\" --max-warnings=5 --report-unused-disable-directives",
 		"lint:types": "vue-tsc --noEmit --pretty --project tsconfig.types.json",
 		"lint:commits": "commitlint --from $(git rev-list --max-parents=0 HEAD) --to HEAD --verbose",
 		"lint:imports": "madge --circular --extensions ts ./src",

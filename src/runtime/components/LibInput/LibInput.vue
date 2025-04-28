@@ -152,13 +152,11 @@
 <script setup lang="ts">
 import { isBlank } from "@alanscodelog/utils/isBlank.js"
 import { pushIfNotIn } from "@alanscodelog/utils/pushIfNotIn.js"
-import type { MakeRequired } from "@alanscodelog/utils/types"
-import { computed,type HTMLAttributes,type InputHTMLAttributes, nextTick, type PropType, ref, toRef, useSlots, watch } from "vue"
+import { computed,type HTMLAttributes,type InputHTMLAttributes, nextTick, onBeforeMount, ref, toRef, useSlots, watch } from "vue"
 import type { ComponentExposed } from "vue-component-type-helpers"
 
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
 import { useSuggestionsInputAria } from "../../composables/useSuggestions.js"
-import { hasModifiers } from "../../helpers/hasModifiers.js"
 import { twMerge } from "../../utils/twMerge.js"
 import Icon from "../Icon/Icon.vue"
 import LibLabel from "../LibLabel/LibLabel.vue"
@@ -342,6 +340,7 @@ defineExpose({
 	suggestionsComponent,
 	el: inputWrapperEl,
 })
+
 </script>
 <script lang="ts">
 

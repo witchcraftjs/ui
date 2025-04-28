@@ -24,9 +24,9 @@ const knownDirectives = ["vExtractRootEl", "vResizableCols", "vResizeObserver", 
 const { resolve, resolvePath } = createResolver(import.meta.url)
 
 const componentsInfo: {
-	name: string ,
-	originalName: string,
-	filepath: string;
+	name: string
+	originalName: string
+	filepath: string
 }[] = globFiles([
 	`${resolve("./runtime/components")}/**/*.vue*`,
 	`!**/Template/**.vue`,
