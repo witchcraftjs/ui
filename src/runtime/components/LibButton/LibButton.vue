@@ -46,7 +46,7 @@
 			after:pointer-events-none
 			after:mix-blend-overlay
 
-			active:shadow-inner
+			active:inset-shadow
 			active:shadow-fg/20
 			active:border-transparent
 			border
