@@ -71,6 +71,7 @@ import type { MakeRequired } from "@alanscodelog/utils/types"
 import { computed, type HTMLAttributes, type InputHTMLAttributes,type PropType, ref, useAttrs, useSlots } from "vue"
 
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
+import { usePreHydrationValue } from "../../composables/usePreHydrationValue.js"
 import { twMerge } from "../../utils/twMerge.js"
 import { type BaseInteractiveProps, baseInteractivePropsDefaults, getFallbackId,type LabelProps, type LinkableByIdProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
 
@@ -99,7 +100,7 @@ const el = ref<null | HTMLElement>(null)
 const inputEl = ref<null | HTMLElement>(null)
 const $value = defineModel<boolean>("modelValue", { default: false })
 
-
+usePreHydrationValue(props.id ?? fallbackId, $value)
 </script>
 
 <script lang="ts">

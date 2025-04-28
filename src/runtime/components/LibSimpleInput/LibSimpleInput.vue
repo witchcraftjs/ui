@@ -71,13 +71,10 @@
 
 
 <script lang="ts" setup generic="T">
-import { keys } from "@alanscodelog/utils/keys.js"
-import { pick } from "@alanscodelog/utils/pick.js"
-import type { MakeRequired } from "@alanscodelog/utils/types"
-import { castType } from "@alanscodelog/utils/utils"
-import { getCurrentInstance, type InputHTMLAttributes, type InputTypeHTMLAttribute,toRef,useAttrs } from "vue"
+import { type InputHTMLAttributes, useAttrs } from "vue"
 
 import { useAriaLabel } from "../../composables/useAriaLabel.js"
+import { usePreHydrationValue } from "../../composables/usePreHydrationValue.js"
 import { hasModifiers } from "../../helpers/hasModifiers.js"
 import { twMerge } from "../../utils/twMerge.js"
 import { type BaseInteractiveProps, baseInteractivePropsDefaults, getFallbackId,type LabelProps, type LinkableByIdProps, type TailwindClassProp } from "../shared/props.js"
@@ -115,6 +112,7 @@ function handleKeydown(e: KeyboardEvent) {
 		emit("submit", modelValue.value)
 	}
 }
+usePreHydrationValue(props.id ?? fallbackId, modelValue)
 
 </script>
 
