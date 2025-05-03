@@ -16,30 +16,22 @@ export default createConfigForNuxt({
 })
 	.append(
 		...vueConfig,
-		{
-			files: ["**/*"],
-			ignores: [".nuxt/"],
-			// for auto imports
-			rules: {
-				"no-undef": "off",
-			},
-		},
+	
 		{
 			files: [`**/*.stories.*`],
 			rules: {
 				"@typescript-eslint/explicit-function-return-type": "off"
 			}
 		},
-		{
-			files: [`**/*.vue`],
-			rules: {
-				"jsdoc/check-tag-names": ["warn", {
-					definedTags: [
-						"vue-ignore",
-						"experimental"
-					]
-				}]
-			}
-		},
-		
 	)
+	.overrideRules({
+		"@typescript-eslint/switch-exhaustiveness-check" : ["warn", {
+			considerDefaultExhaustiveForUnions : true
+		}],
+		"jsdoc/check-tag-names": ["warn", {
+			definedTags: [
+				"vue-ignore",
+				"experimental"
+			]
+		}]
+	})
