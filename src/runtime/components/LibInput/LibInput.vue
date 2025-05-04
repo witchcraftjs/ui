@@ -329,8 +329,8 @@ const multivaluesProps = computed(() => ({
 	border: props.border,
 	disabled: props.disabled,
 	readonly: props.readonly,
-	values: $values.value,
-	"onUpdate:values": (e: string[]) => $values.value = e,
+	modelValue: $values.value,
+	"onUpdate:modelValue": (e: string[]) => $values.value = e,
 	...$.value.multivaluesAttrs,
 	class: undefined,
 }))

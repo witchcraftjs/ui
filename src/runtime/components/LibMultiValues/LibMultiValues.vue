@@ -1,6 +1,6 @@
 <template>
 <div
-	v-if="$values && $values?.length > 0"
+	v-if="$modelValue && $modelValue?.length > 0"
 	:class="twMerge(`
 		values
 		group
@@ -53,7 +53,7 @@
 			($.itemAttrs as any)?.class
 		)"
 		:tabindex="canEdit ? 0 : undefined"
-		v-for="(value) of $values"
+		v-for="(value) of $modelValue"
 		:key="value"
 		@keydown.ctrl.c.prevent="copy(value.toString())"
 	>
@@ -80,7 +80,7 @@ import { copy } from "../../helpers/copy.js"
 import { twMerge } from "../../utils/twMerge.js"
 import Icon from "../Icon/Icon.vue"
 import LibButton from "../LibButton/LibButton.vue"
-import { type BaseInteractiveProps, baseInteractivePropsDefaults,type LabelProps, type MultiValueProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
+import { type BaseInteractiveProps, baseInteractivePropsDefaults,type LabelProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
 
 
 defineOptions({
@@ -96,11 +96,11 @@ const props = withDefaults(defineProps<Props>(), {
 
 
 const canEdit = computed(() => !props.disabled && !props.readonly)
-const $values = defineModel<T[]>("values", { default: () => []})
+const $modelValue = defineModel<T[]>({ default: () => []})
 
 const removeVal = (value: T) => {
 	if (!canEdit.value) return
-	removeIfIn($values.value, value)
+	removeIfIn($modelValue.value, value)
 }
 </script>
 
@@ -110,7 +110,6 @@ type WrapperTypes = Partial<WrapperProps<"item",HTMLAttributes>>
 type RealProps =
 	& LabelProps
 	& BaseInteractiveProps
-	& MultiValueProps
 	& {
 		border?: boolean
 	}

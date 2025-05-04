@@ -12,7 +12,7 @@ const meta = {
 	component: LibMultiValues as any,
 	title: "Components/MultiValues",
 	args: {
-		values: ["A", "B", "C"],
+		modelValue: ["A", "B", "C"],
 		border: true,
 	},
 	tags: ["!test"],
@@ -36,7 +36,7 @@ export const Primary: Story = {
 			const inputValue = ref("B")
 			const multiValueEl = ref<typeof LibMultiValues | null>(null)
 			const onKeydownEnter = (e: KeyboardEvent): void => {
-				if (e.key === "Enter") (args.values!).push(inputValue.value)
+				if (e.key === "Enter") (args.modelValue!).push(inputValue.value)
 			}
 			return ({
 				args,
@@ -49,7 +49,8 @@ export const Primary: Story = {
 
 		template: `
 			<p>Simple Input connected to multi-value.</p>
-			<p> Press enter to add value:</p>
+			<p>Note: You will be able to add values, including duplicates, even to the disabled/readonly version in this test, see the Input component for a properly connected approach.</p>
+			<p> Press enter to add value :</p>
 			<lib-simple-input
 				v-model="inputValue"
 				@keydown="onKeydownEnter"
@@ -60,7 +61,7 @@ export const Primary: Story = {
 				<lib-multi-values
 					ref="multiValueEl"
 					v-bind="args"
-					v-model:values="args.values"
+					v-model="args.modelValue"
 				/>
 			</div>
 		`,
