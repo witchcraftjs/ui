@@ -12,13 +12,13 @@
 		overflow-x-scroll
 		scrollbar-hidden
 	`,
-		($ as any)?.class)
+		($.attrs as any)?.class)
 	"
 	:data-disabled="disabled"
 	:data-read-only="readonly"
 	:aria-label="`Values for ${label}`"
 	:tabindex="disabled ? -1 : 0"
-	v-bind="{...$, class:undefined}"
+	v-bind="{...$.attrs, class:undefined}"
 >
 	<div
 		:data-border="border"
