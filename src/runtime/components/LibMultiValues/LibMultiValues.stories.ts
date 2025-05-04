@@ -12,7 +12,7 @@ const meta = {
 	component: LibMultiValues as any,
 	title: "Components/MultiValues",
 	args: {
-		values: ["A", "B", "C"],
+		modelValue: ["A", "B", "C"],
 		border: true,
 	},
 	tags: ["!test"],
@@ -60,7 +60,7 @@ export const Primary: Story = {
 				<lib-multi-values
 					ref="multiValueEl"
 					v-bind="args"
-					v-model:values="args.values"
+					v-model="args.modelValue"
 				/>
 			</div>
 		`,

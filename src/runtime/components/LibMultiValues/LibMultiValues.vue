@@ -96,7 +96,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 
 const canEdit = computed(() => !props.disabled && !props.readonly)
-const $values = defineModel<T[]>("values", { default: () => []})
+const $values = defineModel<T[]>({ default: () => []})
 
 const removeVal = (value: T) => {
 	if (!canEdit.value) return
