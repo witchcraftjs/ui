@@ -38,30 +38,17 @@ const isRange = computed(() => date.value !== undefined && !(date.value instance
 </script>
 
 <template>
-<LibSingleDatePicker
-	v-if="!isRange"
-	v-bind="attrs"
-	:id="id ?? fallbackId"
-	:use-time="showTime"
-	:time-zone="timeZone"
-	:fallback-date="fallbackDate"
-	v-model="date as SingleDate"
->
-	<template #default="slotProps">
-		<slot v-bind="slotProps"/>
-	</template>
-</LibSingleDatePicker>
-<LibRangeDatePicker
-	v-else
+<component
 	:id="id ?? fallbackId"
 	v-bind="attrs"
 	:use-time="showTime"
 	:time-zone="timeZone"
 	:fallback-date="fallbackDate"
-	v-model="date as RangeDate"
+	:is="isRange ? LibRangeDatePicker : LibSingleDatePicker"
+	v-model="date as any"
 >
 	<template #default="slotProps">
 		<slot v-bind="slotProps"/>
 	</template>
-</LibRangeDatePicker>
+</component>
 </template>

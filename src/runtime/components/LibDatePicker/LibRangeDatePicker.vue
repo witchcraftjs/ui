@@ -363,7 +363,6 @@ watch(tempDate, () => {
 				</DateRangePickerGrid>
 			</div>
 			<slot v-bind="{tempValue: tempDate}"/>
-			<slot/>
 		</DateRangePickerCalendar>
 	</DateRangePickerContent>
 </DateRangePickerRoot>
