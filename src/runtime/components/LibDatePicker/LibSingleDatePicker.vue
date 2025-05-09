@@ -28,19 +28,35 @@ const props = withDefaults(defineProps<{
 const locale = useInjectedLocale().timeLocale
 
 const date = defineModel<SingleDate>({ required: true })
-const tempDate = ref(convertDateWithFallback(date.value, props))
-watch(() => props.timeZone, () => {
+
+let justSet = false
+const tempDate = ref()
+function updateTempDate() {
 	tempDate.value = convertDateWithFallback(date.value, props)
+}
+
+updateTempDate()
+
+watch(date, () => {
+	if (!justSet) {
+		updateTempDate()
+	} else {
+		justSet = false
+	}
+})
+watch(tempDate, () => {
+	justSet = true
+	date.value = toEmittableDate(toRaw(tempDate.value as any))
 })
 
-watch(tempDate, () => {
-	date.value = toEmittableDate(toRaw(tempDate.value as any))
+watch(() => props.timeZone, () => {
+	updateTempDate()
 })
 
 const interval = setInterval(() => {
 	if (!date.value) {
 		// update suggested date if none is set
-		tempDate.value = convertDateWithFallback(date.value, props)
+		updateTempDate()
 	}
 }, props.updateInterval)
 

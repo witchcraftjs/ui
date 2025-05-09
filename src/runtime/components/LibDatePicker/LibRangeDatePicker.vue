@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { type DateValue, getLocalTimeZone } from "@internationalized/date"
-import type { DateRange } from "radix-vue"
 import { DateRangePickerArrow, DateRangePickerCalendar, DateRangePickerCell, DateRangePickerCellTrigger, DateRangePickerContent, DateRangePickerField, DateRangePickerGrid, DateRangePickerGridBody, DateRangePickerGridHead, DateRangePickerGridRow, DateRangePickerHeadCell,DateRangePickerHeader, DateRangePickerHeading, DateRangePickerInput, DateRangePickerNext, DateRangePickerPrev, DateRangePickerRoot, DateRangePickerTrigger } from "radix-vue"
+import { CalendarDate, type DateValue, getLocalTimeZone, ZonedDateTime } from "@internationalized/date"
+import type { DateRange } from "reka-ui"
 import { onBeforeUnmount, ref, toRaw, useAttrs, watch } from "vue"
 
 import { convertDateWithFallback, getNow,toEmittableDate } from "./helpers.js"
@@ -28,26 +28,47 @@ const props = withDefaults(defineProps<{
 const date = defineModel<RangeDate>({ required: true })
 
 
-const tempDate = ref({
-	start: convertDateWithFallback(date.value?.start, props),
-	end: convertDateWithFallback(date.value?.end, props)
-})
-watch(() => props.timeZone, () => {
-	tempDate.value = {
-		start: convertDateWithFallback(date.value?.start, props),
-		end: convertDateWithFallback(date.value?.end, props)
+let justSet = false
+
+const tempDate = ref<{
+	start?: CalendarDate | ZonedDateTime
+	end?: CalendarDate | ZonedDateTime
+}>({})
+function updateTempDate(keys: ("start" | "end")[] = ["start", "end"]) {
+	const newValue = { ...tempDate.value }
+	for (const key of keys) {
+		newValue[key] = convertDateWithFallback(date.value?.[key], props)
+	}
+	// the WHOLE object must be updated due to how the reka date picker works
+	tempDate.value = newValue
+}
+
+watch(date, () => {
+	if (!justSet) {
+		updateTempDate()
+	} else {
+		justSet = false
 	}
 })
 
+watch(tempDate, () => {
+	if (!tempDate.value.start || !tempDate.value.end) return
+	justSet = true
+	date.value = {
+		start: tempDate.value.start ? toEmittableDate(toRaw(tempDate.value.start) as any) : undefined,
+		end: tempDate.value.end ? toEmittableDate(toRaw(tempDate.value.end) as any) : undefined
+	}
+})
+
+watch(() => props.timeZone, () => {
+	updateTempDate()
+})
+
+
 const interval = setInterval(() => {
-	if (!date.value.start) {
-		// update suggested date if none is set
-		tempDate.value.start = convertDateWithFallback(date.value.start, props)
-	}
-	if (!date.value.end) {
-		// update suggested date if none is set
-		tempDate.value.end = convertDateWithFallback(date.value.end, props)
-	}
+	// update suggested date if none is set
+	if (!date.value.start) updateTempDate(["start"])
+	if (!date.value.end) updateTempDate(["end"])
 }, props.updateInterval)
 
 onBeforeUnmount(() => {
@@ -56,12 +77,7 @@ onBeforeUnmount(() => {
 
 const locale = useInjectedLocale().timeLocale
 
-watch(tempDate, () => {
-	date.value = {
-		start: tempDate.value.start ? toEmittableDate(toRaw(tempDate.value.start) as any) : undefined,
-		end: tempDate.value.end ? toEmittableDate(toRaw(tempDate.value.end) as any) : undefined
-	}
-})
+
 </script>
 
 <template>
