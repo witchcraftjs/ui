@@ -61,7 +61,7 @@ export interface ModuleOptions {
 	componentPrefix: string
 	debug?: boolean
 	/**
-	 * @default "~/assets/css/tailwind.css"
+	 * @default "~/assets/css/tailwind.css" if it exists.
 	 */
 	mainCssFile?: string
 	/** @internal */
@@ -172,7 +172,13 @@ export default defineNuxtModule<ModuleOptions>({
 				]
 			}
 		})
-		nuxt.options.css.push(await resolvePath(options.mainCssFile!, nuxt.options.alias))
+		const mainCssFile = await resolvePath(options.mainCssFile!, nuxt.options.alias)
+
+		const exists = fs.existsSync(mainCssFile)
+		if (exists) {
+			nuxt.options.css.push(mainCssFile)
+		}
+
 		// we need to hook in first before it does, otherwise the plugins don't load correctly
 		await installModule("unplugin-icons/nuxt")
 		await installModule("reka-ui/nuxt")
