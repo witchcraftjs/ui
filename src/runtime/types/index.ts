@@ -54,6 +54,8 @@ export type FileInputError = ErrorW<{ file: File, isValidMimeType: boolean, isVa
 export type HsvaColor = { h: number, s: number, v: number, a?: number }
 export type RgbaColor = { r: number, g: number, b: number, a?: number }
 
+export type Point = { x: number, y: number }
+
 export type ScrollNearContainerEdgesOptions = {
 	containerEl: Ref< HTMLElement | null>
 	/** Margin inside contianer that allows scrolling. 10 by default. */
