@@ -43,7 +43,8 @@ function updateTempDate(keys: ("start" | "end")[] = ["start", "end"]) {
 	tempDate.value = newValue
 }
 
-watch(date, () => {
+// to avoid too deep of a watch
+watch([() => date.value.start, () => date.value.end], () => {
 	if (!justSet) {
 		updateTempDate()
 	} else {
