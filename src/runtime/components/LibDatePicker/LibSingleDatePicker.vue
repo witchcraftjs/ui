@@ -86,7 +86,7 @@ onBeforeUnmount(() => {
 			(attrs as any).class)
 		"
 	>
-		<div :class="twMerge(`segments flex items-center overflow-scroll scrollbar-hidden whitespace-nowrapa`, date === undefined && 'text-neutral-400')">
+		<div :class="twMerge(`segments flex items-center overflow-scroll scrollbar-hidden whitespace-nowrap`, date === undefined && 'text-neutral-400')">
 			<template
 				v-for="item in segments"
 				:key="item.part"
