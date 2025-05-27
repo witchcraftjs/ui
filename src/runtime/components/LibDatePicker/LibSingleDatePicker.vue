@@ -70,7 +70,6 @@ onBeforeUnmount(() => {
 <DatePickerRoot
 	:id="id"
 	:locale="locale"
-	class="root"
 	v-model="tempDate as DateValue"
 >
 	<DatePickerField
@@ -142,12 +141,15 @@ onBeforeUnmount(() => {
 			</Icon>
 		</DatePickerTrigger>
 	</DatePickerField>
-
-	<!-- @vue-expect-error to exists -->
+	<!-- @vue-expect-error to exists-->
 	<DatePickerContent
 		:side-offset="4"
+		:avoid-collisions="true"
+		:prioritize-position="true"
+		side="bottom"
 		to="#root"
 		class="
+				z-100
 				mx-2
 				rounded-sm
 				bg-bg
@@ -299,13 +301,15 @@ onBeforeUnmount(() => {
 											focus:shadow
 											focus-outline
 											hover:border-accent-500
-											data-[selected]:bg-accent-700
+											data-[selected]:bg-accent-500
+											dark:data-[selected]:bg-accent-500/80
 											data-[selected]:shadow
 											data-[disabled]:text-neutral-500
 											data-[selected]:text-white
 											data-[unavailable]:pointer-events-none
 											data-[unavailable]:text-neutral-500
 											data-[unavailable]:line-through
+											data-[outside-view]:text-neutral-500
 											before:absolute
 											before:bottom-[1px]
 											before:hidden
@@ -314,7 +318,8 @@ onBeforeUnmount(() => {
 											before:h-[2px]
 											before:bg-white
 											data-[today]:before:block
-											data-[today]:before:bg-accent-500
+											data-[today]:before:bg-accent-700
+											dark:data-[today]:before:bg-accent-300
 											data-[selected]:before:bg-white
 										"
 								/>
