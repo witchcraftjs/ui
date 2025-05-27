@@ -16,7 +16,7 @@ This is unfortunately not true styleless since the tailwind classes are still in
 
 # Usage with Nuxt
 
-Modules, composables, and directives should work out of the box without auto imports. The module also installs the `radix-vue/nuxt` module.
+Modules, composables, and directives should work out of the box without auto imports. The module also installs the `reka-ui/nuxt` module.
 
 ## Tailwind (V4)
 
