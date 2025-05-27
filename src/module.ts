@@ -175,7 +175,7 @@ export default defineNuxtModule<ModuleOptions>({
 		nuxt.options.css.push(await resolvePath(options.mainCssFile!, nuxt.options.alias))
 		// we need to hook in first before it does, otherwise the plugins don't load correctly
 		await installModule("unplugin-icons/nuxt")
-		await installModule("radix-vue/nuxt")
+		await installModule("reka-ui/nuxt")
 
 		// todo make names more specific
 		// addImportsDir(resolve("helpers"))
