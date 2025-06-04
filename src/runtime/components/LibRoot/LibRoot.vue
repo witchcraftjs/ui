@@ -32,6 +32,7 @@
 			($attrs as any).attrs?.class)"
 	>
 		<TestControls v-if="testWrapperMode" :show-outline="showOutline"/>
+		<Notifications v-if="useNotifications && isClientSide"/>
 		<slot/>
 	</div>
 </div>
@@ -44,12 +45,15 @@ import { type ComponentPublicInstance, computed, onBeforeUnmount, onMounted, ref
 
 import { useAccesibilityOutline } from "../../composables/useAccesibilityOutline.js"
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
+import { useNotificationHandler } from "../../composables/useNotificationHandler.js"
 import { useSetupDarkMode } from "../../composables/useSetupDarkMode.js"
 import { useSetupI18n } from "../../composables/useSetupI18n.js"
 import { useSetupLocale } from "../../composables/useSetupLocale.js"
 import { useShowDevOnlyKey } from "../../composables/useShowDevOnlyKey.js"
+import { NotificationHandler } from "../../helpers/NotificationHandler.js"
 import { theme as defaultTheme } from "../../theme.js"
 import { twMerge } from "../../utils/twMerge.js"
+import Notifications from "../LibNotifications/LibNotifications.vue"
 import TestControls from "../TestControls/TestControls.vue"
 
 const $attrs = useDivideAttrs(["wrapper"])
@@ -66,6 +70,8 @@ const props = withDefaults(defineProps<{
 	/** True by default, should be passed import.meta.client if using nuxt, or false when running server side. */
 	isClientSide?: boolean
 	useBuiltinTranslations?: boolean
+	useNotifications?: boolean
+	notificationHandler?: NotificationHandler
 }>(), {
 	theme: undefined,
 	testWrapperMode: false,
@@ -74,7 +80,9 @@ const props = withDefaults(defineProps<{
 	id: "app",
 	getRef: undefined,
 	isClientSide: true,
-	useBuiltinTranslations: true
+	useBuiltinTranslations: true,
+	useNotifications: true,
+	notificationHandler: undefined
 })
 
 const el = ref<HTMLElement | null>(null)
@@ -83,6 +91,11 @@ function handleRef(_: Element | ComponentPublicInstance | null): void {
 	if (_ !== null && !(_ instanceof HTMLElement)) unreachable()
 	el.value = _
 	props.getRef?.(_)
+}
+
+if (props.useNotifications) {
+	const handler = props.notificationHandler ?? new NotificationHandler()
+	useNotificationHandler(handler, props.isClientSide)
 }
 
 const autoOutline = useAccesibilityOutline(el).outline
