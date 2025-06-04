@@ -200,11 +200,16 @@ export type RawNotificationEntry<
 	message: string
 	title?: string
 	code?: string
+	/** @default ["Ok", "Cancel"] */
 	options?: TOptions
+	/** @default false */
 	requiresAction?: boolean
 	cancellable?: TCancellable
+	/** @default "Ok" */
 	default?: TOptions[number]
+	/** @default [] */
 	dangerous?: TOptions[number][]
+	/** @default false if cancellable, otherwise the default timeout */
 	timeout?: number | boolean
 	icon?: string
 }
