@@ -48,10 +48,11 @@
 </template>
 <script setup lang="ts">
 import { removeIfIn } from "@alanscodelog/utils/removeIfIn.js"
-import { type HTMLAttributes,nextTick, onBeforeUnmount, type PropType, ref, shallowReactive } from "vue"
+import { type HTMLAttributes,nextTick, onBeforeUnmount, ref,shallowReactive, Transition, TransitionGroup } from "vue"
 
 import LibNotification from "./LibNotification.vue"
 
+import { useNotificationHandler } from "../../composables/useNotificationHandler.js"
 import { type NotificationEntry, NotificationHandler } from "../../helpers/NotificationHandler.js"
 import { twMerge } from "../../utils/twMerge.js"
 import type { LinkableByIdProps, TailwindClassProp } from "../shared/props.js"
@@ -108,11 +109,14 @@ const notificationListener = (entry: NotificationEntry, type: "added" | "resolve
 		addNotification(entry)
 	}
 }
-props.handler.addNotificationListener(notificationListener)
 
-for (const entry of props.handler.queue) { addNotification(entry) }
+const handler = props.handler ?? useNotificationHandler()
+
+handler.addNotificationListener(notificationListener)
+
+for (const entry of handler.queue) { addNotification(entry) }
 onBeforeUnmount(() => {
-	props.handler.removeNotificationListener(notificationListener)
+	handler.removeNotificationListener(notificationListener)
 })
 
 </script>
@@ -121,7 +125,8 @@ onBeforeUnmount(() => {
 type RealProps =
 & LinkableByIdProps
 & {
-	handler: NotificationHandler
+	/** If not provided, uses the global handler (this requires useNotificationHandler be called and configured). */
+	handler?: NotificationHandler
 }
 
 interface Props
