@@ -18,7 +18,7 @@
 .list-enter-from,
 .list-leave-to {
 	opacity: 0;
-	transform: translateX(30px);
+	transform: translateX(100%);
 }
 
 /* ensure leaving items are taken out of layout flow so that moving

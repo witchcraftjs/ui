@@ -2,13 +2,14 @@
 <TransitionGroup name="list"
 	tag="div"
 	:class="twMerge(`notifications
-			fixed
+			absolute
 			z-50
 			inset-y-0 right-0
 			w-1/3
 			min-w-[300px]
 			pointer-events-none
 			overflow-hidden
+			flex flex-col
 		`, ($attrs as any).class)"
 	v-bind="{ ...$attrs, class: undefined }"
 >
@@ -21,17 +22,20 @@
 	/>
 </TransitionGroup>
 <Transition>
-	<div v-show="topNotifications.length > 0"/>
+	<div
+		v-show="topNotifications.length > 0"
+		:class="twMerge(`notifications-none`, ($attrs as any).class)"
+	/>
 </Transition>
 <Transition>
 	<dialog v-show="topNotifications.length > 0"
 		:id="id"
-		class="modal
+		:class="twMerge(`notifications-modal
 			bg-transparent
 			p-0
 			backdrop:bg-black/50
 			backdrop:p-5
-		"
+		`, ($attrs as any).class)"
 		ref="dialogEl"
 		@click.self.prevent="NotificationHandler.dismiss(topNotifications[0])"
 	>
