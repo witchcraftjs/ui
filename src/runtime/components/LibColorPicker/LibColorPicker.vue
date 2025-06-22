@@ -152,8 +152,10 @@
 <script setup lang="ts">
 /* todo change to colorjsio for less dependencies */
 import { castType } from "@alanscodelog/utils/castType.js"
+import { clampNumber } from "@alanscodelog/utils/clampNumber.js"
 import { isArray } from "@alanscodelog/utils/isArray.js"
-import { colord } from "colord"
+import { unreachable } from "@alanscodelog/utils/unreachable.js"
+import Color from "colorjs.io"
 import { computed, onMounted, type PropType, reactive, type Ref, ref, type UnwrapRef,watch } from "vue"
 
 import { useInjectedI18n } from "../../composables/useInjectedI18n.js"
@@ -253,12 +255,35 @@ const localColor = reactive<Record<"percent" | "val", HsvaColor>>({
 	},
 })
 
-const localColorString = computed(() =>
-	colord(localColor.val).toRgbString(),
-)
-const localColorStringOpaque = computed(() =>
-	colord({ ...localColor.val, a: 1 }).toRgbString(),
-)
+function truncate(val: number, precision: number): string {
+	const str = val.toFixed(precision)
+	const float = parseFloat(str) // removes trailing zeros
+	return float.toString()
+}
+function toLowPrecisionRgbaString(rgba: RgbaColor, withAlpha: boolean, precision: number) {
+	const r = truncate(rgba.r, precision)
+	const g = truncate(rgba.g, precision)
+	const b = truncate(rgba.b, precision)
+	const a = rgba.a !== undefined
+		? truncate(rgba.a, precision)
+		: undefined
+	return withAlpha ? `rgba(${r}, ${g}, ${b}, ${a})` : `rgb(${r}, ${g}, ${b})`
+}
+
+
+const asRgba = computed(() => {
+	const rgba = safeConvertToRgba(localColor.val)
+	if (!rgba) unreachable()
+	return rgba
+})
+const localColorString = computed(() => {
+	const rgba = asRgba.value
+	return toLowPrecisionRgbaString(asRgba.value, props.allowAlpha, props.stringPrecision)
+})
+	const localColorStringOpaque = computed(() =>{
+	return toLowPrecisionRgbaString(asRgba.value, props.allowAlpha, 3)
+})
+const localColorStringOpaque = computed(() => toLowPrecisionRgbaString(asRgba.value, false, 3))
 
 
 const copy = (): void => {
@@ -390,12 +415,21 @@ const slider = {
 		document.removeEventListener("pointerup", slider.pointerup)
 	},
 }
-const update = (_: HsvaColor, { updatePosition = true, updateValue = true }: { updatePosition?: boolean, updateValue?: boolean } = {}): void => {
+const update = (_: HsvaColor, {
+	updatePosition = true,
+	updateValue = true,
+}: {
+	updatePosition?: boolean,
+	updateValue?: boolean;
+} = {}): void => {
 	if (alphaSliderEl.value) {
-		const hsl = colord(_)
-		const hsl0 = hsl.alpha(0).toHslString()
-		const hsl1 = hsl.alpha(1).toHslString()
-		updateSlider(alphaSliderEl.value, [hsl0, hsl1])
+		// https://colorjs.io/docs/output#get-a-displayable-css-color-value
+		const color = new Color("hsv", [_.h, _.s, _.v], _.a).to("hsl")
+		const hsl0 = color.clone()
+		hsl0.alpha = 0
+		const hsl1 = color.clone()
+		hsl1.alpha = 1
+		updateSlider(alphaSliderEl.value, [hsl0.toString(), hsl1.toString()])
 	}
 	updateSlider(hueSliderEl.value!, i => `hsl(${i} 100% 50%)`)
 	updatePicker(pickerEl.value!, _.h)
@@ -417,20 +451,53 @@ const update = (_: HsvaColor, { updatePosition = true, updateValue = true }: { u
 
 const parseInput = (e: Event): void => {
 	const val = (e.target as HTMLInputElement)?.value
-	if (val) {
-		const color = colord(val)
-		if (!color.isValid()) return
-		update(color.toHsv())
+	const converted = safeConvertToHsva(val)
+	if (converted) update(converted, {updateValue: true, updatePosition: true})
+}
+
+function safeConvertToHsva(val: string | RgbaColor): HsvaColor | undefined {
+	try {
+		const color = typeof val === "string"
+			? new Color(val)
+			: new Color("srgb", [val.r / 255, val.g / 255, val.b / 255], props.allowAlpha ? val.a : 1)
+		const hsv = color.hsv
+		const final = {
+			h: clampNumber(hsv[0] ?? 0, 0, Number.MAX_SAFE_INTEGER),
+			s: clampNumber(hsv[1], 0, 100),
+			v: clampNumber(hsv[2], 0, 100),
+			a: clampNumber(props.allowAlpha ? color.alpha : 1, 0, 1),
+		}
+		return final
+	} catch (_err) {
+		return undefined
+	}
+}
+
+function safeConvertToRgba(val: string | HsvaColor): RgbaColor | undefined {
+	try {
+		const color = typeof val === "string" 
+			? new Color(val) 
+			: new Color("hsv", [val.h, val.s, val.v], props.allowAlpha ? val.a : 1)
+		const rgb = color.srgb
+		return {
+			r: clampNumber(rgb[0] / 1 * 255, 0, 255),
+			g: clampNumber(rgb[1] / 1 * 255, 0, 255),
+			b: clampNumber(rgb[2] / 1 * 255, 0, 255),
+			a: clampNumber(props.allowAlpha ? color.alpha : 1, 0, 1),
+		}
+	} catch (_err) {
+		return undefined
 	}
 }
 
 onMounted(() => {
-	const color = colord($value.value)
-	update(color.toHsv())
+	const hsva = safeConvertToHsva($value.value)
+	if (hsva) update(hsva)
 })
+
 watch(props, () => {
-	const color = colord($value.value)
-	update(color.toHsv())
+	const hsva = safeConvertToHsva($value.value)
+	if (hsva) update(hsva)
 })
 
 watch(localColor, () => {
@@ -438,10 +505,11 @@ watch(localColor, () => {
 })
 
 const save = (): void => {
-	const color = colord(localColor.val).toRgb()
+	const rgba = safeConvertToRgba(localColor.val)
+	if (!rgba) return
 	update(localColor.val, { updatePosition: false, updateValue: false })
-	$value.value = color
-	emits("save", color)
+	$value.value = rgba 
+	emits("save", rgba)
 }
 
 const invertColors = computed(() => !!(localColor.percent.v < 50 || (localColor.val.a === undefined || localColor.val.a < 0.5)))

@@ -55,7 +55,7 @@
 </template>
 
 <script setup lang="ts">
-import { colord } from "colord"
+import Color from "colorjs.io"
 import { type ButtonHTMLAttributes,computed, type PropType, ref, useAttrs } from "vue"
 
 import { useInjectedI18n } from "../../composables/useInjectedI18n.js"
@@ -86,7 +86,7 @@ const props = withDefaults(defineProps<Props>(), {
 const $attrs = useAttrs()
  
 const $value = defineModel<RgbaColor>({ required: false, default: () => ({ r: 0, g: 0, b: 0 }) })
-const stringColor = computed(() => colord($value.value).toRgbString())
+const stringColor = computed(() => new Color("srgb", [$value.value.r, $value.value.g, $value.value.b]).toString())
 const tempValue = ref({ ...$value.value })
 
 const showPopup = ref(false)
