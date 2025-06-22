@@ -51,7 +51,10 @@ export type ResizeCallback = (_rect: DOMRectReadOnly, el: Element) => void
 
 export type FileInputError = ErrorW<{ file: File, isValidMimeType: boolean, isValidExtension: boolean }>
 
+
+/** h 0-360+ (deg), s 0-100%, v 0-100%, a 0-1 */
 export type HsvaColor = { h: number, s: number, v: number, a?: number }
+/** rgb 0-255, 0-1 for alpha */
 export type RgbaColor = { r: number, g: number, b: number, a?: number }
 
 export type Point = { x: number, y: number }
