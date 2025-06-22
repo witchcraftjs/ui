@@ -8,18 +8,22 @@
 <component
 	:id="id ?? fallbackId"
 	:class="twMerge(
-		useBackdrop && `bg-transparent
+		useBackdrop && useDialogForBackdrop && `bg-transparent
 			p-0
 			backdrop:bg-transparent
+		`,
+		modelValue && useBackdrop && !useDialogForBackdrop && `
+			fixed
+			inset-0
 		`,
 		$attrs.class as any
 	)"
 	v-bind="{...$attrs, class:undefined}"
-	:is="useBackdrop ? 'dialog' : 'div'"
+	:is="useDialogForBackdrop ? 'dialog' : 'div'"
 	ref="dialogEl"
 	@mousedown.self="handleMouseup"
 >
-	<div v-if="useBackdrop || modelValue"
+	<div v-if="modelValue"
 		:class="`fixed ${props.avoidRepositioning ? 'transition-[top,left]' : ''}`"
 		:style="`
 		top:${pos.y}px;
@@ -52,6 +56,7 @@ const fallbackId = getFallbackId()
 // eslint-disable-next-line no-use-before-define
 const props = withDefaults(defineProps<Props>(), {
 	useBackdrop: true,
+	useDialogForBackdrop: false,
 	// vue is getting confused when the prop type can also be a function
 	preferredHorizontal: () => ["center-most", "either"] satisfies Props["preferredHorizontal"],
 	preferredVertical: () => ["top", "bottom", "either"] satisfies Props["preferredVertical"] ,
@@ -97,7 +102,6 @@ const recompute = (force: boolean = false): void => {
 		const canBePositionedWithoutButton =
 		(horzHasCenterScreen || typeof props.preferredHorizontal === "function")
 		&& (vertHasCenterScreen || typeof props.preferredVertical === "function")
-
 		if (!popupEl.value || !dialogEl.value || (!buttonEl.value && !canBePositionedWithoutButton)) {
 			pos.value = {} as any
 			return
@@ -310,7 +314,7 @@ const show = () => {
 	if (!isOpen) {
 		isOpen = true
 		modelValue.value = isOpen
-		if (props.useBackdrop) dialogEl.value?.showModal()
+		if (props.useBackdrop && props.useDialogForBackdrop) dialogEl.value?.showModal()
 		recompute(true)
 	}
 }
@@ -320,7 +324,7 @@ const close = () => {
 		isOpen = false
 		modelValue.value = isOpen
 		pos.value.maxWidth = undefined
-		if (props.useBackdrop) dialogEl.value?.close()
+		if (props.useBackdrop && props.useDialogForBackdrop) dialogEl.value?.close()
 	}
 }
 
@@ -376,6 +380,15 @@ defineExpose({
 type RealProps =
 & LinkableByIdProps
 & {
+	/**
+	 * Whether to use the dialog element instead of a regular backdrop. While using the dialog element would be ideal, css variables won't be applied to it, tailwind themes will fail, etc, if the css variables are not applied to `::backdrop`.
+	 *
+	 * Using a div ends up easier to setup.
+	 *
+	 * The default is now false.
+	 */
+	useDialogForBackdrop?: false
+	/** Wether to use a backdrop (clicking it will close the popup), or not (use is allowed to click elsewhere. */
 	useBackdrop?: boolean
 	/**
 	 * The preferred horizontal positioning of the popup. The first position in the array to fit is used.
