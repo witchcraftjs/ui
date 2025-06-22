@@ -32,6 +32,7 @@
 			hover:shadow-[0_1px_3px_0]
 			hover:shadow-neutral-950/30
 			hover:border-neutral-300
+			dark:hover:border-neutral-600
 
 			relative
 			after:absolute
