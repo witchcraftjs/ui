@@ -53,7 +53,7 @@
 			:style="`
 					left: calc(${localColor.percent.s}% - var(--slider-size)/2);
 					top: calc(${localColor.percent.v}% - var(--slider-size)/2);
-					background: ${localColorStringOpaque};
+					background: ${asRgbaString};
 				`"
 			@keydown="slider.keydown($event, 'picker')"
 		>
@@ -122,7 +122,7 @@
 					border-neutral-600
 					dark:border-neutral-300
 				"
-				:style="`background:${localColorString}`"
+				:style="`background: ${asRgbaString}`"
 			/>
 		</div>
 		<div class="color-controls flex flex-1 items-center gap-2">
@@ -208,8 +208,21 @@ const props = withDefaults(defineProps<
 & LinkableByIdProps
 & {
 	allowAlpha?: boolean
-	/** The precision of the string representation of the color. Defaults to 3. Extra trailing zeros are removed for a prettier number. Does not affect the number saved. */
+	/**
+	 * The precision of the rgba string representation of the color. Defaults to 3. Extra trailing zeros are removed for a prettier number.
+	 *
+	 * Does not affect the number saved unless the user manually edits the color.
+	 *
+	 * Ignored if `customRepresentation` is set.
+	 *
+	 *
+	 
+	 */
 	stringPrecision?: number
+	/** Allows overriding the string representation of the color. Useful for using a different representation than rgba (e.g. hex). */
+	customRepresentation?: {
+		fromHsvaToString: (hsva: HsvaColor, includeAlpha: boolean) => string
+	}
 	border?: boolean
 	copyTransform?: (val: HsvaColor, stringVal: string) => any
 }>(), {
@@ -279,12 +292,17 @@ const asRgba = computed(() => {
 	if (!rgba) unreachable()
 	return rgba
 })
-const localColorString = computed(() => 
-	toLowPrecisionRgbaString(asRgba.value, props.allowAlpha, props.stringPrecision)
-)
-const localColorStringOpaque = computed(() => 
-	toLowPrecisionRgbaString(asRgba.value, false, props.stringPrecision)
-)
+const asRgbaString = computed(() => {
+	const rgba = asRgba.value
+	if (!rgba) unreachable()
+	return `rgba(${rgba.r}, ${rgba.g}, ${rgba.b}, ${rgba.a})`
+})
+const localColorString = computed(() => {
+	if (props.customRepresentation) {
+		return props.customRepresentation.fromHsvaToString({ ...localColor.val }, props.allowAlpha)
+	}
+	return toLowPrecisionRgbaString(asRgba.value, props.allowAlpha, props.stringPrecision)
+})
 
 
 const copy = (): void => {
