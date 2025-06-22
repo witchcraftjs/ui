@@ -48,7 +48,7 @@
 			placeholder:text-danger-700
 			border-danger-700
 			focus:border-danger-700
-			outlined:!ring-danger-700
+			outlined:!outline-danger-700
 			text-danger-800
 			dark:text-danger-400
 			dark:placeholder:text-danger-700
