@@ -25,8 +25,8 @@ export default createConfigForNuxt({
 		},
 	)
 	.overrideRules({
-		"@typescript-eslint/switch-exhaustiveness-check" : ["warn", {
-			considerDefaultExhaustiveForUnions : true
+		"@typescript-eslint/switch-exhaustiveness-check": ["warn", {
+			considerDefaultExhaustiveForUnions: true
 		}],
 		"jsdoc/check-tag-names": ["warn", {
 			definedTags: [
