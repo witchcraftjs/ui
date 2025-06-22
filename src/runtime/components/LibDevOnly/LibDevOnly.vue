@@ -40,7 +40,6 @@ const doShow = computed(() => props.show || injectedShow.value)
 <script lang="ts">
 interface Props {
 	show?: boolean
-	asChild?: boolean
 }
 
 // Not sure why nuxt's types aren't correctly getting detected
