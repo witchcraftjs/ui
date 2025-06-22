@@ -208,11 +208,14 @@ const props = withDefaults(defineProps<
 & LinkableByIdProps
 & {
 	allowAlpha?: boolean
+	/** The precision of the string representation of the color. Defaults to 3. Extra trailing zeros are removed for a prettier number. Does not affect the number saved. */
+	stringPrecision?: number
 	border?: boolean
 	copyTransform?: (val: HsvaColor, stringVal: string) => any
 }>(), {
 	allowAlpha: true,
 	border: true,
+	stringPrecision: 3,
 	copyTransform: (_val: HsvaColor, stringVal: string) => stringVal,
 })
 
@@ -276,14 +279,12 @@ const asRgba = computed(() => {
 	if (!rgba) unreachable()
 	return rgba
 })
-const localColorString = computed(() => {
-	const rgba = asRgba.value
-	return toLowPrecisionRgbaString(asRgba.value, props.allowAlpha, props.stringPrecision)
-})
-	const localColorStringOpaque = computed(() =>{
-	return toLowPrecisionRgbaString(asRgba.value, props.allowAlpha, 3)
-})
-const localColorStringOpaque = computed(() => toLowPrecisionRgbaString(asRgba.value, false, 3))
+const localColorString = computed(() => 
+	toLowPrecisionRgbaString(asRgba.value, props.allowAlpha, props.stringPrecision)
+)
+const localColorStringOpaque = computed(() => 
+	toLowPrecisionRgbaString(asRgba.value, false, props.stringPrecision)
+)
 
 
 const copy = (): void => {
@@ -419,8 +420,8 @@ const update = (_: HsvaColor, {
 	updatePosition = true,
 	updateValue = true,
 }: {
-	updatePosition?: boolean,
-	updateValue?: boolean;
+	updatePosition?: boolean
+	updateValue?: boolean
 } = {}): void => {
 	if (alphaSliderEl.value) {
 		// https://colorjs.io/docs/output#get-a-displayable-css-color-value
@@ -475,8 +476,8 @@ function safeConvertToHsva(val: string | RgbaColor): HsvaColor | undefined {
 
 function safeConvertToRgba(val: string | HsvaColor): RgbaColor | undefined {
 	try {
-		const color = typeof val === "string" 
-			? new Color(val) 
+		const color = typeof val === "string"
+			? new Color(val)
 			: new Color("hsv", [val.h, val.s, val.v], props.allowAlpha ? val.a : 1)
 		const rgb = color.srgb
 		return {
@@ -508,7 +509,7 @@ const save = (): void => {
 	const rgba = safeConvertToRgba(localColor.val)
 	if (!rgba) return
 	update(localColor.val, { updatePosition: false, updateValue: false })
-	$value.value = rgba 
+	$value.value = rgba
 	emits("save", rgba)
 }
 
