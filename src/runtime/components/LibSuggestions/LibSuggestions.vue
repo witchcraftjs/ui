@@ -6,6 +6,7 @@
 			suggestions
 			bg-bg
 			dark:bg-fg
+			dark:text-bg
 		`,
 		($.attrs as any)?.class
 	)"
@@ -18,12 +19,14 @@
 	<div :id="`suggestion-${id ?? fallbackId}-${index}`"
 		role="option"
 		:class="twMerge(`
-					px-1
 					user-select-none
 					cursor-pointer
 					px-2
 				`,
-			index=== suggestions.active && `bg-accent-200 dark:bg-accent-800`,
+			index=== suggestions.active && `
+				bg-accent-200
+				dark:bg-accent-800/70
+			`,
 			($.itemAttrs as any)?.class
 		)"
 		v-bind="{...$.itemAttrs, class:undefined}"

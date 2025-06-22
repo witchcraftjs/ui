@@ -7,6 +7,7 @@
 			`,
 		disabled && `
 			text-neutral-400
+			dark:text-neutral-600
 		`,
 		($.wrapperAttrs as any)?.class,
 	)"
