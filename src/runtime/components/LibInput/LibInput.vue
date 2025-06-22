@@ -55,7 +55,7 @@
 			isOpen && `rounded-b-none`,
 			!valid && `
 				border-danger-700
-				outlined:!ring-danger-700
+				outlined:!outline-danger-700
 				text-danger-800
 				dark:text-danger-400
 				dark:border-danger-600

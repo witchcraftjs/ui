@@ -37,17 +37,17 @@
 }
 
 @utility focus-outline-within {
-	@apply outlined-within:outline-hidden outlined-within:ring-2 outlined-within:ring-accent-500 outlined-within:ring-offset-2;
+	@apply outlined-within:outline-2 outlined-within:outline-accent-500 outlined-within:outline-offset-2;
 }
 
 @utility focus-outline {
-	@apply outlined:outline-hidden outlined:ring-2 outlined:ring-accent-500 outlined:ring-offset-2;
+	@apply outlined:outline-2 outlined:outline-accent-500 outlined:outline-offset-2;
 }
 @utility focus-outline-no-offset {
-	@apply outlined:outline-hidden outlined:ring-2 outlined:ring-accent-500;
+	@apply outlined:outline-2 outlined:outline-accent-500;
 }
 @utility focus-outline-hidden {
-	@apply outlined:outline-hidden;
+	@apply outlined:outline-none;
 }
 
 /* .bg-squares-gradient { */
