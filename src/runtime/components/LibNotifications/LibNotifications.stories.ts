@@ -100,7 +100,7 @@ export const Primary: Story = {
 		backgrounds: { disable: true },
 		// <lib-debug>{{args.handler}}</lib-debug>
 		template: `
-	<test-wrapper :outline="args.outline">
+	<lib-root :outline="args.outline">
 		<lib-button :label="'Notify Timeoutable'" @click="notifyTimeoutable()"></lib-button>
 		<lib-button :label="'Notify RequiresAction'" @click="notifyRequiresAction()"></lib-button>
 		<lib-button :label="'Notify Non-Cancellable that RequiresAction'" @click="notifyNonCancellableRequiresAction()"></lib-button>
@@ -117,7 +117,7 @@ export const Primary: Story = {
 				<br>
 			</template>
 		</lib-debug>
-	</test-wrapper>
+	</lib-root>
 	`,
 	}),
 }
