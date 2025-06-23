@@ -130,8 +130,9 @@
 				<lib-simple-input
 					class="w-full"
 					:aria-label="label"
-					:model-value="localColorString"
+					v-model="localInputString"
 					@input="parseInput"
+					@blur="onBlurFixInvalidValue"
 				/>
 				<lib-button :aria-label="t('copy')" @click="copy()">
 					<icon><i-fa6-regular-copy/></icon>
@@ -204,7 +205,7 @@ const $value = defineModel<RgbaColor>({ required: false, default: () => ({ r: 0,
 
 const fallbackId = getFallbackId()
 const props = withDefaults(defineProps<
-& LabelProps
+LabelProps
 & LinkableByIdProps
 & {
 	allowAlpha?: boolean
@@ -307,6 +308,17 @@ const localColorString = computed(() => {
 	return toLowPrecisionRgbaString(asRgba.value, props.allowAlpha, props.stringPrecision)
 })
 
+const localInputString = ref(localColorString.value)
+// fixes the localInputString not updating when the user inputs an invalid value
+function onBlurFixInvalidValue() {
+	if (localInputString.value !== localColorString.value) {
+		localInputString.value = localColorString.value
+	}
+}
+
+watch(localColor, () => {
+	localInputString.value = localColorString.value
+})
 
 const copy = (): void => {
 	if (navigator.clipboard) {
