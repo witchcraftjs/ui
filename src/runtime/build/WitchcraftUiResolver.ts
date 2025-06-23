@@ -1,6 +1,6 @@
 import { type ComponentResolver } from "unplugin-vue-components"
 
-const prefixless = ["Icon", "Aria", "TestWrapper"]
+const prefixless = ["Icon", "Aria"]
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const WitchcraftUiResolver = (
 	{

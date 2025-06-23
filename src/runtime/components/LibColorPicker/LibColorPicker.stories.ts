@@ -41,7 +41,7 @@ export const Primary: Story = {
 			}
 		},
 		template: `
-			<test-wrapper :outline="args.outline">
+			<lib-root :outline="args.outline">
 	 		{{args.color}}
 	 		<lib-color-picker
 	 			:modelValue="args.color.value"
@@ -49,7 +49,7 @@ export const Primary: Story = {
 	 			@update:modelValue="handleChange"
 	 		>
 	 		</lib-color-picker>
-	 		</test-wrapper>
+	 		</lib-root>
 		`,
 	}),
 }
