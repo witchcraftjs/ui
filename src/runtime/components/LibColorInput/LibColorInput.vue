@@ -80,6 +80,9 @@ const props = withDefaults(defineProps<Props>(), {
 	allowAlpha: true,
 	border: true,
 	copyTransform: (_val: HsvaColor, stringVal: string) => stringVal,
+	stringPrecision: 3,
+	customRepresentation: undefined,
+	valid: true
 })
 
 
@@ -109,7 +112,15 @@ type RealProps =
 & {
 	allowAlpha?: boolean
 	border?: boolean
+	/** See ColorPicker.copyTransform */
 	copyTransform?: (val: HsvaColor, stringVal: string) => any
+	/** See ColorPicker.allowAlpha */
+	stringPrecision?: number
+	/** See ColorPicker.customRepresentation */
+	customRepresentation?: {
+		fromHsvaToString: (hsva: HsvaColor, includeAlpha: boolean) => string
+	}
+	valid?: boolean
 }
 interface Props
 	extends

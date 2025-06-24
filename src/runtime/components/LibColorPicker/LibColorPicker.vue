@@ -128,6 +128,7 @@
 		<div class="color-controls flex flex-1 items-center gap-2">
 			<slot name="input">
 				<lib-simple-input
+					:valid="valid"
 					class="w-full"
 					:aria-label="label"
 					v-model="localInputString"
@@ -228,12 +229,14 @@ LabelProps
 	border?: boolean
 	/** Modify what the user copies to the clipboard. */
 	copyTransform?: (val: HsvaColor, stringVal: string) => any
+	valid?: boolean
 }>(), {
 	allowAlpha: true,
 	border: true,
 	stringPrecision: 3,
 	copyTransform: (_val: HsvaColor, stringVal: string) => stringVal,
-	customRepresentation: undefined
+	customRepresentation: undefined,
+	valid: true
 })
 
 
