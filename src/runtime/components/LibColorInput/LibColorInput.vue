@@ -6,6 +6,7 @@
 		<lib-button
 			:id="id ?? fallbackId"
 			:class="twMerge(`
+				button
 				flex flex-nowrap
 			`,
 				($attrs as any).class
@@ -42,14 +43,18 @@
 		</lib-button>
 	</template>
 	<template #popup="{extractEl}">
-		<lib-color-picker v-if="showPopup"
-			:id="id ?? fallbackId"
-			:allow-alpha="allowAlpha"
-			v-model="tempValue"
-			v-extract-root-el="extractEl"
-			@save="$value = tempValue; showPopup = false"
-			@cancel="showPopup = false"
-		/>
+		<div class="color-input-margin m-5">
+			<lib-color-picker v-if="showPopup"
+				:id="id ?? fallbackId"
+				:allow-alpha="allowAlpha"
+				:custom-representation="customRepresentation"
+				:string-precision="stringPrecision"
+				v-model="tempValue"
+				v-extract-root-el="extractEl"
+				@save="$value = tempValue; showPopup = false"
+				@cancel="showPopup = false"
+			/>
+		</div>
 	</template>
 </lib-popup>
 </template>
