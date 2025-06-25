@@ -16,6 +16,7 @@
 		`,
 		modelValue && useBackdrop && !useDialogForBackdrop && `
 			popup--backdrop
+			z-100
 			fixed
 			inset-0
 		`,
