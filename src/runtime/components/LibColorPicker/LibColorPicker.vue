@@ -20,11 +20,12 @@
 		`,
 		border && `
 			border rounded-sm border-neutral-600
-		`
+		`,
+		($attrs as any)?.class
 	)"
 >
 	<div
-		:class="`picker
+		:class="`color-picker--all-picker
 			no-touch-action
 			w-full
 			aspect-square
@@ -44,7 +45,8 @@
 			aria-live="assertive"
 			:aria-description="ariaDescription"
 			:class="`
-					handle ${handleClasses}
+					color-picker--all-handle
+					${handleClasses}
 					border-[var(--fg)]
 					hover:shadow-black
 					active:shadow-black
@@ -61,7 +63,7 @@
 		</div>
 	</div>
 	<div
-		:class="`hue-slider ${sliderClasses}`"
+		:class="`color-picker--hue-slider ${sliderClasses}`"
 		@pointerdown="slider.pointerdown($event, 'hue')"
 	>
 		<canvas
@@ -76,7 +78,10 @@
 			:aria-label="t('color-picker.aria.hue')"
 			:aria-description="ariaDescription"
 			tabindex="0"
-			:class="`handle ${handleClasses} bg-neutral-50`"
+			:class="`
+				color-picker--hue-handle
+				${handleClasses}
+			`"
 			:style="`left: calc(${localColor.percent.h}% - var(--slider-size)/2)`"
 			@keydown="slider.keydown($event, 'hue')"
 		/>
@@ -84,7 +89,10 @@
 	<div
 		v-if="allowAlpha"
 
-		:class="`alpha-slider ${sliderClasses}`"
+		:class="`
+			color-picker--alpha-slider
+			${sliderClasses}
+		`"
 		@keydown="slider.keydown($event, 'alpha')"
 		@pointerdown="slider.pointerdown($event, 'alpha')"
 	>
@@ -100,12 +108,12 @@
 			:aria-valuemax="100"
 			:aria-description="ariaDescription"
 			tabindex="0"
-			:class="`handle ${handleClasses} bg-neutral-50`"
+			:class="`color-picker--alpha-handle ${handleClasses}`"
 			:style="`left: calc(${localColor.percent.a}% - var(--slider-size)/2)`"
 		/>
 	</div>
-	<div class="color-group flex w-full flex-1 gap-2">
-		<div class=" color-wrapper
+	<div class="color-picker--footer flex w-full flex-1 gap-2">
+		<div class=" color-picker--preview-wrapper
 				bg-transparency-squares
 				relative
 				aspect-square
@@ -114,8 +122,8 @@
 				shadow-xs
 			"
 		>
-			<!-- <input class="color-input" :value="localColorString" @input="parseInput"> -->
-			<div class="color
+			<div class="
+					color-picker--footer--preview
 					size-full
 					rounded-full
 					border-2
@@ -125,17 +133,17 @@
 				:style="`background: ${asRgbaString}`"
 			/>
 		</div>
-		<div class="color-controls flex flex-1 items-center gap-2">
+		<div class="color-picker--input-group flex flex-1 items-center gap-2">
 			<slot name="input">
 				<lib-simple-input
 					:valid="valid"
-					class="w-full"
+					class="color-picker--input w-full"
 					:aria-label="label"
 					v-model="localInputString"
 					@input="parseInput"
 					@blur="onBlurFixInvalidValue"
 				/>
-				<lib-button :aria-label="t('copy')" @click="copy()">
+				<lib-button class="color-picker--copy-button" :aria-label="t('copy')" @click="copy()">
 					<icon><i-fa6-regular-copy/></icon>
 				</lib-button>
 			</slot>
@@ -143,9 +151,9 @@
 		<!-- <lib-button @click="emits('update:modelValue', localColor.val)">Save</lib-button> -->
 	</div>
 	<slot name="buttons">
-		<div class="save-cancel-group flex w-full items-center justify-center gap-2">
-			<lib-button @click="save()">{{ t("save") }}</lib-button>
-			<lib-button @click="emits('cancel')">{{ t("cancel") }}</lib-button>
+		<div class="color-picker--save-cancel-group flex w-full items-center justify-center gap-2">
+			<lib-button class="color-picker--save-button" @click="save()">{{ t("save") }}</lib-button>
+			<lib-button class="color-picker--cancel-button" @click="emits('cancel')">{{ t("cancel") }}</lib-button>
 		</div>
 	</slot>
 </div>
@@ -158,7 +166,7 @@ import { clampNumber } from "@alanscodelog/utils/clampNumber.js"
 import { isArray } from "@alanscodelog/utils/isArray.js"
 import { unreachable } from "@alanscodelog/utils/unreachable.js"
 import Color from "colorjs.io"
-import { computed, onMounted, type PropType, reactive, type Ref, ref, type UnwrapRef,watch } from "vue"
+import { computed, onMounted, reactive, type Ref, ref, type UnwrapRef,useAttrs, watch } from "vue"
 
 import { useInjectedI18n } from "../../composables/useInjectedI18n.js"
 import type { HsvaColor, RgbaColor } from "../../types/index.js"
@@ -173,6 +181,8 @@ defineOptions({
 	name: "lib-color-picker",
 })
 
+const $attrs = useAttrs()
+
 const t = useInjectedI18n()
 
 const sliderClasses = `
@@ -185,6 +195,7 @@ const sliderClasses = `
 `
 
 const handleClasses = `
+	handle
 	h-[var(--slider-size)]
 	w-[var(--slider-size)]
 	shadow-xs

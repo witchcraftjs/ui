@@ -2,6 +2,7 @@
 <lib-button
 	v-bind="{...$attrs, class:undefined}"
 	:class="!($attrs as any).unstyle && twMerge(`
+			dark-mode-switcher
 			rounded-full
 			after:rounded-full
 		`,
@@ -32,7 +33,7 @@
 		</icon>
 	</template>
 	<template #default v-if="showLabel">
-		<div class="pr-[2px]">
+		<div class="dark-mode-switcher--label pr-[2px]">
 			{{ t(`dark-mode-switcher.${darkModeState}`) }}
 		</div>
 	</template>

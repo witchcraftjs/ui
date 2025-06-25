@@ -32,7 +32,7 @@ defineOptions({
 
 const fallbackId = getFallbackId()
 
- 
+// eslint-disable-next-line no-undef
 withDefaults(defineProps<Props>(), {
 	id: "",
 	unstyled: undefined,
@@ -58,7 +58,7 @@ interface Props
 	/** @vue-ignore */
 	Partial<Omit<LabelHTMLAttributes,"class"> & TailwindClassProp>,
 	RealProps
-{}
+	{ }
 </script>
 
 <script lang="ts">

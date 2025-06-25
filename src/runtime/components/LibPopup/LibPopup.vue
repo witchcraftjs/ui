@@ -8,11 +8,14 @@
 <component
 	:id="id ?? fallbackId"
 	:class="twMerge(
-		useBackdrop && useDialogForBackdrop && `bg-transparent
+		useBackdrop && useDialogForBackdrop && `
+			popup--backdrop
+			bg-transparent
 			p-0
 			backdrop:bg-transparent
 		`,
 		modelValue && useBackdrop && !useDialogForBackdrop && `
+			popup--backdrop
 			fixed
 			inset-0
 		`,
@@ -24,7 +27,7 @@
 	@mousedown.self="handleMouseup"
 >
 	<div v-if="modelValue"
-		:class="`fixed ${props.avoidRepositioning ? 'transition-[top,left]' : ''}`"
+		:class="`popup z-100 fixed ${props.avoidRepositioning ? 'transition-[top,left]' : ''}`"
 		:style="`
 		top:${pos.y}px;
 		left:${pos.x}px;

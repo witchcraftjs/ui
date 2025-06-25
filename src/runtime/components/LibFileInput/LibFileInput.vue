@@ -1,7 +1,6 @@
 <template>
 <!-- todo aria errors -->
-<div :class="twMerge(
-		`file-input
+<div :class="twMerge(`file-input
 		justify-center
 		border-2
 		border-dashed
@@ -9,15 +8,16 @@
 		focus-outline-within
 		transition-[border-color,box-shadow]
 		ease-out`,
-		compact && `rounded-sm`,
-		!compact && `flex w-full flex-col items-center gap-2 rounded-xl  p-2 `,
-		errors.length > 0 && errorFlashing && `border-danger-400`,
-		( $.wrapperAttrs as any ).class
+	compact && `rounded-sm`,
+	!compact && `flex w-full flex-col items-center gap-2 rounded-xl  p-2 `,
+	errors.length > 0 && errorFlashing && `border-danger-400`,
+	( $.wrapperAttrs as any ).class
 	)"
 	v-bind="{...$.wrapperAttrs, class:undefined}"
 >
-	<div :class="twMerge(
-		`relative justify-center`,
+	<div :class="twMerge( `
+		file-input--wrapper
+		relative justify-center`,
 		compact && `flex gap-2`,
 		!compact && `input-wrapper
 		flex flex-col items-center
@@ -26,9 +26,14 @@
 	>
 		<label
 			:for="id ?? fallbackId"
-			:class="twMerge(
-				`pointer-events-none flex gap-1 items-center whitespace-nowrap`
-			)"
+			:class="twMerge( `
+				file-input--label
+				pointer-events-none
+				flex
+				gap-1
+				items-center
+				whitespace-nowrap
+			`)"
 		>
 			<slot v-if="compact || multiple || files.length === 0" name="icon">
 				<icon><i-fa6-solid-arrow-up-from-bracket/></icon>
@@ -45,22 +50,29 @@
 					)
 				}}
 			</slot>
-			<span v-if="compact && multiple">{{ ` (${files.length})` }}</span>
+			<span
+				v-if="compact && multiple"
+				class="file-input--label-count"
+			>
+				{{ ` (${files.length})` }}
+			</span>
 		</label>
-		<label v-if="!compact && formats?.length > 0" class="flex flex-col items-center text-sm">
+		<label v-if="!compact && formats?.length > 0" class="file-input--formats-label flex flex-col items-center text-sm">
 			<slot name="formats">{{ t("file-input.accepted-formats") }}: </slot>
-			<div class="">
+			<div class="file-input--formats-list">
 				{{ extensions.join(", ") }}
 			</div>
 		</label>
 		<input
 			:id="id ?? fallbackId"
-			:class="twMerge(
-				`absolute inset-0
-				z-0
-				cursor-pointer
-				text-[0]
-				opacity-0
+			:class="twMerge(`
+					file-input--input
+					absolute
+					inset-0
+					z-0
+					cursor-pointer
+					text-[0]
+					opacity-0
 				`,
 				($.inputAttrs as any)?.class
 			)"
@@ -75,7 +87,7 @@
 		<!--  click event allows event to fire even if the user picks the same file -->
 	</div>
 	<div v-if="!compact && files.length > 0"
-		:class="twMerge(`previews
+		:class="twMerge(`file-input--previews
 			flex items-stretch justify-center gap-2 flex-wrap
 			`,
 			multiple && `
@@ -84,8 +96,8 @@
 			($.previewsAttrs as any)?.class
 		)"
 	>
-		<div class="flex-1"/>
-		<div class="preview
+		<div class="file-input--preview-spacer flex-1"/>
+		<div class="file-input--preview-wrapper
 				z-1
 				relative
 				flex
@@ -101,7 +113,7 @@
 			v-for="entry of files"
 			:key="entry.file.name"
 		>
-			<div class="flex flex-initial basis-full justify-start">
+			<div class="file-input--remove-button flex flex-initial basis-full justify-start">
 				<lib-button
 					:border="false"
 					:aria-label="`Remove file ${entry.file.name}`"
@@ -111,9 +123,9 @@
 				</lib-button>
 			</div>
 
-			<div class="flex flex-initial basis-full justify-center">
+			<div class="file-input--preview flex flex-initial basis-full justify-center">
 				<div v-if="entry.isImg"
-					class="image
+					class="file-input--preview-image
 					bg-transparency-squares flex
 					h-[80px]   flex-wrap items-center
 					justify-center
@@ -122,7 +134,7 @@
 					<img class="max-h-full w-auto" :src="getSrc(entry.file)">
 				</div>
 				<div v-if="!entry.isImg"
-					class="no-image
+					class="file-input--preview-no-image
 					flex h-[80px]
 					flex-1 basis-full flex-wrap items-center justify-center
 					"
@@ -130,7 +142,21 @@
 					<icon><i-fa6-regular-file class="text-4xl opacity-50"/></icon>
 				</div>
 			</div>
-			<div class="filename min-w-0 flex-1 basis-0 truncate break-all rounded-sm p-1 text-sm" :title="entry.file.name">{{ entry.file.name }}</div>
+			<div class="
+				file-input--preview-filename
+				min-w-0
+				flex-1
+				basis-0
+				truncate
+				break-all
+				rounded-sm
+				p-1
+				text-sm
+			"
+				:title="entry.file.name"
+			>
+				{{ entry.file.name }}
+			</div>
 		</div>
 
 		<div class="flex-1"/>

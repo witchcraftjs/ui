@@ -1,12 +1,13 @@
 <template>
 <lib-popup
+	class="color-input--popup"
 	v-model="showPopup"
 >
 	<template #button="{extractEl}">
 		<lib-button
 			:id="id ?? fallbackId"
 			:class="twMerge(`
-				button
+				color-input--button
 				flex flex-nowrap
 			`,
 				($attrs as any).class
@@ -17,14 +18,14 @@
 			v-extract-root-el="extractEl"
 			@click="togglePopup"
 		>
-			<span class="color-label
+			<span class="color-input--label
 					whitespace-nowrap
 					pr-2
 				"
 			>
 				<slot>{{ t("color-picker.pick-color") }}</slot>
 			</span>
-			<div :class="`color-swatch
+			<div :class="`color-input--swatch
 						rounded-xs
 						px-1
 						flex-1
@@ -43,7 +44,7 @@
 		</lib-button>
 	</template>
 	<template #popup="{extractEl}">
-		<div class="color-input-margin m-5">
+		<div class="color-input--popup-wrapper m-5">
 			<lib-color-picker v-if="showPopup"
 				:id="id ?? fallbackId"
 				:allow-alpha="allowAlpha"

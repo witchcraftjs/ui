@@ -40,13 +40,13 @@
 	, ($attrs as any).class)"
 	v-resizable-cols="resizableOptions"
 >
-	<thead v-if="header">
-		<tr>
+	<thead v-if="header" class="table--header">
+		<tr class="table--row">
 			<template v-for="col,i of cols" :key="col">
 				<slot :name="`header-${col.toString()}`"
 					:class="[
 						extraClasses[`-1-${i}`],
-						'cell',
+						'cell table--header-cell',
 						(colConfig as any)[col]?.resizable === false
 							? 'no-resize'
 							: ''
@@ -56,7 +56,7 @@
 				>
 					<td :class="[
 							extraClasses[`-1-${i}`] ,
-							'cell',
+							'cell table--header-cell',
 							(colConfig as any)[col]?.resizable === false
 								? 'no-resize'
 								: ''
@@ -69,17 +69,17 @@
 			</template>
 		</tr>
 	</thead>
-	<tbody>
+	<tbody class="table--body">
 		<template v-for="item, i of values" :key="typeof itemKey === 'function' ? itemKey(item) : item[itemKey]">
-			<tr>
+			<tr class="table--row">
 				<template v-for="col, j of cols" :key="(typeof itemKey === 'function' ? itemKey(item) : item[itemKey]) + col.toString()">
 					<slot
 						:name="col"
 						:item="item"
 						:value="item[col]"
-						:class="extraClasses[`${i}-${j}`] + ' cell'"
+						:class="extraClasses[`${i}-${j}`] + 'table--cell cell'"
 					>
-						<td :class="extraClasses[`${i}-${j}`] + ' cell'">
+						<td :class="extraClasses[`${i}-${j}`] + 'table--cell cell'">
 							{{ item[col] }}
 						</td>
 					</slot>

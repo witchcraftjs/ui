@@ -1,11 +1,11 @@
 <template>
-<div class="flex h-full flex-col items-center justify-center ">
-	<div class="container mx-auto ">
+<div class="theme-palette flex h-full flex-col items-center justify-center ">
+	<div class="theme-palette--container mx-auto ">
 		<div class="grid grid-cols-11 gap-2 gap-y-10 px-10">
 			<template v-for="color, i in colors" :key="color">
 				<div
 					:style="`background-color: var(${color});`"
-					:class="`h-10 rounded-sm flex items-center justify-center text-fg dark:text-bg`"
+					:class="`theme-palette--item h-10 rounded-sm flex items-center justify-center text-fg dark:text-bg`"
 				>
 					{{ [5, 16, 27, 38, 49].includes(i) ? 'Text':'' }}
 				</div>

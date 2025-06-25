@@ -1,6 +1,6 @@
 <template>
 <div
-	:class="twMerge(`input wrapper
+	:class="twMerge(`input--outer-wrapper
 			grow
 			flex
 			flex-wrap
@@ -21,13 +21,14 @@
 			:disabled="disabled"
 			:readonly="readonly"
 			:valid="valid"
+			class="input--label"
 		>
 			<slot v-bind="slotProps">
 				{{ label }}
 			</slot>
 		</lib-label>
 		<!-- Allow blurring when clicking the blank part of a label. -->
-		<div class="flex-1"/>
+		<div class="input--label-spacer flex-1"/>
 	</slot>
 	<!-- These are mostly copies of the classes on LibSimpleInput except made to work with disabled/readonly/etc manually since a div cannot have these states. -->
 	<div
@@ -37,7 +38,7 @@
 		:data-read-only="readonly"
 		:data-is-open="isOpen"
 		v-bind="{...$['inner-wrapperAttrs'], class:undefined}"
-		:class="twMerge(`inner-wrapper
+		:class="twMerge(`input--inner-wrapper
 				relative
 				flex
 				flex-1
@@ -80,7 +81,7 @@
 		<slot name="input" v-bind="{ ...inputProps, ...slotProps, suggestionsIndicatorClickHandler }">
 			<lib-simple-input
 				:class="twMerge(
-					`p-0`,
+					`input--input p-0`,
 					!$slots.left && `-ml-2 pl-2`,
 					!$slots.right && (!$values || $values.length === 0) && !suggestions && `-mr-2 -pr-2`,
 					($.attrs as any)?.class,
@@ -89,12 +90,11 @@
 			/>
 		</slot>
 		<slot name="indicator" v-bind="{isOpen, suggestionsIndicatorClickHandler }">
+			<!-- todo, convert to button for accessibility ? -->
 			<div
 				v-if="suggestions"
 				:data-is-open="isOpen"
-				:class="twMerge(
-					`indicator flex flex-col justify-center`,
-				)"
+				:class="twMerge(`input--indicator flex flex-col justify-center`)"
 				@click="suggestionsIndicatorClickHandler"
 			>
 				<icon :class="isOpen && `rotate-180`"> <i-fa6-solid-chevron-up/> </icon>
@@ -107,13 +107,12 @@
 			<template v-if="$values && $values.length > 0">
 				<lib-multi-values
 					:class="twMerge(`
+							input--multivalues
 							grow-[9000]
 							justify-space-between
 							py-1
 						`,
-						!$slots.right && `
-							-mr-1
-						`,
+						!$slots.right && `-mr-1`,
 						($.multivaluesAttrs as any)?.class,
 					)"
 					v-bind="multivaluesProps"
@@ -126,6 +125,7 @@
 			<!-- todo 1px needs to be abstracted to var -->
 			<lib-suggestions
 				:class="twMerge(`
+						input--suggestions
 						absolute
 						-inset-x-px
 						z-10

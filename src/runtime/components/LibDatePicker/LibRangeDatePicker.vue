@@ -85,12 +85,13 @@ const locale = useInjectedLocale().timeLocale
 <DateRangePickerRoot
 	:id="id"
 	:locale="locale"
+	class="date-range-picker--root"
 	v-model="tempDate as DateRange"
 >
 	<DateRangePickerField
 		v-slot="{ segments }"
 		:class="twMerge(`
-			container
+			date-range-picker--field
 			flex items-center justify-between
 			select-none
 			data-[invalid]:border-red-500
@@ -98,8 +99,13 @@ const locale = useInjectedLocale().timeLocale
 			rounded-sm
 		`, (attrs as any).class)"
 	>
-		<div class="segments flex items-center flex-1 overflow-scroll scrollbar-hidden whitespace-nowrap">
-			<div :class="twMerge(`start-segment flex items-center`, date.start === undefined && 'text-neutral-400')">
+		<div class="date-range-picker--segments-input flex items-center flex-1 overflow-scroll scrollbar-hidden whitespace-nowrap">
+			<div :class="twMerge(`
+				date-range-picker--start-segment
+				flex
+				items-center
+			`, date.start === undefined && 'text-neutral-400')"
+			>
 				<template
 					v-for="item in segments.start"
 					:key="item.part"
@@ -108,7 +114,7 @@ const locale = useInjectedLocale().timeLocale
 						v-if="item.part === 'literal'"
 						:part="item.part"
 						type="start"
-						class="input-literal"
+						class="date-range-picker--segment-literal"
 					>
 						{{ item.value }}
 					</DateRangePickerInput>
@@ -117,7 +123,7 @@ const locale = useInjectedLocale().timeLocale
 						type="start"
 						:part="item.part"
 						class="
-						input
+						date-range-picker--segment-input
 						focus-outline-hidden
 						border
 						border-transparent
@@ -126,6 +132,7 @@ const locale = useInjectedLocale().timeLocale
 					>
 						<div
 							class="
+							date-range-picker--segment-value
 							group-focus:z-[2]
 							group-focus:bg-accent-500/50
 							group-focus:rounded-xs
@@ -137,10 +144,15 @@ const locale = useInjectedLocale().timeLocale
 					</DateRangePickerInput>
 				</template>
 			</div>
-			<div class="range-separator text-center px-1">
+			<div class="date-range-picker--range-separator text-center px-1">
 				–
 			</div>
-			<div :class="twMerge(`end-segment flex items-center`, date.end === undefined && 'text-neutral-400')">
+			<div :class="twMerge(`
+				date-range-picker--end-segment
+				flex
+				items-center
+			`, date.end === undefined && 'text-neutral-400')"
+			>
 				<template
 					v-for="item in segments.end"
 					:key="item.part"
@@ -149,7 +161,7 @@ const locale = useInjectedLocale().timeLocale
 						v-if="item.part === 'literal'"
 						:part="item.part"
 						type="end"
-						class="input-literal"
+						class="date-range-picker--segment-literal"
 					>
 						{{ item.value }}
 					</DateRangePickerInput>
@@ -158,7 +170,7 @@ const locale = useInjectedLocale().timeLocale
 						type="end"
 						:part="item.part"
 						class="
-						input
+						date-range-picker--segment-input
 						focus-outline-hidden
 						border
 						border-transparent
@@ -167,6 +179,7 @@ const locale = useInjectedLocale().timeLocale
 					>
 						<div
 							class="
+								date-range-picker--segment-value
 								group-focus:z-[2]
 								group-focus:bg-accent-500/50
 								group-focus:rounded-xs
@@ -181,7 +194,7 @@ const locale = useInjectedLocale().timeLocale
 		</div>
 		<DateRangePickerTrigger
 			class="
-				trigger
+				date-range-picker--trigger
 				px-1
 				focus-outline
 				rounded-tr-sm
@@ -208,41 +221,43 @@ const locale = useInjectedLocale().timeLocale
 		side="bottom"
 		to="#root"
 		class="
-				z-100
-				mx-2
-				rounded-sm
-				bg-bg
-				dark:bg-neutral-800
-				border
-				border-neutral-300
-				dark:border-neutral-700
-				shadow-lg
-				will-change-[transform,opacity]
-				data-[state=open]:data-[side=top]:animate-slideDownAndFade
-				data-[state=open]:data-[side=right]:animate-slideLeftAndFade
-				data-[state=open]:data-[side=bottom]:animate-slideUpAndFade
-				data-[state=open]:data-[side=left]:animate-slideRightAndFade
-				text-fg
-				dark:text-neutral-200
-			"
+			date-range-picker--content
+			z-100
+			mx-2
+			rounded-sm
+			bg-bg
+			dark:bg-neutral-800
+			border
+			border-neutral-300
+			dark:border-neutral-700
+			shadow-lg
+			will-change-[transform,opacity]
+			data-[state=open]:data-[side=top]:animate-slideDownAndFade
+			data-[state=open]:data-[side=right]:animate-slideLeftAndFade
+			data-[state=open]:data-[side=bottom]:animate-slideUpAndFade
+			data-[state=open]:data-[side=left]:animate-slideRightAndFade
+			text-fg
+			dark:text-neutral-200
+		"
 	>
-		<DateRangePickerArrow class="fill-neutral-500"/>
+		<DateRangePickerArrow class="date-range-picker--arrow fill-neutral-500"/>
 		<DateRangePickerCalendar
 			v-slot="{ weekDays, grid }"
-			class="p-2 flex flex-col"
+			class="date-range-picker--calendar p-2 flex flex-col"
 		>
-			<DateRangePickerHeader class="flex items-center justify-between">
+			<DateRangePickerHeader class="date-range-picker--header flex items-center justify-between">
 				<DateRangePickerPrev
 					class="
-							inline-flex
-							items-center
-							cursor-pointer
-							active:scale-125
-							justify-center
-							rounded-sm
-							outlined
-							px-1
-						"
+						date-range-picker--year-prev
+						inline-flex
+						items-center
+						cursor-pointer
+						active:scale-125
+						justify-center
+						rounded-sm
+						outlined
+						px-1
+					"
 					:prev-page="(date: DateValue) => date.subtract({ years: 1 })"
 				>
 					<Icon class="scale-150">
@@ -251,6 +266,7 @@ const locale = useInjectedLocale().timeLocale
 				</DateRangePickerPrev>
 				<DateRangePickerPrev
 					class="
+							date-range-picker--prev
 							inline-flex
 							items-center
 							cursor-pointer
@@ -266,18 +282,19 @@ const locale = useInjectedLocale().timeLocale
 					</Icon>
 				</DateRangePickerPrev>
 
-				<DateRangePickerHeading class="min-w-[14ch] text-center"/>
+				<DateRangePickerHeading class="date-range-picker--heading min-w-[14ch] text-center"/>
 				<DateRangePickerNext
 					class="
-							inline-flex
-							items-center
-							cursor-pointer
-							active:scale-125
-							justify-center
-							rounded-sm
-							outlined
-							px-1
-						"
+						date-range-picker--next
+						inline-flex
+						items-center
+						cursor-pointer
+						active:scale-125
+						justify-center
+						rounded-sm
+						outlined
+						px-1
+					"
 				>
 					<Icon class="scale-150">
 						<i-radix-icons-chevron-right/>
@@ -285,15 +302,16 @@ const locale = useInjectedLocale().timeLocale
 				</DateRangePickerNext>
 				<DateRangePickerNext
 					class="
-							inline-flex
-							items-center
-							cursor-pointer
-							active:scale-125
-							justify-center
-							rounded-sm
-							outlined
-							px-1
-						"
+						date-range-picker--year-next
+						inline-flex
+						items-center
+						cursor-pointer
+						active:scale-125
+						justify-center
+						rounded-sm
+						outlined
+						px-1
+					"
 					:next-page="(date: DateValue) => date.add({ years: 1 })"
 				>
 					<Icon class="scale-150">
@@ -303,25 +321,37 @@ const locale = useInjectedLocale().timeLocale
 			</DateRangePickerHeader>
 			<div
 				class="
-						flex
-						flex-col
-						pt-4
-					"
+					date-range-picker--grid-wrapper
+					flex
+					flex-col
+					pt-4
+				"
 			>
 				<DateRangePickerGrid
-					class="border-collapse select-none"
+					class="
+						date-range-picker--grid
+						border-collapse
+						select-none
+					"
 					v-for="month in grid"
 					:key="month.value.toString()"
 				>
-					<DateRangePickerGridHead>
-						<DateRangePickerGridRow class="mb-1 flex justify-between">
+					<DateRangePickerGridHead class="date-range-picker--grid-head">
+						<DateRangePickerGridRow class="
+							date-range-picker--grid-row
+							mb-1
+							flex
+							justify-between
+						"
+						>
 							<DateRangePickerHeadCell
 								class="
-										w-6
-										rounded-md
-										text-xs
-										text-accent-500
-									"
+									date-range-picker--head-cell
+									w-6
+									rounded-md
+									text-xs
+									text-accent-500
+								"
 								v-for="day in weekDays"
 								:key="day"
 							>
@@ -329,14 +359,21 @@ const locale = useInjectedLocale().timeLocale
 							</DateRangePickerHeadCell>
 						</DateRangePickerGridRow>
 					</DateRangePickerGridHead>
-					<DateRangePickerGridBody>
+					<DateRangePickerGridBody class="date-range-picker--grid-body">
 						<DateRangePickerGridRow
-							class="flex w-full justify-between my-1"
+							class="
+								date-range-picker--grid-row
+								flex
+								w-full
+								justify-between
+								my-1
+							"
 							v-for="(weekDates, index) in month.rows"
 							:key="`weekDate-${index}`"
 						>
 							<DateRangePickerCell
 								:date="weekDate"
+								class="date-range-picker--cell"
 								v-for="weekDate in weekDates"
 								:key="weekDate.toString()"
 							>
@@ -344,42 +381,43 @@ const locale = useInjectedLocale().timeLocale
 									:day="weekDate"
 									:month="month.value"
 									class="
-											relative
-											flex
-											items-center
-											justify-center
-											whitespace-nowrap
-											rounded-sm
-											border
-											border-transparent
-											bg-transparent
-											text-sm
-											w-6
-											h-6
-											focus:shadow
-											focus-outline
-											hover:border-accent-500
-											data-[selected]:bg-accent-500
-											dark:data-[selected]:bg-accent-500/80
-											data-[selected]:shadow
-											data-[disabled]:text-neutral-500
-											data-[selected]:text-white
-											data-[unavailable]:pointer-events-none
-											data-[unavailable]:text-neutral-500
-											data-[unavailable]:line-through
-											data-[outside-view]:text-neutral-500
-											before:absolute
-											before:bottom-[1px]
-											before:hidden
-											before:rounded-full
-											before:w-4
-											before:h-[2px]
-											before:bg-white
-											data-[today]:before:block
-											data-[today]:before:bg-accent-700
-											dark:data-[today]:before:bg-accent-300
-											data-[selected]:before:bg-white
-										"
+										date-range-picker--cell-trigger
+										relative
+										flex
+										items-center
+										justify-center
+										whitespace-nowrap
+										rounded-sm
+										border
+										border-transparent
+										bg-transparent
+										text-sm
+										w-6
+										h-6
+										focus:shadow
+										focus-outline
+										hover:border-accent-500
+										data-[selected]:bg-accent-500
+										dark:data-[selected]:bg-accent-500/80
+										data-[selected]:shadow
+										data-[disabled]:text-neutral-500
+										data-[selected]:text-white
+										data-[unavailable]:pointer-events-none
+										data-[unavailable]:text-neutral-500
+										data-[unavailable]:line-through
+										data-[outside-view]:text-neutral-500
+										before:absolute
+										before:bottom-[1px]
+										before:hidden
+										before:rounded-full
+										before:w-4
+										before:h-[2px]
+										before:bg-white
+										data-[today]:before:block
+										data-[today]:before:bg-accent-700
+										dark:data-[today]:before:bg-accent-300
+										data-[selected]:before:bg-white
+									"
 								/>
 							</DateRangePickerCell>
 						</DateRangePickerGridRow>

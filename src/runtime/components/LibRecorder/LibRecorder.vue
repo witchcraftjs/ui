@@ -43,7 +43,7 @@
 >
 	<!-- :aria-description="recording ? recordingTitle : ''" -->
 	<div
-		:class="twMerge(`recorder-indicator
+		:class="twMerge(`recorder--indicator
 				inline-block
 				bg-red-700
 				rounded-full
@@ -62,7 +62,7 @@
 		)"
 		ref="recorderIndicatorEl"
 	/>
-	<div class="recorder-value before:content-vertical-holder truncate">
+	<div class="recorder--value before:content-vertical-holder truncate">
 		{{ recording
 			? recordingValue ?? t("recorder.recording")
 			: tempValue }}

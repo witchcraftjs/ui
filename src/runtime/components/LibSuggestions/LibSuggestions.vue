@@ -19,10 +19,11 @@
 	<div :id="`suggestion-${id ?? fallbackId}-${index}`"
 		role="option"
 		:class="twMerge(`
-					user-select-none
-					cursor-pointer
-					px-2
-				`,
+			suggestions--item
+			user-select-none
+			cursor-pointer
+			px-2
+		`,
 			index=== suggestions.active && `
 				bg-accent-200
 				dark:bg-accent-800/70

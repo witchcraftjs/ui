@@ -1,6 +1,7 @@
 <template>
 <div
 	:class="twMerge(`
+		checkbox--wrapper
 		flex
 		items-center
 		gap-1
@@ -12,8 +13,8 @@
 >
 	<slot name="left"/>
 	<label
-		class="flex items-center gap-1"
 		:class="twMerge(`
+			checkbox--label
 			flex
 			items-center
 			gap-1
@@ -26,6 +27,7 @@
 		<input
 			:id="id ?? fallbackId"
 			:class="!($attrs as any).unstyle && twMerge(`
+				checkbox
 				focus-outline-no-offset
 				m-0
 				p-[0.4em]

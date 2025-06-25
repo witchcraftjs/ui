@@ -24,7 +24,7 @@
 <Transition>
 	<div
 		v-show="topNotifications.length > 0"
-		:class="twMerge(`notifications-none`, ($attrs as any).class)"
+		:class="twMerge(`notifications--none`, ($attrs as any).class)"
 	/>
 </Transition>
 <Transition>

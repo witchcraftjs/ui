@@ -2,7 +2,7 @@
 <div
 	v-if="$modelValue && $modelValue?.length > 0"
 	:class="twMerge(`
-		values
+		multivalues
 		group
 		flex
 		flex-initial
@@ -23,7 +23,7 @@
 	<div
 		:data-border="border"
 		:class="twMerge(`
-				value_wrapper
+				multivalues--item
 				flex-basis-0
 				min-w-2
 				flex
@@ -57,9 +57,9 @@
 		:key="value"
 		@keydown.ctrl.c.prevent="copy(value.toString())"
 	>
-		<span class="value_label truncate">{{ value }}</span>
+		<span class="multivalues--label truncate">{{ value }}</span>
 		<lib-button
-			class="!p-0 text-sm !leading-none"
+			class="multivalues--remove-button !p-0 text-sm !leading-none"
 			:aria-label="`Remove ${value}`"
 			:border="false"
 			:disabled="disabled || readonly"

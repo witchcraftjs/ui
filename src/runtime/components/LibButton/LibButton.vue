@@ -170,7 +170,7 @@
 		...ariaLabel,
 	}"
 >
-	<label :id="`label-${id ?? fallbackId}`" class="label pointer-events-none flex flex-1 items-center justify-center gap-1">
+	<label :id="`label-${id ?? fallbackId}`" class="button--label pointer-events-none flex flex-1 items-center justify-center gap-1">
 		<slot name="icon"/>
 		<slot
 			v-bind="{ label}"

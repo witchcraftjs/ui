@@ -1,5 +1,5 @@
 <template>
-<div class="lib-debug
+<div class="debug--wrapper
 		text-fg
 		dark:text-bg
 		flex
@@ -11,14 +11,15 @@
 		overflow-auto
 	"
 >
-	<div class="flex justify-between">
-		<span class="font-bold">{{ title }}</span>
-		<LibButton class="w-min-content" @click="copy()">
+	<div class="debug--header flex justify-between">
+		<span class="debug--title font-bold">{{ title }}</span>
+		<LibButton class="debug--copy-button w-min-content" @click="copy()">
 			<icon><i-fa6-regular-copy/></icon>
 		</LibButton>
 	</div>
 	<pre v-if="value"
 		:class="`
+			debug--value
 			[tab-size:${tab}]
 		`
 		"

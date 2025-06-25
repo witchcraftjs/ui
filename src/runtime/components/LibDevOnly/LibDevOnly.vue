@@ -2,9 +2,8 @@
 <DevOnly>
 	<slot v-if="doShow && $attrs?.['as-child'] !== undefined"/>
 	<div v-else-if="doShow"
-
-
 		:class="twMerge(`
+			dev-only
 			border
 			border-dashed
 			border-red-500

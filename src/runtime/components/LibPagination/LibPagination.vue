@@ -1,6 +1,7 @@
 <template>
 <nav
 	:class="twMerge(`
+		pagination--wrapper
 		flex flex-wrap items-center justify-center gap-2
 	`, ($attrs as any).class)"
 	role="navigation"
@@ -12,33 +13,33 @@
 		:href="prevLink.href"
 		:text="t('pagination.previous-page')"
 		:aria-label=" t('pagination.aria.go-to-previous-page',{count:prevLink.i})"
-		:class="pageClasses"
+		:class="`pagination--link ${pageClasses}`"
 	>
 		<a
-			:class="pageClasses"
+			:class="`pagination--link ${pageClasses}`"
 			:href="prevLink.href"
 			:aria-label=" t('pagination.aria.go-to-previous-page', {count:prevLink.i})"
 		/>
 	</slot>
-	<div class="flex-1"/>
+	<div class="pagination--spacer flex-1"/>
 	<slot v-if="firstLink.i !== currentLink.i"
 		name="link"
 		:i="0"
 		:href="firstLink.href"
 		:text="firstLink.i"
 		:aria-label="t('pagination.aria.go-to-page', {count:firstLink.i})"
-		:class="pageClasses"
+		:class="`pagination--link pagination--first-link ${pageClasses}`"
 	>
 		{{ firstLink.href }}
 		<a
-			:class="pageClasses"
+			:class="`pagination--link pagination--first-link ${pageClasses}`"
 			:href="firstLink.href"
 			:aria-label="t('pagination.aria.go-to-page', {count:firstLink.i})"
 		>
 			{{ firstLink.i }}
 		</a>
 	</slot>
-	<div v-if="prevLink.i - extraPages > firstLink.i" class="page-fill">
+	<div v-if="prevLink.i - extraPages > firstLink.i" class="pagination--page-fill">
 		...
 	</div>
 	<template
@@ -46,13 +47,13 @@
 		:key="entry.i"
 	>
 		<slot name="link"
-			:class="pageClasses"
+			:class="`pagination--link ${pageClasses}`"
 			:i="entry.i"
 			:href="entry.href"
 			:aria-label="t('pagination.aria.go-to-page', {count:entry.i})"
 		>
 			<a
-				:class="pageClasses"
+				:class="`pagination--link ${pageClasses}`"
 				:href="entry.href"
 				:aria-label="t('pagination.aria.go-to-page', {count:entry.i})"
 			>
@@ -61,15 +62,14 @@
 		</slot>
 	</template>
 	<slot name="current"
-		:class="currentPageClasses"
+		:class="`pagination--link ${currentPageClasses}`"
 		tabindex="0"
 		:i="currentLink.i"
 		:aria-label="t('pagination.aria.current-page', {count:currentLink.i})"
 		:aria_current="true"
 	>
-		<div class="a"
+		<div :class="`pagination--current-page a ${currentPageClasses}`"
 			tabindex="0"
-			:class="currentPageClasses"
 			:aria-label="t('pagination.aria.current-page', {count:currentLink.i})"
 			aria-current="true"
 			@click="$event.preventDefault()"
@@ -82,13 +82,13 @@
 		:key="entry.i"
 	>
 		<slot name="link"
-			:class="pageClasses"
+			:class="`pagination--link ${pageClasses}`"
 			:i="entry.i"
 			:href="entry.href"
 			:aria-label="t('pagination.aria.go-to-page', {count:entry.i})"
 		>
 			<a
-				:class="pageClasses"
+				:class="`pagination--link ${pageClasses}`"
 				:href="entry.href"
 				:aria-label="t('pagination.aria.go-to-page', {count:entry.i})"
 			>
@@ -96,29 +96,29 @@
 			</a>
 		</slot>
 	</template>
-	<div v-if="nextLink.i + extraPages < total" class="page-fill" aria-hidden="true">
+	<div v-if="nextLink.i + extraPages < total" class="pagination--page-fill" aria-hidden="true">
 		...
 	</div>
 	<slot v-if="lastLink.i !== currentLink.i"
 		name="link"
-		:class="pageClasses"
+		:class="`pagination--link ${pageClasses}`"
 		:i="lastLink.i"
 		:href="lastLink.href"
 		:text="total"
 		:aria-label="t('pagination.aria.go-to-page', {count:lastLink.i})"
 	>
 		<a
-			:class="pageClasses"
+			:class="`pagination--link ${pageClasses}`"
 			:href="lastLink.href"
 			:aria-label="t('pagination.aria.go-to-page', {count:lastLink.i})"
 		>
 			{{ total }}
 		</a>
 	</slot>
-	<div class="flex-1"/>
+	<div class="pagination--spacer flex-1"/>
 	<slot
 		v-if="nextLink.i <= total && nextLink.i !== currentLink.i"
-		:class="pageClasses"
+		:class="`pagination--link ${pageClasses}`"
 		name="link"
 		:i="nextLink.i"
 		:href="nextLink.href"
@@ -126,7 +126,7 @@
 		:aria-label="t('pagination.aria.go-to-next-page', {count:nextLink.i})"
 	>
 		<a
-			:class="pageClasses"
+			:class="`pagination--link ${pageClasses}`"
 			:href="nextLink.href"
 			:aria-label="t('pagination.aria.go-to-next-page', {count:nextLink.i})"
 		>

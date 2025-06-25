@@ -2,7 +2,7 @@
 <input
 	:id="id ?? fallbackId"
 	:class="twMerge(`
-			input
+			simple-input
 			flex-1
 			grow-[999999]
 			rounded-sm

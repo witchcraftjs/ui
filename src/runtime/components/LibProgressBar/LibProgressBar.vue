@@ -3,6 +3,7 @@
 	<div v-if="!hide"
 		:id="id ?? fallbackId"
 		:class="twMerge(`
+			progress-bar
 			w-[200px]
 			whitespace-nowrap
 			overflow-x-scroll
@@ -47,7 +48,7 @@
 		v-bind="{...$attrs, class:undefined}"
 		:style="`--progress: ${clampVal(progress, clamp[0] ?? 0, clamp[1] ?? 100)}%;`"
 	>
-		<div class="label-wrapper relative flex-1">
+		<div class="procgress-bar--label-wrapper relative flex-1">
 			<span class="before:content-vertical-holder"/>
 			<Transition>
 				<slot>
@@ -71,6 +72,7 @@
 					<label
 						v-if="!psuedoHide"
 						class="
+							progress-bar--label
 							contrast-label
 							pointer-events-none
 							absolute

@@ -165,7 +165,7 @@ Note that using the strictTemplates compiler option can cause weird issues with 
 
 ## Props
 
-Due to issues with vue 3 removing $listeners and the fact that we can't inherit from an existing HTML attribute types to specify props for wrapper components (most of them), we have to declare props in a convoluted way to get proper types when we consume the componenets.
+Due to issues with vue 3 removing $listeners and the fact that we can't inherit from an existing HTML attribute types to specify props for wrapper components (most of them), we have to declare props in a convoluted way to get proper types when we consume the components.
 
 Here is an example of the needed code for props to work correctly:
 ```vue
@@ -174,14 +174,6 @@ Here is an example of the needed code for props to work correctly:
 // and we can have interface merging, a setup script cannot interface merge
 
 import type { BaseInteractiveProps } from "../shared/props.js"
-
-// if using useDivideAttrs, we need to do the below for each prefix
-// a helper type WrapperProps is provided to do this
-type WrapperTypes =  (WrapperProps<"wrapper", HTMLAttributes, {
-	// overrides
-	/** Tailwind classes. */
-	class:string;
-}>)
 
 // real props vue can understand, they will show up under props.*
 type RealProps =
@@ -194,7 +186,6 @@ type RealProps =
 	id?: InputHTMLAttributes["id"]
 }
 
-
 interface Props
 	extends
 	// we need to ignore the complex InputHTMLAttributes type
@@ -206,12 +197,10 @@ interface Props
 	Partial<Omit<InputHTMLAttributes,"class" | "onSubmit"> & {
 		//	overrides for the components
 		// usually, for example, class can only be a string (because of tailwind)
-		// this is still part of the ignored type above 
-		// it will be passed as an attr
+		// this will be passed as an attr
 		class?:string
 	}>,
 	/** @vue-ignore */
-	Partial<WrapperTypes>,
 	RealProps
 { }
 </script>
@@ -224,7 +213,7 @@ const props = withDefaults(defineProps<Props>(), {
 	id: "",
 	...baseInteractivePropsDefaults
 })
-const $ = useDivideAttrs(["wrapper"] as const)
+const $attrs = useAttrs()
 </script>
 ```
 
