@@ -64,9 +64,14 @@ const props = withDefaults(defineProps<Props>(), {
 	preferredHorizontal: () => ["center-most", "either"] satisfies Props["preferredHorizontal"],
 	preferredVertical: () => ["top", "bottom", "either"] satisfies Props["preferredVertical"] ,
 	avoidRepositioning: false,
+	canClose: true,
 })
 const $attrs = useAttrs()
 defineOptions({ name: "lib-popup" })
+
+const emit = defineEmits<{
+	(e: "close"): void
+}>()
 
 
 const dialogEl = ref<HTMLDialogElement | null>(null)
@@ -324,6 +329,9 @@ const show = () => {
 
 const close = () => {
 	if (isOpen) {
+		const res = props.canClose ?? false
+		emit("close")
+		if (res === false) return
 		isOpen = false
 		modelValue.value = isOpen
 		pos.value.maxWidth = undefined
@@ -447,6 +455,7 @@ type RealProps =
 	 * Allows modifying the calculated position, to for example, clamp it.
 	 */
 	modifyPosition?: PopupPositionModifier
+	canClose?: boolean
 }
 
 interface Props
