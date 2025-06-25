@@ -157,7 +157,7 @@
 		`,
 		($attrs as any)?.class
 	)"
-	:type="$attrs.type as any ?? 'submit'"
+	:type="$attrs.type as any"
 	:tabindex="0"
 	:disabled="disabled"
 	:data-border="border"
