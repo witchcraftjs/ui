@@ -152,6 +152,7 @@
 </template>
 <script setup lang="ts">
 import { isBlank } from "@alanscodelog/utils/isBlank.js"
+import { isObject } from "@alanscodelog/utils/isObject.js"
 import { pushIfNotIn } from "@alanscodelog/utils/pushIfNotIn.js"
 import { computed,type HTMLAttributes,type InputHTMLAttributes, nextTick, onBeforeMount, ref, toRef, useSlots, watch } from "vue"
 import type { ComponentExposed } from "vue-component-type-helpers"
@@ -164,7 +165,16 @@ import LibLabel from "../LibLabel/LibLabel.vue"
 import LibMultiValues from "../LibMultiValues/LibMultiValues.vue"
 import LibSimpleInput from "../LibSimpleInput/LibSimpleInput.vue"
 import LibSuggestions from "../LibSuggestions/LibSuggestions.vue"
-import { type BaseInteractiveProps, baseInteractivePropsDefaults, getFallbackId,type LabelProps, type LinkableByIdProps, type MultiValueProps, type SuggestionsProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
+import {
+	type BaseInteractiveProps,
+	baseInteractivePropsDefaults,
+	getFallbackId,
+	type LabelProps,
+	type LinkableByIdProps,
+	type SuggestionsProps,
+	type TailwindClassProp,
+	type WrapperProps,
+} from "../shared/props.js"
 
 
 /* #region base */
@@ -174,8 +184,8 @@ defineOptions({
 })
 const $slots = useSlots()
 const emit = defineEmits<{
-	(e: "submit", val: string, suggestion?: any): void
 	(e: "input", val: InputEvent): void
+	(e: "submit", val: string, suggestion?: any): void
 	(e: "keydown", val: KeyboardEvent): void
 	(e: "blur", val: FocusEvent): void
 	(e: "focus", val: FocusEvent): void
@@ -223,9 +233,17 @@ const suggestionsIndicatorClickHandler = (e: MouseEvent) => {
 
 const handleKeydown = (e: KeyboardEvent) => {
 	if (props.suggestions) {
-		(suggestionsComponent.value as any)?.inputKeydownHandler?.(e)
+		if (e.key === "Enter" && activeSuggestion.value === -1 && $values.value) {
+			pushIfNotIn($values.value, [$inputValue.value])
+			$inputValue.value = ""
+			$modelValue.value = ""
+		} else {
+			(suggestionsComponent.value as any)?.inputKeydownHandler?.(e)
+			if ($values.value) {
+				$modelValue.value = ""
+			}
+		}
 	}
-	
 	emit("keydown", e)
 }
 const handleBlur = (e: FocusEvent) => {
@@ -244,9 +262,7 @@ const handleFocus = (e: FocusEvent) => {
 function addValue(val: string) {
 	if ($values.value === undefined) return
 	if (isBlank(val)) return
-	props.preventDuplicateValues
-		? pushIfNotIn($values.value, [val])
-		: $values.value.push(val)
+	pushIfNotIn($values.value, [val])
 	$inputValue.value = ""
 	$modelValue.value = ""
 }
@@ -275,7 +291,7 @@ const inputProps = computed(() => ({
 	},
 	onSubmit: (e: string) => {
 		if (!props.suggestions) {
-			$modelValue.value = e
+			$modelValue.value = $values.value ? "" : e
 			emit("submit", e)
 			if ($values.value) {
 				addValue(e)
@@ -288,7 +304,7 @@ const inputProps = computed(() => ({
 	class: undefined,
 }))
 
-function slotSubmit(val: any): void {
+function slotSubmit(val: any, _wasRemoved: boolean): void {
 	emit("submit", val)
 }
 const slotProps = computed(() => ({
@@ -300,6 +316,7 @@ const slotProps = computed(() => ({
 	emitSubmit: slotSubmit
 }))
 
+
 const suggestionProps = computed(() => ({
 	id: fullId.value,
 	suggestions: props.suggestions,
@@ -307,16 +324,16 @@ const suggestionProps = computed(() => ({
 	restrictToSuggestions: props.restrictToSuggestions,
 	suggestionLabel: props.suggestionLabel,
 	suggestionsFilter: props.suggestionsFilter,
-	modelValue: $modelValue.value.toString(),
+	modelValue: $values.value ?? $modelValue.value.toString(),
 	inputValue: $inputValue.value,
 	isValid: props.isValid,
 	"onUpdate:inputValue": (e: string) => $inputValue.value = e,
-	onSubmit: (e: string, suggestion: any) => {
-		$modelValue.value = e
+	onSubmit: (e: string, suggestion?: any, wasRemoved?: boolean) => {
+		$modelValue.value = wasRemoved ? "" : e
 		emit("submit", e, suggestion)
-		if ($values.value) {
-			addValue(e)
-		}
+	},
+	"onUpdate:modelValue": (e: string | string[]) => {
+		$values.value &&= e as string[]
 	},
 	"onUpdate:isOpen": (e: boolean) => { isOpen.value = e },
 	"onUpdate:activeSuggestion": (e: number) => activeSuggestion.value = e,
@@ -355,7 +372,6 @@ type RealProps =
 	& LinkableByIdProps
 	& LabelProps
 	& BaseInteractiveProps
-	& MultiValueProps
 & {
 	suggestions?: SuggestionsProps["suggestions"]
 	valid?: boolean

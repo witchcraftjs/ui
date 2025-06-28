@@ -37,17 +37,28 @@
 		:key="item"
 		@mouseover="suggestions.active = index"
 		@mousedown.prevent
-		@mouseup="suggestions.enterSuggestion(index)"
+		@mouseup="suggestions.enterIndex(index, !Array.isArray($modelValue))"
 	>
-		<slot name="item" :item="item" :index="index">
-			{{ item }}
+		<slot name="item"
+			:item="item"
+			:index="index"
+			:is-selected="Array.isArray($modelValue) ? $modelValue.includes(item) : $modelValue === item"
+		>
+			<div class="flex gap-2 nowrap">
+				<lib-checkbox
+					v-if="Array.isArray($modelValue) && showSelectedValues"
+					:model-value="$modelValue.includes(item)"
+					@mousedown.prevent
+				/>
+				<div> {{ item }} </div>
+			</div>
 		</slot>
 	</div>
 </div>
 </template>
 
 
-<script setup lang="ts" generic="TSuggestion extends string | object">
+<script setup lang="ts" generic="TSuggestion extends string | object, TValue extends string|string[]">
 
 import { type HTMLAttributes,reactive, ref } from "vue"
 
@@ -55,7 +66,8 @@ import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
 import { useSuggestions } from "../../composables/useSuggestions.js"
 import { hasModifiers } from "../../helpers/hasModifiers.js"
 import { twMerge } from "../../utils/twMerge.js"
-import { type BaseInteractiveProps, baseInteractivePropsDefaults, getFallbackId,type LabelProps, type LinkableByIdProps, type MultiValueProps, type SuggestionsEmits, type SuggestionsProps, type WrapperProps } from "../shared/props.js"
+import LibCheckbox from "../LibCheckbox/LibCheckbox.vue"
+import { type BaseInteractiveProps, baseInteractivePropsDefaults, getFallbackId,type LabelProps, type LinkableByIdProps, type SuggestionsEmits, type SuggestionsProps, type WrapperProps } from "../shared/props.js"
 
 defineOptions({
 	name: "lib-suggestions",
@@ -75,13 +87,12 @@ const props = withDefaults(defineProps<Props & SuggestionsProps<TSuggestion>>(),
 	filterKeydown: undefined,
 	...baseInteractivePropsDefaults
 })
-
 /**
  * The final valid value. This is *not* the value you want to share with the input. If `restrictToSuggestions` is true this will not update on any invalid values that `inputValue` might be set to.
  *
  * If suggestions are objects, this will be the string returned by the `suggestionLabel` prop.
  */
-const $modelValue = defineModel<string>("modelValue", { required: true })
+const $modelValue = defineModel<TValue>("modelValue", { required: true })
 /**
  * If the element is bound to an input, this is the value that the input should be sharing.
  *
@@ -95,11 +106,10 @@ if (typeof props.suggestions?.[0] === "object" && !props.suggestionLabel && !pro
 }
 
 const el = ref<HTMLElement | null>(null)
-const mousedown = ref(false)
 
-const suggestions = reactive(useSuggestions(
+const suggestions = reactive(useSuggestions<TSuggestion, TValue extends string[] ? true : false>(
 	$inputValue,
-	$modelValue,
+	$modelValue as any,
 	emits,
 	props
 ))
@@ -108,7 +118,7 @@ const inputKeydownHandler = (e: KeyboardEvent): void => {
 	if (props.filterKeydown?.(e)) return
 	if (hasModifiers(e)) return
 	if (e.key === "Enter") {
-		suggestions.enterSelected()
+		suggestions.enterSelected(!Array.isArray($modelValue))
 		e.preventDefault()
 	} else if (e.key === "Escape") {
 		suggestions.cancel()
@@ -143,7 +153,9 @@ const inputBlurHandler = (e: MouseEvent): void => {
 	if (props.restrictToSuggestions) {
 		suggestions.cancel()
 	} else {
-		$modelValue.value = $inputValue.value
+		if (!Array.isArray($modelValue.value)) {
+			$modelValue.value = $inputValue.value as any
+		}
 	}
 	if (suggestions.isOpen) {
 		suggestions.close()
@@ -177,7 +189,6 @@ type RealProps =
 	& LinkableByIdProps
 	& LabelProps
 	& BaseInteractiveProps
-	& MultiValueProps
 	& {
 		/** Return true to prevent the keydown event from being handled. */
 		filterKeydown?: (e: KeyboardEvent) => boolean

@@ -274,7 +274,7 @@ const MultipleValuesBase: Story = {
 				v-model:values="values"
 			>
 				<template #left>
-					<lib-button class="px-0" :border="false">
+					<lib-button class="px-0" :border="false" :disabled="args.disabled || args.readonly">
 						<icon><icon-fa-solid-tags/></icon>
 					</lib-button>
 				</template>
@@ -297,6 +297,15 @@ export const WithMultipleValuesWithSuggestions = {
 	args: {
 		...MultipleValuesBase.args,
 		suggestions: ["A", "AB", "ABC", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"],
+	},
+	play: playAutosuggestSelectLike
+}
+export const WithMultipleValuesWithSuggestionsNoSelected = {
+	...MultipleValuesBase,
+	args: {
+		...MultipleValuesBase.args,
+		suggestions: ["A", "AB", "ABC", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"],
+		showSelectedValues: false,
 	},
 	play: playAutosuggestSelectLike
 }

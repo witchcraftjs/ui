@@ -194,7 +194,7 @@ import { type ButtonHTMLAttributes,computed, type HTMLAttributes, type PropType,
 import { useAriaLabel } from "../../composables/useAriaLabel.js"
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
 import { twMerge } from "../../utils/twMerge.js"
-import { type BaseInteractiveProps, baseInteractiveProps, baseInteractivePropsDefaults, getFallbackId,type LabelProps, type LinkableByIdProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
+import { type BaseInteractiveProps, baseInteractiveProps, baseInteractivePropsDefaults, type ButtonProps,getFallbackId, type LabelProps, type LinkableByIdProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
 
 
 const $attrs = useAttrs()
@@ -228,12 +228,7 @@ type RealProps =
 	& LinkableByIdProps
 	& LabelProps
 	& BaseInteractiveProps
-	& {
-		border?: boolean
-		color?: "warning" | "ok" | "danger" | "primary" | "secondary" | false
-		label?: string
-		autoTitleFromAria?: boolean
-	}
+	& ButtonProps
 
 interface Props
 	extends

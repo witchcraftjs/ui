@@ -13,23 +13,24 @@ export const playBasicVModel = async ({ canvasElement, args }: { canvasElement: 
 export const playMultipleValues = async ({ canvasElement, args }: { canvasElement: HTMLElement, args: any }) => {
 	const initialValues = [...(args.values ?? [])]
 	const canvas = within(canvasElement)
+	// no multiple values
 	const input = canvas.getByLabelText(args.label ?? "", { selector: "input" })
 	await userEvent.type(input, "A")
 	await expect(canvas.getByTestId("model-value")).toHaveTextContent("A")
 	await userEvent.keyboard("{Enter}")
 	await expect(canvas.getByTestId("values").textContent)
-		.toBe([...initialValues, "A"].join(", "))
+		.toBe([...initialValues].join(", "))
 	// expect input to get cleared
 	await expect(canvas.getByTestId("model-value")).toBeEmptyDOMElement()
 
-	await userEvent.type(input, "B")
-	await expect(canvas.getByTestId("model-value")).toHaveTextContent("B")
+	await userEvent.type(input, "D")
+	await expect(canvas.getByTestId("model-value")).toHaveTextContent("D")
 	await userEvent.keyboard("{Enter}")
 	await expect(canvas.getByTestId("values").textContent)
-		.toBe([ ...initialValues, "A", "B" ].join(", "))
+		.toBe([ ...initialValues, "D" ].join(", "))
 	// empty input does nothing
 	await userEvent.clear(input)
 	await userEvent.keyboard("{Enter}")
 	await expect(canvas.getByTestId("values").textContent)
-		.toBe([ ...initialValues, "A", "B" ].join(", "))
+		.toBe([ ...initialValues, "D" ].join(", "))
 }

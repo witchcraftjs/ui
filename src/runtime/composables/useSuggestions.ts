@@ -1,6 +1,9 @@
 /* eslint-disable no-console */
+import { type AnyFunction } from "@alanscodelog/utils"
 import { isBlank } from "@alanscodelog/utils/isBlank.js"
 import { isObject } from "@alanscodelog/utils/isObject.js"
+import { pushIfNotIn } from "@alanscodelog/utils/pushIfNotIn.js"
+import { removeIfIn } from "@alanscodelog/utils/removeIfIn.js"
 import { computed, type Ref, ref, toRaw, watch } from "vue"
 
 import { type SuggestionsEmits,type SuggestionsOptions } from "../components/shared/props.js"
@@ -12,9 +15,9 @@ import { type SuggestionsEmits,type SuggestionsOptions } from "../components/sha
  * Note that while object suggestions are supported, the `suggestionLabel` prop is required and $inputModel and $modelValue will still be string values (as returned by the suggestionLabel function).
  */
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function useSuggestions<TSuggestion>(
+export function useSuggestions<TSuggestion, TMultivalue extends boolean = false>(
 	$inputValue: Ref<string>,
-	$modelValue: Ref<string>,
+	$modelValue: Ref<TMultivalue extends true ? string[] : string>,
 	emit: SuggestionsEmits,
 	opts: SuggestionsOptions<TSuggestion>,
 	debug: boolean = false
@@ -27,25 +30,38 @@ export function useSuggestions<TSuggestion>(
 	const activeSuggestion = ref(-1)
 	watch(isOpen, val => { emit("update:isOpen", val) })
 	watch(activeSuggestion, val => { emit("update:activeSuggestion", val) })
-	const suggestionKey = (item: any): string => {
+	if (opts.suggestions) {
+		for (const suggestion of opts.suggestions) {
+			suggestionLabelGuard(suggestion, opts.suggestionLabel)
+		}
+	}
+
+	const getSuggestionLabel = (item: any): string => {
+		suggestionLabelGuard(item, opts.suggestionLabel)
 		if (isObject<any>(item)) {
-			if (opts.suggestionLabel) {
-				return opts.suggestionLabel(item)
-			}
-			throw new Error("`suggestionLabel` must be passed if suggestions are objects.")
+			return opts.suggestionLabel!(item)
 		}
 		return item
 	}
-	const getSuggestionLabel = (item: any): string => opts.suggestionLabel?.(item) ?? suggestionKey(item) ?? ""
 
 	const defaultSuggestionsFilter = (input: string, items: TSuggestion[]): TSuggestion[] => input === ""
 		? [...items]
-		: items.filter(item => getSuggestionLabel(item).toLowerCase().includes(input.toLowerCase()))
+		: items.filter(item => {
+			if (Array.isArray($modelValue.value)) {
+				// always include selected values for unselecting
+				if ($modelValue.value.includes(getSuggestionLabel(item))) return true
+			}
+			return getSuggestionLabel(item).toLowerCase().includes(input.toLowerCase())
+		})
 	const suggestionsFilter = computed(() => opts.suggestionsFilter ?? defaultSuggestionsFilter)
 
 	const suggestionsList = computed(() => {
 		if (opts.suggestions) {
-			const res = suggestionsFilter.value($inputValue.value, opts.suggestions)
+			const suggestions = [...opts.suggestions]
+			if (Array.isArray($modelValue.value) && !opts.showSelectedValues) {
+				pushIfNotIn(suggestions, $modelValue.value)
+			}
+			const res = suggestionsFilter.value($inputValue.value, suggestions)
 			return res
 		}
 		return undefined
@@ -79,9 +95,6 @@ export function useSuggestions<TSuggestion>(
 				: opts.suggestions!)
 
 			if (opts.restrictToSuggestions && !isValidSuggestion.value) return res
-			if (opts.preventDuplicateValues && opts.values) {
-				return res.filter(suggestion => !opts.values!.includes(suggestionKey(suggestion)))
-			}
 			return res
 		}
 		return undefined
@@ -89,13 +102,28 @@ export function useSuggestions<TSuggestion>(
 
 
 	// methods
+	// returns true if the value was removed
+	function setValue(val: string): boolean {
+		if (Array.isArray($modelValue.value)) {
+			// works like a toggle
+			if ($modelValue.value.includes(val)) {
+				removeIfIn($modelValue.value, val)
+				return true
+			} else {
+				pushIfNotIn($modelValue.value, [val])
+			}
+		} else {
+			($modelValue.value as string) = val
+		}
+		return false
+	}
 
-	const closeSuggestions = (): void => {
+	function closeSuggestions(): void {
 		if (debug) console.log("closeSuggestions")
 		isOpen.value = false
 		activeSuggestion.value = -1
 	}
-	const openSuggestions = (): void => {
+	function openSuggestions(): void {
 		if (debug) console.log("openSuggestions", { openable: openable.value })
 		if (!openable.value) return
 		if (activeSuggestion.value === -1) {
@@ -108,20 +136,22 @@ export function useSuggestions<TSuggestion>(
 		isOpen.value = true
 	}
 	
-	function enterSuggestion(num: number): void {
+	function enterSuggestion(num: number, doClose: boolean = true): void {
 		if (num < -1 || num > (filteredSuggestions.value?.length ?? 0)) return
 		if (debug) console.log("enterSuggestion", num)
 		if (filteredSuggestions.value === undefined) return
 	
 		const suggestion = filteredSuggestions.value[num]
-		const val = suggestionKey(suggestion)
-		$modelValue.value = val
-		$inputValue.value = getSuggestionLabel(suggestion)
-		closeSuggestions()
-		emit("submit", val, toRaw(suggestion))
+		const val = getSuggestionLabel(suggestion)
+		const wasRemoved = setValue(val)
+		$inputValue.value = Array.isArray($modelValue.value) ? "" : getSuggestionLabel(suggestion)
+		if (doClose) {
+			closeSuggestions()
+		}
+		emit("submit", val, toRaw(suggestion), wasRemoved)
 	}
 
-	const enterSelected = (): void => {
+	function enterSelected(doClose: boolean = true): void {
 		if (activeSuggestion.value === -1) {
 			if (!opts.restrictToSuggestions) {
 				if (debug) console.log("enterSelected, unrestricted, emitting submit")
@@ -132,9 +162,10 @@ export function useSuggestions<TSuggestion>(
 			return
 		}
 		if (debug) console.log("enterSelected")
-		enterSuggestion(activeSuggestion.value)
+		enterSuggestion(activeSuggestion.value, doClose)
 	}
-	const selectSuggestion = (num: number): void => {
+
+	function selectSuggestion(num: number): void {
 		if (debug) console.log("selectSuggestion", num)
 		if (num >= -1) {
 			activeSuggestion.value = num
@@ -144,11 +175,11 @@ export function useSuggestions<TSuggestion>(
 		}
 	}
 	
-	const toggleSuggestions = (): void => {
+	function toggleSuggestions(): void {
 		isOpen.value ? closeSuggestions() : openSuggestions()
 	}
 
-	const prevSuggestion = (): void => {
+	function prevSuggestion(): void {
 		if (!filteredSuggestions.value) return
 		if (activeSuggestion.value > 0) {
 			activeSuggestion.value--
@@ -157,7 +188,7 @@ export function useSuggestions<TSuggestion>(
 		}
 	}
 
-	const nextSuggestion = (): void => {
+	function nextSuggestion(): void {
 		if (!filteredSuggestions.value) return
 		if (activeSuggestion.value >= filteredSuggestions.value.length - 1) {
 			activeSuggestion.value = 0
@@ -165,14 +196,18 @@ export function useSuggestions<TSuggestion>(
 			activeSuggestion.value++
 		}
 	}
-	const firstSuggestion = (): void => {
+	function firstSuggestion(): void {
 		selectSuggestion(0)
 	}
-	const lastSuggestion = (): void => {
+	function lastSuggestion(): void {
 		selectSuggestion(Infinity)
 	}
 	
-	const cancel = (): void => {
+	function cancel(): void {
+		if (Array.isArray($modelValue.value)) {
+			$inputValue.value = ""
+			return
+		}
 		if (debug) console.log("cancel")
 		$inputValue.value = getSuggestionLabel($modelValue.value)
 		closeSuggestions()
@@ -203,11 +238,15 @@ export function useSuggestions<TSuggestion>(
 	// sync vmodels and vmodel effects
 	
 	watch($modelValue, () => {
-		$inputValue.value = getSuggestionLabel($modelValue.value)
+		if (Array.isArray($modelValue.value)) {
+			$inputValue.value = ""
+		} else {
+			$inputValue.value = getSuggestionLabel($modelValue.value)
+		}
 		if (debug) console.log("modelValue changed")
 	})
 
-	const defaultSuggestionSelector = (suggestions: TSuggestion[], input: string): number => {
+	function defaultSuggestionSelector(suggestions: TSuggestion[], input: string): number {
 		if (input.length === 0) return 0
 		let longestMatch
 		let ii = -1
@@ -227,16 +266,16 @@ export function useSuggestions<TSuggestion>(
 
 	watch($inputValue, () => {
 		if (debug) console.log("input changed:", $inputValue.value, "modelValue:", $modelValue.value)
-		if (getSuggestionLabel($modelValue.value) === $inputValue.value) return
+		if (!Array.isArray($modelValue.value) && getSuggestionLabel($modelValue.value) === $inputValue.value) return
 
 		if (suggestionAvailable.value) {
 			if (debug) console.log("input changed, suggestion available, opening suggestions")
 			openSuggestions()
 		}
 		
-		if (!opts.restrictToSuggestions) {
+		if (!opts.restrictToSuggestions && !Array.isArray($modelValue.value)) {
 			if (debug) console.log("input changed, unrestricted, setting modelValue")
-			$modelValue.value = $inputValue.value
+			setValue($inputValue.value)
 		}
 		if (exactlyMatchingSuggestion.value && suggestionsList.value) {
 			if (debug) console.log("input changed, exactly matching, setting activeSuggestion")
@@ -268,7 +307,7 @@ export function useSuggestions<TSuggestion>(
 		open: openSuggestions,
 		close: closeSuggestions,
 		enterSelected,
-		enterSuggestion,
+		enterIndex: enterSuggestion,
 		toggle: toggleSuggestions,
 		cancel,
 		select: selectSuggestion,
@@ -276,6 +315,7 @@ export function useSuggestions<TSuggestion>(
 		next: nextSuggestion,
 		first: firstSuggestion,
 		last: lastSuggestion,
+
 	}
 }
 
@@ -294,4 +334,11 @@ export function useSuggestionsInputAria(
 		"aria-activedescendant": isOpen.value ? `suggestion-${id.value}-${activeSuggestion.value}` : undefined,
 	}))
 	return ariaInputProps
+}
+export function suggestionLabelGuard<TFunction extends AnyFunction>(item: any, suggestionLabeler: TFunction | undefined): asserts suggestionLabeler is TFunction {
+	if (isObject<any>(item)) {
+		if (!suggestionLabeler) {
+			throw new Error("`suggestionLabel` must be passed if suggestions are objects.")
+		}
+	}
 }
