@@ -9,7 +9,7 @@ export { default as LibDarkModeSwitcher } from "./LibDarkModeSwitcher/LibDarkMod
 export { default as LibDatePicker } from "./LibDatePicker/LibDatePicker.vue"
 export { default as LibDebug } from "./LibDebug/LibDebug.vue"
 export { default as LibFileInput } from "./LibFileInput/LibFileInput.vue"
-export { default as LibInput } from "./LibInput/LibInput.vue"
+export { default as LibInputDeprecated } from "./LibInputDeprecated/LibInputDeprecated.vue"
 export { default as LibLabel } from "./LibLabel/LibLabel.vue"
 export { default as LibNotifications } from "./LibNotifications/LibNotifications.vue"
 export { default as LibPagination } from "./LibPagination/LibPagination.vue"

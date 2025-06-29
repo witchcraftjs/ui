@@ -61,14 +61,14 @@ Usually it is possible to do most modifications through props, but slots to repl
 Most slots where possible are passed all properties needed to replace them except classes so you can do something like this, to for example replace the simple input component inside the input component.
 
 ```vue
-<lib-input>
+<lib-simple-input-deprecated>
 	<template #input="slotProps">
 		<lib-simple-input
 			:class="'completely custom styles'"
 			v-bind="slotProps"
 		></lib-simple-input>
 	</template>
-</lib-input>
+</lib-simple-input>
 
 ```
 
