@@ -18,6 +18,7 @@ import { type SuggestionsEmits,type SuggestionsOptions } from "../components/sha
 export function useSuggestions<TSuggestion, TMultivalue extends boolean = false>(
 	$inputValue: Ref<string>,
 	$modelValue: Ref<TMultivalue extends true ? string[] : string>,
+	$open: Ref<boolean>,
 	emit: SuggestionsEmits,
 	opts: SuggestionsOptions<TSuggestion>,
 	debug: boolean = false
@@ -26,9 +27,7 @@ export function useSuggestions<TSuggestion, TMultivalue extends boolean = false>
 		throw new Error("`suggestionLabel` or `suggestionsFilter` must be passed if suggestions are objects.")
 	}
 
-	const isOpen = ref(false)
 	const activeSuggestion = ref(-1)
-	watch(isOpen, val => { emit("update:isOpen", val) })
 	watch(activeSuggestion, val => { emit("update:activeSuggestion", val) })
 	if (opts.suggestions) {
 		for (const suggestion of opts.suggestions) {
@@ -119,8 +118,9 @@ export function useSuggestions<TSuggestion, TMultivalue extends boolean = false>
 	}
 
 	function closeSuggestions(): void {
+		if (!opts.canClose) return
 		if (debug) console.log("closeSuggestions")
-		isOpen.value = false
+		$open.value = false
 		activeSuggestion.value = -1
 	}
 	function openSuggestions(): void {
@@ -133,7 +133,7 @@ export function useSuggestions<TSuggestion, TMultivalue extends boolean = false>
 				activeSuggestion.value = 0
 			}
 		}
-		isOpen.value = true
+		$open.value = true
 	}
 	
 	function enterSuggestion(num: number, doClose: boolean = true): void {
@@ -176,7 +176,7 @@ export function useSuggestions<TSuggestion, TMultivalue extends boolean = false>
 	}
 	
 	function toggleSuggestions(): void {
-		isOpen.value ? closeSuggestions() : openSuggestions()
+		$open.value ? closeSuggestions() : openSuggestions()
 	}
 
 	function prevSuggestion(): void {
@@ -303,7 +303,7 @@ export function useSuggestions<TSuggestion, TMultivalue extends boolean = false>
 		hasValidSuggestion: isValidSuggestion,
 		openable,
 		getLabel: getSuggestionLabel,
-		isOpen,
+		$open,
 		open: openSuggestions,
 		close: closeSuggestions,
 		enterSelected,
@@ -322,7 +322,7 @@ export function useSuggestions<TSuggestion, TMultivalue extends boolean = false>
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function useSuggestionsInputAria(
 	id: Ref<string>,
-	isOpen: Ref<boolean>,
+	$open: Ref<boolean>,
 	activeSuggestion: Ref<number>,
 	suggestions: Ref<any | undefined>
 ) {
@@ -330,8 +330,8 @@ export function useSuggestionsInputAria(
 		"aria-autocomplete": suggestions !== undefined ? "both" as const : undefined,
 		"aria-controls": suggestions !== undefined ? `suggestions-${id.value}` : undefined,
 		role: suggestions ? "combobox" : undefined,
-		"aria-expanded": suggestions !== undefined ? isOpen.value : undefined,
-		"aria-activedescendant": isOpen.value ? `suggestion-${id.value}-${activeSuggestion.value}` : undefined,
+		"aria-expanded": suggestions !== undefined ? $open.value : undefined,
+		"aria-activedescendant": $open.value ? `suggestion-${id.value}-${activeSuggestion.value}` : undefined,
 	}))
 	return ariaInputProps
 }

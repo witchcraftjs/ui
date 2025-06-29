@@ -1,6 +1,6 @@
 <template>
 <div
-	v-if="suggestions.isOpen"
+	v-if="$open"
 	:id="`suggestions-${id ?? fallbackId}`"
 	:class="twMerge(`
 			suggestions
@@ -10,7 +10,7 @@
 		`,
 		($.attrs as any)?.class
 	)"
-	:data-open="suggestions.isOpen"
+	:data-open="$open"
 	role="listbox"
 	ref="el"
 	v-bind="{...$.attrs, class:undefined}"
@@ -83,7 +83,6 @@ const fallbackId = getFallbackId()
 const props = withDefaults(defineProps<Props & SuggestionsProps<TSuggestion>>(), {
 	isValid: true,
 	canOpen: true,
-	values: undefined,
 	filterKeydown: undefined,
 	...baseInteractivePropsDefaults
 })
@@ -100,6 +99,8 @@ const $modelValue = defineModel<TValue>("modelValue", { required: true })
  */
 const $inputValue = defineModel<string >("inputValue", { default: "" })
 
+const $open = defineModel<boolean>("open", { default: false })
+
 
 if (typeof props.suggestions?.[0] === "object" && !props.suggestionLabel && !props.suggestionsFilter) {
 	throw new Error("`suggestionLabel` or `suggestionsFilter` must be passed if suggestions are objects.")
@@ -110,6 +111,7 @@ const el = ref<HTMLElement | null>(null)
 const suggestions = reactive(useSuggestions<TSuggestion, TValue extends string[] ? true : false>(
 	$inputValue,
 	$modelValue as any,
+	$open,
 	emits,
 	props
 ))
@@ -123,7 +125,7 @@ const inputKeydownHandler = (e: KeyboardEvent): void => {
 	} else if (e.key === "Escape") {
 		suggestions.cancel()
 		e.preventDefault()
-	} else if (!suggestions.isOpen && ["ArrowDown", "ArrowUp", "PageUp", "PageDown"].includes(e.key) && suggestions.available) {
+	} else if (!$open.value && ["ArrowDown", "ArrowUp", "PageUp", "PageDown"].includes(e.key) && suggestions.available) {
 		suggestions.open()
 		e.preventDefault()
 		if (e.key === "PageUp") {
@@ -148,7 +150,7 @@ const inputKeydownHandler = (e: KeyboardEvent): void => {
 const inputBlurHandler = (e: MouseEvent): void => {
 	if (props.filterBlur?.(e)) return
 	
-	if (!suggestions.isOpen) return
+	if (!$open.value) return
 
 	if (props.restrictToSuggestions) {
 		suggestions.cancel()
@@ -157,7 +159,7 @@ const inputBlurHandler = (e: MouseEvent): void => {
 			$modelValue.value = $inputValue.value as any
 		}
 	}
-	if (suggestions.isOpen) {
+	if ($open.value) {
 		suggestions.close()
 	}
 }

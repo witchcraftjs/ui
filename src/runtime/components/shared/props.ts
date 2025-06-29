@@ -66,6 +66,8 @@ export type SuggestionsProps<T = any> = {
 	allowOpenEmpty?: boolean
 	/** Whether the suggestions dropdown can be opened. Default is true. */
 	canOpen?: boolean
+	/** Whether the suggestions dropdown can be closed. Default is true. */
+	canClose?: boolean
 	/** Whether the input is valid. Default is true. */
 	isValid?: boolean
 	/**
