@@ -44,9 +44,9 @@ export const Primary: Story = {
 					<a v-bind="linkProps" @click="changePage($event, linkProps.i)">{{ linkProps.text ?? linkProps.i }}</a>
 				</template>
 			</lib-pagination>
-			<lib-input :label="'Change Page'" :modelValue="num.toString()" @update:modelValue="num = parseInt($event)" type="number" min="0" :max="args.total">
+			<lib-simple-input :label="'Change Page'" :modelValue="num.toString()" @update:modelValue="num = parseInt($event)" type="number" min="0" :max="args.total">
 
-			</lib-input>
+			</lib-simple-input>
 		`,
 	}),
 }

@@ -61,14 +61,14 @@ export const Primary: Story = {
 			}
 		},
 		template: `
-			<lib-input
+			<lib-simple-input
 				:suggestions="['TL', 'TR', 'BL', 'BR']"
 				:restrict-to-suggestions="true"
 				:suggestions-filter="(_, items) => items"
 				:label="'Button Position'"
 				v-model="buttonPos"
 			>
-			</lib-input>
+			</lib-simple-input>
 			<div>
 				<label>Auto Rotate Position</label>
 				<input type="checkbox" v-model="autoRotatePos">

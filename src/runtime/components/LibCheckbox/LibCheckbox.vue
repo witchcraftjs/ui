@@ -35,7 +35,8 @@
 				dark:bg-fg
 				appearance-none
 				border
-				border-accent-600
+				border-neutral-500
+				focus:border-accent-600
 				rounded-sm
 				aspect-square
 				relative

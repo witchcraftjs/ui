@@ -165,21 +165,12 @@ import LibLabel from "../LibLabel/LibLabel.vue"
 import LibMultiValues from "../LibMultiValues/LibMultiValues.vue"
 import LibSimpleInput from "../LibSimpleInput/LibSimpleInput.vue"
 import LibSuggestions from "../LibSuggestions/LibSuggestions.vue"
-import {
-	type BaseInteractiveProps,
-	baseInteractivePropsDefaults,
-	getFallbackId,
-	type LabelProps,
-	type LinkableByIdProps,
-	type SuggestionsProps,
-	type TailwindClassProp,
-	type WrapperProps,
-} from "../shared/props.js"
+import { type BaseInteractiveProps, baseInteractivePropsDefaults, getFallbackId, type LabelProps, type LinkableByIdProps, type SuggestionsProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
 
 
 /* #region base */
 defineOptions({
-	name: "lib-input",
+	name: "lib-simple-input-deprecated",
 	inheritAttrs: false,
 })
 const $slots = useSlots()

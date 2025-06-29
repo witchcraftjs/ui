@@ -2,7 +2,7 @@
 import type { Meta, StoryObj } from "@storybook/vue3"
 import { ref, watchEffect } from "vue"
 
-import LibInput from "./LibInput.vue"
+import LibInputDeprecated from "./LibInputDeprecated.vue"
 
 import IconFaChevronLeft from "~icons/fa6-solid/chevron-left"
 import IconFaChevronRight from "~icons/fa6-solid/chevron-right"
@@ -25,20 +25,22 @@ import {
 } from "../shared/storyHelpers/playSuggestions.js"
 
 const meta = {
-	component: LibInput as any,
-	title: "Components/Input",
+	component: LibInputDeprecated as any,
+	title: "Components/Combobox",
 	args: {
 		border: true,
 		label: "Some Label",
-		_template: undefined,
+		...{
+			_template: undefined,
+		} as any
 	},
-} satisfies Meta<typeof LibInput> & Meta<{ custom: string }>
+} satisfies Meta<typeof LibInputDeprecated> & Meta<{ custom: string }>
 
 export default meta
-type Story = StoryObj<typeof LibInput> // & StoryObj<typeof extraArgs>
+type Story = StoryObj<typeof LibInputDeprecated> // & StoryObj<typeof extraArgs>
 const allComponents = {
 	...components,
-	LibInput,
+	LibInputDeprecated,
 	Icon,
 	IconFaChevronRight,
 	IconFaChevronLeft,
@@ -77,14 +79,14 @@ const Base: Story = {
 
 		template: (args as any)._template ?? `
 			Model Value: <span class="inline-block" data-testid="model-value">{{modelValue}}</span>\n
-			<lib-input
+			<lib-simple-input-deprecated
 				v-bind="args"
 				v-model:values="values"
 				v-model:inputValue="inputValue"
 				v-model="modelValue"
 				@submit="modelValue = $event"
 			>
-			</lib-input>
+			</lib-simple-input-deprecated>
 		`,
 	}),
 }
@@ -179,7 +181,7 @@ export const AutosuggestRestrictedWithClearOnClick = {
 		_template: `
 				Model Value: <span class="inline-block" data-testid="model-value">{{modelValue}}</span>\n
 				Temp Value: <span class="inline-block" data-testid="temp-value">{{inputValue}}</span>\n
-				<lib-input
+				<lib-simple-input-deprecated
 					v-bind="args"
 					v-model:values="values"
 					v-model:inputValue="inputValue"
@@ -187,7 +189,7 @@ export const AutosuggestRestrictedWithClearOnClick = {
 					@submit="modelValue = $event"
 					@click="inputValue = ''"
 				>
-				</lib-input>
+				</lib-simple-input-deprecated>
 			`
 	},
 	play: null,
@@ -232,7 +234,7 @@ export const Slots: Story = {
 		template: `
 			Model Value: <span class="inline-block" data-testid="model-value">{{modelValue}}</span>\n
 
-			<lib-input
+			<lib-simple-input-deprecated
 				v-bind="args"
 				v-model="modelValue"
 				v-model:values="values"
@@ -250,7 +252,7 @@ export const Slots: Story = {
 						<icon><icon-fa-chevron-right/></icon>
 					</lib-button>
 				</template>
-			</lib-input>
+			</lib-simple-input-deprecated>
 		`,
 	}),
 }
@@ -268,7 +270,7 @@ const MultipleValuesBase: Story = {
 			Model Value: <span class="inline-block" data-testid="model-value">{{modelValue}}</span>\n
 			<br/>
 			Values: <span class="inline-block" data-testid="values">{{values.join(", ")}}</span>\n
-			<lib-input
+			<lib-simple-input-deprecated
 				v-bind="args"
 				v-model="modelValue"
 				v-model:values="values"
@@ -278,7 +280,7 @@ const MultipleValuesBase: Story = {
 						<icon><icon-fa-solid-tags/></icon>
 					</lib-button>
 				</template>
-			</lib-input>
+			</lib-simple-input-deprecated>
 		`,
 	}),
 	args: {
@@ -354,7 +356,7 @@ export const InputSlotReplacement: Story = {
 			Values: <span class="inline-block" data-testid="values">{{values.join(", ")}}</span>\n
 			<br/>
 			Recording: <span class="inline-block" data-testid="recording">{{recording}}</span>\n
-			<lib-input
+			<lib-simple-input-deprecated
 				v-bind="args"
 				v-model="modelValue"
 				v-model:values="values"
@@ -375,7 +377,7 @@ export const InputSlotReplacement: Story = {
 				<template #left>
 					<icon><icon-fa-solid-keyboard/></icon>
 				</template>
-			</lib-input>
+			</lib-simple-input-deprecated>
 		`,
 	}),
 	args: {
@@ -395,13 +397,13 @@ export const NextToButton: Story = {
 
 		template: `
 		<div class="flex gap-2 items-center">
-			<lib-input
+			<lib-simple-input-deprecated
 				v-bind="args"
 				v-model:values="values"
 				v-model="modelValue"
 				:label="undefined"
 			>
-			</lib-input>
+			</lib-simple-input-deprecated>
 			<lib-button>Button</lib-button>
 		</div>
 		`,
