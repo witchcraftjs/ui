@@ -6,6 +6,7 @@
 />
 <!-- <Transition> -->
 <component
+	v-if="modelValue || useDialogForBackdrop"
 	:id="id ?? fallbackId"
 	:class="twMerge(
 		useBackdrop && useDialogForBackdrop && `
