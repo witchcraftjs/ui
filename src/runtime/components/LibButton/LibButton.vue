@@ -36,7 +36,7 @@
 
 			relative
 			after:absolute
-			after:rounded-sm
+			after:rounded-xs
 			after:inset-0
 			after:content
 			after:shadow-[0_1px_0_0_inset]
