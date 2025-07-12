@@ -1,5 +1,6 @@
 <template>
-<div :id="id ?? fallbackId"
+<div
+	:id="id ?? fallbackId"
 	:aria-label="t('color-picker.aria')"
 	:class="twMerge(`color-picker
 			[--slider-size:calc(var(--spacing)_*_4)]
@@ -34,7 +35,7 @@
 			rounded-sm
 			focus:border-accent-500
 		`"
-		@pointerdown="slider.pointerdown($event, 'picker')"
+		@pointerdown="slider.pointerdown($event, 'all')"
 		@pointerleave="slider.pointerleave($event)"
 	>
 		<canvas
@@ -44,6 +45,7 @@
 		<div
 			aria-live="assertive"
 			:aria-description="ariaDescription"
+			:aria-label="`${t('color-picker.aria.saturation')}: ${localColor.percent.s}, ${t('color-picker.aria.value')}: ${localColor.percent.s}`"
 			:class="`
 					color-picker--all-handle
 					${handleClasses}
@@ -57,10 +59,8 @@
 					top: calc(${localColor.percent.v}% - var(--slider-size)/2);
 					background: ${asRgbaString};
 				`"
-			@keydown="slider.keydown($event, 'picker')"
-		>
-			<aria :value="`${t('color-picker.aria.saturation')}: ${localColor.percent.s}, ${t('color-picker.aria.value')}: ${localColor.percent.s}`"/>
-		</div>
+			@keydown="slider.keydown($event, 'all')"
+		/>
 	</div>
 	<div
 		:class="`color-picker--hue-slider ${sliderClasses}`"
@@ -93,7 +93,6 @@
 			color-picker--alpha-slider
 			${sliderClasses}
 		`"
-		@keydown="slider.keydown($event, 'alpha')"
 		@pointerdown="slider.pointerdown($event, 'alpha')"
 	>
 		<canvas
@@ -110,6 +109,7 @@
 			tabindex="0"
 			:class="`color-picker--alpha-handle ${handleClasses}`"
 			:style="`left: calc(${localColor.percent.a}% - var(--slider-size)/2)`"
+			@keydown="slider.keydown($event, 'alpha')"
 		/>
 	</div>
 	<div class="color-picker--footer flex w-full flex-1 gap-2">
@@ -143,17 +143,26 @@
 					@input="parseInput"
 					@blur="onBlurFixInvalidValue"
 				/>
-				<lib-button class="color-picker--copy-button" :aria-label="t('copy')" @click="copy()">
+				<lib-button class="color-picker--copy-button" :aria-label="t('copy')" @click="copy(copyTransform?.(localColor.val, localColorString) ?? localColorString)">
 					<icon><i-fa6-regular-copy/></icon>
 				</lib-button>
 			</slot>
 		</div>
-		<!-- <lib-button @click="emits('update:modelValue', localColor.val)">Save</lib-button> -->
 	</div>
 	<slot name="buttons">
 		<div class="color-picker--save-cancel-group flex w-full items-center justify-center gap-2">
-			<lib-button class="color-picker--save-button" @click="save()">{{ t("save") }}</lib-button>
-			<lib-button class="color-picker--cancel-button" @click="emits('cancel')">{{ t("cancel") }}</lib-button>
+			<lib-button
+				class="color-picker--save-button"
+				@click="save()"
+			>
+				{{ t("save") }}
+			</lib-button>
+			<lib-button
+				class="color-picker--cancel-button"
+				@click="emits('cancel')"
+			>
+				{{ t("cancel") }}
+			</lib-button>
 		</div>
 	</slot>
 </div>
@@ -168,7 +177,12 @@ import { unreachable } from "@alanscodelog/utils/unreachable.js"
 import Color from "colorjs.io"
 import { computed, onMounted, reactive, type Ref, ref, type UnwrapRef,useAttrs, watch } from "vue"
 
+import { safeConvertToHsva } from "./utils/safeConvertToHsva.js"
+import { safeConvertToRgba } from "./utils/safeConvertToRgba.js"
+import { toLowPrecisionRgbaString } from "./utils/toLowPrecisionRgbaString.js"
+
 import { useInjectedI18n } from "../../composables/useInjectedI18n.js"
+import { copy } from "../../helpers/copy.js"
 import type { HsvaColor, RgbaColor } from "../../types/index.js"
 import { twMerge } from "../../utils/twMerge.js"
 import aria from "../Aria/Aria.vue"
@@ -209,13 +223,11 @@ const handleClasses = `
 	active:border-accent-500
 	hover:border-accent-500
 `
+const emits = defineEmits<{
+	(e: "save", val: RgbaColor): void
+	(e: "cancel"): void
+}>()
 
-
-const ariaDescription = t("color-picker.aria.description")
-
-const $value = defineModel<RgbaColor>({ required: false, default: () => ({ r: 0, g: 0, b: 0 }) })
-
-const fallbackId = getFallbackId()
 const props = withDefaults(defineProps<
 LabelProps
 & LinkableByIdProps
@@ -227,9 +239,6 @@ LabelProps
 	 * Does not affect the number saved unless the user manually edits the color.
 	 *
 	 * Ignored if `customRepresentation` is set.
-	 *
-	 *
-	 *
 	 */
 	stringPrecision?: number
 	/** Allows overriding the string representation of the color. Useful for using a different representation than rgba (e.g. hex). The fromStringToHsva part is rarely needed as the colorjs.io library can normally parse the color. Returning undefined signals an error. */
@@ -247,20 +256,28 @@ LabelProps
 	stringPrecision: 3,
 	copyTransform: (_val: HsvaColor, stringVal: string) => stringVal,
 	customRepresentation: undefined,
-	valid: true
+	valid: true,
 })
 
 
-const emits = defineEmits<{
-	(e: "save", val: RgbaColor): void
-	(e: "cancel"): void
-}>()
+const ariaDescription = t("color-picker.aria.description")
+const fallbackId = getFallbackId()
+
+const $value = defineModel<RgbaColor>({ required: false, default: () => ({ r: 0, g: 0, b: 0 }) })
+const $tempValue = defineModel<RgbaColor | undefined>("tempValue", { required: false, default: () => (undefined) })
 
 const pickerEl = ref<HTMLCanvasElement | null>(null)
 const hueSliderEl = ref<HTMLCanvasElement | null>(null)
 const alphaSliderEl = ref<HTMLCanvasElement | null>(null)
 
-type Config = Record<string, { el: Ref<HTMLCanvasElement>, xKey?: keyof HsvaColor, yKey?: keyof HsvaColor, xSteps?: number, ySteps?: number }>
+type Config = Record<string, {
+	el: Ref<HTMLCanvasElement>
+	xKey?: keyof HsvaColor
+	yKey?: keyof HsvaColor
+	xSteps?: number
+	ySteps?: number
+}>
+
 const config: Config = {
 	hue: {
 		el: hueSliderEl as Ref<HTMLCanvasElement>,
@@ -272,7 +289,7 @@ const config: Config = {
 		xSteps: 1,
 		xKey: "a",
 	},
-	picker: {
+	all: {
 		el: pickerEl as Ref<HTMLCanvasElement>,
 		xSteps: 100,
 		ySteps: 100,
@@ -280,6 +297,7 @@ const config: Config = {
 		yKey: "v",
 	},
 }
+
 const localColor = reactive<Record<"percent" | "val", HsvaColor>>({
 	percent: {
 		h: 0, s: 0, v: 0, a: 0,
@@ -289,24 +307,9 @@ const localColor = reactive<Record<"percent" | "val", HsvaColor>>({
 	},
 })
 
-function truncate(val: number, precision: number): string {
-	const str = val.toFixed(precision)
-	const float = parseFloat(str) // removes trailing zeros
-	return float.toString()
-}
-function toLowPrecisionRgbaString(rgba: RgbaColor, withAlpha: boolean, precision: number) {
-	const r = truncate(rgba.r, precision)
-	const g = truncate(rgba.g, precision)
-	const b = truncate(rgba.b, precision)
-	const a = rgba.a !== undefined
-		? truncate(rgba.a, precision)
-		: undefined
-	return withAlpha ? `rgba(${r}, ${g}, ${b}, ${a})` : `rgb(${r}, ${g}, ${b})`
-}
-
 
 const asRgba = computed(() => {
-	const rgba = safeConvertToRgba(localColor.val)
+	const rgba = safeConvertToRgba(localColor.val, props.allowAlpha)
 	if (!rgba) unreachable()
 	return rgba
 })
@@ -330,18 +333,7 @@ function onBlurFixInvalidValue() {
 	}
 }
 
-watch(localColor, () => {
-	localInputString.value = localColorString.value
-})
-
-const copy = (): void => {
-	if (navigator.clipboard) {
-		const text = props.copyTransform?.(localColor.val, localColorString.value)
-		navigator.clipboard.writeText(text).catch(() => { })
-	}
-}
-
-const updatePicker = (el: HTMLCanvasElement, hue: number): void => {
+function updatePicker(el: HTMLCanvasElement, hue: number): void {
 	const ctx = el.getContext("2d")!
 	const { height, width } = el
 	ctx.clearRect(0, 0, width, height)
@@ -362,9 +354,9 @@ const updatePicker = (el: HTMLCanvasElement, hue: number): void => {
 	ctx.globalCompositeOperation = "source-over"
 }
 
-const updateSlider = (el: HTMLCanvasElement, stops: ((i: number) => string) | string[], length: number = 360): void => {
+function updateSlider(el: HTMLCanvasElement, stops: ((i: number) => string) | string[], length: number = 360): void {
 	const ctx = el.getContext("2d")!
-	const { height, width } = el// .getBoundingClientRect()
+	const { height, width } = el
 	ctx.clearRect(0, 0, width, height)
 
 	const end = isArray(stops) ? stops.length - 1 : length
@@ -373,6 +365,7 @@ const updateSlider = (el: HTMLCanvasElement, stops: ((i: number) => string) | st
 
 	for (let i = 0; i < end + 1; i++) {
 		const stop = stops instanceof Function ? stops(i) : stops[i]
+		if (stop === undefined) unreachable()
 		gradient.addColorStop(i / end, stop)
 	}
 
@@ -381,8 +374,7 @@ const updateSlider = (el: HTMLCanvasElement, stops: ((i: number) => string) | st
 }
 
 
-const getVal = (x: number, width: number, steps: number = 100, accuracy: number = 100, reverse = false): { val: number, percent: number } => {
-	// const stepWidth = width / (steps * accuracy)
+function getVal(x: number, width: number, steps: number = 100, accuracy: number = 100, reverse = false): { val: number, percent: number } {
 	const percent = (x / width)
 	const unrounded = percent * steps
 
@@ -392,53 +384,70 @@ const getVal = (x: number, width: number, steps: number = 100, accuracy: number 
 	if (reverse) res.val = steps - val
 	return res
 }
+
 type Types = keyof UnwrapRef<Config>
 const elDragging = ref<Types | "">("")
 let dragging = false
 
-const moveHandle = (e: { clientX: number, clientY: number }, type: string) => {
-	const el = config[type].el.value
-	const { x, y, width, height } = el.getBoundingClientRect()
+function moveHandle(e: { clientX: number, clientY: number }, type: string) {
+	requestAnimationFrame(() => {
+		if (type === "") return
+		const el = config[type]?.el.value
+		if (!el || !config[type]) return
+		const { x, y, width, height } = el.getBoundingClientRect()
 
-	const info = config[type]
-	if (info.xKey !== undefined) {
-		let newPosX = e.clientX - x
-		newPosX = newPosX < 0 ? 0 : newPosX > width ? width : newPosX
-		const newX = getVal(newPosX, width, info.xSteps ?? 100)
+		const info = config[type]
+		if (info.xKey !== undefined) {
+			let newPosX = e.clientX - x
+			newPosX = newPosX < 0 ? 0 : newPosX > width ? width : newPosX
+			const newX = getVal(newPosX, width, info.xSteps ?? 100)
 
-		localColor.percent[info.xKey] = newX.percent
-		localColor.val[info.xKey] = newX.val
-	}
+			localColor.percent[info.xKey] = newX.percent
+			localColor.val[info.xKey] = newX.val
+		}
 
-	if (info.yKey !== undefined) {
-		let newPosY = e.clientY - y
-		newPosY = newPosY < 0 ? 0 : newPosY > height ? height : newPosY
-		const newY = getVal(newPosY, height, info.ySteps ?? 100, 100, true)
+		if (info.yKey !== undefined) {
+			let newPosY = e.clientY - y
+			newPosY = newPosY < 0 ? 0 : newPosY > height ? height : newPosY
+			const newY = getVal(newPosY, height, info.ySteps ?? 100, 100, true)
 
-		localColor.percent[info.yKey] = newY.percent
-		localColor.val[info.yKey] = newY.val
-	}
+			localColor.percent[info.yKey] = newY.percent
+			localColor.val[info.yKey] = newY.val
+		}
+	})
 }
 const slider = {
 	keydown: (e: KeyboardEvent, type: Types) => {
 		castType<HTMLElement | undefined>(e.target)
-		if (e.target?.getBoundingClientRect && ["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(e.key)) {
-			e.preventDefault()
-			const { x, y, width, height } = e.target.getBoundingClientRect()
-			let xDiff = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0
-			let yDiff = e.key === "ArrowUp" ? -1 : e.key === "ArrowDown" ? 1 : 0
-			if (e.shiftKey) {xDiff *= 10}
-			if (e.shiftKey) {yDiff *= 10}
-			moveHandle({ clientX: x + (width / 2) + xDiff, clientY: y + (height / 2) + yDiff }, type)
+		if (e.target?.getBoundingClientRect) {
+			if (["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(e.key)) {
+				e.preventDefault()
+				const { x, y, width, height } = e.target.getBoundingClientRect()
+				let xDiff = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0
+				let yDiff = e.key === "ArrowUp" ? -1 : e.key === "ArrowDown" ? 1 : 0
+				if (e.shiftKey) {xDiff *= 10}
+				if (e.shiftKey) {yDiff *= 10}
+				moveHandle({ clientX: x + (width / 2) + xDiff, clientY: y + (height / 2) + yDiff }, type)
+			}
+			if (e.key === "Enter") {
+				e.preventDefault()
+				save()
+			}
 		}
 	},
 	pointerdown: (e: PointerEvent, type: Types) => {
+		const focusTargetClass = `#${props.id ?? fallbackId} .color-picker--${type}-handle`
+		const focusTarget = document.querySelector(focusTargetClass)
+		// allows enter to work when the user drags any slider as the even will be captured by the keydown listener
+		if (focusTarget instanceof HTMLElement) focusTarget.focus()
+
 		if (dragging) return
 		e.preventDefault()
 		elDragging.value = type
 		dragging = true
 		document.addEventListener("pointermove", slider.pointermove)
 		document.addEventListener("pointerup", slider.pointerup)
+		moveHandle(e, elDragging.value)
 	},
 	pointerleave: (e: PointerEvent) => {
 		if (dragging) {
@@ -446,29 +455,18 @@ const slider = {
 		}
 	},
 	pointermove: (e: PointerEvent) => {
-		if (dragging) {
-			e.preventDefault()
-			requestAnimationFrame(() => {
-				const type = elDragging.value
-				moveHandle(e, type)
-			})
-		}
+		e.preventDefault()
+		moveHandle(e, elDragging.value)
 	},
 	pointerup: (e: PointerEvent) => {
 		e.preventDefault()
-		elDragging.value = ""
 		dragging = false
+		elDragging.value = ""
 		document.removeEventListener("pointermove", slider.pointermove)
 		document.removeEventListener("pointerup", slider.pointerup)
 	},
 }
-const update = (_: HsvaColor, {
-	updatePosition = true,
-	updateValue = true,
-}: {
-	updatePosition?: boolean
-	updateValue?: boolean
-} = {}): void => {
+function updateSliders(_: HsvaColor): void {
 	if (alphaSliderEl.value) {
 		// https://colorjs.io/docs/output#get-a-displayable-css-color-value
 		const color = new Color("hsv", [_.h, _.s, _.v], _.a).to("hsl")
@@ -480,86 +478,82 @@ const update = (_: HsvaColor, {
 	}
 	updateSlider(hueSliderEl.value!, i => `hsl(${i} 100% 50%)`)
 	updatePicker(pickerEl.value!, _.h)
-	if (updatePosition) {
-		localColor.percent.h = Math.round((_.h / 360) * 10000) / 100
-		localColor.percent.s = _.s
-		localColor.percent.v = 100 - _.v
-		localColor.percent.a =
-			props.allowAlpha
-			? _.a !== undefined
-				? _.a * 100
-				: 1
-			: 1
-	}
-	if (updateValue) {
-		localColor.val = { ..._, a: props.allowAlpha ? _.a : 1 }
-	}
 }
 
-const parseInput = (e: Event): void => {
+function updateValueAndPosition(_: HsvaColor): void {
+	localColor.percent.h = Math.round((_.h / 360) * 10000) / 100
+	localColor.percent.s = _.s
+	localColor.percent.v = 100 - _.v
+	localColor.percent.a =
+		props.allowAlpha
+		? _.a !== undefined
+			? _.a * 100
+			: 1
+		: 1
+	localColor.val = { ..._, a: props.allowAlpha ? _.a : 1 }
+}
+
+function convertAndUpdateAll(rgba: RgbaColor) {
+	const hsva = safeConvertToHsva(rgba, props.allowAlpha)
+	if (!hsva) return
+	updateSliders(hsva)
+	updateValueAndPosition(hsva)
+}
+
+function save(): void {
+	const rgba = safeConvertToRgba(localColor.val, props.allowAlpha)
+	if (!rgba) return
+	// update(localColor.val, { updatePosition: false, updateValue: false })
+	$value.value = rgba
+	$tempValue.value = undefined
+	emits("save", rgba)
+}
+
+
+function parseInput(e: Event): void {
 	const val = (e.target as HTMLInputElement)?.value
 	const converted = props.customRepresentation?.fromStringToHsva
 		? props.customRepresentation.fromStringToHsva(val)
-		: safeConvertToHsva(val)
-	if (converted) update(converted, { updateValue: true, updatePosition: true })
-}
-
-function safeConvertToHsva(val: string | RgbaColor): HsvaColor | undefined {
-	try {
-		const color = typeof val === "string"
-			? new Color(val)
-			: new Color("srgb", [val.r / 255, val.g / 255, val.b / 255], props.allowAlpha ? val.a : 1)
-		const hsv = color.hsv
-		const final = {
-			h: clampNumber(hsv[0] ?? 0, 0, Number.MAX_SAFE_INTEGER),
-			s: clampNumber(hsv[1], 0, 100),
-			v: clampNumber(hsv[2], 0, 100),
-			a: clampNumber(props.allowAlpha ? color.alpha : 1, 0, 1),
-		}
-		return final
-	} catch (_err) {
-		return undefined
+		: safeConvertToHsva(val, props.allowAlpha)
+	if (converted) {
+		updateSliders(converted)
+		updateValueAndPosition(converted)
 	}
 }
 
-function safeConvertToRgba(val: string | HsvaColor): RgbaColor | undefined {
-	try {
-		const color = typeof val === "string"
-			? new Color(val)
-			: new Color("hsv", [val.h, val.s, val.v], props.allowAlpha ? val.a : 1)
-		const rgb = color.srgb
-		return {
-			r: clampNumber(rgb[0] / 1 * 255, 0, 255),
-			g: clampNumber(rgb[1] / 1 * 255, 0, 255),
-			b: clampNumber(rgb[2] / 1 * 255, 0, 255),
-			a: clampNumber(props.allowAlpha ? color.alpha : 1, 0, 1),
-		}
-	} catch (_err) {
-		return undefined
-	}
-}
+
+let disableUpdateTempValue = false
 
 onMounted(() => {
-	const hsva = safeConvertToHsva($value.value)
-	if (hsva) update(hsva)
+	convertAndUpdateAll($value.value)
+	if ($tempValue.value !== undefined) {
+		convertAndUpdateAll($tempValue.value)
+	}
+
+	const handle = document.querySelector(`#${props.id ?? fallbackId} .color-picker--all-handle`)
+	if (handle instanceof HTMLElement) handle.focus()
 })
 
-watch(props, () => {
-	const hsva = safeConvertToHsva($value.value)
-	if (hsva) update(hsva)
+watch($value, () => {
+	convertAndUpdateAll($value.value)
+})
+
+watch($tempValue, () => {
+	if ($tempValue.value !== undefined) {
+		disableUpdateTempValue = true
+		convertAndUpdateAll($tempValue.value)
+		setTimeout(() => { disableUpdateTempValue = false }, 0)
+	}
 })
 
 watch(localColor, () => {
-	update(localColor.val, { updatePosition: false, updateValue: false })
-})
-
-const save = (): void => {
-	const rgba = safeConvertToRgba(localColor.val)
+	updateSliders(localColor.val)
+	localInputString.value = localColorString.value
+	if (disableUpdateTempValue) return
+	const rgba = safeConvertToRgba(localColor.val, props.allowAlpha)
 	if (!rgba) return
-	update(localColor.val, { updatePosition: false, updateValue: false })
-	$value.value = rgba
-	emits("save", rgba)
-}
+	$tempValue.value = rgba
+})
 
 const invertColors = computed(() => !!(localColor.percent.v < 50 || (localColor.val.a === undefined || localColor.val.a < 0.5)))
 </script>

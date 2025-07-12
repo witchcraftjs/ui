@@ -2,58 +2,75 @@
 <lib-popup
 	class="color-input--popup"
 	v-model="showPopup"
+	@close="$tempValue = undefined;emit('cancel')"
 >
 	<template #button="{extractEl}">
+		<!-- <div -->
+		<!-- 		class=" -->
+		<!-- 	flex -->
+		<!-- 				w-full -->
+		<!-- 	border -->
+		<!-- 				 " -->
+		<!-- 	v-extract-root-el="extractEl" -->
+		<!-- > -->
+			
+		<!--  -->
 		<lib-button
 			:id="id ?? fallbackId"
 			:class="twMerge(`
+				p-0
 				color-input--button
 				flex flex-nowrap
+				min-w-4
+				overflow-hidden
+				[&_.button--label]:items-stretch
+				[&_.button--label]:gap-0
+				after:hidden
 			`,
 				($attrs as any).class
 			)"
-			:aria-label="stringColor"
-			:title="stringColor"
+			:aria-label="t('color-input.aria-and-title-prefix') + stringColor"
+			:title="t('color-input.aria-and-title-prefix') + stringColor"
 			v-bind="{...$attrs, class: undefined}"
 			v-extract-root-el="extractEl"
 			@click="togglePopup"
 		>
-			<span class="color-input--label
-					whitespace-nowrap
-					pr-2
+			<template #label>
+				<div class="
+					color-input--swatch-wrapper
+					flex
+					w-full
 				"
-			>
-				<slot>{{ t("color-picker.pick-color") }}</slot>
-			</span>
-			<div :class="`color-input--swatch
-						rounded-xs
-						px-1
-						flex-1
-						h-4
-						w-8
-						relative
-						aspect-square
-						before:content-['']
-						before:absolute
-						before:inset-0
-						before:bg-transparency-squares
-						before:z-[-1]
-					`"
-				:style="`background:${stringColor}`"
-			/>
+				>
+					<slot v-bind="{stringColor, classes:swatchClasses}">
+						<div :class="swatchClasses"
+							:style="`background:${stringColor}`"
+						/>
+					</slot>
+					<slot
+						v-if="$tempValue"
+						v-bind="{tempStringColor, classes:swatchClasses}"
+						name="temp"
+					>
+						<div :class="swatchClasses"
+							:style="`background:${tempStringColor}`"
+						/>
+					</slot>
+				</div>
+			</template>
 		</lib-button>
 	</template>
 	<template #popup="{extractEl}">
-		<div class="color-input--popup-wrapper m-5">
+		<div class="color-input--popup-wrapper p-5" v-extract-root-el="extractEl">
 			<lib-color-picker v-if="showPopup"
 				:id="id ?? fallbackId"
 				:allow-alpha="allowAlpha"
 				:custom-representation="customRepresentation"
 				:string-precision="stringPrecision"
-				v-model="tempValue"
-				v-extract-root-el="extractEl"
-				@save="$value = tempValue; showPopup = false"
-				@cancel="showPopup = false"
+				v-model="internalTempValue"
+				v-model:temp-value="$tempValue"
+				@save="save"
+				@cancel="cancel"
 			/>
 		</div>
 	</template>
@@ -78,6 +95,19 @@ defineOptions({
 	name: "lib-color-input",
 })
 
+const swatchClasses = `
+	color-input--swatch
+	after:content-vertical-holder
+	min-w-4
+	flex-1
+	relative
+	before:content-['']
+	before:absolute
+	before:inset-0
+	before:bg-transparency-squares
+	before:z-[-1]
+`
+
 const fallbackId = getFallbackId()
 
 const t = useInjectedI18n()
@@ -88,22 +118,50 @@ const props = withDefaults(defineProps<Props>(), {
 	copyTransform: (_val: HsvaColor, stringVal: string) => stringVal,
 	stringPrecision: 3,
 	customRepresentation: undefined,
-	valid: true
 })
+const emit = defineEmits<{
+	(e: "save"): void
+	(e: "cancel"): void
+}>()
 
+
+function save() {
+	$value.value = internalTempValue.value
+	showPopup.value = false
+	$tempValue.value = undefined
+	emit("save")
+}
+function cancel() {
+	showPopup.value = false
+	$tempValue.value = undefined
+	emit("cancel")
+}
 
 const $attrs = useAttrs()
  
 const $value = defineModel<RgbaColor>({ required: false, default: () => ({ r: 0, g: 0, b: 0 }) })
-const stringColor = computed(() => new Color("srgb", [$value.value.r, $value.value.g, $value.value.b]).toString())
-const tempValue = ref({ ...$value.value })
+const $tempValue = defineModel<RgbaColor | undefined>("tempValue", { required: false, default: () => (undefined) })
+
+const stringColor = computed(() => new Color("srgb", [
+	$value.value.r / 255,
+	$value.value.g / 255,
+	$value.value.b / 255,
+], $value.value.a ?? 1,).toString())
+
+const tempStringColor = computed(() => $tempValue.value ? new Color("srgb", [
+	$tempValue.value.r / 255,
+	$tempValue.value.g / 255,
+	$tempValue.value.b / 255,
+], $tempValue.value.a ?? 1,).toString() : "")
+
+const internalTempValue = ref({ ...$value.value })
 
 const showPopup = ref(false)
 
 
 const togglePopup = (): void => {
 	if (showPopup.value) {
-		$value.value = tempValue.value
+		$value.value = internalTempValue.value
 	}
 	showPopup.value = !showPopup.value
 }
@@ -126,7 +184,6 @@ type RealProps =
 	customRepresentation?: {
 		fromHsvaToString: (hsva: HsvaColor, includeAlpha: boolean) => string
 	}
-	valid?: boolean
 }
 interface Props
 	extends
@@ -140,3 +197,4 @@ interface Props
 	RealProps
 {}
 </script>
+
