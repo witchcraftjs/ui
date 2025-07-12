@@ -170,17 +170,19 @@
 		...ariaLabel,
 	}"
 >
-	<label :id="`label-${id ?? fallbackId}`" class="button--label pointer-events-none flex flex-1 items-center justify-center gap-1">
-		<slot name="icon"/>
-		<slot
-			v-bind="{ label}"
-		>
-			<span v-if="label && !isBlank(label!)">
-				{{ label }}
-			</span>
-		</slot>
-		<slot name="icon-after"/>
-	</label>
+	<slot name="label" v-bind="{id:`label-${id ?? fallbackId}`, classes:'button--label pointer-events-none flex flex-1 items-center justify-center gap-1'}">
+		<label :id="`label-${id ?? fallbackId}`" class="button--label pointer-events-none flex flex-1 items-center justify-center gap-1">
+			<slot name="icon"/>
+			<slot
+				v-bind="{ label}"
+			>
+				<span v-if="label && !isBlank(label!)">
+					{{ label }}
+				</span>
+			</slot>
+			<slot name="icon-after"/>
+		</label>
+	</slot>
 </button>
 </template>
 
