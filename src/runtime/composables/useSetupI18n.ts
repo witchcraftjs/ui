@@ -36,6 +36,8 @@ const dummyMessageSet = new Proxy({}, {
  * Should be called only once. You can choose to await it or not (see the `useDummyMessageSetWhileLoading` option).
  *
  * A default function is available, see {@link defaultTranslationFunction}.
+ *
+ * To avoid hydration errors, on the server, the message loading is awaited.
  */
 export async function useSetupI18n({
 	locale,
@@ -65,7 +67,11 @@ export async function useSetupI18n({
 				messages.value = newMessages
 			}
 		}
-		void loadMessageSet(locale.value)
+		if (import.meta.server) {
+			await loadMessageSet(locale.value)
+		} else {
+			void loadMessageSet(locale.value)
+		}
 		watch(locale, async () => {
 			void loadMessageSet(locale.value)
 		})
