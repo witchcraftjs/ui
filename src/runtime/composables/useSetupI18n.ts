@@ -62,7 +62,7 @@ export async function useSetupI18n({
 			if (isLoaded) {
 				messages.value = loaded[l]
 			} else {
-				const newMessages = ((await messagesGlob[`../assets/locales/${l}.json`]()) as any).default as any
+				const newMessages = ((await messagesGlob[`../assets/locales/${l}.json`]!()) as any).default as any
 				loaded[l] = newMessages
 				messages.value = newMessages
 			}

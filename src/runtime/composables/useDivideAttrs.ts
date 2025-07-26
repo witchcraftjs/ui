@@ -34,6 +34,7 @@ export const useDivideAttrs = <T extends readonly string[]>(divisionKeys: T): Re
 		res[`${key}Attrs`] = {}
 		for (let i = 0; i < unseen.length; i++) {
 			const attrKey = unseen[i]
+			if (!attrKey) continue
 			if (attrKey.startsWith(`${key}-`)) {
 				res[`${key}Attrs`][attrKey.slice(key.length + 1)] = attrs[attrKey]
 				unseen.splice(i, 1)

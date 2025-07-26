@@ -330,7 +330,9 @@ const positionGrips = (el: ResizableElement): void => {
 	const $el = getElInfo(el)
 	for (const grip of $el.grips.keys()) {
 		const col = $el.grips.get(grip)!
-		const colBox = getBox(getColEls(el)[col])
+		const colEls = getColEls(el)[col]
+		if (!colEls) unreachable()
+		const colBox = getBox(colEls)
 		const gripBox = getBox(grip)
 
 		grip.style.left = `${xPos + colBox.width - (gripBox.width / 2)}px`

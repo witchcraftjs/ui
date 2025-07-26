@@ -107,7 +107,7 @@ export const playBasicClickSelect = async ({ canvasElement, args }: { canvasElem
 	const input = canvas.getByLabelText(args.label ?? "", { selector: "input" })
 	await userEvent.clear(input)
 	await userEvent.type(input, "A")
-	//#awaiting https://github.com/storybookjs/storybook/issues/26888
+	// #awaiting https://github.com/storybookjs/storybook/issues/26888
 	await userEvent.click(canvas.getByRole("option", { name: "AB" }))
 	// if (args.values === undefined) {
 	// 	await expect(canvas.getByTestId("model-value").textContent).toBe("AB")

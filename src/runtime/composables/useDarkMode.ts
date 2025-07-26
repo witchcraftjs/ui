@@ -57,9 +57,9 @@ export const useDarkMode = ({
 		const index = darkModeOrder.indexOf(darkModeState.value)
 
 		if (index === 2) {
-			setDarkMode(darkModeOrder[0])
+			setDarkMode(darkModeOrder[0]!)
 		} else {
-			setDarkMode(darkModeOrder[index + 1])
+			setDarkMode(darkModeOrder[index + 1]!)
 		}
 	}
 

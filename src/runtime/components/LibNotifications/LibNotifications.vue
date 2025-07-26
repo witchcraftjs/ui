@@ -37,10 +37,10 @@
 			backdrop:p-5
 		`, ($attrs as any).class)"
 		ref="dialogEl"
-		@click.self.prevent="NotificationHandler.dismiss(topNotifications[0])"
+		@click.self.prevent="topNotifications[0] && NotificationHandler.dismiss(topNotifications[0])"
 	>
 		<form>
-			<lib-notification v-if="topNotifications.length > 0"
+			<lib-notification v-if="topNotifications.length > 0 && topNotifications[0]"
 				:handler="handler"
 				class="top-notification"
 				:notification="topNotifications[0]"

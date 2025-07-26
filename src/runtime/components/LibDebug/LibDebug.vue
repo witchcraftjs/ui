@@ -70,7 +70,16 @@ const findText = (children: any[]): string => {
 }
 const copy = (): void => {
 	if (navigator.clipboard) {
-		const text = props.value ? getStringValue(props.value) : findText([...$slots.default!()![0].children as any[]])
+		const text = props.value
+			? getStringValue(props.value)
+			: $slots.default?.()?.[0]?.children
+			? findText([...$slots.default()[0]!.children as any[]])
+			: undefined
+		if (text === undefined) {
+			// eslint-disable-next-line no-console
+			console.warn("Cannot copy text, can't generate string value from `getStringValue` or `the default slot`.")
+			return
+		}
 		navigator.clipboard.writeText(text).catch(() => { })
 	}
 }
