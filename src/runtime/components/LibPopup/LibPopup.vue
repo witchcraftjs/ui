@@ -69,7 +69,10 @@ const props = withDefaults(defineProps<Props>(), {
 	canClose: true,
 })
 const $attrs = useAttrs()
-defineOptions({ name: "lib-popup" })
+defineOptions({
+	name: "lib-popup",
+	inheritAttrs: false
+})
 
 const emit = defineEmits<{
 	(e: "close"): void

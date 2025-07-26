@@ -1,6 +1,6 @@
 <template>
 <div
-	class="icon inline-block"
+	:class="twMerge('icon inline-block', $attrs?.class)"
 	v-bind="{...$attrs, class:undefined}"
 >
 	<slot/>
@@ -10,7 +10,15 @@
 <script setup lang="ts">
 import { computed, type HTMLAttributes,useAttrs } from "vue"
 
-const $attrs = useAttrs()
+import { twMerge } from "../../utils/twMerge.js"
+
+defineOptions({
+	name: "icon",
+	inheritAttrs: false,
+})
+
+
+const $attrs = useAttrs() as any
 
 // eslint-disable-next-line no-use-before-define
 const props = defineProps<Props>()
@@ -26,9 +34,6 @@ const props = defineProps<Props>()
  * 		<icon><i-...></icon>
  * ``
  */
-export default {
-	name: "icon",
-}
 
 interface Props
 	extends
