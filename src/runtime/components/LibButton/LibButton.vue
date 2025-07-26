@@ -2,26 +2,26 @@
 <button
 	:id="id ?? fallbackId"
 	:class="!($attrs as any).unstyle && twMerge(`
-			button
-			flex
-			cursor-pointer
-			items-center
-			justify-center
-			rounded-sm
-			px-1
-			hover:cursor-pointer
-			[&:hover_*]:cursor-pointer
-			focus-outline
-			disabled:shadow-none
-			disabled:text-neutral-500
-			disabled:cursor-default
-			text-fg
-			hover:text-accent-700
-			dark:text-bg
-			dark:hover:text-accent-500
-			dark:disabled:text-neutral-500
-			dark:disabled:hover:text-neutral-500
-		`,
+		button
+		flex
+		cursor-pointer
+		items-center
+		justify-center
+		rounded-sm
+		px-1
+		hover:cursor-pointer
+		[&:hover_*]:cursor-pointer
+		focus-outline
+		disabled:shadow-none
+		disabled:text-neutral-500
+		disabled:cursor-default
+		text-fg
+		hover:text-accent-700
+		dark:text-bg
+		dark:hover:text-accent-500
+		dark:disabled:text-neutral-500
+		dark:disabled:hover:text-neutral-500
+	`,
 		!color && `active:text-neutral-800` /* todo for colors */,
 		border && `
 			transition-all
@@ -31,9 +31,8 @@
 			shadow-neutral-950/20
 			hover:shadow-[0_1px_3px_0]
 			hover:shadow-neutral-950/30
-			hover:border-neutral-300
-			dark:hover:border-neutral-600
-
+			hover:border-neutral-200
+			dark:hover:border-neutral-800
 			relative
 			after:absolute
 			after:rounded-xs
@@ -46,15 +45,13 @@
 			dark:hover:after:shadow-bg/50
 			after:pointer-events-none
 			after:mix-blend-overlay
-
 			active:inset-shadow
 			active:shadow-fg/20
 			active:border-transparent
 			border
-			border-neutral-400
+			border-neutral-300
 			disabled:border-neutral-200
 			disabled:bg-neutral-50
-
 			dark:hover:shadow-accent-950/30
 			dark:active:shadow-fg/40
 			dark:active:border-neutral-900
