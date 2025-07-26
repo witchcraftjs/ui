@@ -12,7 +12,7 @@
 		},
 		"./*": {
 			"import": "./dist/runtime/*",
-			"types": "./dist/runtime/*"
+			"types": "./dist/runtime/*.d.ts"
 		},
 		"./components": {
 			"types": "./dist/runtime/components/index.d.ts",
