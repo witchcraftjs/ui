@@ -78,7 +78,7 @@
 		"doc:dev": "pnpm storybook",
 		"lint:eslint": "eslint \"src/**/*.{js,ts,vue,cjs}\" \"*.{js,ts}\" --max-warnings=5 --report-unused-disable-directives",
 		"lint:types": "vue-tsc --noEmit --pretty --project tsconfig.types.json",
-		"lint:commits": "commitlint --from $(git rev-list --max-parents=0 HEAD) --to HEAD --verbose",
+		"lint:commits": "commitlint --from-last-tag --to HEAD --verbose",
 		"lint:imports": "madge --circular --extensions ts ./src",
 		"lint": "pnpm lint:types && pnpm lint:eslint",
 		"//actions:debug": "echo For debugging github build action locally with nektos/act. Requires act and docker. Note: Cache will never work locally because of https://github.com/nektos/act/issues/285",
