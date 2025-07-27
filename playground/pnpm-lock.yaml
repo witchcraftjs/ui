@@ -5,7 +5,6 @@ settings:
   excludeLinksFromLockfile: false
 
 overrides:
-  '@witchcraft/ui': link:..
   rollup: '=4.45.0'
 
 importers:
@@ -13,7 +12,7 @@ importers:
   .:
     dependencies:
       '@witchcraft/ui':
-        specifier: link:..
+        specifier: link:../
         version: link:..
       nuxt:
         specifier: ^4.0.1
