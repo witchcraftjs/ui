@@ -67,7 +67,6 @@ defineOptions({
 })
 
 
-// eslint-disable-next-line no-use-before-define
 const props = defineProps<Props>()
 
 const dialogEl = ref<HTMLDialogElement | null>(null)

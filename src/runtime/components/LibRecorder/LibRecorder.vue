@@ -93,7 +93,6 @@ const emits = defineEmits<{
 	(e: "focus:parent"): void
 }>()
 const fallbackId = getFallbackId()
-// eslint-disable-next-line no-use-before-define
 const props = withDefaults(defineProps<Props>(), {
 	recordingTitle: "",
 	id: undefined,

@@ -88,7 +88,6 @@ const $slots = useSlots()
 /* todo multi states */
 
 const fallbackId = getFallbackId()
-// eslint-disable-next-line no-use-before-define
 const props = withDefaults(defineProps<Props>(), {
 	...baseInteractivePropsDefaults,
 })

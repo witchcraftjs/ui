@@ -24,13 +24,14 @@ const template = `
 			<div class="outline-hidden focus:border-danger-500 border border-accent-600" tabindex="0">Has Manual Focus Classes</div>
 		`
 export default meta
-type Story = StoryObj<typeof NAME>
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+type Story = StoryObj<{}>
 
 export const Primary: Story = {
 	render: args => ({
 		components,
 		setup: () => {
-			const el = ref<HTMLElement>(null)
+			const el = ref<HTMLElement | null>(null)
 			onMounted(() => {
 				// el.value.focus()
 			})

@@ -170,7 +170,6 @@ defineOptions({
 	inheritAttrs: false,
 })
 
-// eslint-disable-next-line no-use-before-define
 const props = withDefaults(defineProps<Props>(), {
 	customRoute: (route: string, i: number) => {
 		if (i === 0 || i === 1) {

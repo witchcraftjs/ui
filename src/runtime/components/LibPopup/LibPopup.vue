@@ -58,7 +58,6 @@ import { isArray } from "@alanscodelog/utils/isArray.js"
 import type { IPopupReference, PopupPosition, PopupPositioner, PopupPositionModifier, SimpleDOMRect } from "../../types/index.js"
 
 const fallbackId = getFallbackId()
-// eslint-disable-next-line no-use-before-define
 const props = withDefaults(defineProps<Props>(), {
 	useBackdrop: true,
 	useDialogForBackdrop: false,

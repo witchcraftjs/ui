@@ -207,7 +207,6 @@ const emits = defineEmits<{
 }>()
 
 const fallbackId = getFallbackId()
-// eslint-disable-next-line no-use-before-define
 const props = withDefaults(defineProps<Props>(), {
 	multiple: false,
 	formats: () => ["image/*", ".jpeg", ".jpg", ".png"],

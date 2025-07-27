@@ -111,7 +111,6 @@ const swatchClasses = `
 const fallbackId = getFallbackId()
 
 const t = useInjectedI18n()
-// eslint-disable-next-line no-use-before-define
 const props = withDefaults(defineProps<Props>(), {
 	allowAlpha: true,
 	border: true,

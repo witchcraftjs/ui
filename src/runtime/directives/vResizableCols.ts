@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-use-before-define */
 import { castType } from "@alanscodelog/utils/castType.js"
 import { override } from "@alanscodelog/utils/override.js"
 import { throttle } from "@alanscodelog/utils/throttle.js"
@@ -137,7 +136,7 @@ export const vResizableCols: Directive = {
 }
 
 
-const setWidth = (col: HTMLElement, amountInPx: number, el: ResizableElement): void => {
+function setWidth(col: HTMLElement, amountInPx: number, el: ResizableElement): void {
 	const $el = getElInfo(el)
 	const width = Math.max($el.margin, amountInPx)
 
@@ -150,13 +149,14 @@ const setWidth = (col: HTMLElement, amountInPx: number, el: ResizableElement): v
 }
 
 
-const getBox = (el: Element): { x: number, width: number } => {
+function getBox(el: Element): { x: number, width: number } {
 	const rect = el.getBoundingClientRect()
 	// the numbers need to be rounded or else the columns will start to shift
 	// rounding rect.width is bettwe than just using clientWidth which does not include the scrollbar
 	return { x: Math.round(rect.x), width: Math.round(rect.width) }
 }
-const getCols = (el: ResizableElement): { col: HTMLElement | null, colNext: HTMLElement | null } => {
+
+function getCols(el: ResizableElement): { col: HTMLElement | null, colNext: HTMLElement | null } {
 	const $el = getElInfo(el)
 	if (!$el.target) unreachable()
 	let col = getColEls(el)[$el.grips.get($el.target!)!]
@@ -174,89 +174,95 @@ const getCols = (el: ResizableElement): { col: HTMLElement | null, colNext: HTML
 	return { col, colNext }
 }
 
-const createPointerDownHandler = (el: ResizableElement) => (e: PointerEvent) => {
-	const $el = getElInfo(el)
-	if (!$el.isDragging) {
-		castType<HTMLElement>(e.target)
-		$el.target = e.target
-		$el.isDragging = true
-		e.preventDefault()
+function createPointerDownHandler(el: ResizableElement) {
+	return (e: PointerEvent) => {
+		const $el = getElInfo(el)
+		if (!$el.isDragging) {
+			castType<HTMLElement>(e.target)
+			$el.target = e.target
+			$el.isDragging = true
+			e.preventDefault()
 
-		// in case any errors happen, we want the pointer up to still be called
-		document.addEventListener("pointerup", $el.pointerUpHandler)
+			// in case any errors happen, we want the pointer up to still be called
+			document.addEventListener("pointerup", $el.pointerUpHandler)
 
-		const { col, colNext } = getCols(el)
-		if (col === null || colNext === null) {
-			el.classList.add("resizable-cols-error")
-		} else {
-			document.addEventListener("pointermove", $el.pointerMoveHandler)
-			const box = getBox(col!)
-			if (box) {
-				$el.offset = e.pageX - (box.x + box.width)
-			}
-		}
-	}
-}
-const createPointerMoveHandler = (el: ResizableElement) => (e: PointerEvent) => {
-	const $el = getElInfo(el)
-	if ($el.isDragging) {
-		e.preventDefault()
-
-		const { col, colNext } = getCols(el)
-
-		if (col !== null) {
-			const leftBox = getBox(col)
-
-			const oldWidth = leftBox.width
-			const leftBound = leftBox.x
-			const rightBox = colNext ? getBox(colNext) : getBox(el)
-
-			const rightBound = rightBox.x + rightBox.width
-			const margin = $el.margin
-			const pos = e.pageX - $el.offset!
-
-			if ($el.fitWidth) {
-				if (pos > (leftBound + margin) && pos < (rightBound - margin)) {
-					const newWidth = pos - leftBound
-					const diff = oldWidth - newWidth
-
-					if (rightBox.width + diff < margin) {
-						el.classList.add("resizable-cols-error")
-						return
-					}
-
-
-					setWidth(col, newWidth, el)
-					setWidth(colNext!, rightBox.width + diff, el)
-				}
+			const { col, colNext } = getCols(el)
+			if (col === null || colNext === null) {
+				el.classList.add("resizable-cols-error")
 			} else {
-				if (pos > leftBound + margin) {
-					const newWidth = pos - leftBound
-					setWidth(col, newWidth, el)
+				document.addEventListener("pointermove", $el.pointerMoveHandler)
+				const box = getBox(col!)
+				if (box) {
+					$el.offset = e.pageX - (box.x + box.width)
 				}
 			}
+		}
+	}
+}
+function createPointerMoveHandler(el: ResizableElement) {
+	return (e: PointerEvent) => {
+		const $el = getElInfo(el)
+		if ($el.isDragging) {
+			e.preventDefault()
 
-			positionGrips(el)
+			const { col, colNext } = getCols(el)
+
+			if (col !== null) {
+				const leftBox = getBox(col)
+
+				const oldWidth = leftBox.width
+				const leftBound = leftBox.x
+				const rightBox = colNext ? getBox(colNext) : getBox(el)
+
+				const rightBound = rightBox.x + rightBox.width
+				const margin = $el.margin
+				const pos = e.pageX - $el.offset!
+
+				if ($el.fitWidth) {
+					if (pos > (leftBound + margin) && pos < (rightBound - margin)) {
+						const newWidth = pos - leftBound
+						const diff = oldWidth - newWidth
+
+						if (rightBox.width + diff < margin) {
+							el.classList.add("resizable-cols-error")
+							return
+						}
+
+
+						setWidth(col, newWidth, el)
+						setWidth(colNext!, rightBox.width + diff, el)
+					}
+				} else {
+					if (pos > leftBound + margin) {
+						const newWidth = pos - leftBound
+						setWidth(col, newWidth, el)
+					}
+				}
+
+				positionGrips(el)
+			}
 		}
 	}
 }
 
-const createPointerUpHandler = (el: ResizableElement) => (e: PointerEvent) => {
-	const $el = getElInfo(el)
-	if ($el.isDragging) {
-		e.preventDefault()
-		$el.isDragging = false
-		el.classList.remove("resizable-cols-error")
-		$el.offset = 0
-		delete $el.target
-		document.removeEventListener("pointermove", $el.pointerMoveHandler)
-		document.removeEventListener("pointerup", $el.pointerUpHandler)
-		// unfortunately does not work with iframes in storybook but otherwise does work
-		document.removeEventListener("pointerleave", $el.pointerLeaveHandler)
+function createPointerUpHandler(el: ResizableElement) {
+	return (e: PointerEvent) => {
+		const $el = getElInfo(el)
+		if ($el.isDragging) {
+			e.preventDefault()
+			$el.isDragging = false
+			el.classList.remove("resizable-cols-error")
+			$el.offset = 0
+			delete $el.target
+			document.removeEventListener("pointermove", $el.pointerMoveHandler)
+			document.removeEventListener("pointerup", $el.pointerUpHandler)
+			// unfortunately does not work with iframes in storybook but otherwise does work
+			document.removeEventListener("pointerleave", $el.pointerLeaveHandler)
+		}
 	}
 }
 
-const createGrip = (): HTMLElement => {
+function createGrip(): HTMLElement {
 	const grip = document.createElement("div")
 	grip.style.position = "absolute"
 	grip.style.cursor = "col-resize"
@@ -271,7 +277,7 @@ const removeGrips = (el: HTMLElement): void => {
 		el.removeChild(grip)
 	}
 }
-const getTestGripSize = (el: ResizableElement): number => {
+function getTestGripSize(el: ResizableElement): number {
 	const testGrip = createGrip()
 	el.appendChild(testGrip)
 	const dynamicMinWidth = getBox(testGrip).width * 3
@@ -279,18 +285,18 @@ const getTestGripSize = (el: ResizableElement): number => {
 	return dynamicMinWidth
 }
 
-const getElInfo = (el: ResizableElement): Data => {
+function getElInfo(el: ResizableElement): Data {
 	const $el = elMap.get(el)
 	if (!$el) unreachable("El went missing.")
 	return $el
 }
-const getColEls = (el: ResizableElement): HTMLElement[] => {
+function getColEls(el: ResizableElement): HTMLElement[] {
 	const $el = elMap.get(el)
 	if (!$el) unreachable("El went missing.")
 	return [...el.querySelectorAll(`:scope ${$el.selector ? $el.selector : "tr > td"}`)] as any
 }
 
-const setupColumns = (el: ResizableElement, opts: ResizableOptions): void => {
+function setupColumns(el: ResizableElement, opts: ResizableOptions): void {
 	const gripWidth = getTestGripSize(el)
 	const $el: Data = {
 		grips: new Map(),
@@ -325,7 +331,7 @@ const setupColumns = (el: ResizableElement, opts: ResizableOptions): void => {
 	el.classList.add("resizable-cols-setup")
 }
 
-const positionGrips = (el: ResizableElement): void => {
+function positionGrips(el: ResizableElement): void {
 	let xPos = 0
 	const $el = getElInfo(el)
 	for (const grip of $el.grips.keys()) {
@@ -340,7 +346,7 @@ const positionGrips = (el: ResizableElement): void => {
 	}
 }
 
-const setColWidths = (el: ResizableElement, children?: Element[]): void => {
+function setColWidths(el: ResizableElement, children?: Element[]): void {
 	const $el = getElInfo(el)
 	const header = children ?? getColEls(el).slice(0, $el.colCount)
 	const len = $el.colCount
@@ -365,7 +371,7 @@ const setColWidths = (el: ResizableElement, children?: Element[]): void => {
 	}
 }
 
-const teardownColumns = (el: ResizableElement): void => {
+function teardownColumns(el: ResizableElement): void {
 	const $el = getElInfo(el)
 
 	el.removeEventListener("pointerdown", $el.pointerDownHandler)

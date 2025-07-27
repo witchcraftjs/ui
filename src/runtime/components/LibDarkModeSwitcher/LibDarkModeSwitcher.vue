@@ -59,7 +59,6 @@ const emit = defineEmits<{
 }>()
 const $attrs = useAttrs()
 
-// eslint-disable-next-line no-use-before-define
 withDefaults(defineProps<Props>(), { showLabel: true })
 
 

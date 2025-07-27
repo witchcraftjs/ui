@@ -20,7 +20,6 @@ defineOptions({
 
 const $attrs = useAttrs() as any
 
-// eslint-disable-next-line no-use-before-define
 const props = defineProps<Props>()
 
 

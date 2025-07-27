@@ -79,7 +79,6 @@ const $ = useDivideAttrs(["item"] as const)
 const emits = defineEmits<SuggestionsEmits>()
 
 const fallbackId = getFallbackId()
-// eslint-disable-next-line no-use-before-define
 const props = withDefaults(defineProps<Props & SuggestionsProps<TSuggestion>>(), {
 	isValid: true,
 	canOpen: true,

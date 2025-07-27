@@ -106,7 +106,6 @@ defineOptions({
 	name: "lib-table",
 })
 
-// eslint-disable-next-line no-use-before-define
 const props = withDefaults(defineProps<Props>(), {
 	resizable: () => ({}),
 	values: () => [] as T[],

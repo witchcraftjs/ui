@@ -185,7 +185,6 @@ const emit = defineEmits<{
 
 const fallbackId = getFallbackId()
 
-// eslint-disable-next-line no-use-before-define
 const props = withDefaults(defineProps<Props>(), {
 	valid: true,
 	suggestions: undefined,

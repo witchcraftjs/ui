@@ -107,7 +107,6 @@ defineOptions({
 	inheritAttrs: false,
 })
 const fallbackId = getFallbackId()
-// eslint-disable-next-line no-use-before-define
 const props = withDefaults(defineProps<Props>(), {
 	autohideOnComplete: -1,
 	keepSpaceWhenHidden: false,

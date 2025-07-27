@@ -1,5 +1,4 @@
 import { clampNumber } from "@alanscodelog/utils/clampNumber.js"
-import { unreachable } from "@alanscodelog/utils/unreachable.js"
 import Color from "colorjs.io"
 
 import type { HsvaColor, RgbaColor } from "../../../types/index.js"
