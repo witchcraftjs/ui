@@ -14,6 +14,6 @@ export default defineNuxtPlugin({
 		? (await Promise.all(config.directives.map(async (name: string) => (import(`../../directives/${name}.ts`))))).map((_: any) => Object.values(_)[0])
 		// @ts-expect-error ts filetype needed for nuxt
 		: await import(`../../directives/index.ts`))
-		registerDirectives(app, Object.values(directives))
+		registerDirectives(app as any, Object.values(directives))
 	},
 })
