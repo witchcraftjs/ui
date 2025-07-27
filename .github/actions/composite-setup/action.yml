@@ -2,7 +2,6 @@ name: Setup
 inputs:
   USE_LOCKFILE:
     required: true
-    type: boolean
 
 # note it cannot contain the checkout, the must be checked out in the calling workflow or it will not be able to find the composite action
 runs:
@@ -16,8 +15,6 @@ runs:
       name: Setting up node.js (${{ matrix.node-version }})
       with:
         node-version: ${{ matrix.node-version }}
-
-    - uses: oven-sh/setup-bun@v2
 
     - uses: pnpm/action-setup@v4
       with:
