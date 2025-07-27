@@ -15,7 +15,8 @@
 	},
 	"pnpm": {
 		"overrides": {
-			"@witchcraft/ui": "link:.."
+			"@witchcraft/ui": "link:..",
+			"rollup": "=4.45.0"
 		}
 	}
 }

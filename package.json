@@ -202,5 +202,10 @@
 	},
 	"publishConfig": {
 		"access": "public"
+	},
+	"pnpm": {
+		"overrides": {
+			"rollup": "=4.45.0"
+		}
 	}
 }
