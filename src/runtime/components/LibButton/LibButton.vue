@@ -185,15 +185,11 @@
 
 <script setup  lang="ts">
 import { isBlank } from "@alanscodelog/utils/isBlank.js"
-import { keys } from "@alanscodelog/utils/keys.js"
-import { pick } from "@alanscodelog/utils/pick.js"
-import type { MakeRequired } from "@alanscodelog/utils/types"
-import { type ButtonHTMLAttributes,computed, type HTMLAttributes, type PropType,useAttrs } from "vue"
+import { type ButtonHTMLAttributes,computed, useAttrs } from "vue"
 
 import { useAriaLabel } from "../../composables/useAriaLabel.js"
-import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
 import { twMerge } from "../../utils/twMerge.js"
-import { type BaseInteractiveProps, baseInteractiveProps, baseInteractivePropsDefaults, type ButtonProps,getFallbackId, type LabelProps, type LinkableByIdProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
+import { type BaseInteractiveProps, baseInteractivePropsDefaults, type ButtonProps,getFallbackId, type LabelProps, type LinkableByIdProps, type TailwindClassProp } from "../shared/props.js"
 
 
 const $attrs = useAttrs()
