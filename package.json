@@ -67,6 +67,7 @@
 	"scripts": {
 		"prepare": "husky && pnpm gen:theme && cd playground && pnpm i",
 		"build": "nuxt-module-build prepare && nuxt-module-build build && nuxi generate playground",
+		"build:only": "nuxt-module-build build",
 		"dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
 		"dev": "nuxi dev playground",
 		"storybook": "BROWSER=none storybook dev -p 6006",
