@@ -32,7 +32,8 @@
 			($attrs as any).attrs?.class)"
 	>
 		<TestControls v-if="testWrapperMode" :show-outline="showOutline"/>
-		<Notifications v-if="useNotifications && isClientSide"/>
+		<!-- @vue-expect-error data-allow-mismatch is for vue/nuxt to allow the hydration mismatch-->
+		<Notifications v-if="useNotifications && isClientSide" data-allow-mismatch/>
 		<slot/>
 	</div>
 </div>
