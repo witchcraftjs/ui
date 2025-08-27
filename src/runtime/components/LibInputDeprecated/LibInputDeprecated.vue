@@ -151,9 +151,9 @@
 </div>
 </template>
 <script setup lang="ts">
-import { isBlank } from "@alanscodelog/utils/isBlank.js"
-import { isObject } from "@alanscodelog/utils/isObject.js"
-import { pushIfNotIn } from "@alanscodelog/utils/pushIfNotIn.js"
+import { isBlank } from "@alanscodelog/utils/isBlank"
+import { isObject } from "@alanscodelog/utils/isObject"
+import { pushIfNotIn } from "@alanscodelog/utils/pushIfNotIn"
 import { computed,type HTMLAttributes,type InputHTMLAttributes, nextTick, onBeforeMount, ref, toRef, useSlots, watch } from "vue"
 import type { ComponentExposed } from "vue-component-type-helpers"
 

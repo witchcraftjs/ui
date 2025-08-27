@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { unreachable } from "@alanscodelog/utils/unreachable.js"
+import { unreachable } from "@alanscodelog/utils/unreachable"
 import { type Theme } from "metamorphosis"
 import { type ComponentPublicInstance, computed, onBeforeUnmount, onMounted, ref, toRaw } from "vue"
 

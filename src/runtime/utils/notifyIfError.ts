@@ -1,4 +1,4 @@
-import { TypedError } from "@alanscodelog/utils/TypedError.js"
+import { TypedError } from "@alanscodelog/utils/TypedError"
 
 import { useNotificationHandler } from "../composables/useNotificationHandler.js"
 

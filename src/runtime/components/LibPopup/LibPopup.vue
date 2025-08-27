@@ -53,8 +53,8 @@ import { onMounted, nextTick, ref, useAttrs, watch , type HTMLAttributes } from 
 import { getFallbackId, type LinkableByIdProps, type TailwindClassProp, type PopupProps } from "../shared/props.js"
 
 import { twMerge } from "../../utils/twMerge.js"
-import { castType } from "@alanscodelog/utils/castType.js"
-import { isArray } from "@alanscodelog/utils/isArray.js"
+import { castType } from "@alanscodelog/utils/castType"
+import { isArray } from "@alanscodelog/utils/isArray"
 import type { IPopupReference, PopupPosition, PopupPositioner, PopupPositionModifier, SimpleDOMRect } from "../../types/index.js"
 
 const fallbackId = getFallbackId()

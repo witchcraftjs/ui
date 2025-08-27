@@ -9,7 +9,7 @@ import type { Directive } from "vue"
  *
  * One can create a ref:
  * ```ts
- * import { vExtractRootEl } from "@witchcraft/ui/directives/vExtractRootEl.js"
+ * import { vExtractRootEl } from "@witchcraft/ui/directives/vExtractRootEl"
  * const el = ref<HTMLElement|null>(null)
  *
  * ```

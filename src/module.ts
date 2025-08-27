@@ -8,8 +8,8 @@ import {
 	useLogger,
 } from "@nuxt/kit"
 import tailwindcss from "@tailwindcss/vite"
-import { addImportsCustom } from "@witchcraft/nuxt-utils/utils/addImportsCustom.js"
-import { globFiles } from "@witchcraft/nuxt-utils/utils/globFiles.js"
+import { addImportsCustom } from "@witchcraft/nuxt-utils/utils/addImportsCustom"
+import { globFiles } from "@witchcraft/nuxt-utils/utils/globFiles"
 import { defu } from "defu"
 import fs from "fs"
 import { themeAsTailwindCss } from "metamorphosis/tailwind"

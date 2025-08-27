@@ -1,4 +1,4 @@
-import { capitalize } from "@alanscodelog/utils/capitalize.js"
+import { capitalize } from "@alanscodelog/utils/capitalize"
 import type { App } from "vue"
 
 /**

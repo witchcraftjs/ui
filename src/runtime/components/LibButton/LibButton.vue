@@ -184,7 +184,7 @@
 </template>
 
 <script setup  lang="ts">
-import { isBlank } from "@alanscodelog/utils/isBlank.js"
+import { isBlank } from "@alanscodelog/utils/isBlank"
 import { type ButtonHTMLAttributes,computed, useAttrs } from "vue"
 
 import { useAriaLabel } from "../../composables/useAriaLabel.js"

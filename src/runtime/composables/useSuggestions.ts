@@ -1,9 +1,9 @@
 /* eslint-disable no-console */
 import { type AnyFunction } from "@alanscodelog/utils"
-import { isBlank } from "@alanscodelog/utils/isBlank.js"
-import { isObject } from "@alanscodelog/utils/isObject.js"
-import { pushIfNotIn } from "@alanscodelog/utils/pushIfNotIn.js"
-import { removeIfIn } from "@alanscodelog/utils/removeIfIn.js"
+import { isBlank } from "@alanscodelog/utils/isBlank"
+import { isObject } from "@alanscodelog/utils/isObject"
+import { pushIfNotIn } from "@alanscodelog/utils/pushIfNotIn"
+import { removeIfIn } from "@alanscodelog/utils/removeIfIn"
 import { computed, type Ref, ref, toRaw, watch } from "vue"
 
 import { type SuggestionsEmits,type SuggestionsOptions } from "../components/shared/props.js"

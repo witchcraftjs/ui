@@ -1,4 +1,4 @@
-import { clampNumber } from "@alanscodelog/utils/clampNumber.js"
+import { clampNumber } from "@alanscodelog/utils/clampNumber"
 import Color from "colorjs.io"
 
 import type { HsvaColor, RgbaColor } from "../../../types/index.js"

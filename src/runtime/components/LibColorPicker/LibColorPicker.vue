@@ -170,10 +170,10 @@
 
 <script setup lang="ts">
 /* todo change to colorjsio for less dependencies */
-import { castType } from "@alanscodelog/utils/castType.js"
-import { clampNumber } from "@alanscodelog/utils/clampNumber.js"
-import { isArray } from "@alanscodelog/utils/isArray.js"
-import { unreachable } from "@alanscodelog/utils/unreachable.js"
+import { castType } from "@alanscodelog/utils/castType"
+import { clampNumber } from "@alanscodelog/utils/clampNumber"
+import { isArray } from "@alanscodelog/utils/isArray"
+import { unreachable } from "@alanscodelog/utils/unreachable"
 import Color from "colorjs.io"
 import { computed, onMounted, reactive, type Ref, ref, type UnwrapRef,useAttrs, watch } from "vue"
 

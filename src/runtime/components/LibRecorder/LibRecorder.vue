@@ -70,7 +70,7 @@
 </div>
 </template>
 <script setup lang="ts">
-import { keys } from "@alanscodelog/utils/keys.js"
+import { keys } from "@alanscodelog/utils/keys"
 import { computed, type HTMLAttributes ,onBeforeUnmount, onMounted, type PropType, ref, watch, watchPostEffect } from "vue"
 
 import { useAriaLabel } from "../../composables/useAriaLabel.js"

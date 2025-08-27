@@ -1,7 +1,7 @@
-import { castType } from "@alanscodelog/utils/castType.js"
-import { override } from "@alanscodelog/utils/override.js"
-import { throttle } from "@alanscodelog/utils/throttle.js"
-import { unreachable } from "@alanscodelog/utils/unreachable.js"
+import { castType } from "@alanscodelog/utils/castType"
+import { override } from "@alanscodelog/utils/override"
+import { throttle } from "@alanscodelog/utils/throttle"
+import { unreachable } from "@alanscodelog/utils/unreachable"
 import type { Directive, Ref } from "vue"
 
 import { globalResizeObserver } from "../globalResizeObserver.js"
@@ -50,7 +50,7 @@ const throttledCallback = throttle(callback)
  * 	</div>
  * </template>
  * <script setup>
- * import {vResizeCols} from "@witchcraft/ui/directives/vResizableCols.js"
+ * import {vResizeCols} from "@witchcraft/ui/directives/vResizableCols"
  * </script>
  * ```
  *

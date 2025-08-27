@@ -79,11 +79,11 @@ Most slots where possible are passed all properties needed to replace them excep
 ```ts
 import { defineConfig } from "vite"
 
-import { WitchcraftUiResolver } from "@witchcraft/ui/build/WitchcraftUiResolver.js"
+import { WitchcraftUiResolver } from "@witchcraft/ui/build/WitchcraftUiResolver"
 import IconsResolver from "unplugin-icons/resolver"
 import Icons from "unplugin-icons/vite"
 import Components from "unplugin-vue-components/vite"
-import { unpluginIconViteOptions } from "@witchcraft/ui/build/unpluginIconViteOptions.js"
+import { unpluginIconViteOptions } from "@witchcraft/ui/build/unpluginIconViteOptions"
 
 export default defineConfig({
 	plugins: [

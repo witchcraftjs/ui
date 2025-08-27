@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { capitalize } from "@alanscodelog/utils/capitalize.js"
+import { capitalize } from "@alanscodelog/utils/capitalize"
 import type { Meta, StoryObj } from "@storybook/vue3"
 
 import IconFaSolidBell from "~icons/fa-solid/bell"

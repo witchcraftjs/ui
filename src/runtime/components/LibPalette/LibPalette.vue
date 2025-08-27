@@ -27,7 +27,7 @@ export default { name: "lib-palette" }
 </script>
 
 <script setup  lang="ts">
-import { keys } from "@alanscodelog/utils/keys.js"
+import { keys } from "@alanscodelog/utils/keys"
 import { type Theme } from "metamorphosis"
 
 import { type BaseInteractiveProps, baseInteractivePropsDefaults,type LinkableByIdProps } from "../shared/props.js"

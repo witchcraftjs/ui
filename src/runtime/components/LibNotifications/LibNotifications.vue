@@ -51,7 +51,7 @@
 </Transition>
 </template>
 <script setup lang="ts">
-import { removeIfIn } from "@alanscodelog/utils/removeIfIn.js"
+import { removeIfIn } from "@alanscodelog/utils/removeIfIn"
 import { type HTMLAttributes,nextTick, onBeforeUnmount, ref,shallowReactive, Transition, TransitionGroup } from "vue"
 
 import LibNotification from "./LibNotification.vue"

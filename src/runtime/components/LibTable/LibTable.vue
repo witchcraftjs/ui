@@ -93,7 +93,7 @@
 <!-- generic="T extends Record<string, any> -->"
 <script setup lang="ts" generic="T">
 import type { MakeRequired } from "@alanscodelog/utils"
-import { keys } from "@alanscodelog/utils/keys.js"
+import { keys } from "@alanscodelog/utils/keys"
 import { computed, type PropType, ref, type TableHTMLAttributes } from "vue"
 
 import { vResizableCols } from "../../directives/vResizableCols.js"

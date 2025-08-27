@@ -72,7 +72,7 @@
 </template>
 
 <script setup lang="ts" generic="T extends string | number">
-import { removeIfIn } from "@alanscodelog/utils/removeIfIn.js"
+import { removeIfIn } from "@alanscodelog/utils/removeIfIn"
 import { computed, type HTMLAttributes } from "vue"
 
 import IFa6SolidXmark from "~icons/fa6-solid/xmark"

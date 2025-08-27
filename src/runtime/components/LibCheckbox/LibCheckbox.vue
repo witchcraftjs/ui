@@ -67,9 +67,9 @@
 </div>
 </template>
 <script setup  lang="ts">
-import { keys } from "@alanscodelog/utils/keys.js"
-import { omit } from "@alanscodelog/utils/omit.js"
-import { pick } from "@alanscodelog/utils/pick.js"
+import { keys } from "@alanscodelog/utils/keys"
+import { omit } from "@alanscodelog/utils/omit"
+import { pick } from "@alanscodelog/utils/pick"
 import type { MakeRequired } from "@alanscodelog/utils/types"
 import { computed, type HTMLAttributes, type InputHTMLAttributes,type PropType, ref, useAttrs, useSlots } from "vue"
 

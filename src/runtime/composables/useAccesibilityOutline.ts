@@ -1,4 +1,4 @@
-import { castType } from "@alanscodelog/utils/castType.js"
+import { castType } from "@alanscodelog/utils/castType"
 import { onBeforeUnmount, onMounted, type Ref, ref, watch } from "vue"
 
 /**
