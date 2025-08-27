@@ -155,12 +155,6 @@ export interface PopupProps {
 	canClose?: boolean
 }
 
-export const baseInteractiveProps = {
-	unstyle: { type: Boolean as Function as PropType<boolean>, required: false, default: false },
-	disabled: { type: Boolean as Function as PropType<boolean>, required: false, default: false },
-	readonly: { type: Boolean as Function as PropType<boolean>, required: false, default: false },
-	border: { type: Boolean as Function as PropType<boolean>, required: false, default: true },
-} as const
 
 export type BaseInteractiveProps = {
 	/** Default is false. */
@@ -172,12 +166,14 @@ export type BaseInteractiveProps = {
 	/** Removes styles from the component. Default is false. */
 	unstyle?: boolean
 }
-export const baseInteractivePropsDefaults = {
-	disabled: false,
-	readonly: false,
-	border: true,
-	unstyle: false,
-}
+
+// see https://github.com/nuxt/module-builder/issues/649
+// export const baseInteractivePropsDefaults = {
+// 	disabled: false,
+// 	readonly: false,
+// 	border: true,
+// 	unstyle: false,
+// }
 
 /**
 	* @internal

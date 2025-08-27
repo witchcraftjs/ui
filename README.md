@@ -206,12 +206,9 @@ interface Props
 </script>
 
 <script lang="ts" setup>
-// eslint-disable-next-line no-duplicate-imports
-import { baseInteractivePropsDefaults } from "../shared/props.js"
-
 const props = withDefaults(defineProps<Props>(), {
 	id: "",
-	...baseInteractivePropsDefaults
+	unstyle: false, disabled:false, readonly:false, border:true,
 })
 const $attrs = useAttrs()
 </script>

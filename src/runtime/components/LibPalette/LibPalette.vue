@@ -30,7 +30,7 @@ export default { name: "lib-palette" }
 import { keys } from "@alanscodelog/utils/keys"
 import { type Theme } from "metamorphosis"
 
-import { type BaseInteractiveProps, baseInteractivePropsDefaults,type LinkableByIdProps } from "../shared/props.js"
+import { type BaseInteractiveProps,type LinkableByIdProps } from "../shared/props.js"
 
 
 const props = withDefaults(defineProps<
@@ -40,7 +40,7 @@ const props = withDefaults(defineProps<
 	theme: Theme
 }>(), {
 	theme: () => ({} as any),
-	...baseInteractivePropsDefaults
+	unstyle: false, disabled: false, readonly: false, border: true,
 })
 
 const exclude = ["--color-bg", "--color-fg"]

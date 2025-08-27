@@ -1,4 +1,4 @@
-import { type themeAsTailwindCss } from "metamorphosis/tailwind.js"
+import { type themeAsTailwindCss } from "metamorphosis/tailwind"
 
 
 export const themeConvertionOpts: Parameters<typeof themeAsTailwindCss>[1] = {

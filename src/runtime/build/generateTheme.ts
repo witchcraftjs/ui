@@ -1,4 +1,4 @@
-import { themeAsTailwindCss } from "metamorphosis/tailwind.js"
+import { themeAsTailwindCss } from "metamorphosis/tailwind"
 import fs from "node:fs"
 import { resolve } from "path"
 

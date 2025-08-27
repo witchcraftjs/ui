@@ -67,16 +67,12 @@
 </div>
 </template>
 <script setup  lang="ts">
-import { keys } from "@alanscodelog/utils/keys"
-import { omit } from "@alanscodelog/utils/omit"
-import { pick } from "@alanscodelog/utils/pick"
-import type { MakeRequired } from "@alanscodelog/utils/types"
-import { computed, type HTMLAttributes, type InputHTMLAttributes,type PropType, ref, useAttrs, useSlots } from "vue"
+import { type HTMLAttributes, type InputHTMLAttributes,ref, useSlots } from "vue"
 
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
 import { usePreHydrationValue } from "../../composables/usePreHydrationValue.js"
 import { twMerge } from "../../utils/twMerge.js"
-import { type BaseInteractiveProps, baseInteractivePropsDefaults, getFallbackId,type LabelProps, type LinkableByIdProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
+import { type BaseInteractiveProps, getFallbackId,type LabelProps, type LinkableByIdProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
 
 defineOptions({
 	name: "lib-checkbox",
@@ -89,7 +85,7 @@ const $slots = useSlots()
 
 const fallbackId = getFallbackId()
 const props = withDefaults(defineProps<Props>(), {
-	...baseInteractivePropsDefaults,
+	unstyle: false, disabled: false, readonly: false, border: true,
 })
 
 

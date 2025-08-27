@@ -77,7 +77,7 @@ import { useAriaLabel } from "../../composables/useAriaLabel.js"
 import { usePreHydrationValue } from "../../composables/usePreHydrationValue.js"
 import { hasModifiers } from "../../helpers/hasModifiers.js"
 import { twMerge } from "../../utils/twMerge.js"
-import { type BaseInteractiveProps, baseInteractivePropsDefaults, getFallbackId,type LabelProps, type LinkableByIdProps, type TailwindClassProp } from "../shared/props.js"
+import { type BaseInteractiveProps, getFallbackId,type LabelProps, type LinkableByIdProps, type TailwindClassProp } from "../shared/props.js"
 
 
 defineOptions({
@@ -93,7 +93,7 @@ const props = withDefaults(defineProps<Props>(), {
 	valid: true,
 	label: "",
 	type: undefined,
-	...baseInteractivePropsDefaults
+	unstyle: false, disabled: false, readonly: false, border: true,
 })
 
 const modelValue = defineModel<T>({ required: true })

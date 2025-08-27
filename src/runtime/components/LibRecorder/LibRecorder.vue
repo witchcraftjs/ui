@@ -76,7 +76,7 @@ import { computed, type HTMLAttributes ,onBeforeUnmount, onMounted, type PropTyp
 import { useAriaLabel } from "../../composables/useAriaLabel.js"
 import { useInjectedI18n } from "../../composables/useInjectedI18n.js"
 import { twMerge } from "../../utils/twMerge.js"
-import { type BaseInteractiveProps, baseInteractivePropsDefaults, getFallbackId, type LabelProps, type LinkableByIdProps,type TailwindClassProp } from "../shared/props.js"
+import { type BaseInteractiveProps, getFallbackId, type LabelProps, type LinkableByIdProps,type TailwindClassProp } from "../shared/props.js"
 
 defineOptions({
 	name: "lib-recorder",
@@ -98,7 +98,7 @@ const props = withDefaults(defineProps<Props>(), {
 	id: undefined,
 	binders: undefined,
 	recorder: undefined,
-	...baseInteractivePropsDefaults
+	unstyle: false, disabled: false, readonly: false, border: true,
 })
 /**
  * Puts the element into recording mode if true. See {@link props.recorder}.

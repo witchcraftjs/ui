@@ -10,10 +10,10 @@
 </template>
 <script setup  lang="ts">
  
-import { computed, type HTMLAttributes, onBeforeUnmount, onMounted, type PropType, reactive, type Ref, ref, watch } from "vue"
+import { type HTMLAttributes, ref } from "vue"
 
 import { twMerge } from "../../utils/twMerge.js"
-import { baseInteractiveProps, type TailwindClassProp } from "../shared/props.js"
+import { type TailwindClassProp } from "../shared/props.js"
 
 
 defineOptions({

@@ -67,7 +67,7 @@ import { useSuggestions } from "../../composables/useSuggestions.js"
 import { hasModifiers } from "../../helpers/hasModifiers.js"
 import { twMerge } from "../../utils/twMerge.js"
 import LibCheckbox from "../LibCheckbox/LibCheckbox.vue"
-import { type BaseInteractiveProps, baseInteractivePropsDefaults, getFallbackId,type LabelProps, type LinkableByIdProps, type SuggestionsEmits, type SuggestionsProps, type WrapperProps } from "../shared/props.js"
+import { type BaseInteractiveProps, getFallbackId,type LabelProps, type LinkableByIdProps, type SuggestionsEmits, type SuggestionsProps, type WrapperProps } from "../shared/props.js"
 
 defineOptions({
 	name: "lib-suggestions",
@@ -83,7 +83,7 @@ const props = withDefaults(defineProps<Props & SuggestionsProps<TSuggestion>>(),
 	isValid: true,
 	canOpen: true,
 	filterKeydown: undefined,
-	...baseInteractivePropsDefaults
+	unstyle: false, disabled: false, readonly: false, border: true,
 })
 /**
  * The final valid value. This is *not* the value you want to share with the input. If `restrictToSuggestions` is true this will not update on any invalid values that `inputValue` might be set to.

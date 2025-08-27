@@ -82,7 +82,7 @@ import { copy } from "../../helpers/copy.js"
 import { twMerge } from "../../utils/twMerge.js"
 import Icon from "../Icon/Icon.vue"
 import LibButton from "../LibButton/LibButton.vue"
-import { type BaseInteractiveProps, baseInteractivePropsDefaults,type LabelProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
+import { type BaseInteractiveProps,type LabelProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
 
 
 defineOptions({
@@ -92,7 +92,7 @@ defineOptions({
 
 const $ = useDivideAttrs(["item"] as const)
 const props = withDefaults(defineProps<Props>(), {
-	...baseInteractivePropsDefaults
+	unstyle: false, disabled: false, readonly: false, border: true,
 })
 
 

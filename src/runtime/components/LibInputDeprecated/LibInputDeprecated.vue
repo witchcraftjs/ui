@@ -167,7 +167,7 @@ import LibLabel from "../LibLabel/LibLabel.vue"
 import LibMultiValues from "../LibMultiValues/LibMultiValues.vue"
 import LibSimpleInput from "../LibSimpleInput/LibSimpleInput.vue"
 import LibSuggestions from "../LibSuggestions/LibSuggestions.vue"
-import { type BaseInteractiveProps, baseInteractivePropsDefaults, getFallbackId, type LabelProps, type LinkableByIdProps, type SuggestionsProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
+import { type BaseInteractiveProps, getFallbackId, type LabelProps, type LinkableByIdProps, type SuggestionsProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
 
 
 /* #region base */
@@ -191,7 +191,7 @@ const props = withDefaults(defineProps<Props>(), {
 	valid: true,
 	suggestions: undefined,
 	updateOnlyOnSubmit: false,
-	...baseInteractivePropsDefaults,
+	unstyle: false, disabled: false, readonly: false, border: true,
 })
 
 const $ = useDivideAttrs(["wrapper", "inner-wrapper", "suggestions", "multivalues"] as const)

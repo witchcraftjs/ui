@@ -189,7 +189,7 @@ import { type ButtonHTMLAttributes,computed, useAttrs } from "vue"
 
 import { useAriaLabel } from "../../composables/useAriaLabel.js"
 import { twMerge } from "../../utils/twMerge.js"
-import { type BaseInteractiveProps, baseInteractivePropsDefaults, type ButtonProps,getFallbackId, type LabelProps, type LinkableByIdProps, type TailwindClassProp } from "../shared/props.js"
+import { type BaseInteractiveProps, type ButtonProps,getFallbackId, type LabelProps, type LinkableByIdProps, type TailwindClassProp } from "../shared/props.js"
 
 
 const $attrs = useAttrs()
@@ -204,7 +204,7 @@ const fallbackId = getFallbackId()
 const props = withDefaults(defineProps<Props>(), {
 	color: false,
 	label: "",
-	...baseInteractivePropsDefaults
+	unstyle: false, disabled: false, readonly: false, border: true,
 })
 
 

@@ -97,7 +97,7 @@
 import { type HTMLAttributes,type PropType, ref, watch } from "vue"
 
 import { twMerge } from "../../utils/twMerge.js"
-import { type BaseInteractiveProps, baseInteractivePropsDefaults,getFallbackId,type LabelProps, type LinkableByIdProps, type TailwindClassProp } from "../shared/props.js"
+import { type BaseInteractiveProps,getFallbackId,type LabelProps, type LinkableByIdProps, type TailwindClassProp } from "../shared/props.js"
 
 // TODO move to utils
 const clampVal = (n: number, min: number, max: number) => Math.min(Math.max(n, min), max)
@@ -111,7 +111,7 @@ const props = withDefaults(defineProps<Props>(), {
 	autohideOnComplete: -1,
 	keepSpaceWhenHidden: false,
 	clamp: () => [0, 100],
-	...baseInteractivePropsDefaults
+	unstyle: false, disabled: false, readonly: false, border: true,
 })
 const hide = ref<boolean>(false)
 const psuedoHide = ref<boolean>(false)

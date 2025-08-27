@@ -23,7 +23,7 @@ import type { MakeRequired } from "@alanscodelog/utils/types"
 import { type LabelHTMLAttributes,toRef,useAttrs } from "vue"
 
 import { twMerge } from "../../utils/twMerge.js"
-import { type BaseInteractiveProps, baseInteractivePropsDefaults, getFallbackId, type LabelProps, type LinkableByIdProps, type TailwindClassProp } from "../shared/props.js"
+import { type BaseInteractiveProps, getFallbackId, type LabelProps, type LinkableByIdProps, type TailwindClassProp } from "../shared/props.js"
 
 
 defineOptions({
@@ -35,9 +35,8 @@ const fallbackId = getFallbackId()
 // eslint-disable-next-line no-undef
 withDefaults(defineProps<Props>(), {
 	id: "",
-	unstyled: undefined,
 	valid: true,
-	...baseInteractivePropsDefaults,
+	unstyle: false, disabled: false, readonly: false, border: true,
 })
 
 const $attrs = useAttrs()
