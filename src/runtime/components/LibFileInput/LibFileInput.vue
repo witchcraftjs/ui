@@ -166,6 +166,10 @@
 <script setup lang="ts">
 import { computed, type HTMLAttributes, type InputHTMLAttributes,ref, shallowReactive, watch } from "vue"
 
+import IFa6RegularFile from "~icons/fa6-regular/file"
+import IFa6SolidArrowUpFromBracket from "~icons/fa6-solid/arrow-up-from-bracket"
+import IFa6SolidXmark from "~icons/fa6-solid/xmark"
+
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
 import { useInjectedI18n } from "../../composables/useInjectedI18n.js"
 import { type FileInputError } from "../../types/index.js"

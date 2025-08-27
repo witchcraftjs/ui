@@ -81,6 +81,9 @@
 <script setup lang="ts">
 import { computed, type HTMLAttributes,ref, useAttrs } from "vue"
 
+import IFa6RegularCopy from "~icons/fa6-regular/copy"
+import IFa6SolidXmark from "~icons/fa6-solid/xmark"
+
 import { copy } from "../../helpers/copy.js"
 import { type NotificationEntry, NotificationHandler } from "../../helpers/NotificationHandler.js"
 import { twMerge } from "../../utils/twMerge.js"

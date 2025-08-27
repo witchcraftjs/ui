@@ -14,22 +14,9 @@
 	<!-- content-vertical-holder will keep the icon the height of a text line regardless of the svg used -->
 	<template #icon>
 		<icon
-			v-if="darkModeState==='dark'"
-			class="w-[1em] flex items-center content-vertical-holder"
+			class="w-[1em] items-center content-vertical-holder"
 		>
-			<i-fa-solid-moon/>
-		</icon>
-		<icon
-			v-else-if="darkModeState==='light'"
-			class="w-[1em] content-vertical-holder"
-		>
-			<i-ph-sun-bold/>
-		</icon>
-		<icon
-			v-else
-			class="w-[1em] content-vertical-holder"
-		>
-			<i-fa6-solid-circle-half-stroke/>
+			<component :is="darkModeState==='dark' ? IFaSolidMoon : darkModeState==='light' ? IPhSunBold : IFa6SolidCircleHalfStroke"/>
 		</icon>
 	</template>
 	<template #default v-if="showLabel">
@@ -42,12 +29,17 @@
 <script lang="ts" setup>
 import { type ButtonHTMLAttributes,onMounted,useAttrs, watch } from "vue"
 
+import IFaSolidMoon from "~icons/fa-solid/moon"
+import IFa6SolidCircleHalfStroke from "~icons/fa6-solid/circle-half-stroke"
+import IPhSunBold from "~icons/ph/sun-bold"
+
 import { useInjectedDarkMode } from "../../composables/useInjectedDarkMode.js"
 import { useInjectedI18n } from "../../composables/useInjectedI18n.js"
 import { twMerge } from "../../utils/twMerge.js"
 import Icon from "../Icon/Icon.vue"
 import LibButton from "../LibButton/LibButton.vue"
 import type { TailwindClassProp } from "../shared/props.js"
+
 
 const t = useInjectedI18n()
 
@@ -67,6 +59,7 @@ const {
 	cycleDarkMode,
 	darkModeState,
 } = useInjectedDarkMode()
+
 
 watch(darkMode, value => emit("update:darkMode", value))
 watch(darkModeState, value => emit("update:darkModeState", value))

@@ -75,6 +75,8 @@
 import { removeIfIn } from "@alanscodelog/utils/removeIfIn.js"
 import { computed, type HTMLAttributes } from "vue"
 
+import IFa6SolidXmark from "~icons/fa6-solid/xmark"
+
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
 import { copy } from "../../helpers/copy.js"
 import { twMerge } from "../../utils/twMerge.js"

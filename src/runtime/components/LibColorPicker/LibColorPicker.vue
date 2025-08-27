@@ -181,6 +181,8 @@ import { safeConvertToHsva } from "./utils/safeConvertToHsva.js"
 import { safeConvertToRgba } from "./utils/safeConvertToRgba.js"
 import { toLowPrecisionRgbaString } from "./utils/toLowPrecisionRgbaString.js"
 
+import IFa6RegularCopy from "~icons/fa-regular/copy"
+
 import { useInjectedI18n } from "../../composables/useInjectedI18n.js"
 import { copy } from "../../helpers/copy.js"
 import type { HsvaColor, RgbaColor } from "../../types/index.js"

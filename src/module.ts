@@ -158,16 +158,23 @@ export default defineNuxtModule<ModuleOptions>({
 				logger.info(`Adding unplugin-icons`)
 				config.plugins ??= []
 				config.plugins = [
-					// we must prepend or the custom style options don't work when the module is used
-					ViteComponents({
-						resolvers: [
-							IconsResolver(),
-							// we don't need our resolver since we use nuxt instead
-						],
-					}),
-					Icons({
-						...unpluginIconViteOptions,
-					}),
+					...(
+						options.includeUnpluginIconsPlugins
+							? [
+								// we must prepend or the custom style options don't work when the module is used
+								ViteComponents({
+									resolvers: [
+										IconsResolver({prefix:"i"}),
+										// we don't need our resolver since we use nuxt instead
+									],
+								}),
+								Icons({
+									compiler: "vue3",
+									...unpluginIconViteOptions,
+								}),
+							]
+							: []	
+					),
 					tailwindcss() as any,
 					...config.plugins,
 				]

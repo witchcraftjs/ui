@@ -157,6 +157,8 @@ import { pushIfNotIn } from "@alanscodelog/utils/pushIfNotIn.js"
 import { computed,type HTMLAttributes,type InputHTMLAttributes, nextTick, onBeforeMount, ref, toRef, useSlots, watch } from "vue"
 import type { ComponentExposed } from "vue-component-type-helpers"
 
+import IFa6SolidChevronUp from "~icons/fa6-solid/chevron-up"
+
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
 import { useSuggestionsInputAria } from "../../composables/useSuggestions.js"
 import { twMerge } from "../../utils/twMerge.js"

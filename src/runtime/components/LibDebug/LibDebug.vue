@@ -32,6 +32,8 @@
 <script setup lang="ts">
 import { type PropType, useSlots } from "vue"
 
+import IFa6RegularCopy from "~icons/fa-regular/copy"
+
 import Icon from "../Icon/Icon.vue"
 import LibButton from "../LibButton/LibButton.vue"
 
