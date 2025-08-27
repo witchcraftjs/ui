@@ -11,7 +11,7 @@
 			"import": "./dist/runtime/main.lib.js"
 		},
 		"./*": {
-			"import": "./dist/runtime/*",
+			"import": "./dist/runtime/*.js",
 			"types": "./dist/runtime/*.d.ts"
 		},
 		"./components": {
@@ -22,10 +22,6 @@
 			"types": "./dist/runtime/components/*/*.vue.d.ts",
 			"import": "./dist/runtime/components/*/*.vue"
 		},
-		"./composables/*": {
-			"types": "./dist/runtime/composables/*",
-			"import": "./dist/runtime/composables/*"
-		},
 		"./composables": {
 			"types": "./dist/runtime/composables/index.d.ts",
 			"import": "./dist/runtime/composables/index.js"
@@ -34,21 +30,9 @@
 			"types": "./dist/runtime/directives/index.d.ts",
 			"import": "./dist/runtime/directives/index.js"
 		},
-		"./directives/*": {
-			"types": "./dist/runtime/directives/*",
-			"import": "./dist/runtime/directives/*"
-		},
 		"./helpers": {
 			"types": "./dist/runtime/helpers/index.d.ts",
 			"import": "./dist/runtime/helpers/index.js"
-		},
-		"./helpers/*": {
-			"types": "./dist/runtime/helpers/*",
-			"import": "./dist/runtime/helpers/*"
-		},
-		"./build/*": {
-			"types": "./dist/runtime/build/*.d.ts",
-			"import": "./dist/runtime/build/*"
 		},
 		"./utils.css": "./src/runtime/assets/utils.css",
 		"./base.css": "./src/runtime/assets/base.css",
