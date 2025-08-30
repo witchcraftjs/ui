@@ -176,12 +176,11 @@ export default defineNuxtModule<ModuleOptions>({
 					tailwindcss() as any,
 					...config.plugins,
 				]
+				config.optimizeDeps ??= {}
+				config.optimizeDeps.exclude ??= []
+				config.optimizeDeps.exclude.push("~icons")
 			}
 		})
-		nuxt.options.vite ||= {}
-		nuxt.options.vite.optimizeDeps ??= {}
-		nuxt.options.vite.optimizeDeps.exclude ??= []
-		nuxt.options.vite.optimizeDeps.exclude.push("~icons")
 		const mainCssFile = await resolvePath(options.mainCssFile!, nuxt.options.alias)
 
 		const exists = fs.existsSync(mainCssFile)
