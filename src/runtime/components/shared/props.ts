@@ -1,4 +1,4 @@
-import { type PropType,useId } from "vue"
+import { useId } from "vue"
 
 import type { PopupPositioner, PopupPositionModifier } from "../../types"
 
