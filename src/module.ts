@@ -180,6 +180,10 @@ export default defineNuxtModule<ModuleOptions>({
 				]
 			}
 		})
+		nuxt.options.vite ||= {}
+		nuxt.options.vite.optimizeDeps ??= {}
+		nuxt.options.vite.optimizeDeps.exclude ??= []
+		nuxt.options.vite.optimizeDeps.exclude.push("~icons")
 		const mainCssFile = await resolvePath(options.mainCssFile!, nuxt.options.alias)
 
 		const exists = fs.existsSync(mainCssFile)
