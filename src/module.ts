@@ -14,7 +14,6 @@ import { defu } from "defu"
 import fs from "fs"
 import { themeAsTailwindCss } from "metamorphosis/tailwind"
 import IconsResolver from "unplugin-icons/resolver"
-import Icons from "unplugin-icons/vite"
 import ViteComponents from "unplugin-vue-components/vite"
 
 import { unpluginIconViteOptions } from "./runtime/build/unpluginIconViteOptions.js"
@@ -164,16 +163,15 @@ export default defineNuxtModule<ModuleOptions>({
 								// we must prepend or the custom style options don't work when the module is used
 								ViteComponents({
 									resolvers: [
-										IconsResolver({prefix:"i"}),
-										// we don't need our resolver since we use nuxt instead
+										IconsResolver({ prefix: "i" }),
 									],
 								}),
-								Icons({
-									compiler: "vue3",
-									...unpluginIconViteOptions,
-								}),
+								// Icons({
+								// 	compiler: "vue3",
+								// 	...unpluginIconViteOptions,
+								// }),
 							]
-							: []	
+							: []
 					),
 					tailwindcss() as any,
 					...config.plugins,
@@ -192,7 +190,7 @@ export default defineNuxtModule<ModuleOptions>({
 		}
 
 		// we need to hook in first before it does, otherwise the plugins don't load correctly
-		await installModule("unplugin-icons/nuxt")
+		await installModule("unplugin-icons/nuxt", unpluginIconViteOptions)
 		await installModule("reka-ui/nuxt")
 
 		// todo make names more specific
