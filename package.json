@@ -1,6 +1,6 @@
 {
 	"name": "@witchcraft/ui",
-	"version": "0.2.1-beta.2",
+	"version": "0.2.1-beta.3",
 	"description": "Vue component library.",
 	"type": "module",
 	"main": "./dist/runtime/main.lib.js",
