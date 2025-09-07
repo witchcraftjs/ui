@@ -1,5 +1,0 @@
-#!/usr/bin/env sh
-
-echo "Running pre-commit hook"
-
-npm run build && npm run lint # future && npm run test
