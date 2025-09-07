@@ -1,19 +1,17 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { Meta, StoryObj } from "@storybook/vue3"
 
-
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 const meta: Meta<{}> = {
 	title: "Other/Scrolling",
 	args: {
 
-	},
+	}
 }
 
 export default meta
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 type Story = StoryObj<{}>
-
 
 export const Scrollbars: Story = {
 	render: args => ({
@@ -37,8 +35,8 @@ export const Scrollbars: Story = {
 				<div class="h-[1000px] w-[1000px]"/>
 			</div>
 		</div>
-		`,
-	}),
+		`
+	})
 }
 
 export const TextareaResizer: Story = {
@@ -52,7 +50,6 @@ export const TextareaResizer: Story = {
 				min-h-[200px]
 				[resize:both]
 			" />
-		`,
-	}),
+		`
+	})
 }
-

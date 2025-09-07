@@ -55,12 +55,11 @@
 			dark:hover:shadow-accent-950/30
 			dark:active:shadow-fg/40
 			dark:active:border-neutral-900
-			dark:bg-neutral-800
 			dark:border-neutral-900
 			dark:disabled:border-neutral-800
 			dark:disabled:bg-neutral-900
 		`,
-		border && ( !color || color === `secondary` ) && `
+		border && (!color || color === `secondary`) && `
 			after:shadow-bg/90
 			hover:after:shadow-bg
 			dark:after:shadow-bg/20
@@ -164,14 +163,20 @@
 		...autoTitle,
 		...$attrs,
 		class: undefined,
-		...ariaLabel,
+		...ariaLabel
 	}"
 >
-	<slot name="label" v-bind="{id:`label-${id ?? fallbackId}`, classes:'button--label pointer-events-none flex flex-1 items-center justify-center gap-1'}">
-		<label :id="`label-${id ?? fallbackId}`" class="button--label pointer-events-none flex flex-1 items-center justify-center gap-1">
+	<slot
+		name="label"
+		v-bind="{ id: `label-${id ?? fallbackId}`, classes: 'button--label pointer-events-none flex flex-1 items-center justify-center gap-1' }"
+	>
+		<label
+			:id="`label-${id ?? fallbackId}`"
+			class="button--label pointer-events-none flex flex-1 items-center justify-center gap-1"
+		>
 			<slot name="icon"/>
 			<slot
-				v-bind="{ label}"
+				v-bind="{ label }"
 			>
 				<span v-if="label && !isBlank(label!)">
 					{{ label }}
@@ -185,18 +190,16 @@
 
 <script setup  lang="ts">
 import { isBlank } from "@alanscodelog/utils/isBlank"
-import { type ButtonHTMLAttributes,computed, useAttrs } from "vue"
+import { type ButtonHTMLAttributes, computed, useAttrs } from "vue"
 
 import { useAriaLabel } from "../../composables/useAriaLabel.js"
 import { twMerge } from "../../utils/twMerge.js"
-import { type BaseInteractiveProps, type ButtonProps,getFallbackId, type LabelProps, type LinkableByIdProps, type TailwindClassProp } from "../shared/props.js"
-
+import { type BaseInteractiveProps, type ButtonProps, getFallbackId, type LabelProps, type LinkableByIdProps, type TailwindClassProp } from "../shared/props.js"
 
 const $attrs = useAttrs()
 
-
 defineOptions({
-	name: "lib-button",
+	name: "LibButton"
 })
 
 const fallbackId = getFallbackId()
@@ -204,33 +207,32 @@ const fallbackId = getFallbackId()
 const props = withDefaults(defineProps<Props>(), {
 	color: false,
 	label: "",
-	unstyle: false, disabled: false, readonly: false, border: true,
+	unstyle: false, disabled: false, readonly: false, border: true
 })
-
 
 const ariaLabel = useAriaLabel(props, fallbackId)
 const autoTitle = computed(() => ({
 	title: props.autoTitleFromAria
 		? ($attrs["aria-label"] ?? props.label) as string
-		: undefined,
+		: undefined
 }))
-
 </script>
 
 <script lang="ts">
-type RealProps =
-	& LinkableByIdProps
-	& LabelProps
-	& BaseInteractiveProps
-	& ButtonProps
+type RealProps
+	= & LinkableByIdProps
+		& LabelProps
+		& BaseInteractiveProps
+		& ButtonProps
 
 interface Props
 	extends
 	/** @vue-ignore */
-	Partial<Omit<ButtonHTMLAttributes,"class" | "color" | "disabled">
+	Partial<Omit<ButtonHTMLAttributes, "class" | "color" | "disabled">
 	& TailwindClassProp
 	& {
 		// why is this not already a part of button?
+		// eslint-disable-next-line @typescript-eslint/naming-convention
 		"aria-label": string
 	}>,
 	RealProps {}

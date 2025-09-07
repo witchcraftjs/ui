@@ -3,7 +3,6 @@ import type { Directive } from "vue"
 import { globalResizeObserver } from "../globalResizeObserver.js"
 import type { ResizeCallback } from "../types/index.js"
 
-
 const observer = globalResizeObserver
 const lastCondition = Symbol("lastCondition")
 const checkCallback = (cb: any): void => {
@@ -35,7 +34,7 @@ export const vResizeObserver: Directive = {
 	},
 	getSSRProps() {
 		return {}
-	},
+	}
 }
 type Options = {
 	value: {

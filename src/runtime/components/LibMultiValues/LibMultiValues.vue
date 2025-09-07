@@ -18,7 +18,7 @@
 	:data-read-only="readonly"
 	:aria-label="`Values for ${label}`"
 	:tabindex="disabled ? -1 : 0"
-	v-bind="{...$.attrs, class:undefined}"
+	v-bind="{ ...$.attrs, class: undefined }"
 >
 	<div
 		:data-border="border"
@@ -82,22 +82,20 @@ import { copy } from "../../helpers/copy.js"
 import { twMerge } from "../../utils/twMerge.js"
 import Icon from "../Icon/Icon.vue"
 import LibButton from "../LibButton/LibButton.vue"
-import { type BaseInteractiveProps,type LabelProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
-
+import type { BaseInteractiveProps, LabelProps, TailwindClassProp, WrapperProps } from "../shared/props.js"
 
 defineOptions({
-	name: "lib-multi-values",
-	inheritAttrs: false,
+	name: "LibMultiValues",
+	inheritAttrs: false
 })
 
 const $ = useDivideAttrs(["item"] as const)
 const props = withDefaults(defineProps<Props>(), {
-	unstyle: false, disabled: false, readonly: false, border: true,
+	unstyle: false, disabled: false, readonly: false, border: true
 })
 
-
 const canEdit = computed(() => !props.disabled && !props.readonly)
-const $modelValue = defineModel<T[]>({ default: () => []})
+const $modelValue = defineModel<T[]>({ default: () => [] })
 
 const removeVal = (value: T) => {
 	if (!canEdit.value) return
@@ -106,22 +104,20 @@ const removeVal = (value: T) => {
 </script>
 
 <script lang="ts">
-type WrapperTypes = Partial<WrapperProps<"item",HTMLAttributes>>
+type WrapperTypes = Partial<WrapperProps<"item", HTMLAttributes>>
 
-type RealProps =
-	& LabelProps
-	& BaseInteractiveProps
-	& {
-		border?: boolean
-	}
+type RealProps
+	= & LabelProps
+		& BaseInteractiveProps
+		& {
+			border?: boolean
+		}
 interface Props
 	extends
 	/** @vue-ignore */
-	Partial<Omit<HTMLAttributes,"class"> & TailwindClassProp>,
+	Partial<Omit<HTMLAttributes, "class"> & TailwindClassProp>,
 	/** @vue-ignore */
 	WrapperTypes,
 	RealProps
 {}
-
 </script>
-

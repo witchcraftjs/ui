@@ -11,6 +11,5 @@ export const VueComponentsPlugin: Plugin = {
 	install(app: App) {
 		registerComponents(app, components)
 		registerDirectives(app, directives)
-	},
+	}
 }
-

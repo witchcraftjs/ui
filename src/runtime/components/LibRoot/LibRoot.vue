@@ -1,12 +1,13 @@
 <template>
-<div :id="id"
+<div
+	:id="id"
 	tabindex="-1"
 	:class="twMerge(
 		(showOutline ? 'group outlined outlined-visible' : '[&_*]:outline-hidden'),
 		darkMode && ' dark',
 		($attrs['wrapperAttrs'] as any)?.class
 	)"
-	v-bind="{ ...($attrs['wrapperAttrs']), attrs:undefined, class: undefined }"
+	v-bind="{ ...($attrs['wrapperAttrs']), attrs: undefined, class: undefined }"
 	:ref="handleRef"
 >
 	<!-- id root is useful for teleports, so they are at the topmost level where they can still be styled -->
@@ -14,7 +15,7 @@
 	<div
 		id="root"
 		v-bind="{ ...$attrs.attrs, class: undefined, wrapperAttrs: undefined }"
-		:class="twMerge( `
+		:class="twMerge(`
 			dark:bg-fg
 			dark:text-bg
 			bg-bg
@@ -31,9 +32,15 @@
 		`,
 			($attrs as any).attrs?.class)"
 	>
-		<TestControls v-if="testWrapperMode" :show-outline="showOutline"/>
-		<!-- @vue-expect-error data-allow-mismatch is for vue/nuxt to allow the hydration mismatch-->
-		<Notifications v-if="useNotifications && isClientSide" data-allow-mismatch/>
+		<TestControls
+			v-if="testWrapperMode"
+			:show-outline="showOutline"
+		/>
+		<!-- @vue-expect-error data-allow-mismatch is for vue/nuxt to allow the hydration mismatch -->
+		<Notifications
+			v-if="useNotifications && isClientSide"
+			data-allow-mismatch
+		/>
 		<slot/>
 	</div>
 </div>
@@ -41,7 +48,7 @@
 
 <script setup lang="ts">
 import { unreachable } from "@alanscodelog/utils/unreachable"
-import { type Theme } from "metamorphosis"
+import type { Theme } from "metamorphosis"
 import { type ComponentPublicInstance, computed, onBeforeUnmount, onMounted, ref, toRaw } from "vue"
 
 import { useAccesibilityOutline } from "../../composables/useAccesibilityOutline.js"
@@ -59,7 +66,7 @@ import TestControls from "../TestControls/TestControls.vue"
 
 const $attrs = useDivideAttrs(["wrapper"])
 
-defineOptions({ name: "root", inheritAttrs: false, suspensible: false })
+defineOptions({ name: "Root", inheritAttrs: false, suspensible: false })
 const props = withDefaults(defineProps<{
 	theme?: Theme
 	outline?: boolean
@@ -124,7 +131,7 @@ const darkMode = darkModeSetup.darkMode
 useShowDevOnlyKey()
 
 defineExpose({
-	darkMode: darkModeSetup,
+	darkMode: darkModeSetup
 })
 
 if (props.useBuiltinTranslations) {
@@ -132,9 +139,7 @@ if (props.useBuiltinTranslations) {
 	void useSetupI18n({
 		locale: languageLocale,
 		useBuiltinTranslations: true,
-		useDummyMessageSetWhileLoading: true,
+		useDummyMessageSetWhileLoading: true
 	})
 }
-
 </script>
-

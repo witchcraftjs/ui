@@ -5,7 +5,7 @@ import { computed, useAttrs } from "vue"
 import LibRangeDatePicker from "./LibRangeDatePicker.vue"
 import LibSingleDatePicker from "./LibSingleDatePicker.vue"
 
-import type { RangeDate,SingleDate } from "../../types/index.js"
+import type { RangeDate, SingleDate } from "../../types/index.js"
 import { getFallbackId } from "../shared/props.js"
 
 const attrs = useAttrs()
@@ -34,7 +34,6 @@ const fallbackId = getFallbackId()
  */
 const date = defineModel<SingleDate | RangeDate>({ required: true })
 const isRange = computed(() => date.value !== undefined && !(date.value instanceof Date))
-
 </script>
 
 <template>

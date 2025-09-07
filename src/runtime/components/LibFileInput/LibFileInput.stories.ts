@@ -4,21 +4,18 @@ import { ref } from "vue"
 
 import LibFileInput from "./LibFileInput.vue"
 
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
-
 
 const meta: Meta<typeof LibFileInput> = {
 	component: LibFileInput,
 	title: "Components/FileInput",
 	args: {
 
-	},
+	}
 }
 
 export default meta
 type Story = StoryObj<typeof LibFileInput>
-
 
 export const SingleFile: Story = {
 	render: args => ({
@@ -32,16 +29,16 @@ export const SingleFile: Story = {
 		},
 		template: `
 			<lib-file-input v-bind="{...args}" @errors="errorHandler"></lib-file-input>
-		`,
-	}),
+		`
+	})
 }
 
 export const MultipleFile: Story = {
 	...SingleFile,
 	args: {
 		...SingleFile.args,
-		multiple: true,
-	},
+		multiple: true
+	}
 }
 
 export const AnyFormat: Story = {
@@ -49,16 +46,16 @@ export const AnyFormat: Story = {
 	args: {
 		...SingleFile.args,
 		multiple: true,
-		formats: [],
-	},
+		formats: []
+	}
 }
 
 export const Compact: Story = {
 	...SingleFile,
 	args: {
 		...SingleFile.args,
-		compact: true,
-	},
+		compact: true
+	}
 }
 
 export const ErrorHandling: Story = {
@@ -68,12 +65,12 @@ export const ErrorHandling: Story = {
 			const errors = ref([])
 			const errorHandler = (e: any) => errors.value = e
 			return {
-				args, errors, errorHandler,
+				args, errors, errorHandler
 			}
 		},
 		template: `
 			<lib-debug :title="'Errors'">{{errors}}</lib-debug>
 			<lib-file-input v-bind="{...args}"  @errors="errorHandler"></lib-file-input>
-		`,
-	}),
+		`
+	})
 }

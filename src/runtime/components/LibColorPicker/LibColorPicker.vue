@@ -113,7 +113,8 @@
 		/>
 	</div>
 	<div class="color-picker--footer flex w-full flex-1 gap-2">
-		<div class=" color-picker--preview-wrapper
+		<div
+			class=" color-picker--preview-wrapper
 				bg-transparency-squares
 				relative
 				aspect-square
@@ -122,7 +123,8 @@
 				shadow-xs
 			"
 		>
-			<div class="
+			<div
+				class="
 					color-picker--footer--preview
 					size-full
 					rounded-full
@@ -143,7 +145,11 @@
 					@input="parseInput"
 					@blur="onBlurFixInvalidValue"
 				/>
-				<lib-button class="color-picker--copy-button" :aria-label="t('copy')" @click="copy(copyTransform?.(localColor.val, localColorString) ?? localColorString)">
+				<lib-button
+					class="color-picker--copy-button"
+					:aria-label="t('copy')"
+					@click="copy(copyTransform?.(localColor.val, localColorString) ?? localColorString)"
+				>
 					<icon><i-fa6-regular-copy/></icon>
 				</lib-button>
 			</slot>
@@ -171,11 +177,10 @@
 <script setup lang="ts">
 /* todo change to colorjsio for less dependencies */
 import { castType } from "@alanscodelog/utils/castType"
-import { clampNumber } from "@alanscodelog/utils/clampNumber"
 import { isArray } from "@alanscodelog/utils/isArray"
 import { unreachable } from "@alanscodelog/utils/unreachable"
 import Color from "colorjs.io"
-import { computed, onMounted, reactive, type Ref, ref, type UnwrapRef,useAttrs, watch } from "vue"
+import { computed, onMounted, reactive, type Ref, ref, type UnwrapRef, useAttrs, watch } from "vue"
 
 import { safeConvertToHsva } from "./utils/safeConvertToHsva.js"
 import { safeConvertToRgba } from "./utils/safeConvertToRgba.js"
@@ -187,14 +192,13 @@ import { useInjectedI18n } from "../../composables/useInjectedI18n.js"
 import { copy } from "../../helpers/copy.js"
 import type { HsvaColor, RgbaColor } from "../../types/index.js"
 import { twMerge } from "../../utils/twMerge.js"
-import aria from "../Aria/Aria.vue"
 import Icon from "../Icon/Icon.vue"
 import LibButton from "../LibButton/LibButton.vue"
 import LibSimpleInput from "../LibSimpleInput/LibSimpleInput.vue"
-import { getFallbackId, type LabelProps , type LinkableByIdProps } from "../shared/props.js"
+import { getFallbackId, type LabelProps, type LinkableByIdProps } from "../shared/props.js"
 
 defineOptions({
-	name: "lib-color-picker",
+	name: "LibColorPicker"
 })
 
 const $attrs = useAttrs()
@@ -231,36 +235,35 @@ const emits = defineEmits<{
 }>()
 
 const props = withDefaults(defineProps<
-LabelProps
-& LinkableByIdProps
-& {
-	allowAlpha?: boolean
-	/**
-	 * The precision of the rgba string representation of the color. Defaults to 3. Extra trailing zeros are removed for a prettier number.
-	 *
-	 * Does not affect the number saved unless the user manually edits the color.
-	 *
-	 * Ignored if `customRepresentation` is set.
-	 */
-	stringPrecision?: number
-	/** Allows overriding the string representation of the color. Useful for using a different representation than rgba (e.g. hex). The fromStringToHsva part is rarely needed as the colorjs.io library can normally parse the color. Returning undefined signals an error. */
-	customRepresentation?: {
-		fromHsvaToString: (hsva: HsvaColor, includeAlpha: boolean) => string
-		fromStringToHsva?: (string: string) => HsvaColor | undefined
-	}
-	border?: boolean
-	/** Modify what the user copies to the clipboard. */
-	copyTransform?: (val: HsvaColor, stringVal: string) => any
-	valid?: boolean
-}>(), {
+	LabelProps
+	& LinkableByIdProps
+	& {
+		allowAlpha?: boolean
+		/**
+		 * The precision of the rgba string representation of the color. Defaults to 3. Extra trailing zeros are removed for a prettier number.
+		 *
+		 * Does not affect the number saved unless the user manually edits the color.
+		 *
+		 * Ignored if `customRepresentation` is set.
+		 */
+		stringPrecision?: number
+		/** Allows overriding the string representation of the color. Useful for using a different representation than rgba (e.g. hex). The fromStringToHsva part is rarely needed as the colorjs.io library can normally parse the color. Returning undefined signals an error. */
+		customRepresentation?: {
+			fromHsvaToString: (hsva: HsvaColor, includeAlpha: boolean) => string
+			fromStringToHsva?: (string: string) => HsvaColor | undefined
+		}
+		border?: boolean
+		/** Modify what the user copies to the clipboard. */
+		copyTransform?: (val: HsvaColor, stringVal: string) => any
+		valid?: boolean
+	}>(), {
 	allowAlpha: true,
 	border: true,
 	stringPrecision: 3,
 	copyTransform: (_val: HsvaColor, stringVal: string) => stringVal,
 	customRepresentation: undefined,
-	valid: true,
+	valid: true
 })
-
 
 const ariaDescription = t("color-picker.aria.description")
 const fallbackId = getFallbackId()
@@ -284,31 +287,30 @@ const config: Config = {
 	hue: {
 		el: hueSliderEl as Ref<HTMLCanvasElement>,
 		xKey: "h",
-		xSteps: 360,
+		xSteps: 360
 	},
 	alpha: {
 		el: alphaSliderEl as Ref<HTMLCanvasElement>,
 		xSteps: 1,
-		xKey: "a",
+		xKey: "a"
 	},
 	all: {
 		el: pickerEl as Ref<HTMLCanvasElement>,
 		xSteps: 100,
 		ySteps: 100,
 		xKey: "s",
-		yKey: "v",
-	},
+		yKey: "v"
+	}
 }
 
 const localColor = reactive<Record<"percent" | "val", HsvaColor>>({
 	percent: {
-		h: 0, s: 0, v: 0, a: 0,
+		h: 0, s: 0, v: 0, a: 0
 	},
 	val: {
-		h: 0, s: 0, v: 0, a: 0,
-	},
+		h: 0, s: 0, v: 0, a: 0
+	}
 })
-
 
 const asRgba = computed(() => {
 	const rgba = safeConvertToRgba(localColor.val, props.allowAlpha)
@@ -347,7 +349,6 @@ function updatePicker(el: HTMLCanvasElement, hue: number): void {
 	gradientColor.addColorStop(0, `hsla(${hue} 100% 50% / 0)`)
 	gradientColor.addColorStop(1, `hsla(${hue} 100% 50% /1)`)
 
-
 	ctx.fillStyle = gradient
 	ctx.fillRect(0, 0, width, height)
 	ctx.fillStyle = gradientColor
@@ -374,7 +375,6 @@ function updateSlider(el: HTMLCanvasElement, stops: ((i: number) => string) | st
 	ctx.fillStyle = gradient
 	ctx.fillRect(0, 0, width, height)
 }
-
 
 function getVal(x: number, width: number, steps: number = 100, accuracy: number = 100, reverse = false): { val: number, percent: number } {
 	const percent = (x / width)
@@ -427,8 +427,8 @@ const slider = {
 				const { x, y, width, height } = e.target.getBoundingClientRect()
 				let xDiff = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0
 				let yDiff = e.key === "ArrowUp" ? -1 : e.key === "ArrowDown" ? 1 : 0
-				if (e.shiftKey) {xDiff *= 10}
-				if (e.shiftKey) {yDiff *= 10}
+				if (e.shiftKey) { xDiff *= 10 }
+				if (e.shiftKey) { yDiff *= 10 }
 				moveHandle({ clientX: x + (width / 2) + xDiff, clientY: y + (height / 2) + yDiff }, type)
 			}
 			if (e.key === "Enter") {
@@ -466,7 +466,7 @@ const slider = {
 		elDragging.value = ""
 		document.removeEventListener("pointermove", slider.pointermove)
 		document.removeEventListener("pointerup", slider.pointerup)
-	},
+	}
 }
 function updateSliders(_: HsvaColor): void {
 	if (alphaSliderEl.value) {
@@ -486,12 +486,12 @@ function updateValueAndPosition(_: HsvaColor): void {
 	localColor.percent.h = Math.round((_.h / 360) * 10000) / 100
 	localColor.percent.s = _.s
 	localColor.percent.v = 100 - _.v
-	localColor.percent.a =
-		props.allowAlpha
-		? _.a !== undefined
-			? _.a * 100
+	localColor.percent.a
+		= props.allowAlpha
+			? _.a !== undefined
+				? _.a * 100
+				: 1
 			: 1
-		: 1
 	localColor.val = { ..._, a: props.allowAlpha ? _.a : 1 }
 }
 
@@ -511,7 +511,6 @@ function save(): void {
 	emits("save", rgba)
 }
 
-
 function parseInput(e: Event): void {
 	const val = (e.target as HTMLInputElement)?.value
 	const converted = props.customRepresentation?.fromStringToHsva
@@ -522,7 +521,6 @@ function parseInput(e: Event): void {
 		updateValueAndPosition(converted)
 	}
 }
-
 
 let disableUpdateTempValue = false
 

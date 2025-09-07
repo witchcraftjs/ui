@@ -6,10 +6,9 @@ import { isBlank } from "@alanscodelog/utils/isBlank"
 import { pretty } from "@alanscodelog/utils/pretty"
 import { setReadOnly } from "@alanscodelog/utils/setReadOnly"
 
-
 export class NotificationHandler<
 	TRawEntry extends RawNotificationEntry<any, any> = RawNotificationEntry<any, any>,
-	TEntry extends NotificationEntry<TRawEntry> = NotificationEntry<TRawEntry>,
+	TEntry extends NotificationEntry<TRawEntry> = NotificationEntry<TRawEntry>
 > {
 	timeout: number = 5000
 
@@ -30,7 +29,7 @@ export class NotificationHandler<
 	constructor({
 		timeout,
 		stringifier,
-		maxHistory,
+		maxHistory
 	}: {
 		timeout?: NotificationHandler<TRawEntry>["timeout"]
 		stringifier?: NotificationHandler<TRawEntry>["stringifier"]
@@ -101,10 +100,9 @@ export class NotificationHandler<
 			timeout: rawEntry.timeout === true
 				? this.timeout
 				: rawEntry.timeout !== undefined && rawEntry.timeout !== false
-				? rawEntry.timeout
-				: undefined,
+					? rawEntry.timeout
+					: undefined
 		} as any as TEntry
-
 
 		if (rawEntry.cancellable === true || (rawEntry.cancellable === undefined && entry.options?.includes("Cancel"))) {
 			entry.cancellable = "Cancel" as any
@@ -120,8 +118,8 @@ export class NotificationHandler<
 
 	async notify<TNotifyEntry extends RawNotificationEntry<any, any>>(rawEntry: TNotifyEntry):
 	NotificationPromise<TNotifyEntry["options"][number] extends string
-			? TNotifyEntry["options"][number]
-			: "Ok" | "Cancel"> {
+		? TNotifyEntry["options"][number]
+		: "Ok" | "Cancel"> {
 		const entry = this._createEntry(rawEntry)
 		entry.promise = new Promise(_resolve => {
 			entry.resolve = _resolve
@@ -195,7 +193,7 @@ export type NotificationPromise<TOption extends string = string> = Promise<TOpti
 
 export type RawNotificationEntry<
 	TOptions extends string[] = ["Ok", "Cancel"],
-	TCancellable extends boolean | TOptions[number] = "Cancel",
+	TCancellable extends boolean | TOptions[number] = "Cancel"
 > = {
 	message: string
 	title?: string
@@ -215,7 +213,7 @@ export type RawNotificationEntry<
 }
 
 export type NotificationEntry<
-	TRawEntry extends RawNotificationEntry<any, any> = RawNotificationEntry<any, any>,
+	TRawEntry extends RawNotificationEntry<any, any> = RawNotificationEntry<any, any>
 > = Omit<MakeRequired<TRawEntry, "options" | "requiresAction" | "default" | "dangerous">, "cancellable"> & {
 	promise: NotificationPromise
 	resolve: AnyFunction
@@ -227,6 +225,4 @@ export type NotificationEntry<
 
 export type NotificationListener<TEntry extends NotificationEntry<any>> = (notification: TEntry, type: "added" | "resolved" | "deleted") => void
 
-
 export type NotificationStringifier<T extends NotificationEntry<any>> = (notification: T) => string
-

@@ -2,7 +2,6 @@ import { reactive, type Ref, ref } from "vue"
 
 import type { ScrollNearContainerEdgesOptions } from "../types/index.js"
 
-
 /**
  * Creates a function `scrollContainer` that allows scrolling a container manually when the coordinates are near it's edges.
  * Supports scrolling faster the closer one is to the edge, and configuing an inner and outer margin.
@@ -55,7 +54,7 @@ import type { ScrollNearContainerEdgesOptions } from "../types/index.js"
  * </div>
  * ```
  */
- 
+
 export const useScrollNearContainerEdges = ({
 	containerEl,
 	scrollMargin = 10,
@@ -63,16 +62,16 @@ export const useScrollNearContainerEdges = ({
 	fastPixelMultiplier = 4,
 	fastPixelAmount,
 	useTimer = true,
-	timerInterval = 1,
+	timerInterval = 1
 }: ScrollNearContainerEdgesOptions): {
-		scrollEdges: (clientX: number, clientY: number, overrideUseTimer?: boolean) => void
-		/** Reactive. */
-		scrollIndicator: { left: boolean, right: boolean, down: boolean, up: boolean }
-		resetScrollIndicator: () => void
-		clearScrollInterval: () => void
-		isScrolling: Ref<boolean>
-		endScroll: () => void
-	} => {
+	scrollEdges: (clientX: number, clientY: number, overrideUseTimer?: boolean) => void
+	/** Reactive. */
+	scrollIndicator: { left: boolean, right: boolean, down: boolean, up: boolean }
+	resetScrollIndicator: () => void
+	clearScrollInterval: () => void
+	isScrolling: Ref<boolean>
+	endScroll: () => void
+} => {
 	fastPixelMultiplier = fastPixelAmount !== undefined ? fastPixelAmount * 2 : fastPixelMultiplier
 	const scrollIndicator = reactive({ left: false, right: false, down: false, up: false })
 	const isScrolling = ref(false)
@@ -104,7 +103,7 @@ export const useScrollNearContainerEdges = ({
 		const el = containerEl.value
 		if (!el) return
 		const box = el.getBoundingClientRect()
-		
+
 		/*
 		     rightRightLimit│
 		                    │
@@ -199,7 +198,7 @@ export const useScrollNearContainerEdges = ({
 		resetScrollIndicator,
 		clearScrollInterval,
 		isScrolling,
-		endScroll,
+		endScroll
 		/* resetMove does not need to be returned since the user cannot call the timer interval manually and the scrollContainer function resets it before starting. */
 	}
 }

@@ -3,7 +3,6 @@ import type { Meta, StoryObj } from "@storybook/vue3"
 import { ref, watchEffect } from "vue"
 
 import { createRecorderHandler, createRecorderWatchEffect } from "../../helpers/storybook.js"
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
 /**
  * This is a special input component designed to record any type of event.
@@ -18,8 +17,8 @@ const meta: Meta<typeof components.LibRecorder> = {
 	args: {
 		label: "Some Label",
 		recordingTitle: "Recording. Press enter or click away to accept. Press escape to cancel.",
-		modelValue: "K E Y S",
-	},
+		modelValue: "K E Y S"
+	}
 }
 
 export default meta
@@ -41,7 +40,7 @@ export const Primary: Story = {
 				recorder,
 				recording,
 				recordingValue,
-				recorderEl,
+				recorderEl
 			}
 		},
 		template: `
@@ -54,28 +53,28 @@ export const Primary: Story = {
 				v-model="modelValue"
 				@recorder:click="recording = !recording"
 			/>
-		`,
-	}),
+		`
+	})
 }
 
 /** Should not be tabbable or recordable. */
 export const Disabled: Story = {
 	...Primary,
 	args: {
-		disabled: true,
-	},
+		disabled: true
+	}
 }
 /** *Should* be tabbable but not recordable. */
 export const Readonly: Story = {
 	...Primary,
 	args: {
-		readonly: true,
-	},
+		readonly: true
+	}
 }
 /** Height should not shrink. */
 export const EmptyInitialValue: Story = {
 	...Primary,
 	args: {
-		modelValue: "",
-	},
+		modelValue: ""
+	}
 }

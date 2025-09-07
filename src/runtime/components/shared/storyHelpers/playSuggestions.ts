@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { expect, userEvent, within } from "@storybook/test"
-
 
 export const playBasicSelect = async ({ canvasElement, args }: { canvasElement: HTMLElement, args: any }) => {
 	const canvas = within(canvasElement)
@@ -23,7 +21,7 @@ export const playBasicSelect = async ({ canvasElement, args }: { canvasElement: 
 		await expect(canvas.queryByRole("listbox")).toBeNull()
 	}
 	await userEvent.keyboard("{Backspace}")
-	await expect(canvas.queryByRole("option",{ selected: true })).toBeInTheDocument()
+	await expect(canvas.queryByRole("option", { selected: true })).toBeInTheDocument()
 	await userEvent.clear(input)
 	await userEvent.type(input, "unmatched")
 	if (!args.suggestionsFilter && !args.values) {
@@ -55,7 +53,7 @@ export const playBasicSelect = async ({ canvasElement, args }: { canvasElement: 
 	}
 }
 
-export const playBasicKeyboardSelect = async ({ canvasElement, args }: { canvasElement: HTMLElement , args: any }) => {
+export const playBasicKeyboardSelect = async ({ canvasElement, args }: { canvasElement: HTMLElement, args: any }) => {
 	const canvas = within(canvasElement)
 	const input = canvas.getByLabelText(args.label ?? "", { selector: "input" })
 	await userEvent.clear(input)
@@ -70,9 +68,8 @@ export const playBasicKeyboardSelect = async ({ canvasElement, args }: { canvasE
 	await userEvent.keyboard("{ArrowUp}")
 	await expect(canvas.queryByRole("option", {
 		name: args.values ? "C" : "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-		selected: true,
+		selected: true
 	})).toBeInTheDocument()
-	
 
 	// loops back to the first item
 	await userEvent.keyboard("{ArrowDown}")
@@ -82,12 +79,12 @@ export const playBasicKeyboardSelect = async ({ canvasElement, args }: { canvasE
 	await userEvent.keyboard("{PageDown}")
 	await expect(canvas.queryByRole("option", {
 		name: args.values ? "C" : "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-		selected: true,
+		selected: true
 	})).toBeInTheDocument()
 	// goes to first
 	await userEvent.keyboard("{PageUp}")
 	await expect(canvas.queryByRole("option", { name: "A", selected: true })).toBeInTheDocument()
-	
+
 	const testOpen = async (key: string) => {
 		await userEvent.keyboard("{Escape}")
 		if (!args.values) {
@@ -116,4 +113,3 @@ export const playBasicClickSelect = async ({ canvasElement, args }: { canvasElem
 	// 	await expect(canvas.getByTestId("values")).toHaveTextContent(/AB$/)
 	// }
 }
-

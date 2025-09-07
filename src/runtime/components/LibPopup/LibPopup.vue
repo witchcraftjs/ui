@@ -1,8 +1,9 @@
 <!-- Popover API WHEN :sob:
 	#awaiting https://developer.mozilla.org/en-US/docs/Web/API/Popover_API#browser_compatibility -->
 <template>
-<slot name="button"
-	:extract-el="(_:any)=> buttonEl = _"
+<slot
+	name="button"
+	:extract-el="(_:any) => buttonEl = _"
 />
 <!-- <Transition> -->
 <component
@@ -23,12 +24,13 @@
 		`,
 		$attrs.class as any
 	)"
-	v-bind="{...$attrs, class:undefined}"
+	v-bind="{ ...$attrs, class: undefined }"
 	:is="useDialogForBackdrop ? 'dialog' : 'div'"
 	ref="dialogEl"
 	@mousedown.self="handleMouseup"
 >
-	<div v-if="modelValue"
+	<div
+		v-if="modelValue"
 		:class="`popup z-100 fixed ${props.avoidRepositioning ? 'transition-[top,left]' : ''}`"
 		:style="`
 		top:${pos.y}px;
@@ -49,13 +51,13 @@
 
 <script setup lang="ts">
 // eslint-disable-next-line simple-import-sort/imports
-import { onMounted, nextTick, ref, useAttrs, watch , type HTMLAttributes } from "vue"
+import { onMounted, ref, useAttrs, watch, type HTMLAttributes } from "vue"
 import { getFallbackId, type LinkableByIdProps, type TailwindClassProp, type PopupProps } from "../shared/props.js"
 
 import { twMerge } from "../../utils/twMerge.js"
 import { castType } from "@alanscodelog/utils/castType"
 import { isArray } from "@alanscodelog/utils/isArray"
-import type { IPopupReference, PopupPosition, PopupPositioner, PopupPositionModifier, SimpleDOMRect } from "../../types/index.js"
+import type { IPopupReference, PopupPosition, SimpleDOMRect } from "../../types/index.js"
 
 const fallbackId = getFallbackId()
 const props = withDefaults(defineProps<Props>(), {
@@ -63,20 +65,19 @@ const props = withDefaults(defineProps<Props>(), {
 	useDialogForBackdrop: false,
 	// vue is getting confused when the prop type can also be a function
 	preferredHorizontal: () => ["center-most", "either"] satisfies Props["preferredHorizontal"],
-	preferredVertical: () => ["top", "bottom", "either"] satisfies Props["preferredVertical"] ,
+	preferredVertical: () => ["top", "bottom", "either"] satisfies Props["preferredVertical"],
 	avoidRepositioning: false,
-	canClose: true,
+	canClose: true
 })
 const $attrs = useAttrs()
 defineOptions({
-	name: "lib-popup",
+	name: "LibPopup",
 	inheritAttrs: false
 })
 
 const emit = defineEmits<{
 	(e: "close"): void
 }>()
-
 
 const dialogEl = ref<HTMLDialogElement | null>(null)
 const popupEl = ref<IPopupReference | null>(null)
@@ -86,7 +87,6 @@ const backgroundEl = ref<IPopupReference | null>(null)
 const pos = ref<PopupPosition>({} as any)
 const modelValue = defineModel<boolean>({ default: false })
 let isOpen = false
-
 
 /**
  * We don't have access to the dialog backdrop and without extra styling, it's of 0 width/height, positioned in the center of the screen, with margins taking up all the space.
@@ -101,19 +101,19 @@ const getDialogBoundingRect = (): SimpleDOMRect => ({
 	top: 0,
 	bottom: 0,
 	left: 0,
-	right: 0,
+	right: 0
 })
 let lastButtonElPos: SimpleDOMRect | undefined
 const recompute = (force: boolean = false): void => {
 	requestAnimationFrame(() => {
 		const horzHasCenterScreen = isArray(props.preferredHorizontal)
-		&& props.preferredHorizontal[0] === "center-screen"
+			&& props.preferredHorizontal[0] === "center-screen"
 		const vertHasCenterScreen = isArray(props.preferredVertical)
-		&& props.preferredVertical[0] === "center-screen"
-		
-		const canBePositionedWithoutButton =
-		(horzHasCenterScreen || typeof props.preferredHorizontal === "function")
-		&& (vertHasCenterScreen || typeof props.preferredVertical === "function")
+			&& props.preferredVertical[0] === "center-screen"
+
+		const canBePositionedWithoutButton
+			= (horzHasCenterScreen || typeof props.preferredHorizontal === "function")
+				&& (vertHasCenterScreen || typeof props.preferredVertical === "function")
 		if (!popupEl.value || !dialogEl.value || (!buttonEl.value && !canBePositionedWithoutButton)) {
 			pos.value = {} as any
 			return
@@ -127,7 +127,6 @@ const recompute = (force: boolean = false): void => {
 		const popup = popupEl.value.getBoundingClientRect()
 
 		let finalPos: { x: number, y: number, maxWidth?: number, maxHeight?: number } = {} as any
-
 
 		if (!force && modelValue.value && props.avoidRepositioning && buttonEl.value && lastButtonElPos) {
 			const shiftX = buttonEl.value.getBoundingClientRect().x - lastButtonElPos.x
@@ -149,7 +148,7 @@ const recompute = (force: boolean = false): void => {
 			topFromCenter: 0,
 			bottomFromCenter: 0,
 			top: 0,
-			bottom: 0,
+			bottom: 0
 		}
 		if (el) {
 			space.left = (el.x + el.width) - bg.x
@@ -169,7 +168,6 @@ const recompute = (force: boolean = false): void => {
 		if (typeof preferredHorizontal === "function") {
 			finalPos.x = preferredHorizontal(el, popup, bg, space)
 		} else {
-			/* eslint-disable no-labels */
 			outerloop:
 			for (const type of preferredHorizontal) {
 				switch (type) {
@@ -184,8 +182,8 @@ const recompute = (force: boolean = false): void => {
 					case "center-most":
 					case "center":
 						castType<DOMRect>(el)
-						if (space.leftFromCenter >= (popup.width / 2) &&
-						space.rightFromCenter >= (popup.width / 2)) {
+						if (space.leftFromCenter >= (popup.width / 2)
+							&& space.rightFromCenter >= (popup.width / 2)) {
 							finalPos.x = el.x + (el.width / 2) - (popup.width / 2)
 							break outerloop
 						}
@@ -216,7 +214,7 @@ const recompute = (force: boolean = false): void => {
 						} else {
 							finalPos.x = bg.x + bg.width - popup.width; break outerloop
 						}
-				
+
 					case "right":
 						castType<DOMRect>(el)
 						if (space.right >= popup.width) {
@@ -284,8 +282,8 @@ const recompute = (force: boolean = false): void => {
 					case "center-most":
 					case "center":
 						castType<DOMRect>(el)
-						if (space.topFromCenter >= (popup.height / 2) &&
-						space.bottomFromCenter >= (popup.height / 2)) {
+						if (space.topFromCenter >= (popup.height / 2)
+							&& space.bottomFromCenter >= (popup.height / 2)) {
 							finalPos.y = el.y + (el.height / 2) - (popup.height / 2)
 							break outerloop
 						}
@@ -313,7 +311,7 @@ const recompute = (force: boolean = false): void => {
 		}
 		finalPos.maxWidth = maxWidth ?? undefined
 		finalPos.maxHeight = maxHeight ?? undefined
-		/* eslint-enable no-labels */
+
 		if (props.modifyPosition) {
 			finalPos = props.modifyPosition(finalPos, el, popup, bg, space)
 		}
@@ -369,7 +367,6 @@ watch([modelValue, popupEl], () => {
 	}
 })
 
-
 const handleMouseup = ($event: MouseEvent) => {
 	$event.preventDefault()
 	toggle()
@@ -385,20 +382,19 @@ defineExpose({
 	},
 	setBackground: (el: IPopupReference | null) => {
 		backgroundEl.value = el
-	},
+	}
 
 })
-
 </script>
-<script lang="ts">
 
-type RealProps =
-& LinkableByIdProps
-& PopupProps
+<script lang="ts">
+type RealProps
+	= & LinkableByIdProps
+		& PopupProps
 
 interface Props
 	extends
 	/** @vue-ignore */
-	Partial<Omit<HTMLAttributes,"class"> & TailwindClassProp>,
+	Partial<Omit<HTMLAttributes, "class"> & TailwindClassProp>,
 	RealProps { }
 </script>

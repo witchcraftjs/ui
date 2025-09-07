@@ -13,7 +13,7 @@ export function notifyIfError<T>(
 	err: T, {
 		logger,
 		ns,
-		force = false,
+		force = false
 	}: {
 		logger?: { debug: (...args: any[]) => void }
 		/* Logger namespace. */
@@ -24,7 +24,7 @@ export function notifyIfError<T>(
 	if (force || err instanceof Error) {
 		const errMessage = {
 			message: err instanceof Error ? err.message : `Unknown error ${err as any}`,
-			code: err instanceof TypedError ? err.code : undefined,
+			code: err instanceof TypedError ? err.code : undefined
 		}
 		if (logger) {
 			logger.debug({

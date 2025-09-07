@@ -1,5 +1,5 @@
 import type { ErrorW } from "@alanscodelog/utils"
-import { type Ref } from "vue"
+import type { Ref } from "vue"
 
 export type ResizableOptions = {
 	/**
@@ -51,7 +51,6 @@ export type ResizeCallback = (_rect: DOMRectReadOnly, el: Element) => void
 
 export type FileInputError = ErrorW<{ file: File, isValidMimeType: boolean, isValidExtension: boolean }>
 
-
 /** h 0-360+ (deg), s 0-100%, v 0-100%, a 0-1 */
 export type HsvaColor = { h: number, s: number, v: number, a?: number }
 /** rgb 0-255, 0-1 for alpha */
@@ -60,7 +59,7 @@ export type RgbaColor = { r: number, g: number, b: number, a?: number }
 export type Point = { x: number, y: number }
 
 export type ScrollNearContainerEdgesOptions = {
-	containerEl: Ref< HTMLElement | null>
+	containerEl: Ref<HTMLElement | null>
 	/** Margin inside contianer that allows scrolling. 10 by default. */
 	scrollMargin?: number
 	/** Margin around container that still allows scrolling. 0 by defualt. */
@@ -80,7 +79,7 @@ export type ScrollNearContainerEdgesOptions = {
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export type SimpleDOMRect = Omit<DOMRect, "toJSON">
- 
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export interface IPopupReference { getBoundingClientRect: () => SimpleDOMRect }
 export type PopupPosition = { x: number, y: number, maxWidth?: number, maxHeight?: number }

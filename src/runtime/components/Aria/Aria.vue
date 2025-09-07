@@ -1,14 +1,13 @@
 <template>
-<div tabindex="0">{{ value }}</div>
+<div tabindex="0">
+	{{ value }}
+</div>
 </template>
 
 <script  setup lang="ts">
-import type { PropType } from "vue"
-
-
-defineOptions({ name: "aria" })
+defineOptions({ name: "Aria" })
 defineProps<{
-	// eslint-disable-next-line vue/no-restricted-props
+
 	value: string
 }>()
 </script>

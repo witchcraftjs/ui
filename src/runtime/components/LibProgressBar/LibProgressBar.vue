@@ -1,6 +1,7 @@
 <template>
 <Transition>
-	<div v-if="!hide"
+	<div
+		v-if="!hide"
 		:id="id ?? fallbackId"
 		:class="twMerge(`
 			progress-bar
@@ -35,7 +36,7 @@
 			before:transition-all
 			before:z-1
 			before:duration-500
-		`,psuedoHide && `
+		`, psuedoHide && `
 			after:opacity-0
 			before:opacity-0
 		`, ($attrs as any).class)"
@@ -45,14 +46,15 @@
 		:aria-valuenow="clampVal(progress, clamp[0] ?? 0, clamp[1] ?? 100)"
 		:aria-valuemin="clamp[0] ?? 0"
 		:aria-valuemax="clamp[1] ?? 100"
-		v-bind="{...$attrs, class:undefined}"
+		v-bind="{ ...$attrs, class: undefined }"
 		:style="`--progress: ${clampVal(progress, clamp[0] ?? 0, clamp[1] ?? 100)}%;`"
 	>
 		<div class="procgress-bar--label-wrapper relative flex-1">
 			<span class="before:content-vertical-holder"/>
 			<Transition>
 				<slot>
-					<label v-if="!psuedoHide"
+					<label
+						v-if="!psuedoHide"
 						:for="id"
 						class="
 							text-bg
@@ -93,25 +95,26 @@
 	</div>
 </Transition>
 </template>
+
 <script setup  lang="ts">
-import { type HTMLAttributes,type PropType, ref, watch } from "vue"
+import { type HTMLAttributes, ref, watch } from "vue"
 
 import { twMerge } from "../../utils/twMerge.js"
-import { type BaseInteractiveProps,getFallbackId,type LabelProps, type LinkableByIdProps, type TailwindClassProp } from "../shared/props.js"
+import { type BaseInteractiveProps, getFallbackId, type LabelProps, type LinkableByIdProps, type TailwindClassProp } from "../shared/props.js"
 
 // TODO move to utils
 const clampVal = (n: number, min: number, max: number) => Math.min(Math.max(n, min), max)
 
 defineOptions({
-	name: "lib-progress-bar",
-	inheritAttrs: false,
+	name: "LibProgressBar",
+	inheritAttrs: false
 })
 const fallbackId = getFallbackId()
 const props = withDefaults(defineProps<Props>(), {
 	autohideOnComplete: -1,
 	keepSpaceWhenHidden: false,
 	clamp: () => [0, 100],
-	unstyle: false, disabled: false, readonly: false, border: true,
+	unstyle: false, disabled: false, readonly: false, border: true
 })
 const hide = ref<boolean>(false)
 const psuedoHide = ref<boolean>(false)
@@ -130,7 +133,7 @@ if (props.autohideOnComplete > -1 && (props.progress >= 100 || props.progress < 
 watch([
 	() => props.progress,
 	() => props.keepSpaceWhenHidden,
-	() => props.autohideOnComplete,
+	() => props.autohideOnComplete
 ], () => {
 	if (props.autohideOnComplete > -1 && (props.progress >= 100 || props.progress < 0)) {
 		if (props.keepSpaceWhenHidden) {
@@ -158,36 +161,34 @@ watch([
 		psuedoHide.value = false
 	}
 }, { immediate: false })
-
 </script>
-<script lang="ts">
 
-type RealProps =
-& LinkableByIdProps
-& BaseInteractiveProps
-& LabelProps
-& {
-	progress: number
-	/** Will auto hide after this given time if progress is 100% or more or less than 0% until progress is set to something else. Disabled (-1) by default. */
-	autohideOnComplete?: number
-	/**
-		* Do not actually hide the element, just leave an unstyled div,
-		* so the whole layout doesn't change on completion when autohideOnComplete is set.
-		*/
-	keepSpaceWhenHidden?: boolean
-	/**
-		* By default the progress bar is visually clamped to 0-100, even if the value might be something else.
-		* You can change what it's clamped to here, to for example,
-		* show at least a small sliver of the progress bar when it's still 0.
-		*/
-	clamp?: [start:number, end:number]
-}
+<script lang="ts">
+type RealProps
+	= & LinkableByIdProps
+		& BaseInteractiveProps
+		& LabelProps
+		& {
+			progress: number
+			/** Will auto hide after this given time if progress is 100% or more or less than 0% until progress is set to something else. Disabled (-1) by default. */
+			autohideOnComplete?: number
+			/**
+			 * Do not actually hide the element, just leave an unstyled div,
+			 * so the whole layout doesn't change on completion when autohideOnComplete is set.
+			 */
+			keepSpaceWhenHidden?: boolean
+			/**
+			 * By default the progress bar is visually clamped to 0-100, even if the value might be something else.
+			 * You can change what it's clamped to here, to for example,
+			 * show at least a small sliver of the progress bar when it's still 0.
+			 */
+			clamp?: [start: number, end: number]
+		}
 
 interface Props
 	extends
 	/** @vue-ignore */
-	Partial<Omit<HTMLAttributes,"class"> & TailwindClassProp>,
+	Partial<Omit<HTMLAttributes, "class"> & TailwindClassProp>,
 	RealProps
 { }
-
 </script>

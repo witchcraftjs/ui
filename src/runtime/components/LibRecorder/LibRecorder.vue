@@ -28,15 +28,15 @@
 			dark:bg-neutral-950
 			border-neutral-400
 			dark:border-neutral-600
-		`
-		, ($attrs as any).class)"
+		`,
+		($attrs as any).class)"
 	:aria-disabled="disabled"
 	:aria-readonly="readonly"
 	:tabindex="disabled ? -1 : 0"
 	:title="recording ? recordingTitle : tempValue"
 	contenteditable="false"
 	ref="recorderEl"
-	v-bind="{...ariaLabel, ...$attrs, class:undefined}"
+	v-bind="{ ...ariaLabel, ...$attrs, class: undefined }"
 	@blur="handleBlurRecorder($event)"
 	@click="handleClickRecorder($event)"
 	@keydown.space.prevent="handleClickRecorder($event, true)"
@@ -69,18 +69,19 @@
 	</div>
 </div>
 </template>
+
 <script setup lang="ts">
 import { keys } from "@alanscodelog/utils/keys"
-import { computed, type HTMLAttributes ,onBeforeUnmount, onMounted, type PropType, ref, watch, watchPostEffect } from "vue"
+import { computed, type HTMLAttributes, onBeforeUnmount, onMounted, ref, watch, watchPostEffect } from "vue"
 
 import { useAriaLabel } from "../../composables/useAriaLabel.js"
 import { useInjectedI18n } from "../../composables/useInjectedI18n.js"
 import { twMerge } from "../../utils/twMerge.js"
-import { type BaseInteractiveProps, getFallbackId, type LabelProps, type LinkableByIdProps,type TailwindClassProp } from "../shared/props.js"
+import { type BaseInteractiveProps, getFallbackId, type LabelProps, type LinkableByIdProps, type TailwindClassProp } from "../shared/props.js"
 
 defineOptions({
-	name: "lib-recorder",
-	inheritAttrs: false,
+	name: "LibRecorder",
+	inheritAttrs: false
 })
 const t = useInjectedI18n()
 
@@ -98,7 +99,7 @@ const props = withDefaults(defineProps<Props>(), {
 	id: undefined,
 	binders: undefined,
 	recorder: undefined,
-	unstyle: false, disabled: false, readonly: false, border: true,
+	unstyle: false, disabled: false, readonly: false, border: true
 })
 /**
  * Puts the element into recording mode if true. See {@link props.recorder}.
@@ -107,7 +108,6 @@ const recording = defineModel<boolean>("recording", { required: false, default: 
 
 /** The final value of the recorder. For intermediate values while recording, pass a recorder and set an appropriate recording value. */
 const modelValue = defineModel<string>({ required: true })
-
 
 const recorderEl = ref<HTMLInputElement | null>(null)
 const recorderIndicatorEl = ref<HTMLElement | null>(null)
@@ -206,37 +206,37 @@ const handleClickRecorder = (e: MouseEvent | KeyboardEvent, isSpaceKey: boolean 
 		emits("recorder:click", { event: e as MouseEvent, indicator: recorderIndicatorEl.value! as HTMLElement, input: recorderEl.value! as HTMLInputElement })
 	}
 }
-
 </script>
+
 <script lang="ts">
-type RealProps =
-& LinkableByIdProps
-& BaseInteractiveProps
-& LabelProps
-& {
-	border?: boolean
-	/** A value to display while recording, if none given the i18n `recorder.recording` key is used. */
-	recordingValue?: string
-	/** A title to display on the input div while recording. Is also used as the aria-description. */
-	recordingTitle?: string
-	/**
-	 * The recorder object is a series of event listeners to attach to the input div while recording is started. If you need to bind directly to the element, see the `binders` prop.
-	 *
-	 * The listeners are then unbound when recording is set to false again.
-	 *
-	 * Note that the component does not handle the setting of `recording` (unless the component is disabled), `modelValue`,  or `recordingValue` at all and has no mechanism for cancelling a recording. It is left to the recorder listeners and any `recorder:*` handlers to determine what to do.
-	 */
-	recorder?: undefined | Record<string, any>
-	/** This provides a way to manually attach/remove event listeners to/from the element. It is an alternative to the `recorder` prop, see it for more details. Both cannot be specified at the same time.*/
-	binders?: undefined | { bind: (el: HTMLElement) => void, unbind: (el: HTMLElement) => void }
-	/** The id of the element. If not provided, the id will be generated automatically. */
-	id?: string
-}
+type RealProps
+	= & LinkableByIdProps
+		& BaseInteractiveProps
+		& LabelProps
+		& {
+			border?: boolean
+			/** A value to display while recording, if none given the i18n `recorder.recording` key is used. */
+			recordingValue?: string
+			/** A title to display on the input div while recording. Is also used as the aria-description. */
+			recordingTitle?: string
+			/**
+			 * The recorder object is a series of event listeners to attach to the input div while recording is started. If you need to bind directly to the element, see the `binders` prop.
+			 *
+			 * The listeners are then unbound when recording is set to false again.
+			 *
+			 * Note that the component does not handle the setting of `recording` (unless the component is disabled), `modelValue`,  or `recordingValue` at all and has no mechanism for cancelling a recording. It is left to the recorder listeners and any `recorder:*` handlers to determine what to do.
+			 */
+			recorder?: undefined | Record<string, any>
+			/** This provides a way to manually attach/remove event listeners to/from the element. It is an alternative to the `recorder` prop, see it for more details. Both cannot be specified at the same time. */
+			binders?: undefined | { bind: (el: HTMLElement) => void, unbind: (el: HTMLElement) => void }
+			/** The id of the element. If not provided, the id will be generated automatically. */
+			id?: string
+		}
 
 interface Props
 	extends
 	/** @vue-ignore */
-	Partial<Omit<HTMLAttributes,"class"> & TailwindClassProp>,
+	Partial<Omit<HTMLAttributes, "class"> & TailwindClassProp>,
 	RealProps
 { }
 </script>

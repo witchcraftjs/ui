@@ -3,11 +3,10 @@ import {
 	provide,
 	type Ref,
 	ref,
-	watch,
+	watch
 } from "vue"
 
 import { defaultTranslationFunction } from "../helpers/defaultTranslationFunction.js"
-
 
 export type TranslationFunction = (key: string, replacements?: Record<string, any>) => string
 
@@ -19,16 +18,15 @@ const loaded: Record<string, any> = {}
 const dummyLibraryMessages = new Proxy({}, {
 	get() {
 		return "..."
-	},
+	}
 })
 const dummyMessageSet = new Proxy({}, {
 	get(_, key: string) {
 		if (key === "witchcraft-ui") {
 			return dummyLibraryMessages
 		} else return undefined
-	},
+	}
 })
-
 
 /**
  * A composable for providing a translation function + messages for the library. Note the Root component already takes care of setting this up with defaults, disable it via it's `useBuiltinTranslations` option.
@@ -43,7 +41,7 @@ export async function useSetupI18n({
 	locale,
 	useBuiltinTranslations = false,
 	useDummyMessageSetWhileLoading = true,
-	translationFunction = defaultTranslationFunction,
+	translationFunction = defaultTranslationFunction
 }: {
 	locale: Ref<string>
 	/** Will asynchronously load the built-in translations for the current locale (watching and updating if needed). If you don't use this, you'll need to provide a custom translation function. */
@@ -80,4 +78,3 @@ export async function useSetupI18n({
 
 export const i18nInjectionKey = _i18nInjectionKey
 export const translationMessagesInjectionKey = _translationMessagesInjectionKey
-

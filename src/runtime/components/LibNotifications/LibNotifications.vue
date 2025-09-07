@@ -1,5 +1,6 @@
 <template>
-<TransitionGroup name="list"
+<TransitionGroup
+	name="list"
 	tag="div"
 	:class="twMerge(`notifications
 			absolute
@@ -13,7 +14,8 @@
 		`, ($attrs as any).class)"
 	v-bind="{ ...$attrs, class: undefined }"
 >
-	<lib-notification class="pointer-events-auto"
+	<lib-notification
+		class="pointer-events-auto"
 		:handler="handler"
 		tabindex="0"
 		:notification="notification"
@@ -28,7 +30,8 @@
 	/>
 </Transition>
 <Transition>
-	<dialog v-show="topNotifications.length > 0"
+	<dialog
+		v-show="topNotifications.length > 0"
 		:id="id"
 		:class="twMerge(`notifications-modal
 			bg-transparent
@@ -40,7 +43,8 @@
 		@click.self.prevent="topNotifications[0] && NotificationHandler.dismiss(topNotifications[0])"
 	>
 		<form>
-			<lib-notification v-if="topNotifications.length > 0 && topNotifications[0]"
+			<lib-notification
+				v-if="topNotifications.length > 0 && topNotifications[0]"
 				:handler="handler"
 				class="top-notification"
 				:notification="topNotifications[0]"
@@ -50,9 +54,10 @@
 	</dialog>
 </Transition>
 </template>
+
 <script setup lang="ts">
 import { removeIfIn } from "@alanscodelog/utils/removeIfIn"
-import { type HTMLAttributes,nextTick, onBeforeUnmount, ref,shallowReactive, Transition, TransitionGroup } from "vue"
+import { type HTMLAttributes, nextTick, onBeforeUnmount, ref, shallowReactive } from "vue"
 
 import LibNotification from "./LibNotification.vue"
 
@@ -62,10 +67,9 @@ import { twMerge } from "../../utils/twMerge.js"
 import type { LinkableByIdProps, TailwindClassProp } from "../shared/props.js"
 
 defineOptions({
-	name: "lib-notifications",
-	inheritAttrs: false,
+	name: "LibNotifications",
+	inheritAttrs: false
 })
-
 
 const props = defineProps<Props>()
 
@@ -121,21 +125,20 @@ for (const entry of handler.queue) { addNotification(entry) }
 onBeforeUnmount(() => {
 	handler.removeNotificationListener(notificationListener)
 })
-
 </script>
-<script lang="ts">
 
-type RealProps =
-& LinkableByIdProps
-& {
-	/** If not provided, uses the global handler (this requires useNotificationHandler be called and configured). */
-	handler?: NotificationHandler
-}
+<script lang="ts">
+type RealProps
+	= & LinkableByIdProps
+		& {
+			/** If not provided, uses the global handler (this requires useNotificationHandler be called and configured). */
+			handler?: NotificationHandler
+		}
 
 interface Props
 	extends
 	/** @vue-ignore */
-	Partial<Omit<HTMLAttributes,"class"> & TailwindClassProp>,
+	Partial<Omit<HTMLAttributes, "class"> & TailwindClassProp>,
 	RealProps
 {}
 </script>

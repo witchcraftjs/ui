@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { CalendarDate, type DateValue, getLocalTimeZone, ZonedDateTime } from "@internationalized/date"
+import type { CalendarDate, DateValue, ZonedDateTime } from "@internationalized/date"
+import { getLocalTimeZone } from "@internationalized/date"
 import type { DateRange } from "reka-ui"
-import { DateRangePickerArrow, DateRangePickerCalendar, DateRangePickerCell, DateRangePickerCellTrigger, DateRangePickerContent, DateRangePickerField, DateRangePickerGrid, DateRangePickerGridBody, DateRangePickerGridHead, DateRangePickerGridRow, DateRangePickerHeadCell,DateRangePickerHeader, DateRangePickerHeading, DateRangePickerInput, DateRangePickerNext, DateRangePickerPrev, DateRangePickerRoot, DateRangePickerTrigger } from "reka-ui"
+import { DateRangePickerArrow, DateRangePickerCalendar, DateRangePickerCell, DateRangePickerCellTrigger, DateRangePickerContent, DateRangePickerField, DateRangePickerGrid, DateRangePickerGridBody, DateRangePickerGridHead, DateRangePickerGridRow, DateRangePickerHeadCell, DateRangePickerHeader, DateRangePickerHeading, DateRangePickerInput, DateRangePickerNext, DateRangePickerPrev, DateRangePickerRoot, DateRangePickerTrigger } from "reka-ui"
 import { onBeforeUnmount, ref, toRaw, useAttrs, watch } from "vue"
 
-import { convertDateWithFallback, getNow,toEmittableDate } from "./helpers.js"
+import { convertDateWithFallback, getNow, toEmittableDate } from "./helpers.js"
 
 import IRadixIconsCalendar from "~icons/radix-icons/calendar"
 import IRadixIconsChevronLeft from "~icons/radix-icons/chevron-left"
@@ -16,6 +17,7 @@ import { useInjectedLocale } from "../../composables/useInjectedLocale.js"
 import type { RangeDate } from "../../types/index.js"
 import { twMerge } from "../../utils/twMerge.js"
 import Icon from "../Icon/Icon.vue"
+
 const attrs = useAttrs()
 
 const props = withDefaults(defineProps<{
@@ -32,7 +34,6 @@ const props = withDefaults(defineProps<{
 })
 
 const date = defineModel<RangeDate>({ required: true })
-
 
 let justSet = false
 
@@ -71,7 +72,6 @@ watch(() => props.timeZone, () => {
 	updateTempDate()
 })
 
-
 const interval = setInterval(() => {
 	// update suggested date if none is set
 	if (!date.value.start) updateTempDate(["start"])
@@ -83,8 +83,6 @@ onBeforeUnmount(() => {
 })
 
 const locale = useInjectedLocale().timeLocale
-
-
 </script>
 
 <template>
@@ -106,7 +104,8 @@ const locale = useInjectedLocale().timeLocale
 		`, (attrs as any).class)"
 	>
 		<div class="date-range-picker--segments-input flex items-center flex-1 overflow-scroll scrollbar-hidden whitespace-nowrap">
-			<div :class="twMerge(`
+			<div
+				:class="twMerge(`
 				date-range-picker--start-segment
 				flex
 				items-center
@@ -153,7 +152,8 @@ const locale = useInjectedLocale().timeLocale
 			<div class="date-range-picker--range-separator text-center px-1">
 				–
 			</div>
-			<div :class="twMerge(`
+			<div
+				:class="twMerge(`
 				date-range-picker--end-segment
 				flex
 				items-center
@@ -219,7 +219,7 @@ const locale = useInjectedLocale().timeLocale
 	</DateRangePickerField>
 
 	<!-- side=bottom makes months easier to click through -->
-	<!-- @vue-expect-error to exists-->
+	<!-- @vue-expect-error to exists -->
 	<DateRangePickerContent
 		:side-offset="4"
 		:avoid-collisions="true"
@@ -343,7 +343,8 @@ const locale = useInjectedLocale().timeLocale
 					:key="month.value.toString()"
 				>
 					<DateRangePickerGridHead class="date-range-picker--grid-head">
-						<DateRangePickerGridRow class="
+						<DateRangePickerGridRow
+							class="
 							date-range-picker--grid-row
 							mb-1
 							flex
@@ -430,7 +431,7 @@ const locale = useInjectedLocale().timeLocale
 					</DateRangePickerGridBody>
 				</DateRangePickerGrid>
 			</div>
-			<slot v-bind="{tempValue: tempDate}"/>
+			<slot v-bind="{ tempValue: tempDate }"/>
 		</DateRangePickerCalendar>
 	</DateRangePickerContent>
 </DateRangePickerRoot>

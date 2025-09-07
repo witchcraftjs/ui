@@ -2,7 +2,6 @@ import { type Ref, ref } from "vue"
 
 import type { Point } from "../types/index.js"
 
-
 /**
  * A composable for dragging items only after a certain threshold of movement has been reached.
  *
@@ -58,12 +57,12 @@ import type { Point } from "../types/index.js"
 export const useDragWithThreshold = ({
 	initialOffset = ref({ x: 0, y: 0 }),
 	pointerCoords = ref({ x: 0, y: 0 }),
-	threshold = ref(10),
+	threshold = ref(10)
 }: {
 	initialOffset?: Ref<Point | undefined>
 	pointerCoords?: Ref<Point | undefined>
 	threshold?: Ref<number>
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+
 } = {}) => {
 	const passedDragThreshold = ref(false)
 	function getDistance(p1: Point, p2: Point): number {
@@ -80,9 +79,9 @@ export const useDragWithThreshold = ({
 	function checkDragThreshold(e: PointerEvent): void {
 		pointerCoords.value = getEventCoords(e)
 		// don't allow it to be reset to false
-		passedDragThreshold.value ||=
-		initialOffset.value !== undefined &&
-			getDistance(initialOffset.value, pointerCoords.value) >= threshold.value
+		passedDragThreshold.value
+			||= initialOffset.value !== undefined
+				&& getDistance(initialOffset.value, pointerCoords.value) >= threshold.value
 	}
 	function startDragThresholdCheck(e: PointerEvent): void {
 		passedDragThreshold.value = false
@@ -102,7 +101,6 @@ export const useDragWithThreshold = ({
 		getEventCoords,
 		checkDragThreshold,
 		startDragThresholdCheck,
-		endDragThresholdCheck,
+		endDragThresholdCheck
 	}
 }
-

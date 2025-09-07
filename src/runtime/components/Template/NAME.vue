@@ -8,32 +8,32 @@
 	<slot/>
 </div>
 </template>
+
 <script setup  lang="ts">
- 
+// remove when copying
+// @ts-nocheck this is a templatek
+/* eslint-disable */
+
 import { type HTMLAttributes, ref } from "vue"
 
 import { twMerge } from "../../utils/twMerge.js"
-import { type TailwindClassProp } from "../shared/props.js"
-
+import type { TailwindClassProp } from "../shared/props.js"
 
 defineOptions({
-	name: "lib-name", /* todo */
-	inheritAttrs: false,
+	name: "LibName", /* todo */
+	inheritAttrs: false
 })
-
 
 // const props = defineProps<{}>({ })
 
 const el = ref<null | HTMLElement>(null)
 
 const modelValue = defineModel<string>({ required: true })
-
-
 </script>
 
 <script lang="ts">
 export default {
-	name: "lib-name",
+	name: "LibName"
 }
 
 type RealProps = {
@@ -43,7 +43,7 @@ interface Props
 	extends
 	/** @vue-ignore */
 	Partial<Omit<HTMLAttributes, "class">
-		& TailwindClassProp
-		& RealProps
+	& TailwindClassProp
+	& RealProps
 	> { }
 </script>

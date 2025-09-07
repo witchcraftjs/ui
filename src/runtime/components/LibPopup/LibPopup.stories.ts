@@ -5,21 +5,18 @@ import { computed, ref, watch } from "vue"
 import LibPopup from "./LibPopup.vue"
 
 import { vExtractRootEl } from "../../directives/vExtractRootEl.js"
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
-
 
 const meta: Meta<typeof LibPopup> = {
 	component: LibPopup,
 	title: "Components/Popup",
 	args: {
 
-	},
+	}
 }
 
 export default meta
 type Story = StoryObj<typeof LibPopup>
-
 
 export const Primary: Story = {
 	render: args => ({
@@ -51,13 +48,12 @@ export const Primary: Story = {
 				}
 			})
 
-
 			return {
 				args,
 				buttonPos,
 				autoRotatePos,
 				buttonStyle,
-				value,
+				value
 			}
 		},
 		template: `
@@ -91,22 +87,22 @@ export const Primary: Story = {
 				</template>
 			</lib-popup>
 			</div>
-			`,
-	}),
+			`
+	})
 }
 export const PopupNoShift = {
 	...Primary,
 	args: {
-		avoidRepositioning: true,
-		
+		avoidRepositioning: true
+
 	}
 }
 /** When the popup is too wide, it's positioned to the left and overflow scroll is set with an invisible scrollbar. */
 export const PopupTooBig = {
 	...Primary,
 	args: {
-		width: "110vw",
-	},
+		width: "110vw"
+	}
 }
 export const PopupCenterScreen = {
 	...Primary,
@@ -114,17 +110,17 @@ export const PopupCenterScreen = {
 		width: "500px",
 		height: "500px",
 		preferredHorizontal: ["center-screen"],
-		preferredVertical: ["center-screen"],
-	},
+		preferredVertical: ["center-screen"]
+	}
 }
 export const PopupRightBottomMost = {
 	...Primary,
 	args: {
 		width: "500px",
 		height: "500px",
-		preferredHorizontal: [ "right-most"],
-		preferredVertical: [ "bottom-most"],
-	},
+		preferredHorizontal: ["right-most"],
+		preferredVertical: ["bottom-most"]
+	}
 }
 export const PopupLeftTopMost = {
 	...Primary,
@@ -132,8 +128,8 @@ export const PopupLeftTopMost = {
 		width: "500px",
 		height: "500px",
 		preferredHorizontal: ["left-most"],
-		preferredVertical: ["top-most"],
-	},
+		preferredVertical: ["top-most"]
+	}
 }
 
 export const PopupCenterMost = {
@@ -142,8 +138,8 @@ export const PopupCenterMost = {
 		width: "500px",
 		height: "500px",
 		preferredHorizontal: ["center-most"],
-		preferredVertical: ["center-most"],
-	},
+		preferredVertical: ["center-most"]
+	}
 }
 export const LeftMenuShapeExample = {
 	...Primary,
@@ -152,6 +148,6 @@ export const LeftMenuShapeExample = {
 		height: "500px",
 		preferredHorizontal: ["left-most"],
 		preferredVertical: ["center-most"],
-		avoidRepositioning: true,
-	},
+		avoidRepositioning: true
+	}
 }

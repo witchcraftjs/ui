@@ -1,5 +1,4 @@
-import { type InjectionKey, provide,type Ref,ref } from "vue"
-
+import { type InjectionKey, provide, type Ref, ref } from "vue"
 
 export const languageLocaleInjectionKey = Symbol("witchcraftUiLanguageLocale") as InjectionKey<Ref<string>>
 export const timeLocaleInjectionKey = Symbol("witchcraftUiTimeLocale") as InjectionKey<Ref<string>>
@@ -19,14 +18,13 @@ export function useSetupLocale(): {
 	function setTimeLocale(value: string): void {
 		timeLocale.value = value
 	}
-	
+
 	provide(languageLocaleInjectionKey, languageLocale)
 	provide(timeLocaleInjectionKey, timeLocale)
 	return {
 		languageLocale,
 		timeLocale,
 		setLanguageLocale,
-		setTimeLocale,
+		setTimeLocale
 	}
 }
-

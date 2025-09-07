@@ -5,22 +5,19 @@ import { reactive, ref } from "vue"
 import LibNotifications from "./LibNotifications.vue"
 
 import { NotificationHandler } from "../../helpers/NotificationHandler.js"
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
-
 
 const meta: Meta<typeof LibNotifications> = {
 	component: LibNotifications,
 	title: "Components/Notifications",
 	args: {
 	// @ts-expect-error story only arg
-		withTitle: true,
-	},
+		withTitle: true
+	}
 }
 
 export default meta
 type Story = StoryObj<typeof LibNotifications>
-
 
 export const Primary: Story = {
 	render: args => ({
@@ -40,7 +37,7 @@ export const Primary: Story = {
 					message: `This is a notification that requires action. Pick an option:`,
 					requiresAction: true,
 					options: ["Ok", "Default Answer", "Cancel"],
-					default: "Default Answer",
+					default: "Default Answer"
 				})
 			}
 			const notifyWithDangerousOption = () => {
@@ -50,7 +47,7 @@ export const Primary: Story = {
 					message: `This is a notification that has a dangerous option. Pick an option:`,
 					options: ["Ok", "Default Answer", "Dangerous Option", "Cancel"],
 					default: "Default Answer",
-					dangerous: ["Dangerous Option"],
+					dangerous: ["Dangerous Option"]
 				})
 			}
 			const notifyNonCancellable = () => {
@@ -60,7 +57,7 @@ export const Primary: Story = {
 					message: `This is a non-cancellable notification. Pick an option:`,
 					options: ["Ok", "Default Answer"],
 					default: "Default Answer",
-					cancellable: false,
+					cancellable: false
 				})
 			}
 			const notifyNonCancellableRequiresAction = () => {
@@ -71,7 +68,7 @@ export const Primary: Story = {
 					requiresAction: true,
 					options: ["Ok", "Default Answer"],
 					default: "Default Answer",
-					cancellable: false,
+					cancellable: false
 				})
 			}
 			const notifyTimeoutable = () => {
@@ -79,7 +76,7 @@ export const Primary: Story = {
 				void handler.notify({
 					title: withTitle.value ? `Notification(${count})` : undefined,
 					message: `This is a notification. No action required.`,
-					timeout: disableTimeout.value ? false : 2000,
+					timeout: disableTimeout.value ? false : 2000
 				})
 			}
 			return {
@@ -93,8 +90,8 @@ export const Primary: Story = {
 				disableTimeout,
 				args: {
 					outline: false,
-					...args,
-				},
+					...args
+				}
 			}
 		},
 		backgrounds: { disable: true },
@@ -118,7 +115,6 @@ export const Primary: Story = {
 			</template>
 		</lib-debug>
 	</lib-root>
-	`,
-	}),
+	`
+	})
 }
-

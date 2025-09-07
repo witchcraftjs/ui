@@ -1,20 +1,19 @@
 /* eslint-disable no-console */
-import { type AnyFunction } from "@alanscodelog/utils"
+import type { AnyFunction } from "@alanscodelog/utils"
 import { isBlank } from "@alanscodelog/utils/isBlank"
 import { isObject } from "@alanscodelog/utils/isObject"
 import { pushIfNotIn } from "@alanscodelog/utils/pushIfNotIn"
 import { removeIfIn } from "@alanscodelog/utils/removeIfIn"
 import { computed, type Ref, ref, toRaw, watch } from "vue"
 
-import { type SuggestionsEmits,type SuggestionsOptions } from "../components/shared/props.js"
-
+import type { SuggestionsEmits, SuggestionsOptions } from "../components/shared/props.js"
 
 /**
  * The logic for the suggestions component.
  *
  * Note that while object suggestions are supported, the `suggestionLabel` prop is required and $inputModel and $modelValue will still be string values (as returned by the suggestionLabel function).
  */
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+
 export function useSuggestions<TSuggestion, TMultivalue extends boolean = false>(
 	$inputValue: Ref<string>,
 	$modelValue: Ref<TMultivalue extends true ? string[] : string>,
@@ -46,12 +45,12 @@ export function useSuggestions<TSuggestion, TMultivalue extends boolean = false>
 	const defaultSuggestionsFilter = (input: string, items: TSuggestion[]): TSuggestion[] => input === ""
 		? [...items]
 		: items.filter(item => {
-			if (Array.isArray($modelValue.value)) {
+				if (Array.isArray($modelValue.value)) {
 				// always include selected values for unselecting
-				if ($modelValue.value.includes(getSuggestionLabel(item))) return true
-			}
-			return getSuggestionLabel(item).toLowerCase().includes(input.toLowerCase())
-		})
+					if ($modelValue.value.includes(getSuggestionLabel(item))) return true
+				}
+				return getSuggestionLabel(item).toLowerCase().includes(input.toLowerCase())
+			})
 	const suggestionsFilter = computed(() => opts.suggestionsFilter ?? defaultSuggestionsFilter)
 
 	const suggestionsList = computed(() => {
@@ -81,8 +80,8 @@ export function useSuggestions<TSuggestion, TMultivalue extends boolean = false>
 
 	const openable = computed(() =>
 		opts.canOpen && (
-			(isBlank($inputValue.value) && opts.allowOpenEmpty) ||
-			suggestionAvailable.value
+			(isBlank($inputValue.value) && opts.allowOpenEmpty)
+			|| suggestionAvailable.value
 
 		)
 	)
@@ -98,7 +97,6 @@ export function useSuggestions<TSuggestion, TMultivalue extends boolean = false>
 		}
 		return undefined
 	})
-
 
 	// methods
 	// returns true if the value was removed
@@ -135,12 +133,12 @@ export function useSuggestions<TSuggestion, TMultivalue extends boolean = false>
 		}
 		$open.value = true
 	}
-	
+
 	function enterSuggestion(num: number, doClose: boolean = true): void {
 		if (num < -1 || num > (filteredSuggestions.value?.length ?? 0)) return
 		if (debug) console.log("enterSuggestion", num)
 		if (filteredSuggestions.value === undefined) return
-	
+
 		const suggestion = filteredSuggestions.value[num]
 		const val = getSuggestionLabel(suggestion)
 		const wasRemoved = setValue(val)
@@ -174,7 +172,7 @@ export function useSuggestions<TSuggestion, TMultivalue extends boolean = false>
 			activeSuggestion.value = filteredSuggestions.value!.length - 1
 		}
 	}
-	
+
 	function toggleSuggestions(): void {
 		$open.value ? closeSuggestions() : openSuggestions()
 	}
@@ -202,7 +200,7 @@ export function useSuggestions<TSuggestion, TMultivalue extends boolean = false>
 	function lastSuggestion(): void {
 		selectSuggestion(Infinity)
 	}
-	
+
 	function cancel(): void {
 		if (Array.isArray($modelValue.value)) {
 			$inputValue.value = ""
@@ -213,30 +211,29 @@ export function useSuggestions<TSuggestion, TMultivalue extends boolean = false>
 		closeSuggestions()
 	}
 
-	
 	watch(() => opts.canOpen, val => {
 		if (!val) {
 			if (debug) console.log("canOpen changed to false, closing suggestions")
 			closeSuggestions()
 		}
 	})
-	
+
 	watch(openable, val => {
 		if (!val) {
 			if (debug) console.log("openable changed to false, closing suggestions")
 			closeSuggestions()
 		}
 	})
-	
+
 	watch(isValidSuggestion, () => {
 		if (!isValidSuggestion.value) {
 			if (debug) console.log("isValidSuggestion changed to false, opening suggestions")
 			openSuggestions()
 		}
 	})
-	
+
 	// sync vmodels and vmodel effects
-	
+
 	watch($modelValue, () => {
 		if (Array.isArray($modelValue.value)) {
 			$inputValue.value = ""
@@ -272,7 +269,7 @@ export function useSuggestions<TSuggestion, TMultivalue extends boolean = false>
 			if (debug) console.log("input changed, suggestion available, opening suggestions")
 			openSuggestions()
 		}
-		
+
 		if (!opts.restrictToSuggestions && !Array.isArray($modelValue.value)) {
 			if (debug) console.log("input changed, unrestricted, setting modelValue")
 			setValue($inputValue.value)
@@ -282,15 +279,14 @@ export function useSuggestions<TSuggestion, TMultivalue extends boolean = false>
 			selectSuggestion(suggestionsList.value.indexOf(exactlyMatchingSuggestion.value))
 		} else {
 			if (debug) console.log("input changed, not exactly matching, finding longest match")
-			
-			const i =
-				opts.suggestionSelector?.(filteredSuggestions.value ?? [], $inputValue.value)
-				?? defaultSuggestionSelector(filteredSuggestions.value ?? [], $inputValue.value)
+
+			const i
+				= opts.suggestionSelector?.(filteredSuggestions.value ?? [], $inputValue.value)
+					?? defaultSuggestionSelector(filteredSuggestions.value ?? [], $inputValue.value)
 
 			selectSuggestion(i)
 		}
 	})
-
 
 	return {
 		list: suggestionsList,
@@ -314,12 +310,11 @@ export function useSuggestions<TSuggestion, TMultivalue extends boolean = false>
 		prev: prevSuggestion,
 		next: nextSuggestion,
 		first: firstSuggestion,
-		last: lastSuggestion,
+		last: lastSuggestion
 
 	}
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function useSuggestionsInputAria(
 	id: Ref<string>,
 	$open: Ref<boolean>,
@@ -331,7 +326,7 @@ export function useSuggestionsInputAria(
 		"aria-controls": suggestions !== undefined ? `suggestions-${id.value}` : undefined,
 		role: suggestions ? "combobox" : undefined,
 		"aria-expanded": suggestions !== undefined ? $open.value : undefined,
-		"aria-activedescendant": $open.value ? `suggestion-${id.value}-${activeSuggestion.value}` : undefined,
+		"aria-activedescendant": $open.value ? `suggestion-${id.value}-${activeSuggestion.value}` : undefined
 	}))
 	return ariaInputProps
 }

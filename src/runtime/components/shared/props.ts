@@ -2,7 +2,6 @@ import { useId } from "vue"
 
 import type { PopupPositioner, PopupPositionModifier } from "../../types"
 
- 
 export interface LinkableByIdProps {
 	/**
 	 * The id for the input. Uses vue's useId if none provided.
@@ -19,7 +18,7 @@ export interface ButtonProps {
 	color?: "warning" | "ok" | "danger" | "primary" | "secondary" | false
 	autoTitleFromAria?: boolean
 }
- 
+
 export interface LabelProps {
 /** For the label. Note the component might or might not support an actual label element. If none is supported, this is used for the `aria-label`. */
 	label?: string
@@ -80,7 +79,7 @@ export type SuggestionsProps<T = any> = {
 	showSelectedValues?: boolean
 }
 export type SuggestionsOptions<T> = SuggestionsProps<T>
- 
+
 export interface SuggestionsEmits<TMultivalue extends boolean = false> {
 	(e: "submit", val: string, suggestion?: any, wasRemoved?: boolean): void
 	(e: "update:isOpen", val: boolean): void
@@ -155,7 +154,6 @@ export interface PopupProps {
 	canClose?: boolean
 }
 
-
 export type BaseInteractiveProps = {
 	/** Default is false. */
 	disabled?: boolean
@@ -185,8 +183,8 @@ export type WrapperProps<TPrefix extends string, T, TOverrides extends Record<st
 	[P in keyof T as P extends keyof TOverrides
 		? never
 		: P extends string
-		? `${TPrefix}${Capitalize<P>}`
-		: never
+			? `${TPrefix}${Capitalize<P>}`
+			: never
 	]: T[P];
 } & {
 	[P in keyof TOverrides as P extends string

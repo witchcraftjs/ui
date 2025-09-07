@@ -1,6 +1,6 @@
 import { inject } from "vue"
 
-import { type DarkModeCommands, darkModeCommandsInjectionKey, type DarkModeState,darkModeStateInjectionKey } from "./useDarkMode.js"
+import { type DarkModeCommands, darkModeCommandsInjectionKey, type DarkModeState, darkModeStateInjectionKey } from "./useDarkMode.js"
 
 export function useInjectedDarkMode(): DarkModeState & DarkModeCommands {
 	const darkModeState = inject(darkModeStateInjectionKey)
@@ -10,6 +10,6 @@ export function useInjectedDarkMode(): DarkModeState & DarkModeCommands {
 	}
 	return {
 		...darkModeState,
-		...darkModeCommands,
+		...darkModeCommands
 	}
 }

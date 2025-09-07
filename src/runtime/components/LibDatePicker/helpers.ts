@@ -40,7 +40,6 @@ export function toEmittableDate(date: ZonedDateTime | CalendarDate): Date {
 		: toZoned(toCalendarDateTime(date, new Time(12, 0, 0)), "UTC").toDate()
 }
 
-
 /**
  * @internal
  *
@@ -52,4 +51,3 @@ export function getNow(opts: { withTime: boolean }): ZonedDateTime | CalendarDat
 	}
 	return today(getLocalTimeZone())
 }
-

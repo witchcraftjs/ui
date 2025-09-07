@@ -14,10 +14,9 @@ export function safeConvertToRgba(val: string | HsvaColor, allowAlpha: boolean):
 			r: clampNumber(rgb[0] / 1 * 255, 0, 255),
 			g: clampNumber(rgb[1] / 1 * 255, 0, 255),
 			b: clampNumber(rgb[2] / 1 * 255, 0, 255),
-			a: clampNumber(allowAlpha ? color.alpha : 1, 0, 1),
+			a: clampNumber(allowAlpha ? color.alpha : 1, 0, 1)
 		}
 	} catch {
 		return undefined
 	}
 }
-

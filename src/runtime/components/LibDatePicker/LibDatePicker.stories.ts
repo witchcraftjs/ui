@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { CalendarDate,fromDate, getLocalTimeZone, toTimeZone } from "@internationalized/date"
+import { CalendarDate, fromDate, getLocalTimeZone, toTimeZone } from "@internationalized/date"
 import type { Meta, StoryObj } from "@storybook/vue3"
-import { computed,ref } from "vue"
+import { computed, ref } from "vue"
 
 import { createNoonUtcDate } from "../../helpers/createNoonUtcDate.js"
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
 
 function html(strings: TemplateStringsArray, ...values: any[]): string {
@@ -16,13 +15,12 @@ const singleMeta: Meta<typeof components.LibDatePicker> = {
 	args: {
 		// @ts-expect-error custom prop just for story
 		slot: "",
-		timeZone: getLocalTimeZone(),
+		timeZone: getLocalTimeZone()
 	}
 }
 
 export default singleMeta
 type Story = StoryObj<typeof components.LibDatePicker>
-
 
 function toUTC(m: Date, timeZone: string) {
 	return toTimeZone(fromDate(m, timeZone), "UTC").toAbsoluteString()
@@ -30,7 +28,7 @@ function toUTC(m: Date, timeZone: string) {
 export const Primary: Story = {
 	render: (args: any) => ({
 		components: {
-			...components,
+			...components
 		},
 		setup: () => {
 			const modelValue = ref(args.modelValue)
@@ -41,10 +39,11 @@ export const Primary: Story = {
 				return m instanceof Date
 					? toUTC(m, z)
 					: typeof m === "object"
-					? `Start: ${m.start ? toUTC(m.start,	z) : "undefined"}, End: ${m.end ? toUTC(m.end,	z) : "undefined"}`
-					: "undefined"
+						? `Start: ${m.start ? toUTC(m.start,	z) : "undefined"}, End: ${m.end ? toUTC(m.end,	z) : "undefined"}`
+						: "undefined"
 			})
-			return { args, getLocalTimeZone, modelValue, timeZone, debugUtcDate } },
+			return { args, getLocalTimeZone, modelValue, timeZone, debugUtcDate }
+		},
 		template: `
 			<div>Date: {{modelValue ?? "undefined"}}</div>
 			<div>Date UTC: {{debugUtcDate}}</div>
@@ -62,15 +61,15 @@ export const Primary: Story = {
 					${args.slot}
 				</LibDatePicker>
 			</div>
-		`,
-	}),
+		`
+	})
 }
 
 export const DateRange: Story = {
 	...Primary,
 	args: {
-		modelValue: { start: undefined, end: undefined },
-	},
+		modelValue: { start: undefined, end: undefined }
+	}
 }
 
 export const IconTriggerFirst: Story = {
@@ -78,7 +77,7 @@ export const IconTriggerFirst: Story = {
 	args: {
 		...Primary.args,
 		class: "[&_.trigger]:order-first"
-	},
+	}
 }
 
 export const BottomSlot: Story = {
@@ -102,7 +101,7 @@ export const DateWithTime: Story = {
 	...Primary,
 	args: {
 		...Primary.args,
-		showTime: true,
+		showTime: true
 	}
 }
 export const WithDifferentFallbackDate: Story = {

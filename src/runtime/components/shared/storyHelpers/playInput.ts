@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { expect, userEvent, within } from "@storybook/test"
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -27,10 +26,10 @@ export const playMultipleValues = async ({ canvasElement, args }: { canvasElemen
 	await expect(canvas.getByTestId("model-value")).toHaveTextContent("D")
 	await userEvent.keyboard("{Enter}")
 	await expect(canvas.getByTestId("values").textContent)
-		.toBe([ ...initialValues, "D" ].join(", "))
+		.toBe([...initialValues, "D"].join(", "))
 	// empty input does nothing
 	await userEvent.clear(input)
 	await userEvent.keyboard("{Enter}")
 	await expect(canvas.getByTestId("values").textContent)
-		.toBe([ ...initialValues, "D" ].join(", "))
+		.toBe([...initialValues, "D"].join(", "))
 }

@@ -1,28 +1,25 @@
 <template>
 <div
 	:class="twMerge('icon inline-block', $attrs?.class)"
-	v-bind="{...$attrs, class:undefined}"
+	v-bind="{ ...$attrs, class: undefined }"
 >
 	<slot/>
 </div>
 </template>
 
 <script setup lang="ts">
-import { computed, type HTMLAttributes,useAttrs } from "vue"
+import { type HTMLAttributes, useAttrs } from "vue"
 
 import { twMerge } from "../../utils/twMerge.js"
 
 defineOptions({
-	name: "icon",
-	inheritAttrs: false,
+	name: "Icon",
+	inheritAttrs: false
 })
-
 
 const $attrs = useAttrs() as any
 
-const props = defineProps<Props>()
-
-
+/* const props =  */defineProps<Props>()
 </script>
 
 <script lang="ts">
@@ -40,4 +37,3 @@ interface Props
 	Partial<Omit<HTMLAttributes, "class">
 	> { }
 </script>
-

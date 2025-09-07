@@ -7,70 +7,78 @@
 	role="navigation"
 	:aria-label="t('pagination.aria')"
 >
-	<slot v-if="prevLink.i > 0 && prevLink.i !== currentLink.i"
+	<slot
+		v-if="prevLink.i > 0 && prevLink.i !== currentLink.i"
 		name="link"
 		:i="prevLink.i"
 		:href="prevLink.href"
 		:text="t('pagination.previous-page')"
-		:aria-label=" t('pagination.aria.go-to-previous-page',{count:prevLink.i})"
+		:aria-label=" t('pagination.aria.go-to-previous-page', { count: prevLink.i })"
 		:class="`pagination--link ${pageClasses}`"
 	>
 		<a
 			:class="`pagination--link ${pageClasses}`"
 			:href="prevLink.href"
-			:aria-label=" t('pagination.aria.go-to-previous-page', {count:prevLink.i})"
+			:aria-label=" t('pagination.aria.go-to-previous-page', { count: prevLink.i })"
 		/>
 	</slot>
 	<div class="pagination--spacer flex-1"/>
-	<slot v-if="firstLink.i !== currentLink.i"
+	<slot
+		v-if="firstLink.i !== currentLink.i"
 		name="link"
 		:i="0"
 		:href="firstLink.href"
 		:text="firstLink.i"
-		:aria-label="t('pagination.aria.go-to-page', {count:firstLink.i})"
+		:aria-label="t('pagination.aria.go-to-page', { count: firstLink.i })"
 		:class="`pagination--link pagination--first-link ${pageClasses}`"
 	>
 		{{ firstLink.href }}
 		<a
 			:class="`pagination--link pagination--first-link ${pageClasses}`"
 			:href="firstLink.href"
-			:aria-label="t('pagination.aria.go-to-page', {count:firstLink.i})"
+			:aria-label="t('pagination.aria.go-to-page', { count: firstLink.i })"
 		>
 			{{ firstLink.i }}
 		</a>
 	</slot>
-	<div v-if="prevLink.i - extraPages > firstLink.i" class="pagination--page-fill">
+	<div
+		v-if="prevLink.i - extraPages > firstLink.i"
+		class="pagination--page-fill"
+	>
 		...
 	</div>
 	<template
 		v-for="entry in extraPagesPrev"
 		:key="entry.i"
 	>
-		<slot name="link"
+		<slot
+			name="link"
 			:class="`pagination--link ${pageClasses}`"
 			:i="entry.i"
 			:href="entry.href"
-			:aria-label="t('pagination.aria.go-to-page', {count:entry.i})"
+			:aria-label="t('pagination.aria.go-to-page', { count: entry.i })"
 		>
 			<a
 				:class="`pagination--link ${pageClasses}`"
 				:href="entry.href"
-				:aria-label="t('pagination.aria.go-to-page', {count:entry.i})"
+				:aria-label="t('pagination.aria.go-to-page', { count: entry.i })"
 			>
 				{{ entry.i }}
 			</a>
 		</slot>
 	</template>
-	<slot name="current"
+	<slot
+		name="current"
 		:class="`pagination--link ${currentPageClasses}`"
 		tabindex="0"
 		:i="currentLink.i"
-		:aria-label="t('pagination.aria.current-page', {count:currentLink.i})"
+		:aria-label="t('pagination.aria.current-page', { count: currentLink.i })"
 		:aria_current="true"
 	>
-		<div :class="`pagination--current-page a ${currentPageClasses}`"
+		<div
+			:class="`pagination--current-page a ${currentPageClasses}`"
 			tabindex="0"
-			:aria-label="t('pagination.aria.current-page', {count:currentLink.i})"
+			:aria-label="t('pagination.aria.current-page', { count: currentLink.i })"
 			aria-current="true"
 			@click="$event.preventDefault()"
 		>
@@ -81,36 +89,42 @@
 		v-for="entry in extraPagesNext"
 		:key="entry.i"
 	>
-		<slot name="link"
+		<slot
+			name="link"
 			:class="`pagination--link ${pageClasses}`"
 			:i="entry.i"
 			:href="entry.href"
-			:aria-label="t('pagination.aria.go-to-page', {count:entry.i})"
+			:aria-label="t('pagination.aria.go-to-page', { count: entry.i })"
 		>
 			<a
 				:class="`pagination--link ${pageClasses}`"
 				:href="entry.href"
-				:aria-label="t('pagination.aria.go-to-page', {count:entry.i})"
+				:aria-label="t('pagination.aria.go-to-page', { count: entry.i })"
 			>
 				{{ entry.i }}
 			</a>
 		</slot>
 	</template>
-	<div v-if="nextLink.i + extraPages < total" class="pagination--page-fill" aria-hidden="true">
+	<div
+		v-if="nextLink.i + extraPages < total"
+		class="pagination--page-fill"
+		aria-hidden="true"
+	>
 		...
 	</div>
-	<slot v-if="lastLink.i !== currentLink.i"
+	<slot
+		v-if="lastLink.i !== currentLink.i"
 		name="link"
 		:class="`pagination--link ${pageClasses}`"
 		:i="lastLink.i"
 		:href="lastLink.href"
 		:text="total"
-		:aria-label="t('pagination.aria.go-to-page', {count:lastLink.i})"
+		:aria-label="t('pagination.aria.go-to-page', { count: lastLink.i })"
 	>
 		<a
 			:class="`pagination--link ${pageClasses}`"
 			:href="lastLink.href"
-			:aria-label="t('pagination.aria.go-to-page', {count:lastLink.i})"
+			:aria-label="t('pagination.aria.go-to-page', { count: lastLink.i })"
 		>
 			{{ total }}
 		</a>
@@ -123,24 +137,25 @@
 		:i="nextLink.i"
 		:href="nextLink.href"
 		:text="t('pagination.next-page')"
-		:aria-label="t('pagination.aria.go-to-next-page', {count:nextLink.i})"
+		:aria-label="t('pagination.aria.go-to-next-page', { count: nextLink.i })"
 	>
 		<a
 			:class="`pagination--link ${pageClasses}`"
 			:href="nextLink.href"
-			:aria-label="t('pagination.aria.go-to-next-page', {count:nextLink.i})"
+			:aria-label="t('pagination.aria.go-to-next-page', { count: nextLink.i })"
 		>
 			Next
 		</a>
 	</slot>
 </nav>
 </template>
+
 <script setup lang="ts">
-import { computed, type HTMLAttributes,useAttrs,watch } from "vue"
+import { computed, type HTMLAttributes, useAttrs, watch } from "vue"
 
 import { useInjectedI18n } from "../../composables/useInjectedI18n.js"
 import { twMerge } from "../../utils/twMerge.js"
-import { type TailwindClassProp } from "../shared/props.js"
+import type { TailwindClassProp } from "../shared/props.js"
 
 const t = useInjectedI18n()
 
@@ -166,8 +181,8 @@ const currentPageClasses = `
 	scale-125
 `
 defineOptions({
-	name: "lib-pagination",
-	inheritAttrs: false,
+	name: "LibPagination",
+	inheritAttrs: false
 })
 
 const props = withDefaults(defineProps<Props>(), {
@@ -178,7 +193,7 @@ const props = withDefaults(defineProps<Props>(), {
 		}
 		return { href: route + i.toString(), i }
 	},
-	extraPages: 3,
+	extraPages: 3
 })
 const $attrs = useAttrs()
 
@@ -216,10 +231,9 @@ const extraPagesNext = computed(() => [...Array(props.extraPages + 1)].map((_, i
 	if (num <= firstLink.value.i || num >= lastLink.value.i || num <= currentLink.value.i) return undefined
 	return props.customRoute(props.route, num)
 }).filter(entry => entry !== undefined).slice(0, props.extraPages) as HrefInfo[])
-
 </script>
-<script lang="ts">
 
+<script lang="ts">
 /**
  * Pagination component.
  *
@@ -231,7 +245,7 @@ const extraPagesNext = computed(() => [...Array(props.extraPages + 1)].map((_, i
  * ```
  */
 export default {
-	name: "lib-pagination",
+	name: "LibPagination"
 }
 type RealProps = {
 	/** The total number of pages. */
@@ -254,7 +268,7 @@ type RealProps = {
 interface Props
 	extends
 	/** @vue-ignore */
-	Partial<Omit<HTMLAttributes,"class"> & TailwindClassProp>,
+	Partial<Omit<HTMLAttributes, "class"> & TailwindClassProp>,
 	RealProps
 {}
 </script>
