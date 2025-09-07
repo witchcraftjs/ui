@@ -2,7 +2,6 @@
 import type { Meta, StoryObj } from "@storybook/vue3"
 import { onMounted, ref } from "vue"
 
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "./index.js"
 // TODO move docs to composable
 /**
@@ -11,8 +10,8 @@ import * as components from "./index.js"
 const meta: Meta = {
 	title: "Other/Focus",
 	args: {
-		outline: true,
-	},
+		outline: true
+	}
 }
 const template = `
 			<div class="focus-outline-no-offset border border-accent-600" tabindex="0">focus-outline-no-offset (outlined i.e. outlined-focus-visible)</div>
@@ -37,32 +36,32 @@ export const Primary: Story = {
 			})
 			return { ...args, el }
 		},
-		template,
-	}),
+		template
+	})
 }
 /* As in force allow, not force show. */
 export const OutlineForcedTrue: Story = {
 	...Primary,
 	args: {
 		...Primary.args,
-		forceOutline: true,
-	},
+		forceOutline: true
+	}
 }
 export const OutlineFalse: Story = {
 	...Primary,
 	args: {
 		...Primary.args,
-		outline: false,
-	},
+		outline: false
+	}
 }
-/* We can also allow focus-visible outlines regardless of the state of outline, by wrapping in `.group.outlined-visible`. This is the default for the test wrapper.*/
+/* We can also allow focus-visible outlines regardless of the state of outline, by wrapping in `.group.outlined-visible`. This is the default for the test wrapper. */
 export const AlwaysAllowFocusVisible: Story = {
 	render: args => ({
 		components,
 		setup: () => args,
 		template: `
 		<div class="outlined-visible group">${template}</div>
-		`,
+		`
 
-	}),
+	})
 }

@@ -63,12 +63,11 @@
 	:disabled="disabled"
 	:readonly="readonly"
 	v-model="modelValue"
-	v-bind="{...$attrs, class:undefined, ...ariaLabel}"
+	v-bind="{ ...$attrs, class: undefined, ...ariaLabel }"
 	@keydown="handleKeydown"
 	@input="emit('input', $event as InputEvent)"
 >
 </template>
-
 
 <script lang="ts" setup generic="T">
 import { type InputHTMLAttributes, useAttrs } from "vue"
@@ -77,12 +76,11 @@ import { useAriaLabel } from "../../composables/useAriaLabel.js"
 import { usePreHydrationValue } from "../../composables/usePreHydrationValue.js"
 import { hasModifiers } from "../../helpers/hasModifiers.js"
 import { twMerge } from "../../utils/twMerge.js"
-import { type BaseInteractiveProps, getFallbackId,type LabelProps, type LinkableByIdProps, type TailwindClassProp } from "../shared/props.js"
-
+import { type BaseInteractiveProps, getFallbackId, type LabelProps, type LinkableByIdProps, type TailwindClassProp } from "../shared/props.js"
 
 defineOptions({
-	name: "lib-simple-input",
-	inheritAttrs: false,
+	name: "LibSimpleInput",
+	inheritAttrs: false
 })
 
 const fallbackId = getFallbackId()
@@ -93,13 +91,13 @@ const props = withDefaults(defineProps<Props>(), {
 	valid: true,
 	label: "",
 	type: undefined,
-	unstyle: false, disabled: false, readonly: false, border: true,
+	unstyle: false, disabled: false, readonly: false, border: true
 })
 
 const modelValue = defineModel<T>({ required: true })
 
 const emit = defineEmits<{
-	/* User presses enter.*/
+	/* User presses enter. */
 	(e: "submit", val: T): void
 	(e: "input", val: InputEvent): void
 }>()
@@ -112,22 +110,20 @@ function handleKeydown(e: KeyboardEvent) {
 	}
 }
 usePreHydrationValue(props.id ?? fallbackId, modelValue)
-
 </script>
 
 <script lang="ts">
-
-type RealProps =
-	& LinkableByIdProps
-	& LabelProps
-	& BaseInteractiveProps
-	& {
-		placeholder?: InputHTMLAttributes["placeholder"]
-		disabled?: InputHTMLAttributes["disabled"]
-		id?: InputHTMLAttributes["id"]
-		type?: InputHTMLAttributes["type"]
-		valid?: boolean
-	}
+type RealProps
+	= & LinkableByIdProps
+		& LabelProps
+		& BaseInteractiveProps
+		& {
+			placeholder?: InputHTMLAttributes["placeholder"]
+			disabled?: InputHTMLAttributes["disabled"]
+			id?: InputHTMLAttributes["id"]
+			type?: InputHTMLAttributes["type"]
+			valid?: boolean
+		}
 
 interface Props
 	extends

@@ -1,6 +1,5 @@
 import type { ResizeCallback } from "../types/index.js"
 
-
 export class ResizeObserverWrapper {
 	observers: WeakMap<Element, Set<ResizeCallback>> = new WeakMap()
 

@@ -14,11 +14,10 @@ export function safeConvertToHsva(val: string | RgbaColor, allowAlpha: boolean):
 			h: clampNumber(hsv[0] ?? 0, 0, Number.MAX_SAFE_INTEGER),
 			s: clampNumber(hsv[1], 0, 100),
 			v: clampNumber(hsv[2], 0, 100),
-			a: clampNumber(allowAlpha ? color.alpha : 1, 0, 1),
+			a: clampNumber(allowAlpha ? color.alpha : 1, 0, 1)
 		}
 		return final
 	} catch {
 		return undefined
 	}
 }
-

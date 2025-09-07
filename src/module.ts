@@ -5,20 +5,21 @@ import {
 	createResolver,
 	defineNuxtModule,
 	installModule,
-	useLogger,
+	useLogger
 } from "@nuxt/kit"
 import tailwindcss from "@tailwindcss/vite"
 import { addImportsCustom } from "@witchcraft/nuxt-utils/utils/addImportsCustom"
 import { globFiles } from "@witchcraft/nuxt-utils/utils/globFiles"
 import { defu } from "defu"
-import fs from "fs"
 import { themeAsTailwindCss } from "metamorphosis/tailwind"
+import fs from "node:fs"
 import IconsResolver from "unplugin-icons/resolver"
 import ViteComponents from "unplugin-vue-components/vite"
 
 import { unpluginIconViteOptions } from "./runtime/build/unpluginIconViteOptions.js"
 import { themeConvertionOpts } from "./runtime/tailwind/themeConvertionOpts.js"
 import { theme } from "./runtime/theme.js"
+
 const knownDirectives = ["vExtractRootEl", "vResizableCols", "vResizeObserver", "vResizableCols"] as const
 
 const { resolve, resolvePath } = createResolver(import.meta.url)
@@ -29,11 +30,11 @@ const componentsInfo: {
 	filepath: string
 }[] = globFiles([
 	`${resolve("./runtime/components")}/**/*.vue*`,
-	`!**/Template/**.vue`,
-],[], (filepath: string, name: string) => ({
+	`!**/Template/**.vue`
+], [], (filepath: string, name: string) => ({
 	originalName: name,
 	name: name.startsWith("Lib") ? name.replace("Lib", "PREFIX") : `PREFIX${name}`,
-	filepath,
+	filepath
 }))
 
 declare module "@nuxt/schema" {
@@ -42,7 +43,6 @@ declare module "@nuxt/schema" {
 	}
 }
 
- 
 export interface ModuleOptions {
 /**
  * Whether to include the vite unplugin-icons plugins (pre-configured with the ui module's defaults.
@@ -71,18 +71,18 @@ export interface ModuleOptions {
 export default defineNuxtModule<ModuleOptions>({
 	meta: {
 		name: "witchcraftUi",
-		configKey: "witchcraftUi",
+		configKey: "witchcraftUi"
 	},
 	defaults: {
 		includeUnpluginIconsPlugins: true,
-		directives: [ ...knownDirectives ],
+		directives: [...knownDirectives],
 		globalComponents: [
-			...componentsInfo.map(_ => _.name.slice("PREFIX".length)),
+			...componentsInfo.map(_ => _.name.slice("PREFIX".length))
 		],
 		componentPrefix: "W",
 		debug: true,
 		mainCssFile: "~/assets/css/tailwind.css",
-		_playgroundWorkaround: false,
+		_playgroundWorkaround: false
 	},
 	async setup(options, nuxt) {
 		const moduleName = "@witchcraft/ui"
@@ -97,7 +97,6 @@ export default defineNuxtModule<ModuleOptions>({
 			}
 		}
 
-
 		const unknownDirectives = options.directives.filter(_ => !knownDirectives.includes(_))
 		if (unknownDirectives.length > 0) {
 			throw new Error(`Witchcraft Components: Directives list contains unknown directives: ${unknownDirectives.join(",")}`)
@@ -105,10 +104,9 @@ export default defineNuxtModule<ModuleOptions>({
 		nuxt.options.runtimeConfig.public.witchcraftUi = defu(
 			nuxt.options.runtimeConfig.public.witchcraftUi,
 			{
-				directives: options.directives,
+				directives: options.directives
 			}
 		)
-
 
 		addTemplate({
 			filename: "witchcraft-ui.css",
@@ -127,13 +125,12 @@ export default defineNuxtModule<ModuleOptions>({
 					${indent(filteredComponentsInfo.map(_ => `@source "${_.filepath}";`).join("\n"), 5)}
 				`
 		})
-		
-		
+
 		await Promise.all(filteredComponentsInfo
 			.map(async entry => addComponent({
 				filePath: entry.filepath,
 				name: entry.name,
-				global: options.globalComponents.includes(entry.name.slice(options.componentPrefix.length)),
+				global: options.globalComponents.includes(entry.name.slice(options.componentPrefix.length))
 			}))
 		)
 
@@ -142,12 +139,12 @@ export default defineNuxtModule<ModuleOptions>({
 		const added: string[] = []
 		addImportsCustom([
 			`${resolve("runtime/composables")}/**/*`,
-			`${resolve("runtime/utils")}/**/*`,
-		], [],(filePath: string, name: string) => {
+			`${resolve("runtime/utils")}/**/*`
+		], [], (filePath: string, name: string) => {
 			added.push(name)
 			return addImports({
 				name,
-				from: filePath,
+				from: filePath
 			})
 		})
 		logger.info(`Added imports: ${added.join(", ")}`)
@@ -161,20 +158,20 @@ export default defineNuxtModule<ModuleOptions>({
 						options.includeUnpluginIconsPlugins
 							? [
 								// we must prepend or the custom style options don't work when the module is used
-								ViteComponents({
-									resolvers: [
-										IconsResolver({ prefix: "i" }),
-									],
-								}),
+									ViteComponents({
+										resolvers: [
+											IconsResolver({ prefix: "i" })
+										]
+									})
 								// Icons({
 								// 	compiler: "vue3",
 								// 	...unpluginIconViteOptions,
 								// }),
-							]
+								]
 							: []
 					),
 					tailwindcss() as any,
-					...config.plugins,
+					...config.plugins
 				]
 				config.optimizeDeps ??= {}
 				config.optimizeDeps.exclude ??= []
@@ -198,7 +195,7 @@ export default defineNuxtModule<ModuleOptions>({
 		nuxt.options.alias["#witchcraft-ui-helpers"] = resolve("runtime/helpers")
 		addTypeTemplate({
 			filename: "types/witchcraft-ui.d.ts",
-			getContents: () => fs.readFileSync(resolve("../types/global.d.ts")).toString(),
+			getContents: () => fs.readFileSync(resolve("../types/global.d.ts")).toString()
 		})
-	},
+	}
 })

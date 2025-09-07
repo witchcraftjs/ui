@@ -1,6 +1,6 @@
 <template>
 <lib-button
-	v-bind="{...$attrs, class:undefined}"
+	v-bind="{ ...$attrs, class: undefined }"
 	:class="!($attrs as any).unstyle && twMerge(`
 			dark-mode-switcher
 			rounded-full
@@ -19,15 +19,19 @@
 			<component :is="darkModeState==='dark' ? IFaSolidMoon : darkModeState==='light' ? IPhSunBold : IFa6SolidCircleHalfStroke"/>
 		</icon>
 	</template>
-	<template #default v-if="showLabel">
+	<template
+		#default
+		v-if="showLabel"
+	>
 		<div class="dark-mode-switcher--label pr-[2px]">
 			{{ t(`dark-mode-switcher.${darkModeState}`) }}
 		</div>
 	</template>
 </lib-button>
 </template>
+
 <script lang="ts" setup>
-import { type ButtonHTMLAttributes,onMounted,useAttrs, watch } from "vue"
+import { type ButtonHTMLAttributes, onMounted, useAttrs, watch } from "vue"
 
 import IFaSolidMoon from "~icons/fa-solid/moon"
 import IFa6SolidCircleHalfStroke from "~icons/fa6-solid/circle-half-stroke"
@@ -39,7 +43,6 @@ import { twMerge } from "../../utils/twMerge.js"
 import Icon from "../Icon/Icon.vue"
 import LibButton from "../LibButton/LibButton.vue"
 import type { TailwindClassProp } from "../shared/props.js"
-
 
 const t = useInjectedI18n()
 
@@ -53,13 +56,11 @@ const $attrs = useAttrs()
 
 withDefaults(defineProps<Props>(), { showLabel: true })
 
-
 const {
 	darkMode,
 	cycleDarkMode,
-	darkModeState,
+	darkModeState
 } = useInjectedDarkMode()
-
 
 watch(darkMode, value => emit("update:darkMode", value))
 watch(darkModeState, value => emit("update:darkModeState", value))
@@ -68,9 +69,10 @@ onMounted(() => {
 	emit("update:darkMode", darkMode.value)
 })
 </script>
+
 <script lang="ts">
 export default {
-	name: "lib-dark-mode-switcher"
+	name: "LibDarkModeSwitcher"
 }
 type RealProps = {
 	showLabel?: boolean
@@ -79,7 +81,7 @@ type RealProps = {
 interface Props
 	extends
 	/** @vue-ignore */
-	Partial<Omit<ButtonHTMLAttributes,"class" | "color" | "disabled">
+	Partial<Omit<ButtonHTMLAttributes, "class" | "color" | "disabled">
 	& TailwindClassProp
 	& {
 		disabled?: boolean

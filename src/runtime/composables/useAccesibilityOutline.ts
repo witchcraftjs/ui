@@ -43,7 +43,7 @@ import { onBeforeUnmount, onMounted, type Ref, ref, watch } from "vue"
 // TODO tailwind example/plugin?
 export function useAccesibilityOutline(
 	target: Ref<HTMLElement | null>,
-	enable: Ref<boolean> = ref(true),
+	enable: Ref<boolean> = ref(true)
 ): Record<"outline" | "control", Ref<boolean>> {
 	const outline = ref(false)
 	const awaitingFocus = ref(false)

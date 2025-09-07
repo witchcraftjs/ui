@@ -3,7 +3,7 @@ import { type DateValue, getLocalTimeZone } from "@internationalized/date"
 import { DatePickerArrow, DatePickerCalendar, DatePickerCell, DatePickerCellTrigger, DatePickerContent, DatePickerField, DatePickerGrid, DatePickerGridBody, DatePickerGridHead, DatePickerGridRow, DatePickerHeadCell, DatePickerHeader, DatePickerHeading, DatePickerInput, DatePickerNext, DatePickerPrev, DatePickerRoot, DatePickerTrigger } from "reka-ui"
 import { onBeforeUnmount, ref, toRaw, useAttrs, watch } from "vue"
 
-import { convertDateWithFallback, getNow,toEmittableDate } from "./helpers.js"
+import { convertDateWithFallback, getNow, toEmittableDate } from "./helpers.js"
 
 import IRadixIconsCalendar from "~icons/radix-icons/calendar"
 import IRadixIconsChevronLeft from "~icons/radix-icons/chevron-left"
@@ -69,7 +69,6 @@ const interval = setInterval(() => {
 onBeforeUnmount(() => {
 	clearInterval(interval)
 })
-
 </script>
 
 <template>
@@ -92,7 +91,8 @@ onBeforeUnmount(() => {
 			(attrs as any).class)
 		"
 	>
-		<div :class="twMerge(`
+		<div
+			:class="twMerge(`
 			date-picker--segment
 			flex
 			items-center
@@ -157,13 +157,12 @@ onBeforeUnmount(() => {
 			</Icon>
 		</DatePickerTrigger>
 	</DatePickerField>
-	<!-- @vue-expect-error to exists-->
 	<DatePickerContent
 		:side-offset="4"
 		:avoid-collisions="true"
 		:prioritize-position="true"
 		side="bottom"
-		to="#root"
+		:portal="{ to: '#root' }"
 		class="
 			date-picker--content
 			z-100
@@ -196,7 +195,8 @@ onBeforeUnmount(() => {
 				max-w-[calc(1.2em*4+var(--spacing)*8+14ch)]
 			"
 		>
-			<DatePickerHeader class="
+			<DatePickerHeader
+				class="
 				date-picker--header
 				flex
 				items-center
@@ -294,7 +294,8 @@ onBeforeUnmount(() => {
 					:key="month.value.toString()"
 				>
 					<DatePickerGridHead class="date-picker--grid-head">
-						<DatePickerGridRow class="
+						<DatePickerGridRow
+							class="
 							date-picker--grid-row
 							mb-1
 							flex
@@ -381,7 +382,7 @@ onBeforeUnmount(() => {
 					</DatePickerGridBody>
 				</DatePickerGrid>
 			</div>
-			<slot v-bind="{tempValue: tempDate}"/>
+			<slot v-bind="{ tempValue: tempDate }"/>
 		</DatePickerCalendar>
 	</DatePickerContent>
 </DatePickerRoot>

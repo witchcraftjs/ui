@@ -19,7 +19,6 @@ import type { App } from "vue"
  * ```
  */
 
-
 export const registerComponents = (app: App, components: Record<string, any>, prefix = ""): void => {
 	for (const key of Object.keys(components)) {
 		const component = (components as any)[key]

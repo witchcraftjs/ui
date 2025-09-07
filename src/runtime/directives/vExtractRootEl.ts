@@ -31,7 +31,7 @@ export const vExtractRootEl: Directive = {
 	},
 	getSSRProps() {
 		return {}
-	},
+	}
 }
 type Options = {
 	value: (el: HTMLElement | null) => void

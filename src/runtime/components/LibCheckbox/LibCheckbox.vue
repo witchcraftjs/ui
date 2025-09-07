@@ -60,37 +60,36 @@
 			:disabled="disabled"
 			ref="inputEl"
 			v-model="$value"
-			v-bind="{...$.attrs, class: undefined}"
+			v-bind="{ ...$.attrs, class: undefined }"
 		>
 		<slot/> {{ label }}
 	</label>
 </div>
 </template>
+
 <script setup  lang="ts">
-import { type HTMLAttributes, type InputHTMLAttributes,ref, useSlots } from "vue"
+import { type HTMLAttributes, type InputHTMLAttributes, ref } from "vue"
 
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
 import { usePreHydrationValue } from "../../composables/usePreHydrationValue.js"
 import { twMerge } from "../../utils/twMerge.js"
-import { type BaseInteractiveProps, getFallbackId,type LabelProps, type LinkableByIdProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
+import { type BaseInteractiveProps, getFallbackId, type LabelProps, type LinkableByIdProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
 
 defineOptions({
-	name: "lib-checkbox",
-	inheritAttrs: false,
+	name: "LibCheckbox",
+	inheritAttrs: false
 })
 
 const $ = useDivideAttrs(["label", "wrapper"])
-const $slots = useSlots()
 /* todo multi states */
 
 const fallbackId = getFallbackId()
 const props = withDefaults(defineProps<Props>(), {
-	unstyle: false, disabled: false, readonly: false, border: true,
+	unstyle: false, disabled: false, readonly: false, border: true
 })
 
-
-const emits = defineEmits<{
-	/* User presses enter.*/
+/* const emits =  */defineEmits<{
+	/* User presses enter. */
 	(e: "submit", val: boolean): void
 }>()
 
@@ -102,20 +101,19 @@ usePreHydrationValue(props.id ?? fallbackId, $value)
 </script>
 
 <script lang="ts">
-
-type WrapperTypes = Partial<WrapperProps<"label",HTMLAttributes, {
+type WrapperTypes = Partial<WrapperProps<"label", HTMLAttributes, {
 	/** Tailwind classes. */
 	class?: string
 }>>
 
-type RealProps =
+type RealProps
 
-	& LinkableByIdProps
-	& LabelProps
-	& BaseInteractiveProps
-	& {
-		unstyle?: boolean
-	}
+	= & LinkableByIdProps
+		& LabelProps
+		& BaseInteractiveProps
+		& {
+			unstyle?: boolean
+		}
 
 interface Props
 	extends

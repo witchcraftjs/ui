@@ -3,7 +3,6 @@ import { onBeforeUnmount, onMounted, type Ref, watch } from "vue"
 
 import { globalResizeObserver } from "../globalResizeObserver.js"
 
-
 export const useGlobalResizeObserver = (el: Ref<HTMLElement | null>, cb: AnyFunction): void => {
 	let wasMounted = false
 	// in case we accidentally use it in an onMounted hook or somewhere where the element already exists

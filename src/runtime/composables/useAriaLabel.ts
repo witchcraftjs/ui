@@ -11,7 +11,7 @@ export const useAriaLabel = (
 
 	const aria = computed(() => ({
 		"aria-label": labelExists.value ? undefined : props.label,
-		"aria-labelledby": labelExists.value ? `label-${id.value}` : undefined,
+		"aria-labelledby": labelExists.value ? `label-${id.value}` : undefined
 	}))
 
 	onMounted(() => {

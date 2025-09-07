@@ -4,21 +4,18 @@ import { ref } from "vue"
 
 import LibPagination from "./LibPagination.vue"
 
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
-
 
 const meta: Meta<typeof LibPagination> = {
 	component: LibPagination,
 	title: "Components/Pagination",
 	args: {
-		total: 10,
-	},
+		total: 10
+	}
 }
 
 export default meta
 type Story = StoryObj<typeof LibPagination>
-
 
 export const Primary: Story = {
 	render: args => ({
@@ -35,7 +32,7 @@ export const Primary: Story = {
 			return {
 				changePage,
 				args,
-				num,
+				num
 			}
 		},
 		template: `
@@ -47,7 +44,6 @@ export const Primary: Story = {
 			<lib-simple-input :label="'Change Page'" :modelValue="num.toString()" @update:modelValue="num = parseInt($event)" type="number" min="0" :max="args.total">
 
 			</lib-simple-input>
-		`,
-	}),
+		`
+	})
 }
-

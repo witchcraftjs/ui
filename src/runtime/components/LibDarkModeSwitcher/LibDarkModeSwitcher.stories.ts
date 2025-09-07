@@ -6,7 +6,6 @@ import { ref } from "vue"
 import LibDarkModeSwitcher from "./LibDarkModeSwitcher.vue"
 
 // todo, maybe don't do this for perf reasons
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
 
 const meta: Meta<typeof LibDarkModeSwitcher> = {
@@ -14,12 +13,11 @@ const meta: Meta<typeof LibDarkModeSwitcher> = {
 	title: "Components/DarkModeSwitcher",
 	args: {
 
-	},
+	}
 }
 
 export default meta
 type Story = StoryObj<typeof LibDarkModeSwitcher>
-
 
 export const Primary: Story = {
 	render: args => ({
@@ -38,14 +36,13 @@ export const Primary: Story = {
 				v-bind="{...args}"
 			></LibDarkModeSwitcher>
 			
-		`,
-	}),
+		`
+	})
 }
 export const WithoutLabel: Story = {
 	...Primary,
 	args: {
 		...Primary.args,
-		showLabel: false,
-	},
+		showLabel: false
+	}
 }
-

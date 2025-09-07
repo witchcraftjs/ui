@@ -7,7 +7,6 @@ import type { Directive, Ref } from "vue"
 import { globalResizeObserver } from "../globalResizeObserver.js"
 import type { ResizableOptions, ResizeCallback } from "../types/index.js"
 
-
 const observer = globalResizeObserver
 type Data = {
 	margin: number
@@ -32,7 +31,7 @@ type ResizableElement = HTMLElement
 const defaultOpts: Omit<ResizableOptions, "colCount" | "widths" | "selector"> = {
 	fitWidth: true,
 	margin: "dynamic",
-	enabled: true,
+	enabled: true
 }
 
 const callback: ResizeCallback = (_rect: DOMRectReadOnly, el: Element): void => {
@@ -132,9 +131,8 @@ export const vResizableCols: Directive = {
 	},
 	getSSRProps() {
 		return {}
-	},
+	}
 }
-
 
 function setWidth(col: HTMLElement, amountInPx: number, el: ResizableElement): void {
 	const $el = getElInfo(el)
@@ -147,7 +145,6 @@ function setWidth(col: HTMLElement, amountInPx: number, el: ResizableElement): v
 		$el.widths.value[index] = `${width}px`
 	}
 }
-
 
 function getBox(el: Element): { x: number, width: number } {
 	const rect = el.getBoundingClientRect()
@@ -227,7 +224,6 @@ function createPointerMoveHandler(el: ResizableElement) {
 							el.classList.add("resizable-cols-error")
 							return
 						}
-
 
 						setWidth(col, newWidth, el)
 						setWidth(colNext!, rightBox.width + diff, el)
@@ -309,7 +305,7 @@ function setupColumns(el: ResizableElement, opts: ResizableOptions): void {
 		margin: opts.margin === "dynamic" ? gripWidth : opts.margin,
 		colCount: opts.colCount,
 		widths: opts.widths,
-		selector: opts.selector,
+		selector: opts.selector
 	}
 	elMap.set(el, $el)
 	const els = getColEls(el)

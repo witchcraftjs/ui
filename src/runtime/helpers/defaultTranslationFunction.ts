@@ -30,4 +30,3 @@ export function defaultTranslationFunction(key: string, replacements?: Record<st
 	}
 	return value
 }
-

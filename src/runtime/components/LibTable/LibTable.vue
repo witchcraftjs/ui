@@ -1,6 +1,7 @@
 <template>
 <!-- Assumes no scrollbars on children -->
-<table :class="twMerge(`table
+<table
+	:class="twMerge(`table
 		table-fixed
 		border-separate
 		border-spacing-0
@@ -16,12 +17,12 @@
 		[&.resizable-cols-error]:cursor-not-allowed
 		[&.resizable-cols-error]:user-select-none
 		`,
-	cellBorder && `
+		cellBorder && `
 			[&_td]:border-neutral-500
 			[&_td:not(.last-row)]:border-b
 			[&_td:not(.first-col)]:border-l
 		`,
-	border && `
+		border && `
 			[&_thead_td]:bg-neutral-200
 			[&_td]:border-neutral-500
 			dark:[&_thead_td]:bg-neutral-800
@@ -31,19 +32,26 @@
 			[&_td.last-col]:border-r
 			[&_td.first-col]:border-l
 		`,
-	rounded &&`
+		rounded &&`
 			[&_td.br]:rounded-br-sm
 			[&_td.bl]:rounded-bl-sm
 			[&_td.tr]:rounded-tr-sm
 			[&_td.tl]:rounded-tl-sm
-		`
-	, ($attrs as any).class)"
+		`,
+		($attrs as any).class)"
 	v-resizable-cols="resizableOptions"
 >
-	<thead v-if="header" class="table--header">
+	<thead
+		v-if="header"
+		class="table--header"
+	>
 		<tr class="table--row">
-			<template v-for="col,i of cols" :key="col">
-				<slot :name="`header-${col.toString()}`"
+			<template
+				v-for="col, i of cols"
+				:key="col"
+			>
+				<slot
+					:name="`header-${col.toString()}`"
 					:class="[
 						extraClasses[`-1-${i}`],
 						'cell table--header-cell',
@@ -54,8 +62,9 @@
 					:style="`width:${widths.length > 0 ? widths[i] : ``}; `"
 					:col-key="col"
 				>
-					<td :class="[
-							extraClasses[`-1-${i}`] ,
+					<td
+						:class="[
+							extraClasses[`-1-${i}`],
 							'cell table--header-cell',
 							(colConfig as any)[col]?.resizable === false
 								? 'no-resize'
@@ -70,9 +79,15 @@
 		</tr>
 	</thead>
 	<tbody class="table--body">
-		<template v-for="item, i of values" :key="typeof itemKey === 'function' ? itemKey(item) : item[itemKey]">
+		<template
+			v-for="item, i of values"
+			:key="typeof itemKey === 'function' ? itemKey(item) : item[itemKey]"
+		>
 			<tr class="table--row">
-				<template v-for="col, j of cols" :key="(typeof itemKey === 'function' ? itemKey(item) : item[itemKey]) + col.toString()">
+				<template
+					v-for="col, j of cols"
+					:key="(typeof itemKey === 'function' ? itemKey(item) : item[itemKey]) + col.toString()"
+				>
 					<slot
 						:name="col"
 						:item="item"
@@ -94,16 +109,15 @@
 <script setup lang="ts" generic="T">
 import type { MakeRequired } from "@alanscodelog/utils"
 import { keys } from "@alanscodelog/utils/keys"
-import { computed, type PropType, ref, type TableHTMLAttributes } from "vue"
+import { computed, ref, type TableHTMLAttributes } from "vue"
 
 import { vResizableCols } from "../../directives/vResizableCols.js"
 import type { ResizableOptions, TableColConfig } from "../../types/index.js"
 import { twMerge } from "../../utils/twMerge.js"
 import type { TailwindClassProp } from "../shared/props.js"
 
-
 defineOptions({
-	name: "lib-table",
+	name: "LibTable"
 })
 
 const props = withDefaults(defineProps<Props>(), {
@@ -115,7 +129,7 @@ const props = withDefaults(defineProps<Props>(), {
 	border: true,
 	cellBorder: true,
 	header: true,
-	colConfig: () => ({}) ,
+	colConfig: () => ({})
 })
 
 const widths = ref([])
@@ -123,7 +137,7 @@ const resizableOptions = computed<MakeRequired<Partial<ResizableOptions>, "colCo
 	colCount: props.cols.length,
 	widths,
 	selector: ".cell",
-	...props.resizable,
+	...props.resizable
 }))
 
 /* props.values.length instead of `props.values.length - 1` because we're creating an artificial first row for the header */
@@ -136,7 +150,7 @@ const getExtraClasses = (row: number, col: number, isHeader: boolean): string[] 
 		"first-row": (isHeader || !props.header) && row === 0,
 		"last-row": row === props.values.length - 1,
 		"first-col": col === 0,
-		"last-col": col === props.cols.length - 1,
+		"last-col": col === props.cols.length - 1
 	}
 	return keys(res).filter(key => res[key])
 }
@@ -146,16 +160,16 @@ const extraClasses = computed(() => Object.fromEntries([...Array(props.values.le
 		.map(col =>
 			[
 				`${row - 1}-${col}`,
-				getExtraClasses(row <= 0 ? 0 : row - 1, col, row === 0).join(" "),
+				getExtraClasses(row <= 0 ? 0 : row - 1, col, row === 0).join(" ")
 			]))
-	.flat(),
+	.flat()
 ))
-
 </script>
+
 <script lang="ts">
 // generic isn't working here :/
 type T = any
-	
+
 type RealProps = {
 	resizable?: Partial<ResizableOptions>
 	values?: T[]
@@ -171,6 +185,6 @@ type RealProps = {
 interface Props
 	extends
 	/** @vue-ignore */
-	Partial<Omit<TableHTMLAttributes,"class" | "readonly" | "disabled"> & TailwindClassProp>,
+	Partial<Omit<TableHTMLAttributes, "class" | "readonly" | "disabled"> & TailwindClassProp>,
 	RealProps { }
 </script>

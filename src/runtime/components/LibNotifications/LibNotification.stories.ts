@@ -4,9 +4,7 @@ import type { Meta, StoryObj } from "@storybook/vue3"
 import LibNotification from "./LibNotification.vue"
 
 import { NotificationHandler } from "../../helpers/NotificationHandler.js"
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
-
 
 const handler = new NotificationHandler()
 
@@ -15,12 +13,11 @@ const meta: Meta<typeof LibNotification> = {
 	title: "Components/Notification",
 	args: {
 
-	},
+	}
 }
 
 export default meta
 type Story = StoryObj<typeof LibNotification>
-
 
 export const Primary: Story = {
 	render: args => ({
@@ -31,17 +28,17 @@ export const Primary: Story = {
 		backgrounds: { disable: true },
 		template: `
 			<lib-notification v-bind="args"/>
-		`,
+		`
 	}),
 	args: {
 		// @ts-expect-error calling protected method
 		notification: { ...handler._createEntry({
 			title: `Notification`,
-			message: `This is a notification. Pick an option:`,
+			message: `This is a notification. Pick an option:`
 		}),
-			// eslint-disable-next-line @typescript-eslint/no-empty-function
-																		resolve: () => { } },
-	},
+
+		resolve: () => { } }
+	}
 }
 export const WithoutTitle: Story = {
 	...Primary,
@@ -50,9 +47,9 @@ export const WithoutTitle: Story = {
 		// @ts-expect-error calling protected method
 		notification: handler._createEntry({
 			...Primary.args!.notification,
-			title: undefined,
-		}),
-	},
+			title: undefined
+		})
+	}
 }
 export const WithCode: Story = {
 	...Primary,
@@ -61,9 +58,9 @@ export const WithCode: Story = {
 		// @ts-expect-error calling protected method
 		notification: handler._createEntry({
 			...Primary.args!.notification,
-			code: "0001",
-		}),
-	},
+			code: "0001"
+		})
+	}
 }
 export const RequiresAction: Story = {
 	...Primary,
@@ -72,9 +69,9 @@ export const RequiresAction: Story = {
 		// @ts-expect-error calling protected method
 		notification: handler._createEntry({
 			...Primary.args!.notification,
-			requiresAction: true,
-		}),
-	},
+			requiresAction: true
+		})
+	}
 }
 
 /** Should not have cancel cross in top corner. */
@@ -87,9 +84,9 @@ export const Uncancellable: Story = {
 		notification: handler._createEntry({
 			...Primary.args!.notification,
 			options: ["Ok"],
-			cancellable: false,
-		}),
-	},
+			cancellable: false
+		})
+	}
 }
 
 export const CustomOptions: Story = {
@@ -99,9 +96,9 @@ export const CustomOptions: Story = {
 		// @ts-expect-error calling protected method
 		notification: handler._createEntry({
 			...Primary.args!.notification,
-			options: ["Ok", "Default Answer", "Cancel"],
-		}),
-	},
+			options: ["Ok", "Default Answer", "Cancel"]
+		})
+	}
 }
 export const CustomDefaultOption: Story = {
 	...Primary,
@@ -110,9 +107,9 @@ export const CustomDefaultOption: Story = {
 		// @ts-expect-error calling protected method
 		notification: handler._createEntry({
 			...CustomOptions.args!.notification,
-			default: "Default Answer",
-		}),
-	},
+			default: "Default Answer"
+		})
+	}
 }
 export const CustomDangerousOption: Story = {
 	...Primary,
@@ -122,9 +119,9 @@ export const CustomDangerousOption: Story = {
 		notification: handler._createEntry({
 			...CustomOptions.args!.notification,
 			options: ["Ok", "Dangerous Option", "Cancel"],
-			dangerous: ["Dangerous Option"],
-		}),
-	},
+			dangerous: ["Dangerous Option"]
+		})
+	}
 }
 export const CustomDefaultAndDangerousOption: Story = {
 	...Primary,
@@ -135,8 +132,7 @@ export const CustomDefaultAndDangerousOption: Story = {
 			...CustomOptions.args!.notification,
 			options: ["Ok", "Default Answer", "Dangerous Option", "Cancel"],
 			default: "Default Answer",
-			dangerous: ["Dangerous Option"],
-		}),
-	},
+			dangerous: ["Dangerous Option"]
+		})
+	}
 }
-

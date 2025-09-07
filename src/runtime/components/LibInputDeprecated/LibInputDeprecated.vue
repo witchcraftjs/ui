@@ -9,14 +9,18 @@
 			text-neutral-400
 			dark:text-neutral-600
 		`,
-		($.wrapperAttrs as any)?.class,
+		($.wrapperAttrs as any)?.class
 	)"
 	tabindex="-1"
-	v-bind="{...$.wrapperAttrs, class:undefined}"
+	v-bind="{ ...$.wrapperAttrs, class: undefined }"
 	ref="inputWrapperEl"
 >
-	<slot name="label" v-bind="{ ...slotProps, label }">
-		<lib-label v-if="label || $slots.default"
+	<slot
+		name="label"
+		v-bind="{ ...slotProps, label }"
+	>
+		<lib-label
+			v-if="label || $slots.default"
 			:id="id ?? fallbackId"
 			:disabled="disabled"
 			:readonly="readonly"
@@ -37,7 +41,7 @@
 		:data-disabled="disabled"
 		:data-read-only="readonly"
 		:data-is-open="isOpen"
-		v-bind="{...$['inner-wrapperAttrs'], class:undefined}"
+		v-bind="{ ...$['inner-wrapperAttrs'], class: undefined }"
 		:class="twMerge(`input--inner-wrapper
 				relative
 				flex
@@ -74,22 +78,31 @@
 				dark:border-neutral-600
 				border-neutral-400
 			`,
-			($['inner-wrapperAttrs'] as any)?.class,
+			($['inner-wrapperAttrs'] as any)?.class
 		)"
 	>
-		<slot name="left" v-bind="slotProps"/>
-		<slot name="input" v-bind="{ ...inputProps, ...slotProps, suggestionsIndicatorClickHandler }">
+		<slot
+			name="left"
+			v-bind="slotProps"
+		/>
+		<slot
+			name="input"
+			v-bind="{ ...inputProps, ...slotProps, suggestionsIndicatorClickHandler }"
+		>
 			<lib-simple-input
 				:class="twMerge(
 					`input--input p-0`,
 					!$slots.left && `-ml-2 pl-2`,
 					!$slots.right && (!$values || $values.length === 0) && !suggestions && `-mr-2 -pr-2`,
-					($.attrs as any)?.class,
+					($.attrs as any)?.class
 				)"
 				v-bind="inputProps"
 			/>
 		</slot>
-		<slot name="indicator" v-bind="{isOpen, suggestionsIndicatorClickHandler }">
+		<slot
+			name="indicator"
+			v-bind="{ isOpen, suggestionsIndicatorClickHandler }"
+		>
 			<!-- todo, convert to button for accessibility ? -->
 			<div
 				v-if="suggestions"
@@ -97,12 +110,14 @@
 				:class="twMerge(`input--indicator flex flex-col justify-center`)"
 				@click="suggestionsIndicatorClickHandler"
 			>
-				<icon :class="isOpen && `rotate-180`"> <i-fa6-solid-chevron-up/> </icon>
+				<icon :class="isOpen && `rotate-180`">
+					<i-fa6-solid-chevron-up/>
+				</icon>
 			</div>
 		</slot>
 		<slot
 			name="values"
-			v-bind="{...multivaluesProps, ...slotProps}"
+			v-bind="{ ...multivaluesProps, ...slotProps }"
 		>
 			<template v-if="$values && $values.length > 0">
 				<lib-multi-values
@@ -113,15 +128,22 @@
 							py-1
 						`,
 						!$slots.right && `-mr-1`,
-						($.multivaluesAttrs as any)?.class,
+						($.multivaluesAttrs as any)?.class
 					)"
 					v-bind="multivaluesProps"
 				/>
 			</template>
 		</slot>
-		<slot name="right" v-bind="slotProps"/>
+		<slot
+			name="right"
+			v-bind="slotProps"
+		/>
 
-		<slot v-if="suggestions" name="suggestions" v-bind="{...suggestionProps, ...slotProps}">
+		<slot
+			v-if="suggestions"
+			name="suggestions"
+			v-bind="{ ...suggestionProps, ...slotProps }"
+		>
 			<!-- todo 1px needs to be abstracted to var -->
 			<lib-suggestions
 				:class="twMerge(`
@@ -137,24 +159,27 @@
 					!border && `
 						rounded-sm
 					`,
-					($.suggestionsAttrs as any)?.class,
+					($.suggestionsAttrs as any)?.class
 				)"
 				ref="suggestionsComponent"
 				v-bind="suggestionProps"
 			>
 				<template #item="itemSlotProps">
-					<slot name="suggestion-item" v-bind="itemSlotProps"/>
+					<slot
+						name="suggestion-item"
+						v-bind="itemSlotProps"
+					/>
 				</template>
 			</lib-suggestions>
 		</slot>
 	</div>
 </div>
 </template>
+
 <script setup lang="ts">
 import { isBlank } from "@alanscodelog/utils/isBlank"
-import { isObject } from "@alanscodelog/utils/isObject"
 import { pushIfNotIn } from "@alanscodelog/utils/pushIfNotIn"
-import { computed,type HTMLAttributes,type InputHTMLAttributes, nextTick, onBeforeMount, ref, toRef, useSlots, watch } from "vue"
+import { computed, type HTMLAttributes, type InputHTMLAttributes, nextTick, ref, toRef, useSlots, watch } from "vue"
 import type { ComponentExposed } from "vue-component-type-helpers"
 
 import IFa6SolidChevronUp from "~icons/fa6-solid/chevron-up"
@@ -169,11 +194,10 @@ import LibSimpleInput from "../LibSimpleInput/LibSimpleInput.vue"
 import LibSuggestions from "../LibSuggestions/LibSuggestions.vue"
 import { type BaseInteractiveProps, getFallbackId, type LabelProps, type LinkableByIdProps, type SuggestionsProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
 
-
 /* #region base */
 defineOptions({
-	name: "lib-simple-input-deprecated",
-	inheritAttrs: false,
+	name: "LibSimpleInputDeprecated",
+	inheritAttrs: false
 })
 const $slots = useSlots()
 const emit = defineEmits<{
@@ -191,7 +215,7 @@ const props = withDefaults(defineProps<Props>(), {
 	valid: true,
 	suggestions: undefined,
 	updateOnlyOnSubmit: false,
-	unstyle: false, disabled: false, readonly: false, border: true,
+	unstyle: false, disabled: false, readonly: false, border: true
 })
 
 const $ = useDivideAttrs(["wrapper", "inner-wrapper", "suggestions", "multivalues"] as const)
@@ -221,7 +245,6 @@ const suggestionsIndicatorClickHandler = (e: MouseEvent) => {
 	})
 	emit("indicatorClick", e)
 }
-
 
 const handleKeydown = (e: KeyboardEvent) => {
 	if (props.suggestions) {
@@ -263,7 +286,7 @@ const inputAriaProps = useSuggestionsInputAria(
 	fullId,
 	isOpen,
 	activeSuggestion,
-	suggestions,
+	suggestions
 )
 const inputProps = computed(() => ({
 	id: fullId.value,
@@ -275,6 +298,7 @@ const inputProps = computed(() => ({
 	onBlur: handleBlur,
 	onFocus: handleFocus,
 	modelValue: $inputValue.value,
+	// eslint-disable-next-line @typescript-eslint/naming-convention
 	"onUpdate:modelValue": (e: string) => {
 		$inputValue.value = e
 		if (!props.suggestions && !props.updateOnlyOnSubmit && !props.restrictToSuggestions) {
@@ -293,7 +317,7 @@ const inputProps = computed(() => ({
 	...inputAriaProps.value,
 	canEdit: canEdit.value,
 	...$.value.attrs,
-	class: undefined,
+	class: undefined
 }))
 
 function slotSubmit(val: any, _wasRemoved: boolean): void {
@@ -308,7 +332,6 @@ const slotProps = computed(() => ({
 	emitSubmit: slotSubmit
 }))
 
-
 const suggestionProps = computed(() => ({
 	id: fullId.value,
 	suggestions: props.suggestions,
@@ -319,18 +342,22 @@ const suggestionProps = computed(() => ({
 	modelValue: $values.value ?? $modelValue.value.toString(),
 	inputValue: $inputValue.value,
 	isValid: props.isValid,
+	// eslint-disable-next-line @typescript-eslint/naming-convention
 	"onUpdate:inputValue": (e: string) => $inputValue.value = e,
 	onSubmit: (e: string, suggestion?: any, wasRemoved?: boolean) => {
 		$modelValue.value = wasRemoved ? "" : e
 		emit("submit", e, suggestion)
 	},
+	// eslint-disable-next-line @typescript-eslint/naming-convention
 	"onUpdate:modelValue": (e: string | string[]) => {
 		$values.value &&= e as string[]
 	},
+	// eslint-disable-next-line @typescript-eslint/naming-convention
 	"onUpdate:isOpen": (e: boolean) => { isOpen.value = e },
+	// eslint-disable-next-line @typescript-eslint/naming-convention
 	"onUpdate:activeSuggestion": (e: number) => activeSuggestion.value = e,
 	...$.value.suggestionsAttrs,
-	class: undefined,
+	class: undefined
 }))
 
 const multivaluesProps = computed(() => ({
@@ -340,41 +367,39 @@ const multivaluesProps = computed(() => ({
 	disabled: props.disabled,
 	readonly: props.readonly,
 	modelValue: $values.value,
+	// eslint-disable-next-line @typescript-eslint/naming-convention
 	"onUpdate:modelValue": (e: string[]) => $values.value = e,
 	...$.value.multivaluesAttrs,
-	class: undefined,
+	class: undefined
 }))
-
 
 defineExpose({
 	suggestionsComponent,
-	el: inputWrapperEl,
+	el: inputWrapperEl
 })
-
 </script>
+
 <script lang="ts">
+type WrapperTypes
+	= & WrapperProps<"suggestions", HTMLAttributes>
+		& WrapperProps<"wrapper", HTMLAttributes>
+		& WrapperProps<"inner-wrapper", HTMLAttributes>
 
-type WrapperTypes =
-	& WrapperProps<"suggestions",HTMLAttributes >
-	& WrapperProps<"wrapper", HTMLAttributes >
-	& WrapperProps<"inner-wrapper",HTMLAttributes>
-
-type RealProps =
-	SuggestionsProps
-	& LinkableByIdProps
-	& LabelProps
-	& BaseInteractiveProps
-& {
-	suggestions?: SuggestionsProps["suggestions"]
-	valid?: boolean
-}
+type RealProps
+	= SuggestionsProps
+		& LinkableByIdProps
+		& LabelProps
+		& BaseInteractiveProps
+		& {
+			suggestions?: SuggestionsProps["suggestions"]
+			valid?: boolean
+		}
 
 interface Props
 	extends
 	/** @vue-ignore */
-	Partial<Omit<InputHTMLAttributes,"class" | "readonly" | "disabled" | "onSubmit"> & TailwindClassProp>,
+	Partial<Omit<InputHTMLAttributes, "class" | "readonly" | "disabled" | "onSubmit"> & TailwindClassProp>,
 	/** @vue-ignore */
 	Partial<WrapperTypes>,
 	RealProps { }
 </script>
-

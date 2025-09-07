@@ -9,7 +9,6 @@ export { VueComponentsPlugin } from "./vue/VueComponentsPlugin.js"
 
 import type * as components from "./components/index.js"
 
-
 type Components = typeof components
 
 /**
@@ -28,4 +27,3 @@ type Components = typeof components
 export type GlobalComponentTypes = {
 	[key in keyof Components]: Components[key]
 }
-

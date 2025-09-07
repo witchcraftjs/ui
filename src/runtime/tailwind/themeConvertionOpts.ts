@@ -1,5 +1,4 @@
-import { type themeAsTailwindCss } from "metamorphosis/tailwind"
-
+import type { themeAsTailwindCss } from "metamorphosis/tailwind"
 
 export const themeConvertionOpts: Parameters<typeof themeAsTailwindCss>[1] = {
 	topLevel: ["number-spacing"],
@@ -10,6 +9,6 @@ export const themeConvertionOpts: Parameters<typeof themeAsTailwindCss>[1] = {
 		"color-warning": "500",
 		"color-ok": "500",
 		"color-error": "500",
-		"color-accent": "500",
-	},
+		"color-accent": "500"
+	}
 }

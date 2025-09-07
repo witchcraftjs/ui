@@ -13,10 +13,11 @@
 	:data-open="$open"
 	role="listbox"
 	ref="el"
-	v-bind="{...$.attrs, class:undefined}"
+	v-bind="{ ...$.attrs, class: undefined }"
 >
 	<!-- Click event is just in case, it should not really be triggered. We can do click selections via the blur handler. -->
-	<div :id="`suggestion-${id ?? fallbackId}-${index}`"
+	<div
+		:id="`suggestion-${id ?? fallbackId}-${index}`"
 		role="option"
 		:class="twMerge(`
 			suggestions--item
@@ -30,7 +31,7 @@
 			`,
 			($.itemAttrs as any)?.class
 		)"
-		v-bind="{...$.itemAttrs, class:undefined}"
+		v-bind="{ ...$.itemAttrs, class: undefined }"
 		:aria-selected="index === suggestions.active ? true : false"
 		:aria-label="suggestions.getLabel(item)"
 		v-for="(item, index) in suggestions.filtered"
@@ -39,7 +40,8 @@
 		@mousedown.prevent
 		@mouseup="suggestions.enterIndex(index, !Array.isArray($modelValue))"
 	>
-		<slot name="item"
+		<slot
+			name="item"
 			:item="item"
 			:index="index"
 			:is-selected="Array.isArray($modelValue) ? $modelValue.includes(item) : $modelValue === item"
@@ -57,21 +59,19 @@
 </div>
 </template>
 
-
 <script setup lang="ts" generic="TSuggestion extends string | object, TValue extends string|string[]">
-
-import { type HTMLAttributes,reactive, ref } from "vue"
+import { type HTMLAttributes, reactive, ref } from "vue"
 
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
 import { useSuggestions } from "../../composables/useSuggestions.js"
 import { hasModifiers } from "../../helpers/hasModifiers.js"
 import { twMerge } from "../../utils/twMerge.js"
 import LibCheckbox from "../LibCheckbox/LibCheckbox.vue"
-import { type BaseInteractiveProps, getFallbackId,type LabelProps, type LinkableByIdProps, type SuggestionsEmits, type SuggestionsProps, type WrapperProps } from "../shared/props.js"
+import { type BaseInteractiveProps, getFallbackId, type LabelProps, type LinkableByIdProps, type SuggestionsEmits, type SuggestionsProps, type WrapperProps } from "../shared/props.js"
 
 defineOptions({
-	name: "lib-suggestions",
-	inheritAttrs: false,
+	name: "LibSuggestions",
+	inheritAttrs: false
 })
 
 const $ = useDivideAttrs(["item"] as const)
@@ -83,7 +83,7 @@ const props = withDefaults(defineProps<Props & SuggestionsProps<TSuggestion>>(),
 	isValid: true,
 	canOpen: true,
 	filterKeydown: undefined,
-	unstyle: false, disabled: false, readonly: false, border: true,
+	unstyle: false, disabled: false, readonly: false, border: true
 })
 /**
  * The final valid value. This is *not* the value you want to share with the input. If `restrictToSuggestions` is true this will not update on any invalid values that `inputValue` might be set to.
@@ -96,10 +96,9 @@ const $modelValue = defineModel<TValue>("modelValue", { required: true })
  *
  * It allows the component to read even invalid output, and also to reset that invalid output when either modelValue is set to a new value, or when the component is closed via cancel.
  */
-const $inputValue = defineModel<string >("inputValue", { default: "" })
+const $inputValue = defineModel<string>("inputValue", { default: "" })
 
 const $open = defineModel<boolean>("open", { default: false })
-
 
 if (typeof props.suggestions?.[0] === "object" && !props.suggestionLabel && !props.suggestionsFilter) {
 	throw new Error("`suggestionLabel` or `suggestionsFilter` must be passed if suggestions are objects.")
@@ -148,7 +147,7 @@ const inputKeydownHandler = (e: KeyboardEvent): void => {
 }
 const inputBlurHandler = (e: MouseEvent): void => {
 	if (props.filterBlur?.(e)) return
-	
+
 	if (!$open.value) return
 
 	if (props.restrictToSuggestions) {
@@ -175,34 +174,33 @@ defineExpose({
 	/** A blur handler for the input that controls the component. This also takes care of making clicking on a suggestion work, since otherwise if canOpen is set to false in the blur handler, no click event will fire. */
 	inputBlurHandler,
 	/** A focus handler for the input that controls the component. */
-	inputFocusHandler,
+	inputFocusHandler
 })
-
 </script>
 
 <script lang="ts">
-type WrapperTypes = Partial<WrapperProps<"item",HTMLAttributes, {
+type WrapperTypes = Partial<WrapperProps<"item", HTMLAttributes, {
 	/** Tailwind classes. */
 	class?: string
 }>>
 
-type RealProps =
-	& LinkableByIdProps
-	& LabelProps
-	& BaseInteractiveProps
-	& {
+type RealProps
+	= & LinkableByIdProps
+		& LabelProps
+		& BaseInteractiveProps
+		& {
 		/** Return true to prevent the keydown event from being handled. */
-		filterKeydown?: (e: KeyboardEvent) => boolean
-		/** Return true to prevent the blur event from being handled. */
-		filterBlur?: (e: MouseEvent) => boolean
-		/** Return true to prevent the focus event from being handled. */
-		filterFocus?: (e: FocusEvent) => boolean
-	}
+			filterKeydown?: (e: KeyboardEvent) => boolean
+			/** Return true to prevent the blur event from being handled. */
+			filterBlur?: (e: MouseEvent) => boolean
+			/** Return true to prevent the focus event from being handled. */
+			filterFocus?: (e: FocusEvent) => boolean
+		}
 
 interface Props
 	extends
 	/** @vue-ignore */
-	Partial<Omit<HTMLAttributes,"class" | "onSubmit"> & {
+	Partial<Omit<HTMLAttributes, "class" | "onSubmit"> & {
 		/** Tailwind classes. */
 		class?: string
 	}>,
@@ -210,5 +208,4 @@ interface Props
 	WrapperTypes,
 	RealProps
 {}
-
 </script>

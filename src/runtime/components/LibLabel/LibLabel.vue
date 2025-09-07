@@ -12,37 +12,37 @@
 	:data-disabled="disabled"
 	:data-invalid="!valid"
 	:for="id"
-	v-bind="{...$attrs, class:undefined}"
+	v-bind="{ ...$attrs, class: undefined }"
 >
 	<slot/>
 </label>
 </template>
 
 <script setup  lang="ts">
-import type { MakeRequired } from "@alanscodelog/utils/types"
-import { type LabelHTMLAttributes,toRef,useAttrs } from "vue"
+import { useAttrs } from "vue"
 
 import { twMerge } from "../../utils/twMerge.js"
-import { type BaseInteractiveProps, getFallbackId, type LabelProps, type LinkableByIdProps, type TailwindClassProp } from "../shared/props.js"
-
+import { getFallbackId } from "../shared/props.js"
 
 defineOptions({
-	name: "lib-label",
+	name: "LibLabel"
 })
 
 const fallbackId = getFallbackId()
 
-// eslint-disable-next-line no-undef
 withDefaults(defineProps<Props>(), {
 	id: "",
 	valid: true,
-	unstyle: false, disabled: false, readonly: false, border: true,
+	unstyle: false, disabled: false, readonly: false, border: true
 })
 
 const $attrs = useAttrs()
 </script>
 
 <script lang="ts">
+import type { LabelHTMLAttributes } from "vue"
+import type { BaseInteractiveProps, LabelProps, LinkableByIdProps, TailwindClassProp } from "../shared/props.js"
+
 type RealProps =
 	& LinkableByIdProps
 	& LabelProps

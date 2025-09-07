@@ -12,7 +12,6 @@ import IconFaSolidTags from "~icons/fa6-solid/tags"
 import { vExtractRootEl } from "../../directives/vExtractRootEl.js"
 import { createRecorderHandler, createRecorderWatchEffect } from "../../helpers/storybook.js"
 import Icon from "../Icon/Icon.vue"
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
 import {
 	playBasicVModel,
@@ -21,7 +20,7 @@ import {
 import {
 	playBasicClickSelect,
 	playBasicKeyboardSelect,
-	playBasicSelect,
+	playBasicSelect
 } from "../shared/storyHelpers/playSuggestions.js"
 
 const meta = {
@@ -31,9 +30,9 @@ const meta = {
 		border: true,
 		label: "Some Label",
 		...{
-			_template: undefined,
+			_template: undefined
 		} as any
-	},
+	}
 } satisfies Meta<typeof LibInputDeprecated> & Meta<{ custom: string }>
 
 export default meta
@@ -45,9 +44,8 @@ const allComponents = {
 	IconFaChevronRight,
 	IconFaChevronLeft,
 	IconFaSolidKeyboard,
-	IconFaSolidTags,
+	IconFaSolidTags
 }
-
 
 const playAutosuggestSelectLike = async (context: { canvasElement: HTMLElement, args: any }) => {
 	await playBasicSelect(context)
@@ -57,24 +55,24 @@ const playAutosuggestSelectLike = async (context: { canvasElement: HTMLElement, 
 
 const setupModelValue = (args: any) => ({
 	modelValue: ref(args.modelValue ?? ""),
-	inputValue: ref(args.inputValue ?? ""),
+	inputValue: ref(args.inputValue ?? "")
 })
 
 const setupModelValues = (args: any) => ({
-	values: ref(args.values ?? undefined),
+	values: ref(args.values ?? undefined)
 })
 
 const Base: Story = {
 	render: args => ({
 		components: allComponents,
 		setup: () => ({
-			
+
 			...setupModelValue(args),
 			...setupModelValues(args),
 			args: {
 				...args,
-				updateOnlyOnSubmit: args.suggestions !== undefined,
-			},
+				updateOnlyOnSubmit: args.suggestions !== undefined
+			}
 		}),
 
 		template: (args as any)._template ?? `
@@ -87,8 +85,8 @@ const Base: Story = {
 				@submit="modelValue = $event"
 			>
 			</lib-simple-input-deprecated>
-		`,
-	}),
+		`
+	})
 }
 
 export const Primary: Story = {
@@ -99,54 +97,53 @@ export const Primary: Story = {
 export const Disabled: Story = {
 	...Base,
 	args: {
-		disabled: true,
-	},
+		disabled: true
+	}
 }
 export const Readonly: Story = {
 	...Base,
 	args: {
-		readonly: true,
-	},
+		readonly: true
+	}
 }
 export const Invalid: Story = {
 	...Base,
 	args: {
-		valid: false,
-	},
+		valid: false
+	}
 }
 
 export const AttrsPassword: Story = {
 	...Base,
 	args: {
-		type: "password",
-	} as any,
+		type: "password"
+	} as any
 }
 export const AttrsDate: Story = {
 	...Base,
 	args: {
-		type: "date",
-	} as any,
+		type: "date"
+	} as any
 }
 export const AttrsNumber: Story = {
 	...Base,
 	args: {
-		type: "number",
-	} as any,
+		type: "number"
+	} as any
 }
 
 export const Borderless = {
 	...Base,
 	args: {
 		border: false,
-		suggestions: ["A", "AB", "ABC", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"],
-	},
+		suggestions: ["A", "AB", "ABC", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"]
+	}
 }
-
 
 export const WithAutosuggest = {
 	...Base,
 	args: {
-		suggestions: ["A", "AB", "ABC", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"],
+		suggestions: ["A", "AB", "ABC", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"]
 	},
 	play: playAutosuggestSelectLike
 }
@@ -155,21 +152,21 @@ export const WithAutosuggestNoLabel = {
 	...Base,
 	args: {
 		label: undefined,
-		suggestions: ["A", "AB", "ABC", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"],
+		suggestions: ["A", "AB", "ABC", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"]
 	},
 	play: playAutosuggestSelectLike
 }
 export const WithInstantAutosuggest = {
 	...Base,
 	args: {
-		suggestions: ["A", "AB", "ABC", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"],
-	},
+		suggestions: ["A", "AB", "ABC", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"]
+	}
 }
 export const AutosuggestRestricted = {
 	...WithAutosuggest,
 	args: {
 		...WithAutosuggest.args,
-		restrictToSuggestions: true,
+		restrictToSuggestions: true
 	},
 	play: playAutosuggestSelectLike
 }
@@ -192,14 +189,14 @@ export const AutosuggestRestrictedWithClearOnClick = {
 				</lib-simple-input-deprecated>
 			`
 	},
-	play: null,
+	play: null
 }
 export const AutosuggestSelectLikeShowAllUnrestricted = {
 	...WithAutosuggest,
 	args: {
 		...WithAutosuggest.args,
 		restrictToSuggestions: false,
-		suggestionsFilter: (_input: string, items: string[]) => items,
+		suggestionsFilter: (_input: string, items: string[]) => items
 	},
 	play: playAutosuggestSelectLike
 }
@@ -212,9 +209,9 @@ export const AutosuggestObjectOptions = {
 			{ label: "A", other: "some data A" },
 			{ label: "AB", other: "some data AB" },
 			{ label: "ABC", other: "some data ABC" },
-			{ label: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", other: "some data ABCDEFGHIJKLMNOPQRSTUVWXYZ" },
+			{ label: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", other: "some data ABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 		],
-		suggestionLabel: (item: any) => item.label,
+		suggestionLabel: (item: any) => item.label
 	},
 	play: playAutosuggestSelectLike
 }
@@ -227,10 +224,9 @@ export const Slots: Story = {
 			...setupModelValues(args),
 			args: {
 				...args,
-				updateOnlyOnSubmit: args.suggestions !== undefined,
-			},
-		})
-		,
+				updateOnlyOnSubmit: args.suggestions !== undefined
+			}
+		}),
 		template: `
 			Model Value: <span class="inline-block" data-testid="model-value">{{modelValue}}</span>\n
 
@@ -253,8 +249,8 @@ export const Slots: Story = {
 					</lib-button>
 				</template>
 			</lib-simple-input-deprecated>
-		`,
-	}),
+		`
+	})
 }
 const MultipleValuesBase: Story = {
 	render: args => ({
@@ -262,9 +258,8 @@ const MultipleValuesBase: Story = {
 		setup: () => ({
 			...setupModelValue(args),
 			...setupModelValues(args),
-			args,
-		})
-		,
+			args
+		}),
 
 		template: `
 			Model Value: <span class="inline-block" data-testid="model-value">{{modelValue}}</span>\n
@@ -281,12 +276,12 @@ const MultipleValuesBase: Story = {
 					</lib-button>
 				</template>
 			</lib-simple-input-deprecated>
-		`,
+		`
 	}),
 	args: {
-		values: ["A", "B", "C"],
-	},
-	
+		values: ["A", "B", "C"]
+	}
+
 }
 /** Press enter to add a value. */
 export const WithMultipleValues: Story = {
@@ -298,7 +293,7 @@ export const WithMultipleValuesWithSuggestions = {
 	...MultipleValuesBase,
 	args: {
 		...MultipleValuesBase.args,
-		suggestions: ["A", "AB", "ABC", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"],
+		suggestions: ["A", "AB", "ABC", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"]
 	},
 	play: playAutosuggestSelectLike
 }
@@ -307,7 +302,7 @@ export const WithMultipleValuesWithSuggestionsNoSelected = {
 	args: {
 		...MultipleValuesBase.args,
 		suggestions: ["A", "AB", "ABC", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"],
-		showSelectedValues: false,
+		showSelectedValues: false
 	},
 	play: playAutosuggestSelectLike
 }
@@ -315,15 +310,15 @@ export const WithMultipleValuesDisabled = {
 	...MultipleValuesBase,
 	args: {
 		...MultipleValuesBase.args,
-		disabled: true,
-	},
+		disabled: true
+	}
 }
 export const WithMultipleValuesReadonly = {
 	...MultipleValuesBase,
 	args: {
 		...MultipleValuesBase.args,
-		readonly: true,
-	},
+		readonly: true
+	}
 }
 
 export const InputSlotReplacement: Story = {
@@ -345,10 +340,9 @@ export const InputSlotReplacement: Story = {
 				recorderEl,
 				modelValue,
 				values,
-				args,
+				args
 			}
-		}
-		,
+		},
 
 		template: `
 			Model Value: <span class="inline-block" data-testid="model-value">{{modelValue}}</span>\n
@@ -378,13 +372,12 @@ export const InputSlotReplacement: Story = {
 					<icon><icon-fa-solid-keyboard/></icon>
 				</template>
 			</lib-simple-input-deprecated>
-		`,
+		`
 	}),
 	args: {
-		values: ["A", "B", "C"],
-	},
+		values: ["A", "B", "C"]
+	}
 }
-
 
 export const NextToButton: Story = {
 	render: args => ({
@@ -392,7 +385,7 @@ export const NextToButton: Story = {
 		setup: () => ({
 			...setupModelValue(args),
 			...setupModelValues(args),
-			args,
+			args
 		}),
 
 		template: `
@@ -406,7 +399,6 @@ export const NextToButton: Story = {
 			</lib-simple-input-deprecated>
 			<lib-button>Button</lib-button>
 		</div>
-		`,
-	}),
+		`
+	})
 }
-

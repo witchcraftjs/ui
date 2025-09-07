@@ -1,19 +1,17 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { Meta, StoryObj } from "@storybook/vue3"
 
-
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 const meta: Meta<{}> = {
 	title: "Other/Reset",
 	args: {
 
-	},
+	}
 }
 
 export default meta
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 type Story = StoryObj<{}>
-
 
 export const Primary: Story = {
 	render: args => ({
@@ -26,7 +24,6 @@ export const Primary: Story = {
 			<h5>h5 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ullamcorper est at dui eleifend, et egestas libero gravida. Phasellus non erat pretium, commodo massa sit amet, accumsan nisl.</h5>
 			<h6>h6 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ullamcorper est at dui eleifend, et egestas libero gravida. Phasellus non erat pretium, commodo massa sit amet, accumsan nisl.</h6>
 			<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ullamcorper est at dui eleifend, et egestas libero gravida. Phasellus non erat pretium, commodo massa sit amet, accumsan nisl.</p>
-		`,
-	}),
+		`
+	})
 }
-

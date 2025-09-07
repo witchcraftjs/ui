@@ -5,7 +5,6 @@ import type { ComponentExposed } from "vue-component-type-helpers"
 
 import LibSuggestions from "./LibSuggestions.vue"
 
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
 
 const meta = {
@@ -16,8 +15,8 @@ const meta = {
 		modelValue: "",
 		label: "Some Label",
 		border: true,
-		suggestions: ["A", "AB", "ABC", "B", "BC", "C", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"],
-	},
+		suggestions: ["A", "AB", "ABC", "B", "BC", "C", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"]
+	}
 } // satisfies Meta<typeof LibSuggestions> & Meta<{ custom: string }>
 
 export default meta
@@ -33,7 +32,7 @@ type Story = StoryObj<typeof LibSuggestions> // & StoryObj<typeof extraArgs>
 export const Primary: Story = {
 	render: args => ({
 		components: { ...components, LibSuggestions },
-		
+
 		setup: () => {
 			const inputValue = ref(args.modelValue)
 			const modelValue = ref(args.modelValue)
@@ -56,7 +55,7 @@ export const Primary: Story = {
 				suggestions,
 				drawer,
 				keydownHandler,
-				blurHandler,
+				blurHandler
 			}
 		},
 
@@ -88,26 +87,25 @@ export const Primary: Story = {
 					</template>
 				</lib-suggestions>
 			</div>
-		`,
-	}),
+		`
+	})
 }
 
 export const RestrictToSuggestions: Story = {
 	...Primary,
 	args: {
 		...Primary.args,
-		restrictToSuggestions: true,
-	},
-	
-	
+		restrictToSuggestions: true
+	}
+
 }
 export const AlwaysShowAllSuggestions = {
 	...Primary,
 	args: {
 		...Primary.args,
 		restrictToSuggestions: true,
-		suggestionsFilter: (_input: string, items: string[]) => items,
-	},
+		suggestionsFilter: (_input: string, items: string[]) => items
+	}
 
 }
 export const AlwaysShowAllSuggestionsAndNoRestrictToSuggestions = {
@@ -115,8 +113,8 @@ export const AlwaysShowAllSuggestionsAndNoRestrictToSuggestions = {
 	args: {
 		...Primary.args,
 		restrictToSuggestions: false,
-		suggestionsFilter: (_input: string, items: string[]) => items,
-	},
+		suggestionsFilter: (_input: string, items: string[]) => items
+	}
 
 }
 export const CustomSuggestionsObject = {
@@ -128,10 +126,9 @@ export const CustomSuggestionsObject = {
 			{ label: "A", other: "some data A" },
 			{ label: "AB", other: "some data AB" },
 			{ label: "ABC", other: "some data ABC" },
-			{ label: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", other: "some data ABCDEFGHIJKLMNOPQRSTUVWXYZ" },
+			{ label: "ABCDEFGHIJKLMNOPQRSTUVWXYZ", other: "some data ABCDEFGHIJKLMNOPQRSTUVWXYZ" }
 		],
-		suggestionLabel: (item: any) => item.label,
-	},
+		suggestionLabel: (item: any) => item.label
+	}
 
 }
-

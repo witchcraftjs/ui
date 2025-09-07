@@ -4,23 +4,20 @@ import { ref } from "vue"
 
 import LibMultiValues from "./LibMultiValues.vue"
 
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
-
 
 const meta = {
 	component: LibMultiValues as any,
 	title: "Components/MultiValues",
 	args: {
 		modelValue: ["A", "B", "C"],
-		border: true,
+		border: true
 	},
-	tags: ["!test"],
+	tags: ["!test"]
 } satisfies Meta<typeof LibMultiValues> & Meta<{ custom: string }>
 
 export default meta
 type Story = StoryObj<typeof LibMultiValues> // & StoryObj<typeof extraArgs>
-
 
 /**
  * The multi-value component is just the values part beneath the input.
@@ -42,10 +39,9 @@ export const Primary: Story = {
 				args,
 				inputValue,
 				multiValueEl,
-				onKeydownEnter,
+				onKeydownEnter
 			})
-		}
-		,
+		},
 
 		template: `
 			<p>Simple Input connected to multi-value.</p>
@@ -64,21 +60,20 @@ export const Primary: Story = {
 					v-model="args.modelValue"
 				/>
 			</div>
-		`,
-	}),
+		`
+	})
 }
-
 
 export const Disabled = {
 	...Primary,
 	args: {
-		disabled: true,
-	},
+		disabled: true
+	}
 }
 
 export const Readonly = {
 	...Primary,
 	args: {
-		readonly: true,
-	},
+		readonly: true
+	}
 }

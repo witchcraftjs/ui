@@ -4,21 +4,18 @@ import { ref } from "vue"
 
 import LibColorInput from "./LibColorInput.vue"
 
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
-
 
 const meta: Meta<typeof LibColorInput> = {
 	component: LibColorInput,
 	title: "Components/ColorInput",
 	args: {
-		
-	},
+
+	}
 }
 
 export default meta
 type Story = StoryObj<typeof LibColorInput>
-
 
 export const Primary: Story = {
 	render: args => ({
@@ -33,9 +30,9 @@ export const Primary: Story = {
 					outline: false,
 					color,
 					allowAlpha: true,
-					...args,
+					...args
 				},
-				handleChange,
+				handleChange
 			}
 		},
 		template: `
@@ -55,15 +52,13 @@ export const Primary: Story = {
 				>
 				</lib-color-Input>
 			</div>
-		`,
-	}),
+		`
+	})
 }
-
 
 export const DoesNotAllowAlpha: Story = {
 	...Primary,
 	args: {
-		allowAlpha: false,
-	},
+		allowAlpha: false
+	}
 }
-

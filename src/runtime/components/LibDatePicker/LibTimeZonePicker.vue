@@ -3,9 +3,11 @@ import { getLocalTimeZone } from "@internationalized/date"
 
 import { getTimeZoneList } from "../../helpers/getTimeZoneList.js"
 import LibInputDeprecated from "../LibInputDeprecated/LibInputDeprecated.vue"
+
 const timeZone = defineModel<string>({ default: getLocalTimeZone() })
 const label = defineModel<string>("label", { default: "Time Zone" })
 </script>
+
 <template>
 <LibInputDeprecated
 	:restrict-to-suggestions="true"
@@ -24,4 +26,3 @@ const label = defineModel<string>("label", { default: "Time Zone" })
 	</template>
 </LibInputDeprecated>
 </template>
-

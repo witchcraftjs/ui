@@ -4,9 +4,7 @@ import type { Meta, StoryObj } from "@storybook/vue3"
 
 import IconFaSolidBell from "~icons/fa-solid/bell"
 
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
-
 
 const meta: Meta<typeof components.LibButton> = {
 	component: components.LibButton,
@@ -14,19 +12,18 @@ const meta: Meta<typeof components.LibButton> = {
 	args: {
 		label: "Label",
 		// @ts-expect-error - custom prop for story
-		_iconAfter: true,
-	},
+		_iconAfter: true
+	}
 }
 
 export default meta
 type Story = StoryObj<typeof components.LibButton>
 
-
 export const Primary: Story = {
 	render: (args: any) => ({
 		components: {
 			...components,
-			IconFaSolidBell,
+			IconFaSolidBell
 		},
 		setup: () => ({ args, capitalize }),
 		template: `
@@ -42,16 +39,18 @@ export const Primary: Story = {
 		<div class="flex flex-col gap-4 pt-10">
 			<template v-for="type of [false, 'ok', 'warning', 'danger', 'primary', 'secondary']">
 				<lib-button v-bind="{...args, color: type , label: !args.label ? undefined : args.label + ' ' + capitalize(type || 'false') }">
-					${args._iconAfter ? `
+					${args._iconAfter
+			? `
 						<template #icon-after>
 							<icon class="w-[1em]"><icon-fa-solid-bell /></icon>
 						</template>
-					` : ``}
+					`
+			: ``}
 				</lib-button>
 			</template>
 		</div>
-		`,
-	}),
+		`
+	})
 }
 
 export const IconAfter: Story = {
@@ -59,38 +58,38 @@ export const IconAfter: Story = {
 	args: {
 		...Primary.args,
 		// @ts-expect-error - .
-		_iconAfter: true,
-	},
+		_iconAfter: true
+	}
 }
 
 export const OnlyIcon: Story = {
 	...Primary,
 	args: {
 		...Primary.args,
-		label: undefined,
-	},
+		label: undefined
+	}
 }
 export const Disabled: Story = {
 	...Primary,
 	args: {
 		...Primary.args,
-		disabled: true,
-	},
+		disabled: true
+	}
 }
 export const Borderless: Story = {
 	...Primary,
 	args: {
 		...Primary.args,
-		border: false,
-	},
+		border: false
+	}
 }
 export const BorderlessDisabled: Story = {
 	...Primary,
 	args: {
 		...Primary.args,
 		border: false,
-		disabled: true,
-	},
+		disabled: true
+	}
 }
 export const WithDivInside: Story = {
 	render: (args: any) => ({
@@ -102,6 +101,6 @@ export const WithDivInside: Story = {
 				<div>Div inside button still has a pointer cursor.</div>
 			</lib-button>
 		</div>
-		`,
-	}),
+		`
+	})
 }

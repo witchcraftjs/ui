@@ -1,27 +1,24 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { Meta, StoryObj } from "@storybook/vue3"
 
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
-
 
 const meta = {
 	component: components.LibSimpleInput,
 	title: "Components/Input",
 	args: {
 		modelValue: "Value",
-		placeholder: "Placeholder",
-	},
+		placeholder: "Placeholder"
+	}
 } satisfies Meta<typeof components.LibSimpleInput> & Meta<{ custom: string }>
 
 export default meta
 type Story = StoryObj<typeof components.LibSimpleInput> // & StoryObj<typeof extraArgs>
 
-
 /** Input */
 export const Primary: Story = {
 	args: {
-		modelValue: "some value",
+		modelValue: "some value"
 	},
 	render: args => ({
 		components,
@@ -32,8 +29,8 @@ export const Primary: Story = {
 				@keydown="test"
 				class="m-2" v-bind="args" v-model="args.modelValue" ></lib-simple-input>
 				<lib-simple-input class="m-2" v-bind="{...args, modelValue:''}" ></lib-simple-input>
-				`,
-	}),
+				`
+	})
 }
 
 /** Has more reasonable min-width inside a flexbox. */
@@ -47,31 +44,30 @@ export const InsideAFlexbox: Story = {
 					<lib-simple-input v-bind="args" v-model="args.modelValue"></lib-simple-input>
 					<div class="border-1 border-danger-500 flex-1 whitespace-nowrap">Flex Grow: 1</div>
 				</div>
-		`,
+		`
 	}),
 	args: {
-		stretch: true,
-	},
+		stretch: true
+	}
 }
-
 
 export const Disabled = {
 	...Primary,
 	args: {
-		disabled: true,
-	},
+		disabled: true
+	}
 }
 export const Readonly = {
 	...Primary,
 	args: {
-		readonly: true,
-	},
+		readonly: true
+	}
 }
 export const Invalid = {
 	...Primary,
 	args: {
-		valid: false,
-	},
+		valid: false
+	}
 }
 /**
  * Intended for being wrapped.
@@ -80,19 +76,19 @@ export const Invalid = {
 export const Borderless = {
 	...Primary,
 	args: {
-		border: false,
-	},
+		border: false
+	}
 }
 
 export const Numerical = {
 	...Primary,
 	args: {
-		type: "number",
-	},
+		type: "number"
+	}
 }
 export const NumericalInsideAFlexbox = {
 	...InsideAFlexbox,
 	args: {
-		type: "number",
-	},
+		type: "number"
+	}
 }

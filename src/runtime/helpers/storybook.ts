@@ -2,7 +2,6 @@ import type { Ref } from "vue"
 
 import { hasModifiers } from "./hasModifiers.js"
 
-
 export const createRecorderHandler = (
 	recordingValue: Ref<string>,
 	recording: Ref<boolean>,
@@ -23,7 +22,7 @@ export const createRecorderHandler = (
 		recordingValue.value += ` ${e.key}`
 	},
 	mousedown(e: MouseEvent) {
-		const target = (e.target as any)
+		const target = e.target as any
 		const el = recordingEl.value
 		if (target === el || el?.contains(target)) {
 			return
@@ -34,7 +33,7 @@ export const createRecorderHandler = (
 	wheel(e: WheelEvent) {
 		recordingValue.value += ` ${e.deltaY > 0 ? "↓" : "↑"}`
 		e.preventDefault()
-	},
+	}
 })
 
 export const createRecorderWatchEffect = (recordingValue: Ref<string>, recording: Ref<boolean>, modelValue: Ref<string>, values?: Ref<string[]>) => () => {

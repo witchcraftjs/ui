@@ -5,21 +5,18 @@ import { ref } from "vue"
 
 import LibColorPicker from "./LibColorPicker.vue"
 
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import * as components from "../index.js"
-
 
 const meta: Meta<typeof LibColorPicker> = {
 	component: LibColorPicker,
 	title: "Components/ColorPicker",
 	args: {
-		
-	},
+
+	}
 }
 
 export default meta
 type Story = StoryObj<typeof LibColorPicker>
-
 
 export const Primary: Story = {
 	render: args => ({
@@ -35,9 +32,9 @@ export const Primary: Story = {
 					outline: false,
 					color,
 					allowAlpha: true,
-					...args,
+					...args
 				},
-				handleChange,
+				handleChange
 			}
 		},
 		template: `
@@ -50,20 +47,20 @@ export const Primary: Story = {
 	 		>
 	 		</lib-color-picker>
 	 		</lib-root>
-		`,
-	}),
+		`
+	})
 }
 export const DoesNotAllowAlpha: Story = {
 	...Primary,
 	args: {
-		allowAlpha: false,
-	},
+		allowAlpha: false
+	}
 }
 export const WithExistingValue: Story = {
 	...Primary,
 	args: {
-		modelValue: { r: 255, g: 0, b: 0 },
-	},
+		modelValue: { r: 255, g: 0, b: 0 }
+	}
 }
 export const CustomStringRepresentation: Story = {
 	...Primary,
@@ -73,9 +70,8 @@ export const CustomStringRepresentation: Story = {
 			fromHsvaToString: (hsva: any, includeAlpha: boolean) => new Color(
 				"hsv",
 				[hsva.h, hsva.s, hsva.v],
-					includeAlpha ? hsva.a : 1 // this takes care of the correct hex format
-			).toString({ format: "hex" }),
-		},
-	},
+				includeAlpha ? hsva.a : 1 // this takes care of the correct hex format
+			).toString({ format: "hex" })
+		}
+	}
 }
-

@@ -6,7 +6,7 @@ import { useScrollNearContainerEdges } from "./useScrollNearContainerEdges.js"
 import { twMerge } from "../utils/twMerge.js"
 
 const meta = {
-	title: "Composables/ScrollNearContainerEdges",
+	title: "Composables/ScrollNearContainerEdges"
 }
 
 export default meta
@@ -25,7 +25,7 @@ export const Primary: Story = {
 			} = useScrollNearContainerEdges({
 				containerEl,
 				scrollMargin: 20,
-				outerScrollMargin: 20,
+				outerScrollMargin: 20
 			})
 			const pos = ref({ x: 0, y: 0 })
 			onMounted(() => {
@@ -88,6 +88,6 @@ export const Primary: Story = {
 				></div>
 			</div>
 		</div>
-		`,
-	}),
+		`
+	})
 }

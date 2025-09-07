@@ -13,31 +13,31 @@ export default defineConfig({
 		"src/**/*.vue",
 		"!src/**/*.stories.*",
 		"!src/nuxt/**/*",
-		"!src/module.ts",
+		"!src/module.ts"
 	],
 	pluginOpts: {
 		// just for ./src/nuxt/*
 		externalizeDeps: { include: [
-			"#imports",
-		]},
+			"#imports"
+		] },
 		typesPlugin: { dtsGenerator: "vue-tsc" }
-	},
+	}
 }, {
 	plugins: [
 		vue() as any,
 		Components({
 			// don't auto-import our own components
 			dirs: [],
-			resolvers: [ IconsResolver()],
-			dts: "./types/components.d.ts",
+			resolvers: [IconsResolver()],
+			dts: "./types/components.d.ts"
 		}),
 		Icons(unpluginIconViteOptions)
 	],
 	build: {
-		emptyOutDir: false,
-	},
-},{
+		emptyOutDir: false
+	}
+}, {
 	server: {
-		port: 3001,
-	},
+		port: 3001
+	}
 })

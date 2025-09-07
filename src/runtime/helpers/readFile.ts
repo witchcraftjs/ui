@@ -5,8 +5,8 @@ export const readFile = async <TType extends "DataUrl" | "ArrayBuffer" | "Binary
 ):
 Promise<
 	TType extends "ArrayBuffer"
-	? ArrayBuffer
-	: string
+		? ArrayBuffer
+		: string
 > => new Promise((resolve, reject) => {
 	const reader = new FileReader()
 	reader.addEventListener("load", () => {

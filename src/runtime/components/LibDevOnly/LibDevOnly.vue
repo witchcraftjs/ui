@@ -1,7 +1,8 @@
 <template>
 <DevOnly>
 	<slot v-if="doShow && $attrs?.['as-child'] !== undefined"/>
-	<div v-else-if="doShow"
+	<div
+		v-else-if="doShow"
 		:class="twMerge(`
 			dev-only
 			border
@@ -13,17 +14,19 @@
 		`,
 			($attrs.class as string)
 		)"
-		v-bind="{...$attrs, class: undefined}"
+		v-bind="{ ...$attrs, class: undefined }"
 	>
 		<slot/>
 	</div>
 </DevOnly>
 </template>
+
 <script lang="ts" setup>
 import { computed, inject, ref, useAttrs } from "vue"
 
 import { showDevOnlyInjectionKey } from "../../composables/useShowDevOnlyKey.js"
 import { twMerge } from "../../utils/twMerge.js"
+
 const $attrs = useAttrs()
 
 const props = withDefaults(defineProps<{
@@ -34,10 +37,10 @@ const props = withDefaults(defineProps<{
 
 const injectedShow = inject(showDevOnlyInjectionKey, ref(false))
 const doShow = computed(() => props.show || injectedShow.value)
-
 </script>
+
 <script lang="ts">
-interface Props {
+export interface Props {
 	show?: boolean
 }
 
@@ -45,6 +48,7 @@ interface Props {
 // This should be enough to bypass the type lint error.
 declare module "vue" {
 	export interface GlobalComponents {
+		// eslint-disable-next-line @typescript-eslint/naming-convention
 		DevOnly: any
 	}
 }

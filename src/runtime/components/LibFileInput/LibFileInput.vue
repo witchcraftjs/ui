@@ -1,6 +1,7 @@
 <template>
 <!-- todo aria errors -->
-<div :class="twMerge(`file-input
+<div
+	:class="twMerge(`file-input
 		justify-center
 		border-2
 		border-dashed
@@ -8,25 +9,26 @@
 		focus-outline-within
 		transition-[border-color,box-shadow]
 		ease-out`,
-	compact && `rounded-sm`,
-	!compact && `flex w-full flex-col items-center gap-2 rounded-xl  p-2 `,
-	errors.length > 0 && errorFlashing && `border-danger-400`,
-	( $.wrapperAttrs as any ).class
+		compact && `rounded-sm`,
+		!compact && `flex w-full flex-col items-center gap-2 rounded-xl  p-2 `,
+		errors.length > 0 && errorFlashing && `border-danger-400`,
+		($.wrapperAttrs as any).class
 	)"
-	v-bind="{...$.wrapperAttrs, class:undefined}"
+	v-bind="{ ...$.wrapperAttrs, class: undefined }"
 >
-	<div :class="twMerge( `
+	<div
+		:class="twMerge(`
 		file-input--wrapper
 		relative justify-center`,
-		compact && `flex gap-2`,
-		!compact && `input-wrapper
+			compact && `flex gap-2`,
+			!compact && `input-wrapper
 		flex flex-col items-center
 		`
-	)"
+		)"
 	>
 		<label
 			:for="id ?? fallbackId"
-			:class="twMerge( `
+			:class="twMerge(`
 				file-input--label
 				pointer-events-none
 				flex
@@ -35,7 +37,10 @@
 				whitespace-nowrap
 			`)"
 		>
-			<slot v-if="compact || multiple || files.length === 0" name="icon">
+			<slot
+				v-if="compact || multiple || files.length === 0"
+				name="icon"
+			>
 				<icon><i-fa6-solid-arrow-up-from-bracket/></icon>
 			</slot>
 			<slot name="label">
@@ -57,7 +62,10 @@
 				{{ ` (${files.length})` }}
 			</span>
 		</label>
-		<label v-if="!compact && formats?.length > 0" class="file-input--formats-label flex flex-col items-center text-sm">
+		<label
+			v-if="!compact && formats?.length > 0"
+			class="file-input--formats-label flex flex-col items-center text-sm"
+		>
 			<slot name="formats">{{ t("file-input.accepted-formats") }}: </slot>
 			<div class="file-input--formats-list">
 				{{ extensions.join(", ") }}
@@ -80,13 +88,14 @@
 			:accept="formats.join(', ')"
 			:multiple="multiple"
 			ref="el"
-			v-bind="{...$.inputAttrs, class:undefined}"
+			v-bind="{ ...$.inputAttrs, class: undefined }"
 			@input="(inputFile as any)"
 			@click="($event.target! as any).value = null"
 		>
 		<!--  click event allows event to fire even if the user picks the same file -->
 	</div>
-	<div v-if="!compact && files.length > 0"
+	<div
+		v-if="!compact && files.length > 0"
 		:class="twMerge(`file-input--previews
 			flex items-stretch justify-center gap-2 flex-wrap
 			`,
@@ -97,7 +106,8 @@
 		)"
 	>
 		<div class="file-input--preview-spacer flex-1"/>
-		<div class="file-input--preview-wrapper
+		<div
+			class="file-input--preview-wrapper
 				z-1
 				relative
 				flex
@@ -124,16 +134,21 @@
 			</div>
 
 			<div class="file-input--preview flex flex-initial basis-full justify-center">
-				<div v-if="entry.isImg"
+				<div
+					v-if="entry.isImg"
 					class="file-input--preview-image
 					bg-transparency-squares flex
 					h-[80px]   flex-wrap items-center
 					justify-center
 				"
 				>
-					<img class="max-h-full w-auto" :src="getSrc(entry.file)">
+					<img
+						class="max-h-full w-auto"
+						:src="getSrc(entry.file)"
+					>
 				</div>
-				<div v-if="!entry.isImg"
+				<div
+					v-if="!entry.isImg"
 					class="file-input--preview-no-image
 					flex h-[80px]
 					flex-1 basis-full flex-wrap items-center justify-center
@@ -142,7 +157,8 @@
 					<icon><i-fa6-regular-file class="text-4xl opacity-50"/></icon>
 				</div>
 			</div>
-			<div class="
+			<div
+				class="
 				file-input--preview-filename
 				min-w-0
 				flex-1
@@ -163,8 +179,9 @@
 	</div>
 </div>
 </template>
+
 <script setup lang="ts">
-import { computed, type HTMLAttributes, type InputHTMLAttributes,ref, shallowReactive, watch } from "vue"
+import { computed, type HTMLAttributes, type InputHTMLAttributes, ref, shallowReactive, watch } from "vue"
 
 import IFa6RegularFile from "~icons/fa6-regular/file"
 import IFa6SolidArrowUpFromBracket from "~icons/fa6-solid/arrow-up-from-bracket"
@@ -172,11 +189,11 @@ import IFa6SolidXmark from "~icons/fa6-solid/xmark"
 
 import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
 import { useInjectedI18n } from "../../composables/useInjectedI18n.js"
-import { type FileInputError } from "../../types/index.js"
+import type { FileInputError } from "../../types/index.js"
 import { twMerge } from "../../utils/twMerge.js"
 import Icon from "../Icon/Icon.vue"
 import LibButton from "../LibButton/LibButton.vue"
-import { getFallbackId,type LinkableByIdProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
+import { getFallbackId, type LinkableByIdProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
 
 const t = useInjectedI18n()
 const el = ref<null | HTMLInputElement>(null)
@@ -200,11 +217,11 @@ watch(errors, () => {
 })
 
 defineOptions({
-	name: "lib-file-input",
-	inheritAttrs: false,
+	name: "LibFileInput",
+	inheritAttrs: false
 })
 const $ = useDivideAttrs(["wrapper", "input", "previews"] as const)
- 
+
 const emits = defineEmits<{
 	(e: "input", val: File[]): void
 	(e: "errors", val: FileInputError[]): void
@@ -214,7 +231,7 @@ const fallbackId = getFallbackId()
 const props = withDefaults(defineProps<Props>(), {
 	multiple: false,
 	formats: () => ["image/*", ".jpeg", ".jpg", ".png"],
-	compact: false,
+	compact: false
 })
 
 const mimeTypes = computed(() => props.formats?.filter(_ => !_.startsWith(".")) ?? [])
@@ -230,7 +247,7 @@ const removeFile = (entry: Entry) => {
 	files.splice(index, 1)
 }
 const extensionsList = computed(() => extensions.value.join(", "))
-const inputFile = async (e: InputEvent): Promise<void | boolean> => {
+const inputFile = async (e: InputEvent): Promise<undefined | boolean> => {
 	e.preventDefault()
 	if (el.value!.files) {
 		const errs = []
@@ -268,34 +285,35 @@ const inputFile = async (e: InputEvent): Promise<void | boolean> => {
 			errors.splice(0, errors.length)
 		}
 	}
+	return undefined
 }
-
 </script>
+
 <script lang="ts">
-export default { name: "lib-file-input" }
+export default { name: "LibFileInput" }
 
-type WrapperTypes =
-	& WrapperProps<"input", InputHTMLAttributes >
-	& WrapperProps<"wrapper", HTMLAttributes >
-	& WrapperProps<"previews",HTMLAttributes >
+type WrapperTypes
+	= & WrapperProps<"input", InputHTMLAttributes>
+		& WrapperProps<"wrapper", HTMLAttributes>
+		& WrapperProps<"previews", HTMLAttributes>
 
-type RealProps =
-& LinkableByIdProps
-& {
-	multiple?: boolean
-	/**
-	 * A list of extensions or mime types to add to the input's accept. Basic validations are done so that files match an extension and mimeType, but note that a file could still be lying, all files should be validated server side.
-	 *
-	 * Pass an empty array to allow any filetype.
-	 */
-	formats?: string[]
-	compact?: boolean
-}
+type RealProps
+	= & LinkableByIdProps
+		& {
+			multiple?: boolean
+			/**
+			 * A list of extensions or mime types to add to the input's accept. Basic validations are done so that files match an extension and mimeType, but note that a file could still be lying, all files should be validated server side.
+			 *
+			 * Pass an empty array to allow any filetype.
+			 */
+			formats?: string[]
+			compact?: boolean
+		}
 
 interface Props
 	extends
 	/** @vue-ignore */
-	Partial<Omit<InputHTMLAttributes,"class" | "multiple" | "formats" | "compact"> & TailwindClassProp>,
+	Partial<Omit<InputHTMLAttributes, "class" | "multiple" | "formats" | "compact"> & TailwindClassProp>,
 	/** @vue-ignore */
 	Partial<WrapperTypes>,
 	RealProps { }

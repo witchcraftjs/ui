@@ -7,7 +7,6 @@ import type { Directive } from "vue"
 import { globalResizeObserver } from "../globalResizeObserver.js"
 import type { ResizeCallback } from "../types/index.js"
 
-
 const observer = globalResizeObserver
 /**
  * Directive for detecting flex wrap on element. It will bind a resize-observer to the element to detect when it's children have wrapped and add a .wrapped class when they are.
@@ -56,7 +55,7 @@ function removeCallback(throttleTime: number): void {
 
 function callback(_rect: DOMRectReadOnly, el: Element): void {
 	const _ = elMap.get(el as HTMLElement)
-	if (!_) {unreachable()}
+	if (!_) { unreachable() }
 	const pos = _.vertical ? "x" : "y"
 	const dimension = _.vertical ? "width" : "height"
 
@@ -78,7 +77,6 @@ function callback(_rect: DOMRectReadOnly, el: Element): void {
 	const firstRect = firstChild.getBoundingClientRect()
 	const lastRect = lastChild.getBoundingClientRect()
 
-
 	// should work even if the flex items are different heights
 	// only exceptions i think are if the element aligns itself below another element somehow
 	// rounded to nearest 10th since getBoundingClientRect can have rounding errors
@@ -89,14 +87,13 @@ function callback(_rect: DOMRectReadOnly, el: Element): void {
 	}
 }
 
-
 export const vDetectFlex: Directive = {
 	mounted(el: HTMLElement, { value: { condition = true, vertical = false, throttleTime = 50, ignoreSelector = ".detect-flex-ignore" } = {} }: DetectFlexOptions) {
 		const _: PrivateState = {
 			vertical,
 			lastCondition: condition,
 			lastThrottleTime: throttleTime,
-			ignoreSelector,
+			ignoreSelector
 		}
 		elMap.set(el, _)
 		if (condition) {
@@ -106,7 +103,7 @@ export const vDetectFlex: Directive = {
 	},
 	updated(el: HTMLElement, { value: { condition = true, vertical = false, throttleTime = 50, ignoreSelector = ".detect-flex-ignore" } = {} }: DetectFlexOptions) {
 		const _ = elMap.get(el)
-		if (!_) {unreachable()}
+		if (!_) { unreachable() }
 
 		_.vertical = vertical
 		_.ignoreSelector = ignoreSelector
@@ -135,7 +132,7 @@ export const vDetectFlex: Directive = {
 	},
 	unmounted(el: HTMLElement, { value: { vertical = false, throttleTime = 50, ignoreSelector = ".detect-flex-ignore" } = {} }: DetectFlexOptions) {
 		const _ = elMap.get(el)
-		if (!_) {unreachable()}
+		if (!_) { unreachable() }
 		_.vertical = vertical
 		_.ignoreSelector = ignoreSelector
 		_.lastThrottleTime = throttleTime
@@ -147,7 +144,7 @@ export const vDetectFlex: Directive = {
 	},
 	getSSRProps() {
 		return {}
-	},
+	}
 }
 type DetectFlexOptions = {
 	value: {

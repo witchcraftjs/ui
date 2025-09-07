@@ -10,9 +10,13 @@
 		"types/**/*.d.ts",
 		"src/**/*.ts",
 		"src/**/*.vue",
-		"src/**/*.js",
+		"src/**/*.js"
 	],
 	"vueCompilerOptions": {
 		"strictTemplates": true,
+		"fallthroughAttributes": true,
+		"checkUnknownComponents" : false, // is causing issues with fallthroughComponentNames
+		"fallthroughComponentNames": ["Transition", "KeepAlive", "Teleport", "Suspense"],
+		"dataAttributes": ["data-*"]
 	}
 }

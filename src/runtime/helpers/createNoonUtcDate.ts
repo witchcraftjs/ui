@@ -18,4 +18,3 @@ export function createNoonUtcDate(date: CalendarDate): ZonedDateTime {
 	)
 	return d
 }
-

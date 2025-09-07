@@ -1,5 +1,4 @@
-import { computed, type InjectionKey, onMounted, provide, type Ref,ref, watch } from "vue"
-
+import { computed, type InjectionKey, onMounted, provide, type Ref, ref, watch } from "vue"
 
 const defaultLocalStorageKey = "prefersColorSchemeDark"
 const defaultOrder = ["system", "dark", "light"] as const
@@ -29,7 +28,7 @@ export const useDarkMode = ({
 }: DarkModeOptions = {}): DarkModeState & DarkModeCommands => {
 	const systemDarkMode = ref(false)
 	const manualDarkMode = ref<boolean | undefined>(undefined)
-	
+
 	if (useLocalStorage && isClientSide) {
 		watch(manualDarkMode, () => {
 			localStorage.setItem(defaultLocalStorageKey, manualDarkMode.value ? "true" : "false")
@@ -39,19 +38,19 @@ export const useDarkMode = ({
 	const darkMode = computed(() => manualDarkMode.value ?? systemDarkMode.value)
 	const darkModeState = computed(() =>
 		manualDarkMode.value === undefined
-		? "system"
-		: manualDarkMode.value
-		? "dark"
-		: "light"
+			? "system"
+			: manualDarkMode.value
+				? "dark"
+				: "light"
 	)
 	// todo move to useinjected
 	function setDarkMode(value: "dark" | "light" | "system"): void {
-		manualDarkMode.value =
-			value === "dark"
-			? true
-			: value === "light"
-			? false
-			: undefined
+		manualDarkMode.value
+			= value === "dark"
+				? true
+				: value === "light"
+					? false
+					: undefined
 	}
 	function cycleDarkMode(): void {
 		const index = darkModeOrder.indexOf(darkModeState.value)
@@ -90,11 +89,11 @@ export const useDarkMode = ({
 		darkMode,
 		darkModeState,
 		manualDarkMode,
-		systemDarkMode,
+		systemDarkMode
 	})
 	provide(commandsInjectionKey, {
 		setDarkMode,
-		cycleDarkMode,
+		cycleDarkMode
 	})
 
 	return {
@@ -103,7 +102,7 @@ export const useDarkMode = ({
 		setDarkMode,
 		cycleDarkMode,
 		manualDarkMode,
-		systemDarkMode,
+		systemDarkMode
 	}
 }
 export const defaultDarkModeOrder = defaultOrder
@@ -116,7 +115,6 @@ export const darkModeCommandsInjectionKey = commandsInjectionKey
 
 export const darkModeStateInjectionKey = stateInjectionKey
 
-
 export type DarkModeOptions = {
 	/* Whether to save the manual dark mode to local storage. Uses the key "prefersColorSchemeDark" by default. You can pass a key instead of true to use that as the key instead. */
 	useLocalStorage?: boolean | string
@@ -126,13 +124,11 @@ export type DarkModeOptions = {
 	isClientSide?: boolean
 }
 
- 
 export interface DarkModeCommands {
 	setDarkMode: (value: "dark" | "light" | "system") => void
 	cycleDarkMode: () => void
 }
 
- 
 export interface DarkModeState {
 	/** Whether the dark mode should be enabled or not */
 	darkMode: Ref<boolean>
