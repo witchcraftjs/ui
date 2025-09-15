@@ -178,6 +178,11 @@ export default defineNuxtModule<ModuleOptions>({
 				config.optimizeDeps.exclude.push("~icons")
 			}
 		})
+
+		nuxt.options.typescript.tsConfig.compilerOptions ??= {}
+		nuxt.options.typescript.tsConfig.compilerOptions.types ??= []
+		nuxt.options.typescript.tsConfig.compilerOptions.types.push("unplugin-icons/types/vue3")
+
 		const mainCssFile = await resolvePath(options.mainCssFile!, nuxt.options.alias)
 
 		const exists = fs.existsSync(mainCssFile)

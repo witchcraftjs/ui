@@ -6,17 +6,13 @@
 		"@alanscodelog/tsconfigs",
 		"./.nuxt/tsconfig.json"
 	],
+	"compilerOptions": {
+		"types": ["unplugin-icons/types/vue3"],
+	},
 	"include": [
 		"types/**/*.d.ts",
 		"src/**/*.ts",
 		"src/**/*.vue",
 		"src/**/*.js"
 	],
-	"vueCompilerOptions": {
-		"strictTemplates": true,
-		"fallthroughAttributes": true,
-		"checkUnknownComponents" : false, // is causing issues with fallthroughComponentNames
-		"fallthroughComponentNames": ["Transition", "KeepAlive", "Teleport", "Suspense"],
-		"dataAttributes": ["data-*"]
-	}
 }
