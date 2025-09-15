@@ -4,7 +4,6 @@ import {
 	addImports, addTemplate, addTypeTemplate,
 	createResolver,
 	defineNuxtModule,
-	installModule,
 	useLogger
 } from "@nuxt/kit"
 import tailwindcss from "@tailwindcss/vite"
@@ -19,6 +18,8 @@ import ViteComponents from "unplugin-vue-components/vite"
 import { unpluginIconViteOptions } from "./runtime/build/unpluginIconViteOptions.js"
 import { themeConvertionOpts } from "./runtime/tailwind/themeConvertionOpts.js"
 import { theme } from "./runtime/theme.js"
+
+import pkg from "../package.json" assert { type: "json" }
 
 const knownDirectives = ["vExtractRootEl", "vResizableCols", "vResizeObserver", "vResizableCols"] as const
 
@@ -83,6 +84,15 @@ export default defineNuxtModule<ModuleOptions>({
 		debug: true,
 		mainCssFile: "~/assets/css/tailwind.css",
 		_playgroundWorkaround: false
+	},
+	moduleDependencies: {
+		"unplugin-icons/nuxt": {
+			version: pkg.dependencies["unplugin-icons"],
+			defaults: unpluginIconViteOptions as any
+		},
+		"reka-ui/nuxt": {
+			version: pkg.dependencies["reka-ui"]
+		}
 	},
 	async setup(options, nuxt) {
 		const moduleName = "@witchcraft/ui"
@@ -189,10 +199,6 @@ export default defineNuxtModule<ModuleOptions>({
 		if (exists) {
 			nuxt.options.css.push(mainCssFile)
 		}
-
-		// we need to hook in first before it does, otherwise the plugins don't load correctly
-		await installModule("unplugin-icons/nuxt", unpluginIconViteOptions)
-		await installModule("reka-ui/nuxt")
 
 		// todo make names more specific
 		// addImportsDir(resolve("helpers"))
