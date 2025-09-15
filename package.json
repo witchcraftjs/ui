@@ -59,6 +59,7 @@
 		"storybook:build": "pnpm nuxt prepare && storybook build -o docs/storybook",
 		"storybook:test": "pnpm storybook:build && pnpm concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"pnpm http-server docs/storybook --port 6006 --silent\" \"pnpm wait-on tcp:6006 && pnpm test-storybook\"",
 		"test": "pnpm storybook:test && pnpm lint:types",
+		"test:dev": "pnpm concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"pnpm storybook\" \"pnpm wait-on tcp:6006 && pnpm test-storybook --watch\"",
 		"doc": "pnpm test && pnpm storybook:build",
 		"doc:dev": "pnpm storybook",
 		"lint:eslint": "eslint \"src/**/*.{js,ts,vue,cjs}\" \"*.{js,ts}\" --max-warnings=5 --report-unused-disable-directives",

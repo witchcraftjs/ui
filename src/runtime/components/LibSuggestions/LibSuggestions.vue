@@ -82,6 +82,7 @@ const fallbackId = getFallbackId()
 const props = withDefaults(defineProps<Props & SuggestionsProps<TSuggestion>>(), {
 	isValid: true,
 	canOpen: true,
+	canClose: true,
 	filterKeydown: undefined,
 	unstyle: false, disabled: false, readonly: false, border: true
 })
