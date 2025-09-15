@@ -25,6 +25,12 @@ jobs:
       with:
         USE_LOCKFILE: ${{ secrets.USE_LOCKFILE }}
 
+    - run: pnpm i --frozen-lockfile
+      working-directory: playground 
+
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+
     - name: Build 
       uses: ./.github/actions/composite-build
       with:
