@@ -30,7 +30,7 @@ const componentsInfo: {
 	originalName: string
 	filepath: string
 }[] = globFiles([
-	`${resolve("./runtime/components")}/**/*.vue*`,
+	`${resolve("./runtime/components")}/**/*.vue`,
 	`!**/Template/**.vue`
 ], [], (filepath: string, name: string) => ({
 	originalName: name,
