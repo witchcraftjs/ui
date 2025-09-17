@@ -1,0 +1,1 @@
+{"version":3,"file":"useInjectedDarkMode.d.ts","sourceRoot":"","sources":["../../../../src/runtime/composables/useInjectedDarkMode.ts"],"names":[],"mappings":"AAEA,OAAO,EAAE,KAAK,gBAAgB,EAAgC,KAAK,aAAa,EAA6B,MAAM,kBAAkB,CAAA;AAErI,wBAAgB,mBAAmB,IAAI,aAAa,GAAG,gBAAgB,CAUtE"}
