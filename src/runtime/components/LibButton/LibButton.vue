@@ -18,7 +18,7 @@
 		text-fg
 		hover:text-accent-700
 		dark:text-bg
-		dark:hover:text-accent-500
+		dark:hover:text-accent-400
 		dark:disabled:text-neutral-500
 		dark:disabled:hover:text-neutral-500
 	`,
@@ -26,7 +26,7 @@
 		border && `
 			transition-all
 			bg-neutral-100
-			dark:bg-neutral-900
+			dark:bg-neutral-800
 			shadow-[0_1px_1px_0]
 			shadow-neutral-950/20
 			hover:shadow-[0_1px_3px_0]
@@ -35,7 +35,7 @@
 			dark:hover:border-neutral-800
 			relative
 			after:absolute
-			after:rounded-xs
+			after:rounded-sm
 			after:inset-0
 			after:content
 			after:shadow-[0_1px_0_0_inset]
@@ -52,7 +52,7 @@
 			border-neutral-300
 			disabled:border-neutral-200
 			disabled:bg-neutral-50
-			dark:hover:shadow-accent-950/30
+			dark:hover:shadow-neutral-950/70
 			dark:active:shadow-fg/40
 			dark:active:border-neutral-900
 			dark:border-neutral-900
