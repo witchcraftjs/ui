@@ -4,6 +4,7 @@ import {
 	addImports, addTemplate, addTypeTemplate,
 	createResolver,
 	defineNuxtModule,
+	installModule,
 	useLogger
 } from "@nuxt/kit"
 import tailwindcss from "@tailwindcss/vite"
@@ -13,6 +14,7 @@ import { defu } from "defu"
 import { themeAsTailwindCss } from "metamorphosis/tailwind"
 import fs from "node:fs"
 import IconsResolver from "unplugin-icons/resolver"
+import type Icons from "unplugin-icons/vite"
 import ViteComponents from "unplugin-vue-components/vite"
 
 import { unpluginIconViteOptions } from "./runtime/build/unpluginIconViteOptions.js"
@@ -45,16 +47,24 @@ declare module "@nuxt/schema" {
 }
 
 export interface ModuleOptions {
-/**
- * Whether to include the vite unplugin-icons plugins (pre-configured with the ui module's defaults.
- *
- * @default true
- */
+	/**
+	 * Whether to include the vite unplugin-icons plugins (pre-configured with the ui module's defaults, i.e. prefix "i").
+	 *
+	 * @default true
+	 */
 	includeUnpluginIconsPlugins?: boolean
+	/**
+	 * Pass options to unplugin-icons/nuxt
+	 *
+	 * The module doesn't define a key for it's options so this is the only way to allow proper merging.
+	 */
+	// also moduleDependencies + defaults (or even overrides) isn't working, hence the use of the deprecated installModule
+	// I think this is due to how the module is defined (without a key)
+	unpluginOptions?: Parameters<typeof Icons>[0]
 	directives: (typeof knownDirectives[number])[]
 	/**
-		* Which components (without a prefix) to register for auto-importing globally.
-		*/
+	 * Which components (without a prefix) to register for auto-importing globally.
+	 */
 	globalComponents: string[]
 	/**
 	 * @default "W"
@@ -76,6 +86,7 @@ export default defineNuxtModule<ModuleOptions>({
 	},
 	defaults: {
 		includeUnpluginIconsPlugins: true,
+		unpluginOptions: unpluginIconViteOptions,
 		directives: [...knownDirectives],
 		globalComponents: [
 			...componentsInfo.map(_ => _.name.slice("PREFIX".length))
@@ -86,16 +97,21 @@ export default defineNuxtModule<ModuleOptions>({
 		_playgroundWorkaround: false
 	},
 	moduleDependencies: {
-		"unplugin-icons/nuxt": {
-			version: pkg.dependencies["unplugin-icons"],
-			defaults: unpluginIconViteOptions as any
-		},
+		// not working, see note for unpluginOptions
+		// "unplugin-icons/nuxt": {
+		// 	version: pkg.dependencies["unplugin-icons"],
+		// 	defaults: unpluginIconViteOptions as any
+		// },
 		"reka-ui/nuxt": {
 			version: pkg.dependencies["reka-ui"]
 		}
 	},
 	async setup(options, nuxt) {
 		const moduleName = "@witchcraft/ui"
+		// see note for unpluginOptions
+		installModule("unplugin-icons/nuxt", defu(
+			options.unpluginOptions
+		))
 		const logger = useLogger(moduleName, { level: options.debug ? 10 : 0 })
 
 		const filteredComponentsInfo: typeof componentsInfo = []
@@ -173,6 +189,7 @@ export default defineNuxtModule<ModuleOptions>({
 											IconsResolver({ prefix: "i" })
 										]
 									})
+								// this is taken care of by unplugin-icons
 								// Icons({
 								// 	compiler: "vue3",
 								// 	...unpluginIconViteOptions,
