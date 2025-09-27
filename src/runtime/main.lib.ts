@@ -6,6 +6,7 @@ export * as directives from "./directives/index.js"
 export { registerDirectives } from "./vue/registerDirectives.js"
 export { registerComponents } from "./vue/registerComponents.js"
 export { VueComponentsPlugin } from "./vue/VueComponentsPlugin.js"
+export * from "./injectionKeys.js"
 
 import type * as components from "./components/index.js"
 

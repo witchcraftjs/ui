@@ -1,6 +1,8 @@
 import { inject } from "vue"
 
-import { languageLocaleInjectionKey, timeLocaleInjectionKey, type useSetupLocale } from "./useSetupLocale.js"
+import type { useSetupLocale } from "./useSetupLocale.js"
+
+import { languageLocaleInjectionKey, timeLocaleInjectionKey } from "../injectionKeys.js"
 
 export function useInjectedLocale(): ReturnType<typeof useSetupLocale> {
 	const timeLocale = inject(timeLocaleInjectionKey)

@@ -1,6 +1,7 @@
 import { onBeforeUnmount, onMounted, provide, ref } from "vue"
 
-const injectionKey = Symbol("showDevOnly")
+import { showDevOnlyInjectionKey } from "../injectionKeys.js"
+
 /**
 	* For nuxt only.
 	*
@@ -9,7 +10,7 @@ const injectionKey = Symbol("showDevOnly")
 export function useShowDevOnlyKey(key: string = "F1"): void {
 	if (!(import.meta as any).dev) return
 	const showDevOnly = ref(false)
-	provide(injectionKey, showDevOnly)
+	provide(showDevOnlyInjectionKey, showDevOnly)
 
 	const listener = (e: KeyboardEvent): void => {
 		if (e.key === key && !e.ctrlKey && !e.metaKey && !e.altKey) {
@@ -25,4 +26,3 @@ export function useShowDevOnlyKey(key: string = "F1"): void {
 	})
 }
 
-export const showDevOnlyInjectionKey = injectionKey

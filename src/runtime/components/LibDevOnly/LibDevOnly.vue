@@ -24,7 +24,7 @@
 <script lang="ts" setup>
 import { computed, inject, ref, useAttrs } from "vue"
 
-import { showDevOnlyInjectionKey } from "../../composables/useShowDevOnlyKey.js"
+import { showDevOnlyInjectionKey } from "../../injectionKeys.js"
 import { twMerge } from "../../utils/twMerge.js"
 
 const $attrs = useAttrs()

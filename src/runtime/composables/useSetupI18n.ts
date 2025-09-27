@@ -1,5 +1,4 @@
 import {
-	type InjectionKey,
 	provide,
 	type Ref,
 	ref,
@@ -7,11 +6,10 @@ import {
 } from "vue"
 
 import { defaultTranslationFunction } from "../helpers/defaultTranslationFunction.js"
+import { i18nInjectionKey, translationMessagesInjectionKey } from "../injectionKeys.js"
 
 export type TranslationFunction = (key: string, replacements?: Record<string, any>) => string
 
-const _i18nInjectionKey = Symbol("witchcraftUiI18n") as InjectionKey<TranslationFunction>
-const _translationMessagesInjectionKey = Symbol("witchcraftUiI18nMessages") as InjectionKey<Ref<Record<string, any>>>
 
 const messagesGlob = import.meta.glob("../assets/locales/*.json")
 const loaded: Record<string, any> = {}
@@ -51,10 +49,10 @@ export async function useSetupI18n({
 	/** A	custom translation function. The default requires the `useBuiltinTranslations` option to be true. */
 	translationFunction?: TranslationFunction
 }): Promise<void> {
-	provide(_i18nInjectionKey, translationFunction)
+	provide(i18nInjectionKey, translationFunction)
 	if (useBuiltinTranslations) {
 		const messages = ref(useDummyMessageSetWhileLoading ? dummyMessageSet : {})
-		provide(_translationMessagesInjectionKey, messages)
+		provide(translationMessagesInjectionKey, messages)
 		async function loadMessageSet(l: string): Promise<void> {
 			const isLoaded = loaded[l]
 			if (isLoaded) {
@@ -76,5 +74,3 @@ export async function useSetupI18n({
 	}
 }
 
-export const i18nInjectionKey = _i18nInjectionKey
-export const translationMessagesInjectionKey = _translationMessagesInjectionKey

@@ -1,6 +1,7 @@
-import { inject, type Ref } from "vue"
+import { inject } from "vue"
 
-import { translationMessagesInjectionKey } from "../composables/useSetupI18n.js"
+import { translationMessagesInjectionKey } from "../injectionKeys.js"
+
 
 /**
  * A default translation function to use with `useSetupI18n`. Requires at least one set of translation message sets (or a dummy) be loaded (the useSetupI18n function takes care of setting up a temporary dummy if you set `useBuiltinTranslations: true`).
@@ -19,7 +20,7 @@ import { translationMessagesInjectionKey } from "../composables/useSetupI18n.js"
  */
 
 export function defaultTranslationFunction(key: string, replacements?: Record<string, any>): string {
-	const messages = inject(translationMessagesInjectionKey) as Ref<Record<string, any>> | undefined
+	const messages = inject(translationMessagesInjectionKey)
 	if (messages === undefined) throw new Error("witchcraft/ui: The default translation function requires the useSetupI18n `useBuiltinTranslations` options to be true. Did you set it?")
 	let value = (messages.value)["witchcraft-ui"][key]
 	if (value === undefined) throw new Error(`No translation for key ${key}.`)

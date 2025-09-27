@@ -1,7 +1,8 @@
 import { inject } from "vue"
 
 import type { TranslationFunction } from "./useSetupI18n.js"
-import { i18nInjectionKey } from "./useSetupI18n.js"
+
+import { i18nInjectionKey } from "../injectionKeys.js"
 
 export function useInjectedI18n(): TranslationFunction {
 	const val = inject(i18nInjectionKey, undefined)

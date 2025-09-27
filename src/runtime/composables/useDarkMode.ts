@@ -1,13 +1,9 @@
-import { computed, type InjectionKey, onMounted, provide, type Ref, ref, watch } from "vue"
+import { computed, onMounted, provide, type Ref, ref, watch } from "vue"
+
+import { darkModeCommandsInjectionKey, darkModeStateInjectionKey, isDarkModeInjectionKey, manualDarkModeInjectionKey } from "../injectionKeys.js"
 
 const defaultLocalStorageKey = "prefersColorSchemeDark"
 const defaultOrder = ["system", "dark", "light"] as const
-/** @deprecated */
-const injectionKey = Symbol("isDarkMode") as InjectionKey<Ref<boolean>>
-/** @deprecated */
-const manualInjectionKey = Symbol("manualDarkMode") as InjectionKey<Ref<boolean | undefined>>
-const commandsInjectionKey = Symbol("darkModeCommands") as InjectionKey<DarkModeCommands>
-const stateInjectionKey = Symbol("darkModeState") as InjectionKey<DarkModeState>
 
 /**
  * @deprecated Use `useSetupDarkMode` instead.
@@ -82,16 +78,16 @@ export const useDarkMode = ({
 			}
 		}
 	})
-	provide(injectionKey, darkMode)
-	provide(manualInjectionKey, manualDarkMode)
+	provide(isDarkModeInjectionKey, darkMode)
+	provide(manualDarkModeInjectionKey, manualDarkMode)
 
-	provide(stateInjectionKey, {
+	provide(darkModeStateInjectionKey, {
 		darkMode,
 		darkModeState,
 		manualDarkMode,
 		systemDarkMode
 	})
-	provide(commandsInjectionKey, {
+	provide(darkModeCommandsInjectionKey, {
 		setDarkMode,
 		cycleDarkMode
 	})
@@ -107,13 +103,6 @@ export const useDarkMode = ({
 }
 export const defaultDarkModeOrder = defaultOrder
 
-export const isDarkModeInjectionKey = injectionKey
-
-export const manualDarkModeInjectionKey = manualInjectionKey
-
-export const darkModeCommandsInjectionKey = commandsInjectionKey
-
-export const darkModeStateInjectionKey = stateInjectionKey
 
 export type DarkModeOptions = {
 	/* Whether to save the manual dark mode to local storage. Uses the key "prefersColorSchemeDark" by default. You can pass a key instead of true to use that as the key instead. */
