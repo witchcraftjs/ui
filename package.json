@@ -179,6 +179,13 @@
 			"@alanscodelog"
 		]
 	},
+	"madge": {
+		"detectiveOptions": {
+			"ts": {
+				"skipTypeImports": true
+			}
+		}
+	},
 	"engines": {
 		"node": ">=20.0.0"
 	},
