@@ -214,7 +214,10 @@ export default defineNuxtModule<ModuleOptions>({
 
 		const exists = fs.existsSync(mainCssFile)
 		if (exists) {
-			nuxt.options.css.push(mainCssFile)
+			logger.info(`Adding ${options.mainCssFile!}.`)
+			nuxt.options.css.push(options.mainCssFile!)
+		} else {
+			logger.warn(`Could not find ${options.mainCssFile!} (resolved to ${mainCssFile}).`)
 		}
 
 		// todo make names more specific
