@@ -1,0 +1,2 @@
+patchedDependencies:
+  '@nuxt/module-builder': patches/@nuxt__module-builder.patch
