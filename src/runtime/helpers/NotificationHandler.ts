@@ -5,6 +5,7 @@ import { indent } from "@alanscodelog/utils/indent"
 import { isBlank } from "@alanscodelog/utils/isBlank"
 import { pretty } from "@alanscodelog/utils/pretty"
 import { setReadOnly } from "@alanscodelog/utils/setReadOnly"
+import { type Reactive, reactive } from "vue"
 
 export class NotificationHandler<
 	TRawEntry extends RawNotificationEntry<any, any> = RawNotificationEntry<any, any>,
@@ -126,9 +127,10 @@ export class NotificationHandler<
 		}) as NotificationPromise
 
 		if (entry.timeout !== undefined) {
-			setTimeout(() => {
-				entry.resolve(entry.cancellable)
-			}, entry.timeout)
+			entry._timer = {
+				elapsedBeforePause: 0
+			}
+			this.resume(entry as any)
 		}
 		this.queue.push(entry)
 		for (const listener of this.listeners) {
@@ -150,6 +152,31 @@ export class NotificationHandler<
 			this.queue.splice(this.queue.indexOf(entry), 1)
 			return res
 		}) satisfies NotificationPromise as any
+	}
+
+	pause(notification: NotificationEntry): void {
+		if (notification.timeout === undefined) {
+			throw new Error(`Cannot pause notification with no timeout: ${notification.id}`)
+		}
+		if (notification.isPaused) {
+			throw new Error(`Cannot pause notification that is already paused: ${notification.id}`)
+		}
+		notification.isPaused = true
+		clearTimeout(notification._timer.id)
+		notification._timer.elapsedBeforePause += (Date.now() - notification.startTime)
+	}
+
+	resume(notification: NotificationEntry): void {
+		if (notification.timeout === undefined) {
+			throw new Error(`Cannot resume notification with no timeout: ${notification.id}`)
+		}
+		notification.isPaused = false
+		notification.startTime = Date.now()
+		const remaining = notification.timeout - notification._timer.elapsedBeforePause
+		clearTimeout(notification._timer.id)
+		notification._timer.id = setTimeout(() => {
+			notification.resolve(notification.cancellable)
+		}, remaining)
 	}
 
 	static resolveToDefault(notification: NotificationEntry): void {
@@ -221,6 +248,12 @@ export type NotificationEntry<
 	timeout?: number
 	resolution?: string
 	id: number
+	startTime: number
+	isPaused: boolean
+	_timer: {
+		id?: ReturnType<typeof setTimeout>
+		elapsedBeforePause: number
+	}
 }
 
 export type NotificationListener<TEntry extends NotificationEntry<any>> = (notification: TEntry, type: "added" | "resolved" | "deleted") => void
