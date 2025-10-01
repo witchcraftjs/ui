@@ -127,7 +127,9 @@
 					notification--button
 					notification--option-button
 					px-2
-				`"
+				`,
+					notification.default === option && `notification--default`
+				)"
 				:color="buttonColors[i]"
 				v-for="option, i in notification.options"
 				:key="option"
@@ -139,7 +141,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, type HTMLAttributes, ref, useAttrs } from "vue"
+import { computed, type HTMLAttributes, onMounted, ref, useAttrs } from "vue"
 
 import IFa6RegularCopy from "~icons/fa6-regular/copy"
 import IFa6SolidXmark from "~icons/fa6-solid/xmark"
@@ -172,6 +174,9 @@ const getColor = (notification: NotificationEntry, option: string): "ok" | "prim
 const buttonColors = computed(() => props.notification.options.map((option: any /* what ??? */) => getColor(props.notification, option)))
 
 const notificationEl = ref<null | HTMLElement>(null)
+onMounted(() => {
+	notificationEl.value?.focus()
+})
 defineExpose({
 	focus: () => {
 		notificationEl.value?.focus()
