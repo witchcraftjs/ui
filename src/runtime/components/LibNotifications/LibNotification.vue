@@ -26,6 +26,10 @@
 	ref="notificationEl"
 	@keydown.enter.self="NotificationHandler.resolveToDefault(notification)"
 >
+	<slot
+		name="top"
+		:notification="notification"
+	/>
 	<div
 		class="
 			notification--header
