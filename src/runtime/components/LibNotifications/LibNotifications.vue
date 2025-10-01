@@ -95,7 +95,7 @@
 			>
 				<template #title="slotProps">
 					<AlertDialogTitle v-bind="slotProps">
-						Notification
+						{{ slotProps.title }}
 					</AlertDialogTitle>
 				</template>
 				<template #message="slotProps">
@@ -110,7 +110,6 @@
 </template>
 
 <script setup lang="ts">
-import { removeIfIn } from "@alanscodelog/utils/removeIfIn"
 import {
 	AlertDialogContent,
 	AlertDialogDescription,
@@ -124,7 +123,7 @@ import { computed, ref } from "vue"
 import LibNotification from "./LibNotification.vue"
 
 import { useNotificationHandler } from "../../composables/useNotificationHandler.js"
-import { type NotificationEntry, NotificationHandler } from "../../helpers/NotificationHandler.js"
+import { NotificationHandler } from "../../helpers/NotificationHandler.js"
 import { twMerge } from "../../utils/twMerge.js"
 import LibProgressBar from "../LibProgressBar/LibProgressBar.vue"
 import type { LinkableByIdProps, TailwindClassProp } from "../shared/props.js"
@@ -136,6 +135,8 @@ defineOptions({
 
 const props = defineProps<Props>()
 
+const topNotifications = computed(() => handler.queue.filter(entry => entry.requiresAction).reverse())
+const notifications = computed(() => handler.queue.filter(entry => !entry.requiresAction))
 
 const time = ref(Date.now())
 setInterval(() => {
@@ -144,36 +145,8 @@ setInterval(() => {
 	})
 }, 50)
 
-const addNotification = (entry: NotificationEntry) => {
-	if (entry.resolution === undefined) {
-		if (entry.requiresAction) {
-			topNotifications.push(entry)
-			entry.promise.then(() => {
-				removeIfIn(topNotifications, entry)
-			})
-		} else {
-			notifications.splice(0, 0, entry)
-			entry.promise.then(() => {
-				removeIfIn(notifications, entry)
-			})
-		}
-	}
-}
-
-const notificationListener = (entry: NotificationEntry, type: "added" | "resolved" | "deleted"): void => {
-	if (type === "added") {
-		addNotification(entry)
-	}
-}
 
 const handler = props.handler ?? useNotificationHandler()
-
-handler.addNotificationListener(notificationListener)
-
-for (const entry of handler.queue) { addNotification(entry) }
-onBeforeUnmount(() => {
-	handler.removeNotificationListener(notificationListener)
-})
 </script>
 
 <script lang="ts">

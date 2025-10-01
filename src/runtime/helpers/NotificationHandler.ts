@@ -17,9 +17,9 @@ export class NotificationHandler<
 
 	private id: number = 0
 
-	readonly queue: TEntry[] = []
+	readonly queue: Reactive<TEntry[]>
 
-	readonly history: TEntry[] = []
+	readonly history: Readonly<TEntry[]>
 
 	maxHistory: number = 100
 
@@ -36,6 +36,8 @@ export class NotificationHandler<
 		stringifier?: NotificationHandler<TRawEntry>["stringifier"]
 		maxHistory?: NotificationHandler<TRawEntry>["maxHistory"]
 	} = {}) {
+		this.queue = reactive([])
+		this.history = reactive([])
 		if (timeout) this.timeout = timeout
 		if (maxHistory) this.maxHistory = maxHistory
 		if (stringifier) this.stringifier = stringifier
@@ -132,7 +134,7 @@ export class NotificationHandler<
 			}
 			this.resume(entry as any)
 		}
-		this.queue.push(entry)
+		this.queue.push(entry as any)
 		for (const listener of this.listeners) {
 			listener(entry, "added")
 		}
@@ -142,14 +144,14 @@ export class NotificationHandler<
 			for (const listener of this.listeners) {
 				listener(entry, "resolved")
 			}
-			this.history.push(entry)
+			;(this.history as any).push(entry)
 			if (this.history.length > this.maxHistory) {
-				this.history.splice(0, 1)
+				;(this.history as any).splice(0, 1)
 				for (const listener of this.listeners) {
 					listener(entry, "deleted")
 				}
 			}
-			this.queue.splice(this.queue.indexOf(entry), 1)
+			this.queue.splice(this.queue.indexOf(entry as any), 1)
 			return res
 		}) satisfies NotificationPromise as any
 	}
@@ -200,19 +202,6 @@ export class NotificationHandler<
 
 	clear(): void {
 		setReadOnly(this, "history", [])
-	}
-
-	addNotificationListener(cb: NotificationListener<TEntry>): void {
-		this.listeners.push(cb)
-	}
-
-	removeNotificationListener(cb: NotificationListener<TEntry>): void {
-		const exists = this.listeners.indexOf(cb)
-		if (exists > -1) {
-			this.listeners.splice(exists, 1)
-		} else {
-			throw new Error(`Listener does not exist: ${cb.toString()}`)
-		}
 	}
 }
 
