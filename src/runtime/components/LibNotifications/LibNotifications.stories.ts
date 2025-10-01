@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { Meta, StoryObj } from "@storybook/vue3"
-import { reactive, ref } from "vue"
+import { ref } from "vue"
 
 import LibNotifications from "./LibNotifications.vue"
 
@@ -23,7 +23,7 @@ export const Primary: Story = {
 	render: args => ({
 		components,
 		setup() {
-			const handler = reactive(new NotificationHandler())
+			const handler = new NotificationHandler({})
 
 			let count = 0
 
@@ -76,7 +76,7 @@ export const Primary: Story = {
 				void handler.notify({
 					title: withTitle.value ? `Notification(${count})` : undefined,
 					message: `This is a notification. No action required.`,
-					timeout: disableTimeout.value ? false : 2000
+					timeout: disableTimeout.value ? false : 5000
 				})
 			}
 			return {
@@ -97,7 +97,7 @@ export const Primary: Story = {
 		backgrounds: { disable: true },
 		// <lib-debug>{{args.handler}}</lib-debug>
 		template: `
-	<lib-root :outline="args.outline">
+	<lib-root :outline="args.outline" :notification-handler="handler">
 		<lib-button :label="'Notify Timeoutable'" @click="notifyTimeoutable()"></lib-button>
 		<lib-button :label="'Notify RequiresAction'" @click="notifyRequiresAction()"></lib-button>
 		<lib-button :label="'Notify Non-Cancellable that RequiresAction'" @click="notifyNonCancellableRequiresAction()"></lib-button>
