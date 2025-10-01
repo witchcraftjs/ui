@@ -56,8 +56,16 @@
 			"
 		>
 			<lib-notification
-				v-if="topNotifications.length > 0 && topNotifications[0]"
-				class="top-notification"
+				class="
+					top-notification
+					text-md
+					gap-2
+					p-2
+					[&_.notification--button]:p-2
+					[&_.notification--button]:py-1
+					[&_.notification--header]:text-lg
+					[&_.notification--message]:py-3
+				"
 				:handler="handler"
 				:notification="topNotifications[0]!"
 				ref="topNotificationComp"

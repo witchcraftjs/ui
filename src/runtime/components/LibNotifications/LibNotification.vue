@@ -1,6 +1,8 @@
 <template>
 <div
-	:class="twMerge(`notification
+	v-if="notification"
+	:class="twMerge(`
+		notification
 		max-w-700px
 		bg-neutral-50
 		dark:bg-neutral-900
@@ -8,11 +10,15 @@
 		dark:text-bg
 		border
 		border-neutral-400
+		dark:border-neutral-700
 		rounded-sm
 		focus-outline
-		flex-flex-col
+		flex
+		flex-col
 		gap-2
-		p-2 m-2
+		p-1
+		text-sm
+		focus:border-accent-500
 	`,
 		($attrs as any).class)"
 	v-bind="{ ...$attrs, class: undefined }"
@@ -20,13 +26,26 @@
 	ref="notificationEl"
 	@keydown.enter.self="NotificationHandler.resolveToDefault(notification)"
 >
-	<div class="notification--header flex-reverse flex justify-between">
+	<div
+		class="
+			notification--header
+			flex-reverse
+			flex
+			justify-between
+			items-center
+		"
+	>
 		<slot
 			v-if="notification.title"
 			name="title"
 			v-bind="setSlotVar('title', {
 				title: notification.title,
-				class: 'title focus-outline flex rounded-sm font-bold',
+				class: `
+					notification--title
+					focus-outline
+					rounded-sm
+					font-bold
+				`,
 				tabindex: 0
 			})"
 		>
@@ -40,14 +59,22 @@
 		<div class="actions flex">
 			<LibButton
 				:border="false"
-				class="notification--copy-button text-neutral-700"
+				class="
+					notification--title-button
+					notification--copy-button
+					text-neutral-700
+					dark:text-neutral-300
+				"
 				@click="copy(handler ? handler.stringify(notification) : JSON.stringify(notification))"
 			>
 				<icon><i-fa6-regular-copy/></icon>
 			</LibButton>
 			<lib-button
 				v-if="notification.cancellable"
-				class="notification--cancel-button"
+				class="
+					notification--title-button
+					notification--cancel-button
+				"
 				:border="false"
 				@click="NotificationHandler.dismiss(notification)"
 			>
@@ -59,7 +86,13 @@
 		v-if="notification.message"
 		name="message"
 		v-bind="setSlotVar('message', {
-			class: 'notification--message whitespace-pre-wrap py-2',
+			class: `
+				notification--message
+				whitespace-pre-wrap
+				text-neutral-800
+				dark:text-neutral-200
+				mb-1
+			`,
 			message: notification.message,
 			tabindex: 0
 		})"
@@ -80,19 +113,21 @@
 		<div class="notification--footer-spacer flex-1 py-1"/>
 		<div
 			v-if="notification.options"
-			class="notification--options
-				flex flex-wrap justify-end
+			class="
+				notification--options
+				flex
+				flex-wrap
+				justify-end
 				gap-2
 			"
 		>
 			<lib-button
 				:label="option"
 				:class="twMerge(`
+					notification--button
 					notification--option-button
-				`,
-					buttonColors[i] == 'secondary' && 'p-0'
-				)"
-				:border="buttonColors[i] !== 'secondary'"
+					px-2
+				`"
 				:color="buttonColors[i]"
 				v-for="option, i in notification.options"
 				:key="option"
