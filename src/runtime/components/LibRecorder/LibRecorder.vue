@@ -53,7 +53,7 @@
 				hover:bg-red-500
 			`,
 			recording && `
-				animate-[blink_1s_infinite]
+				animate-blinkInf
 				bg-red-500
 			`,
 			(disabled || readonly) && `

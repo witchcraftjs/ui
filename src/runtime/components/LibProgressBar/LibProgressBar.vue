@@ -28,7 +28,7 @@
 			before:shadow-black/50
 			before:rounded-sm
 			before:bg-bars-gradient
-			before:animate-[slide_10s_linear_infinite]
+			before:animate-slideBgInf
 			before:[background-size:15px_15px]
 			before:absolute
 			before:w-[var(--progress)]
@@ -171,6 +171,7 @@ type RealProps
 		& BaseInteractiveProps
 		& LabelProps
 		& {
+			/** A number from 0-100. It is auto-clamped. */
 			progress: number
 			/** Will auto hide after this given time if progress is 100% or more or less than 0% until progress is set to something else. Disabled (-1) by default. */
 			autohideOnComplete?: number

@@ -34,33 +34,6 @@ animations can be calculated correctly. */
 	user-select: none;
 }
 
-/* Animations */
-@keyframes blink {
-	0% {
-		opacity: 0;
-	}
-
-	25% {
-		opacity: 1;
-	}
-
-	75% {
-		opacity: 1;
-	}
-
-	100% {
-		opacity: 0;
-	}
-}
-
-@keyframes slide {
-	0% {
-		background-position:0%;
-	}
-	100% {
-		background-position: 100%;
-	}
-}
 
 a {
 	@apply link-like;

@@ -1,0 +1,75 @@
+@theme {
+	--animate-blinkInf: blink 1s linear-infinite;
+	@keyframes blink {
+		0% {
+			opacity: 0;
+		}
+
+		25% {
+			opacity: 1;
+		}
+
+		75% {
+			opacity: 1;
+		}
+
+		100% {
+			opacity: 0;
+		}
+	}
+
+	--animate-slideBgInf: slide-bg 10s linear-infinite;
+	@keyframes slide {
+		0% {
+			background-position:0%;
+		}
+		100% {
+			background-position: 100%;
+		}
+	}
+
+	--animate-hide: hide 500ms ease-in;
+	@keyframes hide {
+		from {
+			opacity: 1;
+		}
+		to {
+			opacity: 0;
+		}
+	}
+
+	--animate-slideIn: slideIn 500ms cubic-bezier(0.16, 1, 0.3, 1);
+	@keyframes slideIn {
+		from {
+			transform: translateX(100%);
+			opacity: 0;
+		}
+		to {
+			transform: translateX(0);
+			opacity: 1;
+		}
+	}
+
+	--animate-overlayShow: overlayShow 500ms cubic-bezier(0.16, 1, 0.3, 1);
+	@keyframes overlayShow {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+
+	--animate-contentShow: contentShow 500ms cubic-bezier(0.16, 1, 0.3, 1);
+	@keyframes contentShow {
+		from {
+			opacity: 0;
+			transform: translate(0, -10%) scale(0.96);
+		}
+		to {
+			opacity: 1;
+			transform: scale(1);
+		}
+	}
+}
+
