@@ -86,7 +86,7 @@ const backgroundEl = ref<IPopupReference | null>(null)
 
 const pos = ref<PopupPosition>({} as any)
 const modelValue = defineModel<boolean>({ default: false })
-let isOpen = false
+let isOpen = modelValue.value
 
 /**
  * We don't have access to the dialog backdrop and without extra styling, it's of 0 width/height, positioned in the center of the screen, with margins taking up all the space.
@@ -341,10 +341,6 @@ const close = () => {
 	}
 }
 
-const toggle = () => {
-	if (!isOpen) show()
-	else close()
-}
 
 const recomputeListener = () => recompute()
 
@@ -369,7 +365,7 @@ watch([modelValue, popupEl], () => {
 
 const handleMouseup = ($event: MouseEvent) => {
 	$event.preventDefault()
-	toggle()
+	close()
 }
 onMounted(() => {
 	recompute()

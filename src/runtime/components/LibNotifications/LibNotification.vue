@@ -21,17 +21,21 @@
 	@keydown.enter.self="NotificationHandler.resolveToDefault(notification)"
 >
 	<div class="notification--header flex-reverse flex justify-between">
-		<div
+		<slot
 			v-if="notification.title"
-			tabindex="0"
-			class="title
-				focus-outline flex
-				rounded-sm
-				font-bold
-			"
+			name="title"
+			v-bind="setSlotVar('title', {
+				title: notification.title,
+				class: 'title focus-outline flex rounded-sm font-bold',
+				tabindex: 0
+			})"
 		>
-			{{ notification.title }}
-		</div>
+			<div
+				v-bind="slotVars.title"
+			>
+				{{ notification.title }}
+			</div>
+		</slot>
 		<div class="notification--spacer flex-1"/>
 		<div class="actions flex">
 			<LibButton
@@ -51,12 +55,21 @@
 			</lib-button>
 		</div>
 	</div>
-	<div
-		class="notification--message whitespace-pre-wrap"
-		tabindex="0"
+	<slot
+		v-if="notification.message"
+		name="message"
+		v-bind="setSlotVar('message', {
+			class: 'notification--message whitespace-pre-wrap py-2',
+			message: notification.message,
+			tabindex: 0
+		})"
 	>
-		{{ notification.message }}
-	</div>
+		<div
+			v-bind="slotVars.message"
+		>
+			{{ notification.message }}
+		</div>
+	</slot>
 	<div class="notification--footer flex items-end justify-between">
 		<div
 			v-if="notification.code"
@@ -96,6 +109,7 @@ import { computed, type HTMLAttributes, ref, useAttrs } from "vue"
 import IFa6RegularCopy from "~icons/fa6-regular/copy"
 import IFa6SolidXmark from "~icons/fa6-solid/xmark"
 
+import { useSlotVars } from "../../composables/useSlotVars.js"
 import { copy } from "../../helpers/copy.js"
 import { type NotificationEntry, NotificationHandler } from "../../helpers/NotificationHandler.js"
 import { twMerge } from "../../utils/twMerge.js"
@@ -108,6 +122,9 @@ defineOptions({
 	inheritAttrs: false
 })
 const $attrs = useAttrs()
+
+const { setSlotVar, slotVars } = useSlotVars()
+
 
 const props = withDefaults(defineProps<Props>(), {
 	handler: undefined

@@ -29,35 +29,65 @@
 		:class="twMerge(`notifications--none`, ($attrs as any).class)"
 	/>
 </Transition>
-<Transition>
-	<dialog
-		v-show="topNotifications.length > 0"
-		:id="id"
-		:class="twMerge(`notifications-modal
-			bg-transparent
-			p-0
-			backdrop:bg-black/50
-			backdrop:p-5
-		`, ($attrs as any).class)"
-		ref="dialogEl"
-		@click.self.prevent="topNotifications[0] && NotificationHandler.dismiss(topNotifications[0])"
-	>
-		<form>
+<!-- we don't need to worry about the user accidentally closing a non-closable dialog as keeping open=true (which the handler handles when the component tries to close) is enough to keep it open without issues -->
+<AlertDialogRoot
+	:open="topNotifications.length > 0 && topNotifications[0] !== undefined"
+	@update:open="topNotifications[0] && NotificationHandler.dismiss(topNotifications[0])"
+>
+	<AlertDialogPortal :to="'#root'">
+		<AlertDialogOverlay
+			class="
+				fixed inset-0 z-30
+				bg-neutral-950/20
+				data-[state=open]:animate-overlayShow
+			"
+		/>
+		<AlertDialogContent
+			class="
+				data-[state=open]:animate-contentShow
+				fixed
+				top-[50%]
+				left-[50%]
+				translate-x-[-50%]
+				translate-y-[-50%]
+				max-h-[80dvh]
+				max-w-[700px]
+				z-100
+			"
+		>
 			<lib-notification
 				v-if="topNotifications.length > 0 && topNotifications[0]"
-				:handler="handler"
 				class="top-notification"
-				:notification="topNotifications[0]"
+				:handler="handler"
+				:notification="topNotifications[0]!"
 				ref="topNotificationComp"
-			/>
-		</form>
-	</dialog>
-</Transition>
+			>
+				<template #title="slotProps">
+					<AlertDialogTitle v-bind="slotProps">
+						Notification
+					</AlertDialogTitle>
+				</template>
+				<template #message="slotProps">
+					<AlertDialogDescription v-bind="slotProps">
+						{{ slotProps.message }}
+					</AlertDialogDescription>
+				</template>
+			</lib-notification>
+		</AlertDialogContent>
+	</AlertDialogPortal>
+</AlertDialogRoot>
 </template>
 
 <script setup lang="ts">
 import { removeIfIn } from "@alanscodelog/utils/removeIfIn"
-import { nextTick, onBeforeUnmount, ref, shallowReactive } from "vue"
+import {
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogOverlay,
+	AlertDialogPortal,
+	AlertDialogRoot,
+	AlertDialogTitle } from "reka-ui"
+import { onBeforeUnmount, shallowReactive } from "vue"
 
 import LibNotification from "./LibNotification.vue"
 
@@ -73,34 +103,16 @@ defineOptions({
 
 const props = defineProps<Props>()
 
-const dialogEl = ref<HTMLDialogElement | null>(null)
 
-const isOpen = ref(false)
 const notifications = shallowReactive<NotificationEntry[]>([])
 const topNotifications = shallowReactive<NotificationEntry[]>([])
-const open = () => {
-	if (!isOpen.value) {
-		void nextTick(() => {
-			dialogEl.value!.showModal()
-			isOpen.value = true
-		})
-	}
-}
-const close = () => {
-	if (isOpen.value && topNotifications.length === 0) {
-		dialogEl.value!.close()
-		isOpen.value = false
-	}
-}
 
 const addNotification = (entry: NotificationEntry) => {
 	if (entry.resolution === undefined) {
 		if (entry.requiresAction) {
 			topNotifications.push(entry)
-			open()
 			entry.promise.then(() => {
 				removeIfIn(topNotifications, entry)
-				close()
 			})
 		} else {
 			notifications.splice(0, 0, entry)
