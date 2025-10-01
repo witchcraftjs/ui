@@ -23,7 +23,7 @@ export const Primary: Story = {
 		components,
 		setup: () => {
 			const color = ref({ r: 0, g: 0, b: 0/* , a: 0.5 */, ...(args.modelValue) })
-			delete args.modelValue
+			delete (args as any).modelValue
 			const handleChange = (e: any) => {
 				color.value = { ...e }
 			}
