@@ -1,34 +1,57 @@
 <template>
+<!-- using custom toasts, reka-ui toasts still have issues, like like of control over pause, and I can't get the leave event to animate or transition with vue transitions to work -->
 <TransitionGroup
 	name="list"
 	tag="div"
-	:class="twMerge(`notifications
-			absolute
-			z-50
-			inset-y-0 right-0
-			w-1/3
-			min-w-[300px]
-			pointer-events-none
-			overflow-hidden
-			flex flex-col
-		`, ($attrs as any).class)"
+	:class="twMerge(`
+		notifications
+		[--notification-width:300px]
+		fixed
+		top-0
+		z-50
+		right-[calc(var(--notification-width)*-1)]
+		py-2
+		w-[calc(var(--spacing)*2+var(--notification-width)*2)]
+		[&_.notification]:w-[var(--notification-width)]
+		max-h-[100dvh]
+		flex
+		flex-col
+		[&_.notification]:shrink-0
+		gap-1
+		list-none
+		outline-none
+		overflow-y-auto
+		overflow-x-clip
+		scrollbar-hidden
+	`, ($attrs as any).class)"
 	v-bind="{ ...$attrs, class: undefined }"
 >
 	<lib-notification
-		class="pointer-events-auto"
 		:handler="handler"
 		tabindex="0"
 		:notification="notification"
+		class="overflow-hidden"
 		v-for="notification of notifications"
 		:key="notification.id"
-	/>
+		@pointerenter="notification.timeout && !notification.isPaused && handler.pause(notification)"
+		@blur="notification.timeout && notification.isPaused && handler.resume(notification)"
+	>
+		<template #top>
+			<LibProgressBar
+				v-if="notification.timeout !== undefined"
+				class="
+					w-full
+					h-1
+					before:duration-[10ms]
+					-mt-1
+					-mx-[calc(var(--spacing)*2+2px)]
+					rounded-none
+				"
+				:progress="100 - (((notification.isPaused ? (notification._timer.elapsedBeforePause): (notification._timer.elapsedBeforePause + (time - notification.startTime))) / notification.timeout) * 100)"
+			/>
+		</template>
+	</lib-notification>
 </TransitionGroup>
-<Transition>
-	<div
-		v-show="topNotifications.length > 0"
-		:class="twMerge(`notifications--none`, ($attrs as any).class)"
-	/>
-</Transition>
 <!-- we don't need to worry about the user accidentally closing a non-closable dialog as keeping open=true (which the handler handles when the component tries to close) is enough to keep it open without issues -->
 <AlertDialogRoot
 	:open="topNotifications.length > 0 && topNotifications[0] !== undefined"
@@ -94,14 +117,16 @@ import {
 	AlertDialogOverlay,
 	AlertDialogPortal,
 	AlertDialogRoot,
-	AlertDialogTitle } from "reka-ui"
-import { onBeforeUnmount, shallowReactive } from "vue"
+	AlertDialogTitle
+} from "reka-ui"
+import { computed, ref } from "vue"
 
 import LibNotification from "./LibNotification.vue"
 
 import { useNotificationHandler } from "../../composables/useNotificationHandler.js"
 import { type NotificationEntry, NotificationHandler } from "../../helpers/NotificationHandler.js"
 import { twMerge } from "../../utils/twMerge.js"
+import LibProgressBar from "../LibProgressBar/LibProgressBar.vue"
 import type { LinkableByIdProps, TailwindClassProp } from "../shared/props.js"
 
 defineOptions({
@@ -112,8 +137,12 @@ defineOptions({
 const props = defineProps<Props>()
 
 
-const notifications = shallowReactive<NotificationEntry[]>([])
-const topNotifications = shallowReactive<NotificationEntry[]>([])
+const time = ref(Date.now())
+setInterval(() => {
+	requestAnimationFrame(() => {
+		time.value = Date.now()
+	})
+}, 50)
 
 const addNotification = (entry: NotificationEntry) => {
 	if (entry.resolution === undefined) {
