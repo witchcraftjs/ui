@@ -49,7 +49,7 @@
 		"failOnWarn": false
 	},
 	"scripts": {
-		"prepare": "husky && pnpm gen:theme && cd playground && pnpm i",
+		"prepare": "husky && pnpm gen:theme && cd playground && pnpm i --ignore-scripts",
 		"build": "nuxt-module-build prepare && nuxt-module-build build && nuxi generate playground",
 		"build:only": "nuxt-module-build build",
 		"dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
