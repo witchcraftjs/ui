@@ -10,7 +10,6 @@
 		top-0
 		z-50
 		right-[calc(var(--notification-width)*-1)]
-		py-2
 		w-[calc(var(--spacing)*2+var(--notification-width)*2)]
 		[&_.notification]:w-[var(--notification-width)]
 		max-h-[100dvh]
@@ -30,7 +29,7 @@
 		:handler="handler"
 		tabindex="0"
 		:notification="notification"
-		class="overflow-hidden"
+		class="overflow-hidden my-2"
 		v-for="notification of notifications"
 		:key="notification.id"
 		@pointerenter="notification.timeout && !notification.isPaused && handler.pause(notification)"
