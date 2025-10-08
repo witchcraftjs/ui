@@ -1,4 +1,4 @@
-import { computed, onMounted, provide, type Ref, ref, watch } from "vue"
+import { computed, nextTick, onMounted, provide, type Ref, ref, watch } from "vue"
 
 import { darkModeCommandsInjectionKey, darkModeStateInjectionKey, isDarkModeInjectionKey, manualDarkModeInjectionKey } from "../injectionKeys.js"
 
@@ -19,8 +19,9 @@ const defaultOrder = ["system", "dark", "light"] as const
 export const useDarkMode = ({
 	useLocalStorage = true,
 	darkModeOrder = defaultOrder,
-	/** True by default, should be passed import.meta.client if using nuxt, or false when running server side. */
-	isClientSide = true
+
+	isClientSide = true,
+	useViewTransition = true
 }: DarkModeOptions = {}): DarkModeState & DarkModeCommands => {
 	const systemDarkMode = ref(false)
 	const manualDarkMode = ref<boolean | undefined>(undefined)
@@ -48,14 +49,38 @@ export const useDarkMode = ({
 					? false
 					: undefined
 	}
-	function cycleDarkMode(): void {
+
+	function getNextValue(): "dark" | "light" | "system" {
 		const index = darkModeOrder.indexOf(darkModeState.value)
 
-		if (index === 2) {
-			setDarkMode(darkModeOrder[0]!)
-		} else {
-			setDarkMode(darkModeOrder[index + 1]!)
+		return index === 2
+			? darkModeOrder[0]!
+			: darkModeOrder[index + 1]!
+	}
+
+	function _cycleDarkMode(): void {
+		setDarkMode(getNextValue())
+	}
+
+	function cycleDarkMode(): void {
+		if (!useViewTransition) {
+			_cycleDarkMode()
+			return
 		}
+		const nextValue = getNextValue()
+		const index = darkModeOrder.indexOf(darkModeState.value)
+		const systemDarkModeName = systemDarkMode.value ? "dark" : "light"
+
+		if (nextValue === "system" && systemDarkModeName === darkModeOrder[index]) {
+			// don't do view transitions if we're not really transitioning
+			_cycleDarkMode()
+			return
+		}
+		if (!document.startViewTransition) _cycleDarkMode()
+		document.startViewTransition(async () => {
+			_cycleDarkMode()
+			await nextTick()
+		})
 	}
 
 	onMounted(() => {
@@ -111,6 +136,49 @@ export type DarkModeOptions = {
 	darkModeOrder?: readonly ("system" | "dark" | "light")[]
 	/** True by default, should be passed import.meta.client if using nuxt, or false when running server side. */
 	isClientSide?: boolean
+	/**
+	 * Whether to use the view transition to animate the dark mode switch (you just need to add the css).
+	 *
+	 * Note that the transitition is NOT triggered if visually the mode does not change (e.g. system mode is dark and the user switches from system to dark, visually nothing changes so transitioning is skipped).
+	 *
+	 * There is an example in storybook. But basically:
+	 *
+	 * ```css
+	 *
+	 * #root { // the dark mode switcher works on the WRoot component not the html root
+	 *		view-transition-name: wroot;
+	 *		height: 100dvh;
+	 *		padding: 0;
+	 *	}
+	 *
+	 * ::view-transition-new(wroot) {
+	 * 	animation: grow var(--story-anim-length) ease-in-out;
+	 * 	animation-fill-mode: both;
+	 * 	z-index: 2;
+	 * 	mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill="white"/></svg>') center / 0 no-repeat;
+	 * }
+	 *
+	 * ::view-transition-old(wroot) {
+	 * 	animation: none;
+	 * 	animation-fill-mode: both;
+	 * 	z-index: 1;
+	 * }
+	 *
+	 * @keyframes grow {
+	 * 	from {
+	 * 		mask-size: 0dvw;
+	 * 	}
+	 * 	to {
+	 * 		mask-size: 300dvw;
+	 * 	}
+	 * }
+	 * ```
+	 *
+	 * See https://theme-toggle.rdsx.dev/ for more ideas.
+	 *
+	 * @default true
+	 */
+	useViewTransition?: boolean
 }
 
 export interface DarkModeCommands {
