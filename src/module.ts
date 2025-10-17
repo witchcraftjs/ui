@@ -103,7 +103,7 @@ export default defineNuxtModule<ModuleOptions>({
 		// 	defaults: unpluginIconViteOptions as any
 		// },
 		"reka-ui/nuxt": {
-			version: pkg.dependencies["reka-ui"]
+			version: "^2.5.0"
 		}
 	},
 	async setup(options, nuxt) {
