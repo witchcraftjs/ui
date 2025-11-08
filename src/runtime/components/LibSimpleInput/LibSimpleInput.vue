@@ -2,31 +2,31 @@
 <input
 	:id="id ?? fallbackId"
 	:class="twMerge(`
-			simple-input
-			flex-1
-			grow-[999999]
-			rounded-sm
-			px-1
-			focus-outline
-			min-w-[2rem]
-			bg-inherit
-			placeholder:text-neutral-400
-			placeholder:focus:text-accent-300
-			read-only:bg-neutral-50
-			read-only:text-neutral-800
-			read-only:placeholder:select-none
-			read-only:placeholder:text-opacity-0
-			read-only:focus:placeholder:text-opacity-0
-			disabled:placeholder:text-nuetral-400
-			disabled:cursor-unset
-			disabled:bg-neutral-50
-			disabled:text-neutral-400
-			dark:read-only:bg-neutral-950
-			dark:read-only:text-neutral-200
-			dark:disabled:placeholder:text-nuetral-600
-			dark:disabled:bg-neutral-950
-			dark:disabled:text-neutral-500
-		`,
+		simple-input
+		flex-1
+		grow-[999999]
+		rounded-sm
+		px-1
+		focus-outline
+		min-w-[2rem]
+		bg-inherit
+		placeholder:text-neutral-400
+		placeholder:focus:text-accent-300
+		read-only:bg-neutral-50
+		read-only:text-neutral-800
+		read-only:placeholder:select-none
+		read-only:placeholder:text-opacity-0
+		read-only:focus:placeholder:text-opacity-0
+		disabled:placeholder:text-nuetral-400
+		disabled:cursor-unset
+		disabled:bg-neutral-50
+		disabled:text-neutral-400
+		dark:read-only:bg-neutral-950
+		dark:read-only:text-neutral-200
+		dark:disabled:placeholder:text-nuetral-600
+		dark:disabled:bg-neutral-950
+		dark:disabled:text-neutral-500
+	`,
 		type === `text` && `
 			min-w-[10ch]
 			w-full
@@ -43,16 +43,28 @@
 			focus:border-accent-500
 			disabled:border-neutral-400
 			dark:disabled:border-neutral-600
+			invalid:border-danger-700
+			invalid:focus:border-danger-700
+			invalid:dark:border-danger-600
+		`,
+		border && !valid && `
+			dark:border-danger-600
+			focus:border-danger-700
+			border-danger-700
+		`,
+		`
+			invalid:outline-danger-700
+			invalid:text-danger-800
+			invalid:dark:text-danger-400
+			invalid:placeholder:text-danger-700
+			invalid:dark:placeholder:text-danger-700
 		`,
 		!valid && `
-			placeholder:text-danger-700
-			border-danger-700
-			focus:border-danger-700
 			outlined:!outline-danger-700
 			text-danger-800
 			dark:text-danger-400
+			placeholder:text-danger-700
 			dark:placeholder:text-danger-700
-			dark:border-danger-600
 		`,
 		($attrs as any)?.class
 	)"

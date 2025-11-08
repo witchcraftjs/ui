@@ -57,15 +57,24 @@
 				border
 				border-neutral-500
 				outlined-within:border-accent-500
+				has-[input:invalid]:border-danger-700
+				has-[input:invalid]:dark:border-danger-600
+			`,
+			border && !valid && `
+				border-danger-700
+				dark:border-danger-600
 			`,
 			isOpen && `rounded-b-none`,
 			!valid && `
-				border-danger-700
 				outlined:!outline-danger-700
 				text-danger-800
 				dark:text-danger-400
-				dark:border-danger-600
-				`,
+			`,
+			`
+				has-[input:invalid]:outline-danger-700
+				has-[input:invalid]:text-danger-800
+				has-[input:invalid]:dark:text-danger-400
+			`,
 			readonly && `
 				bg-neutral-50
 				text-neutral-800
