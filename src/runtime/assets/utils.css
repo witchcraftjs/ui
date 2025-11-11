@@ -217,7 +217,7 @@
 }
 
 @utility bg-transparency-squares {
-	@reference bg-squares-gradient square-light-white square-dark-neutral-300 square-size-6;
+	@apply bg-squares-gradient square-light-white square-dark-neutral-300 square-size-6;
 }
 
 @utility link-like {
