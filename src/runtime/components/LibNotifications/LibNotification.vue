@@ -171,7 +171,13 @@ const props = withDefaults(defineProps<Props>(), {
 	handler: undefined
 })
 
-const getColor = (notification: NotificationEntry, option: string): "ok" | "primary" | "danger" | "secondary" => notification.default === option ? "primary" : notification.dangerous.includes(option) ? "danger" : "secondary"
+const getColor = (notification: NotificationEntry, option: string): "ok" | "primary" | "danger" | "secondary" => {
+	return notification.dangerous.includes(option)
+		? "danger"
+		: notification.default === option
+			? "primary"
+			: "secondary"
+}
 
 /* Todo make this more flexible? */
 
