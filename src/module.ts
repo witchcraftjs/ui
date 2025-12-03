@@ -21,7 +21,6 @@ import { unpluginIconViteOptions } from "./runtime/build/unpluginIconViteOptions
 import { themeConvertionOpts } from "./runtime/tailwind/themeConvertionOpts.js"
 import { theme } from "./runtime/theme.js"
 
-import pkg from "../package.json" assert { type: "json" }
 
 const knownDirectives = ["vExtractRootEl", "vResizableCols", "vResizeObserver", "vResizableCols"] as const
 
