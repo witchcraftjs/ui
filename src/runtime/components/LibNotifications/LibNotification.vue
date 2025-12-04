@@ -19,12 +19,15 @@
 		p-1
 		text-sm
 		focus:border-accent-500
+		focus-within:border-accent-500
 	`,
 		($attrs as any).class)"
 	v-bind="{ ...$attrs, class: undefined }"
 	tabindex="0"
+	:data-id="notification.id"
 	ref="notificationEl"
 	@keydown.enter.self="NotificationHandler.resolveToDefault(notification)"
+	@pointerenter="notification.timeout && !notification.isPaused && emit('pause', notification)"
 >
 	<slot
 		name="top"
@@ -145,7 +148,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, type HTMLAttributes, onMounted, ref, useAttrs } from "vue"
+import { computed, type HTMLAttributes, onBeforeUnmount, onMounted, ref, useAttrs } from "vue"
 
 import IFa6RegularCopy from "~icons/fa6-regular/copy"
 import IFa6SolidXmark from "~icons/fa6-solid/xmark"
@@ -171,6 +174,11 @@ const props = withDefaults(defineProps<Props>(), {
 	handler: undefined
 })
 
+const emit = defineEmits<{
+	(e: "pause", notification: NotificationEntry): void
+	(e: "resume", notification: NotificationEntry): void
+}>()
+
 const getColor = (notification: NotificationEntry, option: string): "ok" | "primary" | "danger" | "secondary" => {
 	return notification.dangerous.includes(option)
 		? "danger"
@@ -184,9 +192,28 @@ const getColor = (notification: NotificationEntry, option: string): "ok" | "prim
 const buttonColors = computed(() => props.notification.options.map((option: any /* what ??? */) => getColor(props.notification, option)))
 
 const notificationEl = ref<null | HTMLElement>(null)
+
+const mousedownAbortController = new AbortController()
+
 onMounted(() => {
 	notificationEl.value?.focus()
+	if (props.notification.timeout) {
+		window.addEventListener("pointerdown", e => {
+			if (!e.target || !(e.target instanceof HTMLElement)) return
+			if (e.target === notificationEl.value || notificationEl.value?.contains(e.target)) {
+				if (props.notification.isPaused) return
+				emit("pause", props.notification)
+			} else {
+				emit("resume", props.notification)
+			}
+		}, { signal: mousedownAbortController.signal })
+	}
 })
+
+onBeforeUnmount(() => {
+	mousedownAbortController.abort()
+})
+
 defineExpose({
 	focus: () => {
 		notificationEl.value?.focus()

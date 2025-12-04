@@ -32,8 +32,8 @@
 		class="overflow-hidden my-2"
 		v-for="notification of notifications"
 		:key="notification.id"
-		@pointerenter="notification.timeout && !notification.isPaused && handler.pause(notification)"
-		@blur="notification.timeout && notification.isPaused && handler.resume(notification)"
+		@pause="handler.pause(notification)"
+		@resume="handler.resume(notification)"
 	>
 		<template #top>
 			<LibProgressBar
