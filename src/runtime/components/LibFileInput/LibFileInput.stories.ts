@@ -21,14 +21,24 @@ export const SingleFile: Story = {
 	render: args => ({
 		components,
 		setup: () => {
-			function errorHandler(e: any): void {
+			const errors = ref([])
+			function errorHandler(errs: any) {
 				// eslint-disable-next-line no-console
-				console.log(e)
+				console.log(errs)
+				errors.value = errs
 			}
-			return { args, errorHandler }
+			return { args, errorHandler, errors }
 		},
 		template: `
 			<lib-file-input v-bind="{...args}" @errors="errorHandler"></lib-file-input>
+			<div
+				v-if="errors.length > 0"
+				class="border-2 border-red-500 rounded-lg p-2 mt-2 w-full"
+			>
+				<div v-for="err of errors" :key="err">
+					{{err}}
+				</div>
+			</div>
 		`
 	})
 }

@@ -1,29 +1,51 @@
 <template>
 <!-- todo aria errors -->
 <div
-	:class="twMerge(`file-input
+	:class="twMerge(`
+		file-input
 		justify-center
 		border-2
 		border-dashed
 		border-accent-500/80
 		focus-outline-within
 		transition-[border-color,box-shadow]
-		ease-out`,
+		ease-out
+		hover:bg-accent-500/10
+		outlined-focus-within
+	`,
 		compact && `rounded-sm`,
-		!compact && `flex w-full flex-col items-center gap-2 rounded-xl  p-2 `,
+		!compact && `
+			flex
+			w-full
+			flex-col
+			items-stretch
+			gap-2
+			rounded-xl
+			p-2
+		`,
 		errors.length > 0 && errorFlashing && `border-danger-400`,
+		isHovered && `bg-accent-500/10`,
 		($.wrapperAttrs as any).class
 	)"
 	v-bind="{ ...$.wrapperAttrs, class: undefined }"
+	@drop="onDrop"
+	@dragover.prevent="isHovered = true"
+	@dragleave="isHovered = false"
 >
 	<div
 		:class="twMerge(`
-		file-input--wrapper
-		relative justify-center`,
+			file-input--wrapper
+			relative
+			justify-center
+			@container
+		`,
 			compact && `flex gap-2`,
-			!compact && `input-wrapper
-		flex flex-col items-center
-		`
+			!compact && `
+				file-input
+				flex
+				flex-col
+				items-center
+			`
 		)"
 	>
 		<label
@@ -34,7 +56,9 @@
 				flex
 				gap-1
 				items-center
+				justify-center
 				whitespace-nowrap
+				max-w-full
 			`)"
 		>
 			<slot
@@ -44,44 +68,58 @@
 				<icon><i-fa6-solid-arrow-up-from-bracket/></icon>
 			</slot>
 			<slot name="label">
-				{{
-					(compact
-						? multiple
-							? t("file-input.compact-choose-file-plural")
-							: t("file-input.compact-choose-file")
-						: multiple
-							? t("file-input.non-compact-choose-file-plural")
-							: t("file-input.non-compact-choose-file")
-					)
-				}}
+				<div class="text-ellipsis overflow-hidden shrink-1 hidden @min-[15ch]:block">
+					{{
+						(compact
+							? multiple
+								? t("file-input.compact-choose-file-plural")
+								: t("file-input.compact-choose-file")
+							: multiple
+								? t("file-input.non-compact-choose-file-plural")
+								: t("file-input.non-compact-choose-file")
+						)
+					}}
+				</div>
 			</slot>
-			<span
+			<div
 				v-if="compact && multiple"
 				class="file-input--label-count"
 			>
 				{{ ` (${files.length})` }}
-			</span>
+			</div>
+			<div
+				v-if="compact && !multiple && files.length > 0"
+				class="file-input--label-name text-ellipsis overflow-hidden shrink-9999 hidden @3xs:block"
+			>
+				{{ ` (${files[0]?.file.name})` }}
+			</div>
+			<div
+				v-if="compact && !multiple && files.length > 0"
+				class="file-input--label-name text-ellipsis overflow-hidden shrink-9999 @3xs:hidden"
+			>
+				{{ ` (...)` }}
+			</div>
 		</label>
 		<label
 			v-if="!compact && formats?.length > 0"
-			class="file-input--formats-label flex flex-col items-center text-sm"
+			class="file-input--formats-label flex-col items-center text-sm max-w-full hidden @min-[15ch]:flex"
 		>
-			<slot name="formats">{{ t("file-input.accepted-formats") }}: </slot>
-			<div class="file-input--formats-list">
+			<slot name="formats"><div class="text-ellipsis overflow-hidden max-w-full">{{ t("file-input.accepted-formats") }}:</div> </slot>
+			<div class="file-input--formats-list overflow-hidden text-ellipsis max-w-full">
 				{{ extensions.join(", ") }}
 			</div>
 		</label>
 		<input
 			:id="id ?? fallbackId"
 			:class="twMerge(`
-					file-input--input
-					absolute
-					inset-0
-					z-0
-					cursor-pointer
-					text-[0]
-					opacity-0
-				`,
+				file-input--input
+				absolute
+				inset-[calc(var(--spacing)*-2)]
+				cursor-pointer
+				z-0
+				text-[0]
+				opacity-0
+			`,
 				($.inputAttrs as any)?.class
 			)"
 			type="file"
@@ -97,7 +135,7 @@
 	<div
 		v-if="!compact && files.length > 0"
 		:class="twMerge(`file-input--previews
-			flex items-stretch justify-center gap-2 flex-wrap
+			flex items-stretch justify-center gap-4 flex-wrap
 			`,
 			multiple && `
 				w-full
@@ -105,32 +143,47 @@
 			($.previewsAttrs as any)?.class
 		)"
 	>
-		<div class="file-input--preview-spacer flex-1"/>
 		<div
-			class="file-input--preview-wrapper
+			class="
+				file-input--preview-wrapper
 				z-1
 				relative
 				flex
 				min-w-0
 				max-w-[150px]
 				flex-initial
-				flex-wrap
+				flex-col
 				items-center
-				gap-2 rounded-sm border border-neutral-400
-				shadow-xs
-				shadow-neutral-800/20
+				gap-1
+				p-1
+				rounded-sm
+				border
+				border-neutral-300
+				dark:border-neutral-800
+				shadow-md
+				shadow-neutral-800/30
+				bg-neutral-100
+				dark:bg-neutral-900
+				[&:hover_.file-input--remove-button]:opacity-100
 			"
 			v-for="entry of files"
 			:key="entry.file.name"
 		>
-			<div class="file-input--remove-button flex flex-initial basis-full justify-start">
+			<div class="flex flex-initial basis-full justify-start items-center max-w-full gap-2 px-1">
 				<lib-button
 					:border="false"
+					class="file-input--remove-button rounded-full p-0"
 					:aria-label="`Remove file ${entry.file.name}`"
 					@click="removeFile(entry)"
 				>
 					<icon><i-fa6-solid-xmark/></icon>
 				</lib-button>
+				<div
+					class="file-input--preview-filename min-w-0 flex-1 basis-0 truncate break-all rounded-sm text-sm"
+					:title="entry.file.name"
+				>
+					{{ entry.file.name }}
+				</div>
 			</div>
 
 			<div class="file-input--preview flex flex-initial basis-full justify-center">
@@ -157,25 +210,7 @@
 					<icon><i-fa6-regular-file class="text-4xl opacity-50"/></icon>
 				</div>
 			</div>
-			<div
-				class="
-				file-input--preview-filename
-				min-w-0
-				flex-1
-				basis-0
-				truncate
-				break-all
-				rounded-sm
-				p-1
-				text-sm
-			"
-				:title="entry.file.name"
-			>
-				{{ entry.file.name }}
-			</div>
 		</div>
-
-		<div class="flex-1"/>
 	</div>
 </div>
 </template>
@@ -202,9 +237,16 @@ type Entry = { file: File, isImg: boolean }
 const files = shallowReactive<(Entry)[]>([])
 const errors = shallowReactive<(FileInputError)[]>([])
 const errorFlashing = ref(false)
+const isHovered = ref(false)
+
+
+function clearFiles() {
+	el.value!.value = ""
+	files.splice(0, files.length)
+}
 
 watch(files, () => {
-	emits("input", files.map(entry => entry.file))
+	emits("input", files.map(entry => entry.file), clearFiles)
 })
 watch(errors, () => {
 	if (errors.length > 0) {
@@ -212,7 +254,8 @@ watch(errors, () => {
 		setTimeout(() => {
 			errorFlashing.value = false
 		}, 500)
-		emits("errors", errors)
+		emits("errors", [...errors])
+		errors.splice(0, errors.length)
 	}
 })
 
@@ -223,7 +266,7 @@ defineOptions({
 const $ = useDivideAttrs(["wrapper", "input", "previews"] as const)
 
 const emits = defineEmits<{
-	(e: "input", val: File[]): void
+	(e: "input", val: File[], clearFiles: () => void): void
 	(e: "errors", val: FileInputError[]): void
 }>()
 
@@ -247,46 +290,65 @@ const removeFile = (entry: Entry) => {
 	files.splice(index, 1)
 }
 const extensionsList = computed(() => extensions.value.join(", "))
-const inputFile = async (e: InputEvent): Promise<undefined | boolean> => {
-	e.preventDefault()
-	if (el.value!.files) {
-		const errs = []
-		for (const file of el.value!.files) {
-			const isImg = file.type.startsWith("image")
 
-			const byPassValidation = props.formats.length === 0
-			const isValidMimeType = mimeTypes.value.find(_ => _.endsWith("/*") ? file.type.startsWith(_.slice(0, -2)) : _ === file.type) !== undefined
-			const isValidExtension = extensions.value.find(_ => file.name.endsWith(_)) !== undefined
-			if (!byPassValidation && (!isValidMimeType || !isValidExtension)) {
-				const extension = file.name.match(/.*(\..*)/)?.[1] ?? "Unknown"
-				const type = file.type === "" ? "" : ` (${file.type})`
-				const message = `File type ${extension}${type} is not allowed. Allowed file types are: ${extensionsList.value}.`
-				const err = new Error(message) as FileInputError
-				err.file = file
-				err.isValidExtension = isValidExtension
-				err.isValidMimeType = isValidMimeType
-				errs.push(err)
-				continue
-			}
-			if (errs.length > 0) continue
-			if (!files.find(_ => _.file === file)) {
-				if ((props.multiple || files.length < 1)
-				) {
-					files.push({ file, isImg })
-				} else {
-					files.splice(0, files.length, { file, isImg })
-				}
-			}
-		}
-		if (errs.length > 0) {
-			errors.splice(0, errors.length, ...errs)
-			return false
-		} else if (errors.length > 0) {
-			errors.splice(0, errors.length)
-		}
+function onDrop(e: DragEvent) {
+	if ("dataTransfer" in e && e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+		el.value!.files = e.dataTransfer.files
+		e.preventDefault()
+		isHovered.value = false
+		return updateFiles(el.value!.files)
 	}
 	return undefined
 }
+async function inputFile(e: InputEvent): Promise<undefined | boolean> {
+	e.preventDefault()
+	if (el.value!.files) {
+		return updateFiles(el.value!.files)
+	}
+	return undefined
+}
+
+function updateFiles(filesList: FileList): boolean | undefined {
+	const errs = []
+	for (const file of filesList) {
+		const isImg = file.type.startsWith("image")
+
+		const byPassValidation = props.formats.length === 0
+		const isValidMimeType = mimeTypes.value.find(_ => _.endsWith("/*") ? file.type.startsWith(_.slice(0, -2)) : _ === file.type) !== undefined
+		const isValidExtension = extensions.value.find(_ => file.name.endsWith(_)) !== undefined
+		if (!byPassValidation && (!isValidMimeType || !isValidExtension)) {
+			const extension = file.name.match(/.*(\..*)/)?.[1] ?? "Unknown"
+			const type = file.type === "" ? "" : ` (${file.type})`
+			const message = `File type ${extension}${type} is not allowed. Allowed file types are: ${extensionsList.value}.`
+			const err = new Error(message) as FileInputError
+			err.file = file
+			err.isValidExtension = isValidExtension
+			err.isValidMimeType = isValidMimeType
+			errs.push(err)
+			continue
+		}
+		if (errs.length > 0) continue
+		if (!files.find(_ => _.file === file)) {
+			if ((props.multiple || files.length < 1)
+			) {
+				files.push({ file, isImg })
+			} else {
+				files.splice(0, files.length, { file, isImg })
+			}
+		}
+	}
+	if (errs.length > 0) {
+		errors.splice(0, errors.length, ...errs)
+		return false
+	} else if (errors.length > 0) {
+		errors.splice(0, errors.length)
+	}
+	return undefined
+}
+
+defineExpose({
+	clearFiles
+})
 </script>
 
 <script lang="ts">
