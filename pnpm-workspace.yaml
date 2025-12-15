@@ -60,7 +60,7 @@ catalog:
   indexit: 2.1.0-beta.3
   madge: ^7.0.0
   metamorphosis: ^0.6.1
-  nuxt: ^4.0.3
+  nuxt: ^4.2.1
   playwright: =1.54.0
   playwright-core: =1.54.0
   reka-ui: ^2.5.0
