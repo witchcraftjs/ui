@@ -1,6 +1,7 @@
 import { TypedError } from "@alanscodelog/utils/TypedError"
 
 import { useNotificationHandler } from "../composables/useNotificationHandler.js"
+import type { NotificationEntry } from "../helpers/NotificationHandler.js"
 
 /**
  * Notifies the user if the given value is an error. Useful for making non-critical errors don't go unnoticed.
@@ -13,13 +14,15 @@ export function notifyIfError<T>(
 	err: T, {
 		logger,
 		ns,
-		force = false
+		force = false,
+		entry
 	}: {
 		logger?: { debug: (...args: any[]) => void }
 		/* Logger namespace. */
 		ns?: string
 		/* force interpret as error, for catch blocks */
 		force?: boolean
+		entry?: Partial<NotificationEntry<any>>
 	} = {}): T {
 	if (force || err instanceof Error) {
 		const errMessage = {
@@ -38,7 +41,8 @@ export function notifyIfError<T>(
 			...errMessage,
 			options: ["Ok"],
 			cancellable: "Ok",
-			timeout: true
+			timeout: true,
+			...entry
 		})
 	}
 	return err
