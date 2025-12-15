@@ -37,17 +37,17 @@
 }
 
 @utility focus-outline-within {
-	@reference outlined-within:outline-2 outlined-within:outline-accent-500 outlined-within:outline-offset-2;
+	@apply outlined-within:outline-2 outlined-within:outline-accent-500 outlined-within:outline-offset-2;
 }
 
 @utility focus-outline {
-	@reference outlined:outline-2 outlined:outline-accent-500 outlined:outline-offset-2;
+	@apply outlined:outline-2 outlined:outline-accent-500 outlined:outline-offset-2;
 }
 @utility focus-outline-no-offset {
-	@reference outlined:outline-2 outlined:outline-accent-500;
+	@apply outlined:outline-2 outlined:outline-accent-500;
 }
 @utility focus-outline-hidden {
-	@reference outlined:outline-none;
+	@apply outlined:outline-none;
 }
 
 /* .bg-squares-gradient { */
