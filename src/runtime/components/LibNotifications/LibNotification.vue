@@ -90,7 +90,7 @@
 		</div>
 	</div>
 	<slot
-		v-if="notification.message"
+		v-if="notification.message && !notification.component"
 		name="message"
 		v-bind="setSlotVar('message', {
 			class: `
@@ -110,6 +110,21 @@
 			{{ notification.message }}
 		</div>
 	</slot>
+	<Component
+		v-if="notification.component"
+		:is="notification.component"
+		v-bind="{
+			message: notification.message,
+			messageClasses: `
+					notification--message
+					whitespace-pre-wrap
+					text-neutral-800
+					dark:text-neutral-200
+					mb-1
+				`,
+			...(notification.componentProps ?? {})
+		}"
+	/>
 	<div class="notification--footer flex items-end justify-between">
 		<div
 			v-if="notification.code"

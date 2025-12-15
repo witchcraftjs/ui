@@ -5,7 +5,7 @@ import { indent } from "@alanscodelog/utils/indent"
 import { isBlank } from "@alanscodelog/utils/isBlank"
 import { pretty } from "@alanscodelog/utils/pretty"
 import { setReadOnly } from "@alanscodelog/utils/setReadOnly"
-import { type Reactive, reactive } from "vue"
+import { type Component, markRaw, type Reactive, reactive } from "vue"
 
 export class NotificationHandler<
 	TRawEntry extends RawNotificationEntry<any, any> = RawNotificationEntry<any, any>,
@@ -99,6 +99,7 @@ export class NotificationHandler<
 			default: "Ok",
 			cancellable: rawEntry.cancellable,
 			...rawEntry,
+			component: rawEntry.component && typeof rawEntry.component !== "string" ? markRaw(rawEntry.component) : undefined,
 			dangerous: rawEntry.dangerous ?? [],
 			timeout: rawEntry.timeout === true
 				? this.timeout
@@ -211,7 +212,6 @@ export type RawNotificationEntry<
 	TOptions extends string[] = ["Ok", "Cancel"],
 	TCancellable extends boolean | TOptions[number] = "Cancel"
 > = {
-	message: string
 	title?: string
 	code?: string
 	/** @default ["Ok", "Cancel"] */
@@ -226,6 +226,10 @@ export type RawNotificationEntry<
 	/** @default false if cancellable, otherwise the default timeout */
 	timeout?: number | boolean
 	icon?: string
+	message: string
+	component?: string | Component
+	/** By default the component is passed the message and the messageClasses. Both will be overriden if you set them on componentProps. */
+	componentProps?: Record<string, any>
 }
 
 export type NotificationEntry<

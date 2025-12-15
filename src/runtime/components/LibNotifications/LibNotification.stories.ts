@@ -2,6 +2,7 @@
 import type { Meta, StoryObj } from "@storybook/vue3"
 
 import LibNotification from "./LibNotification.vue"
+import LibNotificationTestMessageComponent from "./LibNotificationTestMessageComponent.vue"
 
 import { NotificationHandler } from "../../helpers/NotificationHandler.js"
 import * as components from "../index.js"
@@ -21,7 +22,11 @@ type Story = StoryObj<typeof LibNotification>
 
 export const Primary: Story = {
 	render: args => ({
-		components: { ...components, LibNotification },
+		components: {
+			...components,
+			LibNotification,
+			LibNotificationTestMessageComponent
+		},
 		setup() {
 			return { args }
 		},
@@ -133,6 +138,22 @@ export const CustomDefaultAndDangerousOption: Story = {
 			options: ["Ok", "Default Answer", "Dangerous Option", "Cancel"],
 			default: "Default Answer",
 			dangerous: ["Dangerous Option"]
+		})
+	}
+}
+
+
+export const CustomMessageComponent: Story = {
+	...Primary,
+	args: {
+		...Primary.args,
+		// @ts-expect-error calling protected method
+		notification: handler._createEntry({
+			...Primary.args!.notification,
+			component: LibNotificationTestMessageComponent,
+			componentProps: {
+				customProp: "Custom Prop"
+			}
 		})
 	}
 }

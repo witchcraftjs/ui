@@ -118,3 +118,8 @@ export type RangeDate = {
 	start?: SingleDate
 	end?: SingleDate
 }
+
+export type CustomNotificationComponentProps = {
+	message: string
+	messageClasses?: string
+}
