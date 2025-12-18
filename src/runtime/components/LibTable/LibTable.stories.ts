@@ -7,12 +7,12 @@ import LibTable from "./LibTable.vue"
 import * as components from "../index.js"
 
 const meta: Meta<typeof LibTable> = {
-	component: LibTable,
+	component: LibTable as any,
 	title: "Components/Table"
 }
 
 export default meta
-type Story = StoryObj<typeof LibTable>
+type Story = StoryObj<typeof LibTable> & { args: { slots?: string } }
 export const Primary: Story = {
 	render: args => ({
 		components,
@@ -22,6 +22,7 @@ export const Primary: Story = {
 					<lib-table
 						v-bind="args"
 					>
+						${(args as any).slots}
 					</lib-table>
 				</div>
 		`
@@ -89,6 +90,38 @@ export const NoHeaderNoCellBorders: Story = {
 		...Primary.args,
 		header: false,
 		cellBorder: false
+	}
+}
+
+export const InitialSize: Story = {
+	...Primary,
+	args: {
+		...Primary.args,
+		colConfig: {
+			prop1: { name: "Initially Flex 1", resizable: true },
+			prop2: { name: "Initially Flex 2", resizable: true },
+			prop3: { name: "Initially Size of Header", resizable: true }
+		},
+		resizable: {
+			enabled: true
+		},
+		class: `
+			[&:not(.resizable-cols-setup)]:block
+			[&:not(.resizable-cols-setup)_thead]:block
+			[&:not(.resizable-cols-setup)_thead_tr]:w-full
+			[&:not(.resizable-cols-setup)_thead_tr]:flex
+			[&:not(.resizable-cols-setup)_thead_tr]:flex-nowrap
+			[&:not(.resizable-cols-setup)_thead_td:not(.override-initial)]:flex-1
+		`,
+		slots: `
+			<template #header-prop3="colProps">
+			<td
+				:class="\`\${colProps.class} w-[min-content] whitespace-nowrap override-initial\`"
+			>
+				{{ colProps.config.name }}
+			</td>
+		</template>
+		`
 	}
 }
 export const FitWidthFalse: Story = {
