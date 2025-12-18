@@ -160,7 +160,7 @@ const extraClasses = computed(() => Object.fromEntries([...Array(props.values.le
 		.map(col =>
 			[
 				`${row - 1}-${col}`,
-				getExtraClasses(row <= 0 ? 0 : row - 1, col, row === 0).join(" ")
+				" " +	getExtraClasses(row <= 0 ? 0 : row - 1, col, row === 0).join(" ") + " "
 			]))
 	.flat()
 ))
