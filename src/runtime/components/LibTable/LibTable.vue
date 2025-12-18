@@ -61,6 +61,7 @@
 					].join(' ')"
 					:style="`width:${widths.length > 0 ? widths[i] : ``}; `"
 					:col-key="col"
+					:config="(colConfig as any)[col]"
 				>
 					<td
 						:class="[
