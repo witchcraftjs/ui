@@ -116,7 +116,8 @@ export const InitialSize: Story = {
 		slots: `
 			<template #header-prop3="colProps">
 			<td
-				:class="\`\${colProps.class} w-[min-content] whitespace-nowrap override-initial\`"
+				:class="\`\${colProps.class} [table:not(.resizable-cols-setup)_&]:w-[min-content] whitespace-nowrap override-initial\`"
+				:style="colProps.style"
 			>
 				{{ colProps.config.name }}
 			</td>
