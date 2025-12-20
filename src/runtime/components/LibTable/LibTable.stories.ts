@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { Meta, StoryObj } from "@storybook/vue3"
+import { reactive, ref } from "vue"
 
 import LibTable from "./LibTable.vue"
 
@@ -12,13 +13,43 @@ const meta: Meta<typeof LibTable> = {
 }
 
 export default meta
-type Story = StoryObj<typeof LibTable> & { args: { slots?: string } }
+type Story = StoryObj<typeof LibTable> & { args: {
+	slots?: string
+	wrapperClass?: string
+} }
 export const Primary: Story = {
 	render: args => ({
 		components,
-		setup: () => ({ args }),
+		setup: () => {
+			const show = ref(true)
+			// careful, storybook passes refs as is causing issues
+			//
+			const argsReactive = reactive({
+				...args,
+				resizable: {
+					enabled: true,
+					...args.resizable
+				}
+			})
+
+			return {
+				args: argsReactive,
+				show
+			}
+		},
 		template: `
-				<div class="overflow-x-scroll scrollbar-hidden">
+				<div class="p-2 flex flex-col gap-2 border rounded-md mb-10">
+					Controls:
+					<div class="flex gap-2 w-full">
+						<LibButton class="flex-1" @click="args.resizable.enabled = !args.resizable.enabled">Toggle Resizable (currently {{args.resizable.enabled}})</LibButton>
+					</div>
+					<LibButton @click="show = !show">Toggle Table</LibButton>
+				</div>
+				<div
+					v-if="show"
+					class="overflow-x-auto"
+					:class="args.wrapperClass"
+				>
 					<lib-table
 						v-bind="args"
 					>
@@ -46,6 +77,7 @@ export const NoCellBorders: Story = {
 		cellBorder: false
 	}
 }
+
 export const NoBorders: Story = {
 	...Primary,
 	args: {

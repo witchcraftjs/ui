@@ -108,8 +108,8 @@ export const vResizableCols: Directive = {
 	},
 	updated(el: ResizableElement, { value: opts = {} }: RawOpts) {
 		const options = override({ ...defaultOpts }, opts) as ResizableOptions
-		const info = el && getElInfo(el)
-		const hasGrips = el && elMap.get(el)!.grips
+		const info = el && options.enabled && getElInfo(el)
+		const hasGrips = el && options.enabled && elMap.get(el)?.grips
 		// todo, we should probably check by name
 		const colsNotEqual = (info && info.colCount !== options.colCount)
 		if ((hasGrips && !options.enabled) || colsNotEqual) {
