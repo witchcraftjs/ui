@@ -47,6 +47,7 @@ export const Primary: Story = {
 					<div class="flex gap-2 w-full">
 						<LibButton class="flex-1" @click="args.resizable.enabled = !args.resizable.enabled">Toggle Resizable (currently {{args.resizable.enabled}})</LibButton>
 					</div>
+					<LibButton @click="args.stickyHeader = !args.stickyHeader">Toggle Sticky Header (currently {{args.stickyHeader}})</LibButton>
 					<LibButton @click="show = !show">Toggle Table</LibButton>
 				</div>
 				<lib-table
@@ -168,6 +169,29 @@ export const FitWidthFalse: Story = {
 }
 
 
+export const StickyHeader: Story = {
+	...Primary,
+	args: {
+		...Primary.args,
+		resizable: {
+			enabled: true
+		},
+		stickyHeader: true,
+		// moving the border to the wrapper is to hide the little bits of border sticking out
+		// added back the right straight border otherwise the scrollbar looks ass
+		// this is ever so slightly visible if there is no scrollbar
+		wrapperClass: `
+			max-h-[50dvh]
+		`,
+		values: Array.from({ length: 200 }).fill(0).map((_, i) => ({
+			prop1: `Item${i + 1} Prop 1`,
+			prop2: `Item${i + 1} Prop 2`,
+			prop3: `Item${i + 1} Prop 3`
+		}))
+	}
+}
+
+
 export const VirtualizedFixedHeight: Story = {
 	...Primary,
 	args: {
@@ -178,6 +202,7 @@ export const VirtualizedFixedHeight: Story = {
 		virtualizerOptions: {
 			enabled: true
 		},
+		stickyHeader: true,
 		wrapperClass: `
 			max-h-[50dvh]
 		`,

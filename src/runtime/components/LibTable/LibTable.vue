@@ -4,15 +4,24 @@
 	added back the right straight border otherwise the scrollbar looks ass
 	this is ever so slightly visible if there is no scrollbar
 
-	- dynamic mode REQUIRES grid
+	- relative is for the sticky header in dynamic mode
+
+	- dynamic mode REQUIRES grid since otherwise the transforms don't work because of how tanstack calculates them
+	- tried pre-calculating the transforms to take into account the previous elements (e.g. virtual.start - (height of previous rows)) but this was way to slow and buggy
 -->
 <div
 	:class="twMerge(`
 		table--container
 		overflow-auto
 	`,
-	hasScrollbar.vertical && `has-scrollbar-vertical`,
-	hasScrollbar.horizontal && `has-scrollbar-horizontal`,
+		hasScrollbar.vertical && `has-scrollbar-vertical`,
+		hasScrollbar.horizontal && `has-scrollbar-horizontal`,
+		stickyHeader && `
+		[&_thead]:sticky
+		[&_thead]:top-0
+		[&_thead]:z-1
+		[&_.grip]:z-2
+	`,
 	border && `
 		border
 		border-neutral-500
@@ -23,9 +32,13 @@
 		[&.has-scrollbar-vertical_.last-col]:border-r
 		[&.has-scrollbar-vertical_.last-col]:border-neutral-500
 	`,
-	// this combo prevents the x-scrollbar from showing up when it shouldn't
-	// and max-w-fit allows the border to shrink with the table columns
-	resizableOptions.fitWidth === false && `
+		(!resizableOptions.fitWidth || stickyHeader) && `
+		[&_td.tr]:rounded-tr-none!
+		[&_td.br]:rounded-br-none!
+	`,
+		// this combo prevents the x-scrollbar from showing up when it shouldn't
+		// and max-w-fit allows the border to shrink with the table columns
+		resizableOptions.fitWidth === false && `
 		[&_.grip]:last:translate-x-[-5px]
 		mr-1
 		max-w-fit
@@ -47,7 +60,14 @@
 				: {})
 		}"
 	>
+		<!-- https://github.com/TanStack/virtual/issues/640#issuecomment-2795731690 -->
 		<table
+			:style="{
+				...(stickyHeader && mergedVirtualizerOpts.enabled
+					? { '--table-sticky-fix': `${totalSize-tableHeight}px` }
+					: {}),
+				...($attrs as any).style ?? {}
+			}"
 			:class="twMerge(`
 				table
 				table-fixed
@@ -68,6 +88,10 @@
 			`,
 				isPostSetup && mergedVirtualizerOpts.enabled && mergedVirtualizerOpts.method === 'dynamic' && `
 				grid
+			`,
+				stickyHeader && mergedVirtualizerOpts.enabled && mergedVirtualizerOpts.method === 'fixed' && `
+				after:inline-block
+				after:h-(--table-sticky-fix)
 			`,
 				cellBorder && `
 				[&_td]:border-neutral-500
@@ -213,6 +237,7 @@ const props = withDefaults(defineProps<Props>(), {
 	header: true,
 	colConfig: () => ({}),
 	virtualizerOptions: () => ({ }),
+	enableStickyHeader: false,
 	itemKey: ""
 })
 
@@ -409,6 +434,8 @@ type RealProps = {
 	 * ```
 	 */
 	virtualizerOptions?: Partial<VirtualizerOptions<any, any>> & { method?: "fixed" | "dynamic" }
+	/** Whether to enable sticky header styles. This requires `border:false`. This moves the border to the wrapper and styles a straight border between the scroll bar and the rounded border. */
+	stickyHeader?: boolean
 	/** Which key to use for the rows (only if not using virtualization). */
 	itemKey?: keyof T | ((item: T) => string)
 }
