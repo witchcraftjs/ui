@@ -224,3 +224,8 @@
 	@apply cursor-pointer hover:text-accent-500;
 }
 
+@utility no-truncate {
+	text-overflow: unset;
+	overflow: visible;
+	white-space: normal;
+}

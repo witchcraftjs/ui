@@ -3,7 +3,8 @@ import { extendTailwindMerge } from "tailwind-merge"
 const _twMergeExtend = {
 	extend: {
 		classGroups: {
-			"focus-outline": [{ "focus-outline": ["", "no-offset", "none"] }]
+			"focus-outline": [{ "focus-outline": ["", "no-offset", "none"] }],
+			"no-truncate": ["truncate", "no-truncate"]
 		}
 	}
 } satisfies Parameters<typeof extendTailwindMerge>[0]
