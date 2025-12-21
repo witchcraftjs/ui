@@ -18,6 +18,7 @@ catalog:
   "@commitlint/cli": ^19.8.1
   "@iconify/json": ^2.2.379
   "@internationalized/date": ^3.9.0
+  "@faker-js/faker": ^10.0.0
   "@nuxt/eslint-config": ^1.9.0
   "@nuxt/kit": ^4.0.3
   "@nuxt/module-builder": ^1.0.2
@@ -41,6 +42,7 @@ catalog:
   "@tailwindcss/cli": ^4.1.12
   "@tailwindcss/postcss": ^4.1.12
   "@tailwindcss/vite": ^4.1.12
+  '@tanstack/vue-virtual': ^3.13.0
   "@types/node": ^24.3.0
   "@vitejs/plugin-vue": ^6.0.1
   "@vue/runtime-core": ^3.5.20

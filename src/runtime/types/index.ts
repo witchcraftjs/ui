@@ -3,9 +3,7 @@ import type { Ref } from "vue"
 
 export type ResizableOptions = {
 	/**
-	 * Defaults to true.
-	 *
-	 * ### true
+	 * ### true (default)
 	 * The directive will shrink/expand the columns when the table is resized and will use percentage widths on the table cells. This disables resizing of the last column (from the right handle).
 	 *
 	 * Additionally because of the way `table-layout:fixed` works, a min-width cannot be set on the elements via css, so instead, if the table shrinks past `opts.margin * col #`, `min-width` is set on the table until it's resized larger.
@@ -17,6 +15,8 @@ export type ResizableOptions = {
 	 * The table can be resized past it's normal width and uses pixel widths on the table cells. You might want to set `overscroll-x: scroll` on a parent wrapping element.
 	 *
 	 * This will set the table width to `min-content`, else it doesn't work. Note that it does this after the initial reading/setting of sizes so you can, for example, layout the table with `width: 100%`.
+	 *
+	 * @default true
 	 */
 	fitWidth: boolean
 	/**

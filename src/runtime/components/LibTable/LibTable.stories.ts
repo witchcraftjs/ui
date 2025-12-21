@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import { faker } from "@faker-js/faker"
 import type { Meta, StoryObj } from "@storybook/vue3"
 import { reactive, ref } from "vue"
 
@@ -6,6 +7,9 @@ import LibTable from "./LibTable.vue"
 
 // todo
 import * as components from "../index.js"
+
+// faker is slow, we can just choose from a few hundred pre-generated sentences
+const fakerSentences = Array.from({ length: 100 }).fill(0).map(_ => faker.lorem.sentence(faker.number.int({ min: 1, max: 50 })))
 
 const meta: Meta<typeof LibTable> = {
 	component: LibTable as any,
@@ -45,17 +49,12 @@ export const Primary: Story = {
 					</div>
 					<LibButton @click="show = !show">Toggle Table</LibButton>
 				</div>
-				<div
+				<lib-table
 					v-if="show"
-					class="overflow-x-auto"
-					:class="args.wrapperClass"
+					v-bind="args"
 				>
-					<lib-table
-						v-bind="args"
-					>
-						${(args as any).slots}
-					</lib-table>
-				</div>
+					${(args as any).slots}
+				</lib-table>
 		`
 	}),
 	args: {
@@ -65,8 +64,7 @@ export const Primary: Story = {
 			{ prop1: "Item2 Prop 1", prop2: "Item2 Prop 2", prop3: "Item2 Prop 3" },
 			{ prop1: "Item3 Prop 1", prop2: "Item3 Prop 2", prop3: "Item3 Prop 3" }
 		],
-		colConfig: { prop1: { name: "Header 1" }, prop2: { name: "Header 2" } },
-		itemKey: "prop1"
+		colConfig: { prop1: { name: "Header 1" }, prop2: { name: "Header 2" } }
 	}
 }
 
@@ -138,6 +136,7 @@ export const InitialSize: Story = {
 			enabled: true
 		},
 		class: `
+			[&:not(.resizable-cols-setup)]:w-full
 			[&:not(.resizable-cols-setup)]:block
 			[&:not(.resizable-cols-setup)_thead]:block
 			[&:not(.resizable-cols-setup)_thead_tr]:w-full
@@ -148,15 +147,16 @@ export const InitialSize: Story = {
 		slots: `
 			<template #header-prop3="colProps">
 			<td
-				:class="\`\${colProps.class} [table:not(.resizable-cols-setup)_&]:w-[min-content] whitespace-nowrap override-initial\`"
-				:style="colProps.style"
-			>
-				{{ colProps.config.name }}
 			</td>
-		</template>
+					:class="\`\${colProps.class} [table:not(.resizable-cols-setup)_&]:w-[min-content] whitespace-nowrap override-initial\`"
+					:style="colProps.style"
+				>
+					{{ colProps.config.name }}
+			</template>
 		`
 	}
 }
+
 export const FitWidthFalse: Story = {
 	...Primary,
 	args: {
@@ -164,6 +164,79 @@ export const FitWidthFalse: Story = {
 		resizable: {
 			fitWidth: false
 		}
+	}
+}
+
+
+export const VirtualizedFixedHeight: Story = {
+	...Primary,
+	args: {
+		...Primary.args,
+		resizable: {
+			enabled: true
+		},
+		virtualizerOptions: {
+			enabled: true
+		},
+		wrapperClass: `
+			max-h-[50dvh]
+		`,
+		values: Array.from({ length: 10000 }).fill(0).map((_, i) => ({
+			prop1: `Item${i + 1} Prop 1`,
+			prop2: `Item${i + 1} Prop 2`,
+			prop3: `Item${i + 1} Prop 3`
+		}))
+	}
+}
+
+
+// this is not the smoothest ever, but then the tan stack example isn't either
+// i think the issue is when the scrollbar gets to it's min height
+export const VirtualizedDynamicHeightExperimental: Story = {
+	...VirtualizedFixedHeight,
+	args: {
+		...VirtualizedFixedHeight.args,
+		virtualizerOptions: {
+			enabled: true,
+			method: "dynamic",
+			overscan: 5 // overscan is more expensive in dynamic mode
+		},
+		class: `
+			[&_td]:no-truncate!
+			[&_th]:no-truncate!
+		`,
+		values: Array.from({ length: 10000 }).fill(0).map((_, i) => ({
+			prop1: `Item${i + 1} Prop 1: ${faker.helpers.arrayElement(fakerSentences)}`,
+			prop2: `Item${i + 1} Prop 2: ${faker.helpers.arrayElement(fakerSentences)}`,
+			prop3: `Item${i + 1} Prop 3: ${faker.helpers.arrayElement(fakerSentences)}`
+		}))
+	}
+}
+
+
+export const VirtualizedFitWidthFalse: Story = {
+	...VirtualizedFixedHeight,
+	args: {
+		...VirtualizedFixedHeight.args,
+		resizable: {
+			fitWidth: false
+		},
+
+		class: `
+			[&_th]:no-truncate!
+			[&_th]:whitespace-nowrap!
+			[&:not(.resizable-cols-setup)]:w-max
+			[&:not(.resizable-cols-setup)_th]:w-max
+		`,
+		wrapperClass: `
+			max-h-[50dvh]
+		`,
+		values: Array.from({ length: 10000 }).fill(0).map((_, i) => ({
+			prop1: `Item${i + 1} Prop 1`,
+			prop2: `Item${i + 1} Prop 2`,
+			prop3: `Item${i + 1} Prop 3`
+		}))
+
 	}
 }
 
