@@ -184,7 +184,7 @@ function createPointerDownHandler(el: ResizableElement) {
 			document.addEventListener("pointerup", $el.pointerUpHandler)
 
 			const { col, colNext } = getCols(el)
-			if (col === null || colNext === null) {
+			if (col === null || (colNext === null && $el.fitWidth)) {
 				el.classList.add("resizable-cols-error")
 			} else {
 				document.addEventListener("pointermove", $el.pointerMoveHandler)
