@@ -289,7 +289,7 @@ function getElInfo(el: ResizableElement): Data {
 function getColEls(el: ResizableElement): HTMLElement[] {
 	const $el = elMap.get(el)
 	if (!$el) unreachable("El went missing.")
-	return [...el.querySelectorAll(`:scope ${$el.selector ? $el.selector : "tr > td"}`)] as any
+	return [...el.querySelectorAll(`:scope ${$el.selector ? $el.selector : "tr > th, tr > td"}`)] as any
 }
 
 function setupColumns(el: ResizableElement, opts: ResizableOptions): void {

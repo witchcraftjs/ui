@@ -142,16 +142,16 @@ export const InitialSize: Story = {
 			[&:not(.resizable-cols-setup)_thead_tr]:w-full
 			[&:not(.resizable-cols-setup)_thead_tr]:flex
 			[&:not(.resizable-cols-setup)_thead_tr]:flex-nowrap
-			[&:not(.resizable-cols-setup)_thead_td:not(.override-initial)]:flex-1
+			[&:not(.resizable-cols-setup)_thead_th:not(.override-initial)]:flex-1
 		`,
 		slots: `
 			<template #header-prop3="colProps">
-			<td
-			</td>
+				<th
 					:class="\`\${colProps.class} [table:not(.resizable-cols-setup)_&]:w-[min-content] whitespace-nowrap override-initial\`"
 					:style="colProps.style"
 				>
 					{{ colProps.config.name }}
+				</th>
 			</template>
 		`
 	}

@@ -112,12 +112,12 @@
 							:col-key="col"
 							:config="(colConfig as any)[col]"
 						>
-							<td
+							<th
 								:class="classes[`-1-${i}`]"
 								:style="{ width: widths[i] }"
 							>
 								{{ (colConfig as any)[col]?.name ?? col }}
-							</td>
+							</th>
 						</slot>
 					</template>
 				</tr>
