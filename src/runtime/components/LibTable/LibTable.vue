@@ -22,7 +22,8 @@
 		[&_thead]:z-1
 		[&_.grip]:z-2
 	`,
-	border && `
+		isPostSetup && `resizable-cols-setup`,
+		border && `
 		border
 		border-neutral-500
 	`,
@@ -244,11 +245,24 @@ const props = withDefaults(defineProps<Props>(), {
 const widths = ref([])
 
 
+const isPostSetup = ref(false)
 const resizableOptions = computed<MakeRequired<Partial<ResizableOptions>, "colCount" | "widths">>(() => ({
 	colCount: props.cols.length,
 	widths,
 	selector: ".cell",
-	...props.resizable
+	...props.resizable,
+	onSetup: el => {
+		isPostSetup.value = true
+		if (props.resizable.onSetup) {
+			props.resizable.onSetup(el)
+		}
+	},
+	onTeardown: el => {
+		isPostSetup.value = false
+		if (props.resizable.onTeardown) {
+			props.resizable.onTeardown(el)
+		}
+	}
 }))
 
 

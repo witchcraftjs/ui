@@ -22,6 +22,7 @@ type Data = {
 	offset?: number
 	widths: Ref<string[]>
 	selector: string
+	onTeardown?: (el: Element) => void
 }
 const elMap = new WeakMap<HTMLElement, Data>()
 type RawOpts = { value: Partial<ResizableOptions> }
@@ -305,7 +306,8 @@ function setupColumns(el: ResizableElement, opts: ResizableOptions): void {
 		margin: opts.margin === "dynamic" ? gripWidth : opts.margin,
 		colCount: opts.colCount,
 		widths: opts.widths,
-		selector: opts.selector
+		selector: opts.selector,
+		onTeardown: opts.onTeardown
 	}
 	elMap.set(el, $el)
 	const els = getColEls(el)
@@ -325,6 +327,7 @@ function setupColumns(el: ResizableElement, opts: ResizableOptions): void {
 	}
 	positionGrips(el)
 	el.classList.add("resizable-cols-setup")
+	opts.onSetup?.(el)
 }
 
 function positionGrips(el: ResizableElement): void {
@@ -379,4 +382,5 @@ function teardownColumns(el: ResizableElement): void {
 	elMap.delete(el)
 	el.classList.remove("resizable-cols-setup")
 	removeGrips(el)
+	$el.onTeardown?.(el)
 }
