@@ -150,8 +150,10 @@
 			<tbody
 				:class="twMerge(
 					`table--body`,
-					isPostSetup && mergedVirtualizerOpts.enabled && mergedVirtualizerOpts.method === 'dynamic'
-						&& `grid relative`
+					isPostSetup && mergedVirtualizerOpts.enabled && mergedVirtualizerOpts.method === 'dynamic' && `
+						grid
+						relative
+					`
 				)"
 				:style="{
 					...(mergedVirtualizerOpts.enabled && mergedVirtualizerOpts.method === 'dynamic'
@@ -165,9 +167,14 @@
 				>
 					<tr
 						:class="twMerge(`
-							table--row
-						`, isPostSetup && mergedVirtualizerOpts.enabled && mergedVirtualizerOpts.method === 'dynamic'
-							&& `flex absolute w-full`
+								table--row
+							`,
+							isPostSetup && mergedVirtualizerOpts.enabled && mergedVirtualizerOpts.method === 'dynamic' && `
+								flex
+								absolute
+								w-full
+							`,
+							isPostSetup && mergedVirtualizerOpts.enabled && ` will-change-transform `
 						)"
 						:style="{
 							...(mergedVirtualizerOpts.enabled
