@@ -22,6 +22,8 @@ type Data = {
 	widths: Ref<string[]>
 	selector: string
 	onTeardown?: (el: Element) => void
+	fixedWidths?: Record<number, number>
+	fluidWidthsAsPercentOfFluidWidth?: Record<number, number>
 	justResized?: boolean
 }
 const elMap = new WeakMap<HTMLElement, Data>()
@@ -208,6 +210,8 @@ function createPointerMoveHandler(el: ResizableElement) {
 		if ($el.isDragging) {
 			e.preventDefault()
 
+			$el.fluidWidthsAsPercentOfFluidWidth = undefined
+
 			const { col, colNext } = getCols(el)
 
 			if (col !== null) {
@@ -362,8 +366,60 @@ function setColWidths(el: ResizableElement, children?: Element[]): void {
 	const $el = getElInfo(el)
 	const header = children ?? getColEls(el).slice(0, $el.colCount)
 	const len = $el.colCount
+	const elWidth = getBox(el).width
+
+
+	let fluidTotalPx = 0
+	const fluid: Record<number, number> = {}
+
+	const doCalculateFixed = $el.fixedWidths === undefined
+	const doCalculateFluid = $el.fluidWidthsAsPercentOfFluidWidth === undefined
+
+	if (doCalculateFixed) {
+		$el.fixedWidths = { [-1]: 0 } // fixedTotalWidth
+	}
+	if (doCalculateFluid) {
+		$el.fluidWidthsAsPercentOfFluidWidth = {}
+	}
+	for (let i = 0; i < len; i++) {
+		const col = header[i]
+		castType<HTMLElement>(col)
+		if (col.classList.contains("no-resize")) {
+			if (doCalculateFixed) {
+				const w = getBox(col).width
+				$el.fixedWidths![i] = w
+				$el.fixedWidths![-1]! += $el.fixedWidths![i]!
+			}
+		} else {
+			if (doCalculateFluid) {
+				const w = getBox(col).width
+				fluid[i] = w
+				fluidTotalPx += w
+			}
+		}
+	}
+
+	const totalFluidCount = len - Object.keys($el.fixedWidths!).length
+
+	if (doCalculateFluid) {
+		for (let i = 0; i < len; i++) {
+			if ($el.fixedWidths![i] !== undefined) continue
+			$el.fluidWidthsAsPercentOfFluidWidth![i] = fluid[i]! / fluidTotalPx
+		}
+	}
+
+	const fixedTotalPx = $el.fixedWidths![-1]!
+	const minFlexWidth = (totalFluidCount * $el.margin)
+	const minTotalWidth = minFlexWidth + fixedTotalPx
+
+
+	let leftOverFluidWidth = elWidth - fixedTotalPx
+	if (leftOverFluidWidth < minFlexWidth) {
+		leftOverFluidWidth = minFlexWidth
+	}
+
 	let width = 0
-	const minTotalWidth = len * $el.margin
+
 	for (let i = 0; i < len; i++) {
 		const col = header[i]
 		castType<HTMLElement>(col)
@@ -371,9 +427,24 @@ function setColWidths(el: ResizableElement, children?: Element[]): void {
 		 * only works if parent table does NOT use `box-sizing:border-box` and either has no border or does `width: calc(100% - BORDERWIDTH*2)`
 		 */
 		const colBox = getBox(col)
-
-		setWidth(col, colBox.width, el)
-		width += getBox(col).width
+		if ($el.fixedWidths![i] !== undefined) {
+			setWidth(col, $el.fixedWidths![i]!, el)
+			width += $el.fixedWidths![i]!
+		} else {
+			if ($el.fitWidth) {
+				if (!$el.widths.value[i]) {
+					setWidth(col, colBox.width, el)
+					width += getBox(col).width
+					continue
+				}
+				const newInPx = $el.fluidWidthsAsPercentOfFluidWidth![i]! * leftOverFluidWidth
+				setWidth(col, newInPx, el)
+				width += getBox(col).width
+			} else {
+				setWidth(col, colBox.width, el)
+				width += getBox(col).width
+			}
+		}
 	}
 
 	if (width < minTotalWidth) {
