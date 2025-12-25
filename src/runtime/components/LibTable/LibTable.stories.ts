@@ -45,11 +45,10 @@ export const Primary: Story = {
 		template: `
 				<div class="p-2 flex flex-col gap-2 border rounded-md mb-10">
 					Controls:
-						<LibButton class="flex-1" @click="args.resizable.enabled = !args.resizable.enabled">Toggle Resizable (currently {{args.resizable.enabled}})</LibButton>
+					<LibButton class="flex-1" @click="args.resizable.enabled = !args.resizable.enabled">Toggle Resizable (currently {{args.resizable.enabled}})</LibButton>
 					<LibButton @click="args.stickyHeader = !args.stickyHeader">Toggle Sticky Header (currently {{args.stickyHeader}})</LibButton>
 					<LibButton @click="show = !show">Toggle Table</LibButton>
 					<LibButton @click="debugGrips = !debugGrips">Toggle Debug Grips (currently {{debugGrips}})</LibButton>
-					</div>
 				</div>
 				<div :class="debugGrips ? ' [&_.grip]:bg-red-500': ''">
 					<lib-table

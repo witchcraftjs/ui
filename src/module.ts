@@ -177,7 +177,9 @@ export default defineNuxtModule<ModuleOptions>({
 		nuxt.hook("vite:extendConfig", async config => {
 			if (options.includeUnpluginIconsPlugins) {
 				logger.info(`Adding unplugin-icons`)
+				// @ts-expect-error .
 				config.plugins ??= []
+				// @ts-expect-error .
 				config.plugins = [
 					...(
 						options.includeUnpluginIconsPlugins
@@ -199,6 +201,7 @@ export default defineNuxtModule<ModuleOptions>({
 					tailwindcss() as any,
 					...config.plugins
 				]
+				// @ts-expect-error .
 				config.optimizeDeps ??= {}
 				config.optimizeDeps.exclude ??= []
 				config.optimizeDeps.exclude.push("~icons")
