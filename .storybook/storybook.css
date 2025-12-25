@@ -1,0 +1,4 @@
+/* this is hiding stories until after the onMounted hook which makes it very hard to debug issues during onMounted. */
+.sb-preparing-story {
+	display: none;
+}

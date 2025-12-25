@@ -5,6 +5,7 @@ import { type Parameters,type Preview } from "@storybook/vue3"
 
 import LibRoot from "../src/runtime/components/LibRoot/LibRoot.vue"
 import { vExtractRootEl } from "../src/runtime/directives/vExtractRootEl.js"
+import "./storybook.css"
 
 
 export const parameters: Parameters = {
