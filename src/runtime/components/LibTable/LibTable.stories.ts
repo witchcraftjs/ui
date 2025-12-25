@@ -26,8 +26,8 @@ export const Primary: Story = {
 		components,
 		setup: () => {
 			const show = ref(true)
+			const debugGrips = ref(false)
 			// careful, storybook passes refs as is causing issues
-			//
 			const argsReactive = reactive({
 				...args,
 				resizable: {
@@ -38,24 +38,27 @@ export const Primary: Story = {
 
 			return {
 				args: argsReactive,
+				debugGrips,
 				show
 			}
 		},
 		template: `
 				<div class="p-2 flex flex-col gap-2 border rounded-md mb-10">
 					Controls:
-					<div class="flex gap-2 w-full">
 						<LibButton class="flex-1" @click="args.resizable.enabled = !args.resizable.enabled">Toggle Resizable (currently {{args.resizable.enabled}})</LibButton>
-					</div>
 					<LibButton @click="args.stickyHeader = !args.stickyHeader">Toggle Sticky Header (currently {{args.stickyHeader}})</LibButton>
 					<LibButton @click="show = !show">Toggle Table</LibButton>
+					<LibButton @click="debugGrips = !debugGrips">Toggle Debug Grips (currently {{debugGrips}})</LibButton>
+					</div>
 				</div>
-				<lib-table
-					v-if="show"
-					v-bind="args"
-				>
-					${(args as any).slots}
-				</lib-table>
+				<div :class="debugGrips ? ' [&_.grip]:bg-red-500': ''">
+					<lib-table
+						v-if="show"
+						v-bind="args"
+					>
+						${(args as any).slots}
+					</lib-table>
+				</div>
 		`
 	}),
 	args: {
@@ -268,8 +271,15 @@ export const VirtualizedFitWidthFalse: Story = {
 export const ThreeColSomeColsNotResizable: Story = {
 	render: args => ({
 		components,
-		setup: () => ({ args }),
+		setup: () => {
+			const debugGrips = ref(false)
+			return { args, debugGrips }
+		},
 		template: `
+		<div class="flex flex-col gap-2 w-full border rounded-md mb-10">
+			<WButton @click="debugGrips = !debugGrips">Toggle Debug Grips (currently {{debugGrips}})</WButton>
+		</div>
+		<div :class="debugGrips ? ' [&_.grip]:bg-red-500': ''">
 			<div class="flex flex-col gap-2 w-full">
 				<lib-table
 					v-bind="args"
@@ -284,6 +294,7 @@ export const ThreeColSomeColsNotResizable: Story = {
 				>
 				</lib-table>
 			</div>
+		</div>
 		`
 	}),
 	args: {
@@ -298,26 +309,7 @@ export const ThreeColSomeColsNotResizable: Story = {
 	} as any
 }
 export const FourColSomeColsNotResizable: Story = {
-	render: args => ({
-		components,
-		setup: () => ({ args }),
-		template: `
-			<div class="flex flex-col gap-2 w-full">
-				<lib-table
-					v-bind="args"
-				>
-				</lib-table>
-				<lib-table
-					v-bind="{...args, colConfig:args.colConfig2}"
-				>
-				</lib-table>
-				<lib-table
-					v-bind="{...args, colConfig:args.colConfig3}"
-				>
-				</lib-table>
-			</div>
-		`
-	}),
+	render: ThreeColSomeColsNotResizable.render,
 	args: {
 		cols: ["prop1", "prop2", "prop3", "prop4"],
 		values: [
