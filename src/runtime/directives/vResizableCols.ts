@@ -22,6 +22,7 @@ type Data = {
 	widths: Ref<string[]>
 	selector: string
 	onTeardown?: (el: Element) => void
+	justResized?: boolean
 }
 const elMap = new WeakMap<HTMLElement, Data>()
 type RawOpts = { value: Partial<ResizableOptions> }
@@ -37,8 +38,14 @@ const defaultOpts: Omit<ResizableOptions, "colCount" | "widths" | "selector"> = 
 // note that while it would be nice to throttle this it seems to loose the reference to the original element
 // haven't found where the issue is yet #future
 const callback: ResizeCallback = (_rect: DOMRectReadOnly, el: Element): void => {
+	const $el = getElInfo(el as ResizableElement)
+	if ($el.justResized) return
 	setColWidths(el as ResizableElement)
-	positionGrips(el as ResizableElement)
+	$el.justResized = true
+	setTimeout(() => {
+		positionGrips(el as ResizableElement)
+		$el.justResized = false
+	}, 0)
 }
 
 /**
@@ -234,7 +241,11 @@ function createPointerMoveHandler(el: ResizableElement) {
 					}
 				}
 
-				positionGrips(el)
+				$el.justResized = true
+				setTimeout(() => {
+					positionGrips(el)
+					$el.justResized = false
+				}, 0)
 			}
 		}
 	}
@@ -323,9 +334,13 @@ function setupColumns(el: ResizableElement, opts: ResizableOptions): void {
 		el.appendChild(grip)
 		$el.grips.set(grip, i)
 	}
-	positionGrips(el)
-	el.classList.add("resizable-cols-setup")
-	opts.onSetup?.(el)
+	$el.justResized = true
+	setTimeout(() => {
+		positionGrips(el)
+		$el.justResized = false
+		el.classList.add("resizable-cols-setup")
+		opts.onSetup?.(el)
+	}, 0)
 }
 
 function positionGrips(el: ResizableElement): void {
