@@ -270,20 +270,20 @@ export const ThreeColSomeColsNotResizable: Story = {
 		components,
 		setup: () => ({ args }),
 		template: `
-			<lib-table
-				v-bind="args"
-			>
-			</lib-table>
-			<br>
-			<lib-table
-			v-bind="{...args, colConfig:args.colConfig2}"
-			>
-			</lib-table>
-			<br>
-			<lib-table
-				v-bind="{...args, colConfig:args.colConfig3}"
-			>
-			</lib-table>
+			<div class="flex flex-col gap-2 w-full">
+				<lib-table
+					v-bind="args"
+				>
+				</lib-table>
+				<lib-table
+				v-bind="{...args, colConfig:args.colConfig2}"
+				>
+				</lib-table>
+				<lib-table
+					v-bind="{...args, colConfig:args.colConfig3}"
+				>
+				</lib-table>
+			</div>
 		`
 	}),
 	args: {
@@ -302,20 +302,20 @@ export const FourColSomeColsNotResizable: Story = {
 		components,
 		setup: () => ({ args }),
 		template: `
+			<div class="flex flex-col gap-2 w-full">
 				<lib-table
 					v-bind="args"
 				>
 				</lib-table>
-				<br>
 				<lib-table
-				v-bind="{...args, colConfig:args.colConfig2}"
+					v-bind="{...args, colConfig:args.colConfig2}"
 				>
-			</lib-table>
-			<br>
+				</lib-table>
 				<lib-table
 					v-bind="{...args, colConfig:args.colConfig3}"
 				>
 				</lib-table>
+			</div>
 		`
 	}),
 	args: {

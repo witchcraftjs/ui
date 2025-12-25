@@ -1,6 +1,5 @@
 import { castType } from "@alanscodelog/utils/castType"
 import { override } from "@alanscodelog/utils/override"
-import { throttle } from "@alanscodelog/utils/throttle"
 import { unreachable } from "@alanscodelog/utils/unreachable"
 import type { Directive, Ref } from "vue"
 
@@ -35,11 +34,13 @@ const defaultOpts: Omit<ResizableOptions, "colCount" | "widths" | "selector"> = 
 	enabled: true
 }
 
+// note that while it would be nice to throttle this it seems to loose the reference to the original element
+// haven't found where the issue is yet #future
 const callback: ResizeCallback = (_rect: DOMRectReadOnly, el: Element): void => {
 	setColWidths(el as ResizableElement)
 	positionGrips(el as ResizableElement)
 }
-const throttledCallback = throttle(callback)
+
 /**
  * Allow a table like element to be resized along it's columns.
  *
@@ -104,7 +105,7 @@ export const vResizableCols: Directive = {
 
 		if (options.enabled) {
 			setupColumns(el, options)
-			observer.observe(el, throttledCallback)
+			observer.observe(el, callback)
 		}
 	},
 	updated(el: ResizableElement, { value: opts = {} }: RawOpts) {
@@ -113,22 +114,19 @@ export const vResizableCols: Directive = {
 		const hasGrips = el && options.enabled && elMap.get(el)?.grips
 		// todo, we should probably check by name
 		const colsNotEqual = (info && info.colCount !== options.colCount)
-		if ((hasGrips && !options.enabled) || colsNotEqual) {
+		if (!options.enabled || colsNotEqual) {
 			teardownColumns(el)
-			observer.unobserve(el, throttledCallback)
+			observer.unobserve(el, callback)
 		}
 
 		if ((!hasGrips && options.enabled) || colsNotEqual) {
 			setupColumns(el, options)
-			observer.observe(el, throttledCallback)
+			observer.observe(el, callback)
 		}
 	},
 	unmounted(el: ResizableElement) {
-		const hasGrips = elMap.has(el) && elMap.get(el)!.grips
-		if (hasGrips) {
-			teardownColumns(el)
-			globalResizeObserver.unobserve(el, throttledCallback)
-		}
+		teardownColumns(el)
+		globalResizeObserver.unobserve(el, callback)
 	},
 	getSSRProps() {
 		return {}
@@ -282,10 +280,10 @@ function getTestGripSize(el: ResizableElement): number {
 	return dynamicMinWidth
 }
 
-function getElInfo(el: ResizableElement): Data {
+function getElInfo<T extends boolean = true>(el: ResizableElement, { throwIfMissing = true as T }: { throwIfMissing?: T } = {}): T extends true ? Data : Data | undefined {
 	const $el = elMap.get(el)
-	if (!$el) unreachable("El went missing.")
-	return $el
+	if (!$el && throwIfMissing) unreachable("El went missing.")
+	return $el as any
 }
 function getColEls(el: ResizableElement): HTMLElement[] {
 	const $el = elMap.get(el)
@@ -335,9 +333,9 @@ function positionGrips(el: ResizableElement): void {
 	const $el = getElInfo(el)
 	for (const grip of $el.grips.keys()) {
 		const col = $el.grips.get(grip)!
-		const colEls = getColEls(el)[col]
-		if (!colEls) unreachable()
-		const colBox = getBox(colEls)
+		const colEl = getColEls(el)[col]
+		if (!colEl) unreachable()
+		const colBox = getBox(colEl)
 		const gripBox = getBox(grip)
 
 		grip.style.left = `${xPos + colBox.width - (gripBox.width / 2)}px`
@@ -371,16 +369,19 @@ function setColWidths(el: ResizableElement, children?: Element[]): void {
 }
 
 function teardownColumns(el: ResizableElement): void {
-	const $el = getElInfo(el)
+	const $el = getElInfo(el, { throwIfMissing: false })
 
-	el.removeEventListener("pointerdown", $el.pointerDownHandler)
-	document.removeEventListener("pointermove", $el.pointerMoveHandler)
-	document.removeEventListener("pointerup", $el.pointerUpHandler)
-	for (const key of Object.keys($el)) {
-		delete $el[key as keyof typeof $el]
+	if ($el) {
+		el.removeEventListener("pointerdown", $el.pointerDownHandler)
+		document.removeEventListener("pointermove", $el.pointerMoveHandler)
+		document.removeEventListener("pointerup", $el.pointerUpHandler)
+		for (const key of Object.keys($el)) {
+			delete $el[key as keyof typeof $el]
+		}
+		$el.onTeardown?.(el)
+		elMap.delete(el)
 	}
-	elMap.delete(el)
+
 	el.classList.remove("resizable-cols-setup")
 	removeGrips(el)
-	$el.onTeardown?.(el)
 }
