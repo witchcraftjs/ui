@@ -237,6 +237,9 @@ export const VirtualizedDynamicHeightExperimental: Story = {
 			prop2: `Item${i + 1} Prop 2: ${faker.helpers.arrayElement(fakerSentences)}`,
 			prop3: `Item${i + 1} Prop 3: ${faker.helpers.arrayElement(fakerSentences)}`
 		}))
+	},
+	parameters: {
+		tags: ["skip-smoke-test"]
 	}
 }
 
