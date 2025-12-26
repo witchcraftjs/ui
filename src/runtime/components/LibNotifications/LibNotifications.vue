@@ -29,7 +29,7 @@
 		:handler="handler"
 		tabindex="0"
 		:notification="notification"
-		class="overflow-hidden my-2"
+		class="overflow-hidden my-2 max-h-[25dvh] min-h-[300px]"
 		v-for="notification of notifications"
 		:key="notification.id"
 		@pause="handler.pause(notification)"
@@ -68,6 +68,7 @@
 			class="
 				data-[state=open]:animate-contentShow
 				fixed
+				flex
 				top-[50%]
 				left-[50%]
 				translate-x-[-50%]
@@ -79,6 +80,8 @@
 		>
 			<lib-notification
 				class="
+					max-w-full
+					max-h-full
 					top-notification
 					text-md
 					gap-2

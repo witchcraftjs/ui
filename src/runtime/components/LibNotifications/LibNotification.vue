@@ -95,6 +95,8 @@
 		v-bind="setSlotVar('message', {
 			class: `
 				notification--message
+				shrink-1
+				overflow-auto
 				whitespace-pre-wrap
 				text-neutral-800
 				dark:text-neutral-200

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import { faker } from "@faker-js/faker"
 import type { Meta, StoryObj } from "@storybook/vue3"
-import { ref } from "vue"
+import { computed, ref } from "vue"
 
 import LibNotifications from "./LibNotifications.vue"
 
@@ -29,22 +30,26 @@ export const Primary: Story = {
 
 			const withTitle = ref(args.withTitle)
 			const disableTimeout = ref(false)
+			const lotsOfText = ref(false)
+			const paragraphs = `\n Simulating lots of text:\n${faker.lorem.paragraphs(20)}`
+			const extraText = computed(() => lotsOfText.value ? paragraphs : "")
 
 			const notifyRequiresAction = () => {
 				count++
 				void handler.notify({
 					title: withTitle.value ? `Notification(${count})` : undefined,
-					message: `This is a notification that requires action. Pick an option:`,
+					message: `This is a notification that requires action. Pick an option:${extraText.value}`,
 					requiresAction: true,
 					options: ["Ok", "Default Answer", "Cancel"],
 					default: "Default Answer"
 				})
 			}
+
 			const notifyWithDangerousOption = () => {
 				count++
 				void handler.notify({
 					title: withTitle.value ? `Notification(${count})` : undefined,
-					message: `This is a notification that has a dangerous option. Pick an option:`,
+					message: `This is a notification that has a dangerous option. Pick an option:${extraText.value}`,
 					options: ["Ok", "Default Answer", "Dangerous Option", "Cancel"],
 					default: "Default Answer",
 					dangerous: ["Dangerous Option"]
@@ -54,7 +59,7 @@ export const Primary: Story = {
 				count++
 				void handler.notify({
 					title: withTitle.value ? `Notification(${count})` : undefined,
-					message: `This is a non-cancellable notification. Pick an option:`,
+					message: `This is a non-cancellable notification. Pick an option:${extraText.value}`,
 					options: ["Ok", "Default Answer"],
 					default: "Default Answer",
 					cancellable: false
@@ -64,7 +69,7 @@ export const Primary: Story = {
 				count++
 				void handler.notify({
 					title: withTitle.value ? `Notification(${count})` : undefined,
-					message: `This is a non-cancellable notification. Pick an option:`,
+					message: `This is a non-cancellable notification. Pick an option:${extraText.value}`,
 					requiresAction: true,
 					options: ["Ok", "Default Answer"],
 					default: "Default Answer",
@@ -75,7 +80,7 @@ export const Primary: Story = {
 				count++
 				void handler.notify({
 					title: withTitle.value ? `Notification(${count})` : undefined,
-					message: `This is a notification. No action required.`,
+					message: `This is a notification. No action required.${extraText.value}`,
 					timeout: disableTimeout.value ? false : 5000
 				})
 			}
@@ -88,6 +93,7 @@ export const Primary: Story = {
 				handler,
 				withTitle,
 				disableTimeout,
+				lotsOfText,
 				args: {
 					outline: false,
 					...args
@@ -103,9 +109,10 @@ export const Primary: Story = {
 		<lib-button :label="'Notify Non-Cancellable that RequiresAction'" @click="notifyNonCancellableRequiresAction()"></lib-button>
 		<lib-button :label="'Notify With Dangerous Option'" @click="notifyWithDangerousOption()"></lib-button>
 		<lib-button :label="'Notify Non-Cancellable'" @click="notifyNonCancellable()"></lib-button>
-		<input type="checkbox" v-model="withTitle"/> With Title
-		<input type="checkbox" v-model="disableTimeout"/> Disable Timeout
-			<lib-notifications :handler="handler" />
+		<lib-checkbox v-model="lotsOfText">Use lots of text</lib-checkbox>
+		<lib-checkbox v-model="disableTimeout">Disable Timeout</lib-checkbox>
+		<lib-checkbox v-model="withTitle">With Title</lib-checkbox>
+		<lib-notifications :handler="handler" />
 		History:
 		<lib-debug>
 			<template v-for="entry in handler.history">

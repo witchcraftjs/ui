@@ -439,7 +439,7 @@ type RealProps = {
 	 * Since the table now truncates rows by default, they will always be the same height unless you change the inner styling. In fixed mode, `forceRecalculateFixedVirtualizer` is exposed if you need to force re-calculation.
 	 *
 	 * If using slots, be sure to at least pass the `class` slot prop to the td element. `style` with width is also supplied but is not required if you're displaying the table as a table.
-	  *
+	 *
 	 * ### Dynamic (experimental)
 	 *
 	 * In `dynamic` mode we use tanstack's measureElement method. This is more expensive, but it will work with any heights.
