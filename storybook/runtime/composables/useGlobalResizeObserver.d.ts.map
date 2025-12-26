@@ -1,0 +1,1 @@
+{"version":3,"file":"useGlobalResizeObserver.d.ts","sourceRoot":"","sources":["../../../../src/runtime/composables/useGlobalResizeObserver.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,WAAW,EAAE,MAAM,qBAAqB,CAAA;AACtD,OAAO,EAA8B,KAAK,GAAG,EAAS,MAAM,KAAK,CAAA;AAIjE,eAAO,MAAM,uBAAuB,GAAI,IAAI,GAAG,CAAC,WAAW,GAAG,IAAI,CAAC,EAAE,IAAI,WAAW,KAAG,IA0BtF,CAAA"}
