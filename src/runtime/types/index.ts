@@ -41,7 +41,7 @@ export type ResizableOptions = {
 	 * It can then be used as needed by the component.
 	 */
 	widths: Ref<string[]>
-	/** The selector to use for the cells. "tr > td" by default. */
+	/** The selector to use for the header cells. "tr > th" by default. */
 	selector: string
 	/** Is called just after the `resizable-cols-setup` class is added. Can be useful for controlling the styling of wrappers or doing additional things post-setup. The default table element uses it to set the class on the wrapper also. */
 	onSetup?: (el: Element) => void

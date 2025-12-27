@@ -305,7 +305,7 @@ function getElInfo<T extends boolean = true>(el: ResizableElement, { throwIfMiss
 function getColEls(el: ResizableElement): HTMLElement[] {
 	const $el = elMap.get(el)
 	if (!$el) unreachable("El went missing.")
-	return [...el.querySelectorAll(`:scope ${$el.selector ? $el.selector : "tr > th, tr > td"}`)] as any
+	return [...el.querySelectorAll(`:scope ${$el.selector ?? "tr > th"}`)] as any
 }
 
 function setupColumns(el: ResizableElement, opts: ResizableOptions): void {
@@ -325,9 +325,10 @@ function setupColumns(el: ResizableElement, opts: ResizableOptions): void {
 		onTeardown: opts.onTeardown
 	}
 	elMap.set(el, $el)
-	const els = getColEls(el)
-
-	const headers = els.slice(0, opts.colCount)
+	const headers = getColEls(el)
+	if (headers.length !== opts.colCount) {
+		throw new Error(`Number of headers matched using selector ${opts.selector ?? "tr > th"} does not match number of columns.`)
+	}
 
 	setColWidths(el, headers)
 	el.style.width = $el.fitWidth ? "" : "min-content"

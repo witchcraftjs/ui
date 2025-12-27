@@ -256,7 +256,7 @@ const isPostSetup = ref(false)
 const resizableOptions = computed<MakeRequired<Partial<ResizableOptions>, "colCount" | "widths">>(() => ({
 	colCount: props.cols.length,
 	widths,
-	selector: ".cell",
+	selector: props.header ? undefined : `tr:first-child > td`,
 	...props.resizable,
 	onSetup: el => {
 		isPostSetup.value = true
@@ -414,6 +414,7 @@ type RealProps = {
 	rounded?: boolean
 	border?: boolean
 	cellBorder?: boolean
+	/** Disables the header. This also sets the selector to `tr:first-child > td` instead to avoid issues with the vResizableCols directive. */
 	header?: boolean
 	colConfig?: TableColConfig<T>
 	/**
