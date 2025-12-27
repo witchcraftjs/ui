@@ -186,6 +186,7 @@ function createPointerDownHandler(el: ResizableElement) {
 			castType<HTMLElement>(e.target)
 			$el.target = e.target
 			$el.isDragging = true
+			el.classList.add("dragging")
 			e.preventDefault()
 
 			// in case any errors happen, we want the pointer up to still be called
@@ -261,6 +262,7 @@ function createPointerUpHandler(el: ResizableElement) {
 		if ($el.isDragging) {
 			e.preventDefault()
 			$el.isDragging = false
+			el.classList.remove("dragging")
 			el.classList.remove("resizable-cols-error")
 			$el.offset = 0
 			delete $el.target
