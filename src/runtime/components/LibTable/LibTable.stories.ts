@@ -19,8 +19,9 @@ const meta: Meta<typeof LibTable> = {
 export default meta
 type Story = StoryObj<typeof LibTable> & { args: {
 	slots?: string
-	wrapperClass?: string
+	["wrapper-class"]?: string
 } }
+
 export const Primary: Story = {
 	render: args => ({
 		components,
@@ -182,7 +183,7 @@ export const StickyHeader: Story = {
 		// moving the border to the wrapper is to hide the little bits of border sticking out
 		// added back the right straight border otherwise the scrollbar looks ass
 		// this is ever so slightly visible if there is no scrollbar
-		wrapperClass: `
+		["wrapper-class"]: `
 			max-h-[50dvh]
 		`,
 		values: Array.from({ length: 200 }).fill(0).map((_, i) => ({
@@ -205,7 +206,7 @@ export const VirtualizedFixedHeight: Story = {
 			enabled: true
 		},
 		stickyHeader: true,
-		wrapperClass: `
+		["wrapper-class"]: `
 			max-h-[50dvh]
 		`,
 		values: Array.from({ length: 10000 }).fill(0).map((_, i) => ({
@@ -258,7 +259,7 @@ export const VirtualizedFitWidthFalse: Story = {
 			[&:not(.resizable-cols-setup)]:w-max
 			[&:not(.resizable-cols-setup)_th]:w-max
 		`,
-		wrapperClass: `
+		["wrapper-class"]: `
 			max-h-[50dvh]
 		`,
 		values: Array.from({ length: 10000 }).fill(0).map((_, i) => ({

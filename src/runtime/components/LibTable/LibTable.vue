@@ -50,7 +50,7 @@
 		mergedVirtualizerOpts.enabled && mergedVirtualizerOpts.method === 'dynamic' && `
 		relative
 		`,
-		($attrs as any).wrapperClass)"
+		($attrs as any)['wrapper-class'])"
 	ref="parentRef"
 >
 	<div
