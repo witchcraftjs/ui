@@ -29,7 +29,7 @@
 		:handler="handler"
 		tabindex="0"
 		:notification="notification"
-		class="overflow-hidden my-2 max-h-[25dvh] min-h-[300px]"
+		class="overflow-hidden my-2 max-h-[300px]"
 		v-for="notification of notifications"
 		:key="notification.id"
 		@pause="handler.pause(notification)"
