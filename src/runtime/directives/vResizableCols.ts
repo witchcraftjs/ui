@@ -24,7 +24,6 @@ type Data = {
 	onTeardown?: (el: Element) => void
 	fixedWidths?: Record<number, number>
 	fluidWidthsAsPercentOfFluidWidth?: Record<number, number>
-	justResized?: boolean
 }
 const elMap = new WeakMap<HTMLElement, Data>()
 type RawOpts = { value: Partial<ResizableOptions> }
@@ -40,14 +39,8 @@ const defaultOpts: Omit<ResizableOptions, "colCount" | "widths" | "selector"> = 
 // note that while it would be nice to throttle this it seems to loose the reference to the original element
 // haven't found where the issue is yet #future
 const callback: ResizeCallback = (_rect: DOMRectReadOnly, el: Element): void => {
-	const $el = getElInfo(el as ResizableElement)
-	if ($el.justResized) return
 	setColWidths(el as ResizableElement)
-	$el.justResized = true
-	setTimeout(() => {
-		positionGrips(el as ResizableElement)
-		$el.justResized = false
-	}, 0)
+	positionGrips(el as ResizableElement)
 }
 
 /**
@@ -148,7 +141,11 @@ function setWidth(col: HTMLElement, amountInPx: number, el: ResizableElement): v
 
 	const index = getColEls(el).findIndex(_ => col === _)
 	if ($el.fitWidth) {
-		$el.widths.value[index] = `${width / getBox(el).width * 100}%`
+		if (amountInPx <= $el.margin) {
+			$el.widths.value[index] = `${$el.margin}px`
+		} else {
+			$el.widths.value[index] = `${width / getBox(el).width * 100}%`
+		}
 	} else {
 		$el.widths.value[index] = `${width}px`
 	}
@@ -246,11 +243,7 @@ function createPointerMoveHandler(el: ResizableElement) {
 					}
 				}
 
-				$el.justResized = true
-				setTimeout(() => {
-					positionGrips(el)
-					$el.justResized = false
-				}, 0)
+				positionGrips(el)
 			}
 		}
 	}
@@ -259,6 +252,7 @@ function createPointerMoveHandler(el: ResizableElement) {
 function createPointerUpHandler(el: ResizableElement) {
 	return (e: PointerEvent) => {
 		const $el = getElInfo(el)
+		$el.pointerMoveHandler(e)
 		if ($el.isDragging) {
 			e.preventDefault()
 			$el.isDragging = false
@@ -341,13 +335,9 @@ function setupColumns(el: ResizableElement, opts: ResizableOptions): void {
 		el.appendChild(grip)
 		$el.grips.set(grip, i)
 	}
-	$el.justResized = true
-	setTimeout(() => {
-		positionGrips(el)
-		$el.justResized = false
-		el.classList.add("resizable-cols-setup")
-		opts.onSetup?.(el)
-	}, 0)
+	positionGrips(el)
+	el.classList.add("resizable-cols-setup")
+	opts.onSetup?.(el)
 }
 
 function positionGrips(el: ResizableElement): void {
@@ -415,7 +405,6 @@ function setColWidths(el: ResizableElement, children?: Element[]): void {
 	const minFlexWidth = (totalFluidCount * $el.margin)
 	const minTotalWidth = minFlexWidth + fixedTotalPx
 
-
 	let leftOverFluidWidth = elWidth - fixedTotalPx
 	if (leftOverFluidWidth < minFlexWidth) {
 		leftOverFluidWidth = minFlexWidth
@@ -431,7 +420,7 @@ function setColWidths(el: ResizableElement, children?: Element[]): void {
 		 */
 		const colBox = getBox(col)
 		if ($el.fixedWidths![i] !== undefined) {
-			setWidth(col, $el.fixedWidths![i]!, el)
+			$el.widths.value[i] = `${$el.fixedWidths![i]!}px`
 			width += $el.fixedWidths![i]!
 		} else {
 			if ($el.fitWidth) {
