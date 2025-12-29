@@ -5,17 +5,16 @@
 	tag="div"
 	:class="twMerge(`
 		notifications
-		[--notification-width:300px]
+		[--notification-width:calc(100dvw-var(--spacing)*4)]
+		sm:[--notification-width:300px]
 		fixed
 		top-0
 		z-50
 		right-[calc(var(--notification-width)*-1)]
 		w-[calc(var(--spacing)*2+var(--notification-width)*2)]
-		[&_.notification]:w-[var(--notification-width)]
 		max-h-[100dvh]
 		flex
 		flex-col
-		[&_.notification]:shrink-0
 		gap-1
 		list-none
 		outline-none
@@ -29,7 +28,16 @@
 		:handler="handler"
 		tabindex="0"
 		:notification="notification"
-		class="overflow-hidden my-2 max-h-[300px]"
+		class="
+			overflow-hidden
+			my-2
+			max-h-[300px]
+			w-[var(--notification-width)]
+			shrink-0
+			max-sm:[&_.notification--button]:p-2
+			max-sm:[&_.notification--button]:py-1
+			max-sm:[&_.notification--header]:text-lg
+		"
 		v-for="notification of notifications"
 		:key="notification.id"
 		@pause="handler.pause(notification)"
@@ -67,19 +75,27 @@
 		<AlertDialogContent
 			class="
 				data-[state=open]:animate-contentShow
+				max-sm:data-[state=open]:animate-slideInUp
 				fixed
 				flex
+				max-h-[80dvh]
 				top-[50%]
 				left-[50%]
-				translate-x-[-50%]
-				translate-y-[-50%]
-				max-h-[80dvh]
+				sm:translate-x-[-50%]
+				sm:translate-y-[-50%]
 				max-w-[700px]
+				max-sm:bottom-2
+				max-sm:top-[unset]
+				max-sm:left-2
+				max-sm:right-2
+				max-sm:w-[calc(100%-var(--spacing)*4)]
 				z-100
 			"
 		>
 			<lib-notification
 				class="
+					w-full
+					sm:max-w-[700px]
 					max-w-full
 					max-h-full
 					top-notification

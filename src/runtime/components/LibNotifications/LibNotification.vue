@@ -3,7 +3,6 @@
 	v-if="notification"
 	:class="twMerge(`
 		notification
-		max-w-700px
 		bg-neutral-50
 		dark:bg-neutral-900
 		text-fg
@@ -63,7 +62,7 @@
 			</div>
 		</slot>
 		<div class="notification--spacer flex-1"/>
-		<div class="actions flex">
+		<div class="notification--actions flex">
 			<LibButton
 				:border="false"
 				class="
