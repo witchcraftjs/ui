@@ -1,3 +1,13 @@
+@utility animate-from-* {
+	--animate-from: --value([length, percentage]);
+	--animate-from: calc(var(--spacing) * --value(integer));
+}
+
+@utility -animate-from-* {
+	--animate-from: --value([length, percentage]);
+	--animate-from: calc(var(--spacing) * -1 * --value(integer));
+}
+
 @theme {
 	--animate-blinkInf: blink 1s linear-infinite;
 	@keyframes blink {
@@ -38,10 +48,10 @@
 		}
 	}
 
-	--animate-slideIn: slideIn 500ms cubic-bezier(0.16, 1, 0.3, 1);
-	@keyframes slideIn {
+	--animate-slideInLeft: slideInLeft 500ms cubic-bezier(0.16, 1, 0.3, 1);
+	@keyframes slideInLeft {
 		from {
-			transform: translateX(100%);
+			transform: translateX(var(--animate-from, 100%));
 			opacity: 0;
 		}
 		to {
@@ -49,6 +59,43 @@
 			opacity: 1;
 		}
 	}
+
+	--animate-slideInRight: slideInLeft 500ms cubic-bezier(0.16, 1, 0.3, 1);
+	@keyframes slideInRight {
+		from {
+			transform: translateX(var(--animate-from, -100%));
+			opacity: 0;
+		}
+		to {
+			transform: translateX(0);
+			opacity: 1;
+		}
+	}
+
+	--animate-slideInUp: slideInUp 500ms cubic-bezier(0.16, 1, 0.3, 1);
+	@keyframes slideInUp {
+		from {
+			transform: translateY(var(--animate-from, 100%));
+			opacity: 0;
+		}
+		to {
+			transform: translateY(0);
+			opacity: 1;
+		}
+	}
+
+	--animate-slideInDown: slideInDown 500ms cubic-bezier(0.16, 1, 0.3, 1);
+	@keyframes slideInDown {
+		from {
+			transform: translateY(var(--animate-from, -100%));
+			opacity: 0;
+		}
+		to {
+			transform: translateY(0);
+			opacity: 1;
+		}
+	}
+
 
 	--animate-overlayShow: overlayShow 500ms cubic-bezier(0.16, 1, 0.3, 1);
 	@keyframes overlayShow {
