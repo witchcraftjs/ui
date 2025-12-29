@@ -237,10 +237,14 @@ const locale = useInjectedLocale().timeLocale
 			dark:border-neutral-700
 			shadow-lg
 			will-change-[transform,opacity]
-			data-[state=open]:data-[side=top]:animate-slideDownAndFade
-			data-[state=open]:data-[side=right]:animate-slideLeftAndFade
-			data-[state=open]:data-[side=bottom]:animate-slideUpAndFade
-			data-[state=open]:data-[side=left]:animate-slideRightAndFade
+			data-[side=top]:animate-from-3
+			data-[side=left]:animate-from-3
+			data-[side=right]:-animate-from-3
+			data-[side=bottom]:-animate-from-3
+			data-[state=open]:data-[side=top]:animate-slideInUp
+			data-[state=open]:data-[side=right]:animate-slideInRight
+			data-[state=open]:data-[side=bottom]:animate-slideInDown
+			data-[state=open]:data-[side=left]:animate-slideInLeft
 			text-fg
 			dark:text-neutral-200
 		"
