@@ -220,6 +220,7 @@ onMounted(() => {
 				if (props.notification.isPaused) return
 				emit("pause", props.notification)
 			} else {
+				if (!props.notification.isPaused) return
 				emit("resume", props.notification)
 			}
 		}, { signal: mousedownAbortController.signal })
