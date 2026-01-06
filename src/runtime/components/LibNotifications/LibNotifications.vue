@@ -54,7 +54,7 @@
 					-mx-[calc(var(--spacing)*2+2px)]
 					rounded-none
 				"
-				:progress="100 - (((notification.isPaused ? (notification._timer.elapsedBeforePause): (notification._timer.elapsedBeforePause + (time - notification.startTime))) / notification.timeout) * 100)"
+				:progress="calculateNotificationProgress(notification, time!)"
 			/>
 		</template>
 	</lib-notification>
@@ -136,11 +136,13 @@ import {
 	AlertDialogRoot,
 	AlertDialogTitle
 } from "reka-ui"
-import { computed, ref } from "vue"
+import { computed } from "vue"
 
+import { calculateNotificationProgress } from "./calculateNotificationProgress.js"
 import LibNotification from "./LibNotification.vue"
 
 import { useNotificationHandler } from "../../composables/useNotificationHandler.js"
+import { useTimeConditionally } from "../../composables/useTimeConditionally.js"
 import { NotificationHandler } from "../../helpers/NotificationHandler.js"
 import { twMerge } from "../../utils/twMerge.js"
 import LibProgressBar from "../LibProgressBar/LibProgressBar.vue"
@@ -153,18 +155,16 @@ defineOptions({
 
 const props = defineProps<Props>()
 
+const handler = props.handler ?? useNotificationHandler()
+
 const topNotifications = computed(() => handler.queue.filter(entry => entry.requiresAction).reverse())
 const notifications = computed(() => handler.queue.filter(entry => !entry.requiresAction))
 
-const time = ref(Date.now())
-setInterval(() => {
-	requestAnimationFrame(() => {
-		time.value = Date.now()
-	})
-}, 50)
+const fetchTime = computed(() => {
+	return notifications.value.filter(entry => entry.timeout !== undefined && !entry.isPaused).length > 0
+})
 
-
-const handler = props.handler ?? useNotificationHandler()
+const { time } = useTimeConditionally(fetchTime, { refreshInterval: props.progressUpdateInterval })
 </script>
 
 <script lang="ts">
@@ -173,8 +173,9 @@ import type { HTMLAttributes } from "vue"
 type RealProps
 	= & LinkableByIdProps
 		& {
-			/** If not provided, uses the global handler (this requires useNotificationHandler be called and configured). */
+		/** If not provided, uses the global handler (this requires useNotificationHandler be called and configured). */
 			handler?: NotificationHandler
+			progressUpdateInterval?: number
 		}
 
 interface Props
