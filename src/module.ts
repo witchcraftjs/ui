@@ -75,7 +75,7 @@ export interface ModuleOptions {
 	 */
 	mainCssFile?: string
 	/** @internal */
-	_playgroundWorkaround?: boolean
+	_playgroundWorkaround?: string
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -93,7 +93,7 @@ export default defineNuxtModule<ModuleOptions>({
 		componentPrefix: "W",
 		debug: true,
 		mainCssFile: "~/assets/css/tailwind.css",
-		_playgroundWorkaround: false
+		_playgroundWorkaround: undefined
 	},
 	moduleDependencies: {
 		// not working, see note for unpluginOptions
@@ -143,7 +143,7 @@ export default defineNuxtModule<ModuleOptions>({
 		addTemplate({
 			filename: "witchcraft-ui.css",
 			write: true,
-			getContents: () => options._playgroundWorkaround
+			getContents: () => options._playgroundWorkaround === "@witchcraft/ui"
 				? crop`
 					${indent(themeAsTailwindCss(theme, themeConvertionOpts), 5)}
 					${indent(tailwindFiles.map(_ => `@import "${_.filepath}";`).join("\n"), 5)}
