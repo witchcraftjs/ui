@@ -136,7 +136,8 @@ export default defineNuxtModule<ModuleOptions>({
 		const assetDir = resolve("runtime/assets")
 		const tailwindFiles = globFiles([
 			`${assetDir}/**/*.css`,
-			`!${assetDir}/**/tailwind.css`
+			`!${assetDir}/**/tailwind.css`,
+			`!${assetDir}/**/theme.css`
 		], [])
 
 		addTemplate({
@@ -150,7 +151,7 @@ export default defineNuxtModule<ModuleOptions>({
 				`
 				: crop`
 					${indent(themeAsTailwindCss(theme, themeConvertionOpts), 5)}
-					${indent(tailwindFiles.map(_ => `@import "${_.filepath.replace(assetDir, "@witchcraft/ui/")}";`).join("\n"), 5)}
+					${indent(tailwindFiles.map(_ => `@import "${_.filepath.replace(assetDir, "@witchcraft/ui")}";`).join("\n"), 5)}
 					${indent(filteredComponentsInfo.map(_ => `@source "${_.filepath}";`).join("\n"), 5)}
 				`
 		})
