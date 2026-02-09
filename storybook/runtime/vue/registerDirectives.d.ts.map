@@ -1,0 +1,1 @@
+{"version":3,"file":"registerDirectives.d.ts","sourceRoot":"","sources":["../../../../src/runtime/vue/registerDirectives.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,GAAG,EAAE,MAAM,KAAK,CAAA;AAE9B,kIAAkI;AAClI,eAAO,MAAM,kBAAkB,GAAI,KAAK,GAAG,EAAE,YAAY,MAAM,CAAC,MAAM,EAAE,GAAG,CAAC,EAAE,eAAW,KAAG,IAQ3F,CAAA"}
