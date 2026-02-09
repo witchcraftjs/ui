@@ -32,6 +32,7 @@
 		},
 		"./utils.css": "./src/runtime/assets/utils.css",
 		"./base.css": "./src/runtime/assets/base.css",
+		"./animation.css": "./src/runtime/assets/animations.css",
 		"./nuxt": {
 			"types": "./dist/types.d.mts",
 			"import": "./dist/module.mjs"
