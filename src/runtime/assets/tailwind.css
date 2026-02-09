@@ -1,4 +1,4 @@
-/* For storybook, **NOT EXPORTED**. The nuxt module creates it's own version of this file by looking at all css files in this folder. See it for details. */
+/* For storybook, **NOT EXPORTED**. The nuxt module creates it's own version of this file by looking at all css files in this folder. See it for details. We also need to be sure to add them to the exports. */
 @import "tailwindcss" source("../../");
 @import "./theme.css";
 @import "./animations.css";

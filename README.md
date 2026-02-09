@@ -31,6 +31,7 @@ It does not install "@nuxtjs/tailwindcss" for now since it's not compatible with
 // without Nuxt:
 @import "@witchcraft/ui/utils.css";
 @import "@witchcraft/ui/base.css";
+@import "@witchcraft/ui/animations.css";
 // source used components
 @source "@witchcraft/ui/components";
 
@@ -117,6 +118,7 @@ See [@witchcraft/editor/vite.config.dev.ts].
 ```css
 @import "@witchcraft/ui/utils.css";
 @import "@witchcraft/ui/base.css";
+@import "@witchcraft/ui/animations.css";
 @source "/path/to/node_modules/@witchcraft/ui/src/runtime/components";
 ```
 Base just contains animation keyframes, basic styles for vue animations, and some basic global styles. They will get imported regardless of whether they are used since otherwise tailwind does not detect they are being used.
