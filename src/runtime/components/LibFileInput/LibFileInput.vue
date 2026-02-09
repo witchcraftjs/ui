@@ -355,9 +355,13 @@ defineExpose({
 export default { name: "LibFileInput" }
 
 type WrapperTypes
-	= & WrapperProps<"input", InputHTMLAttributes>
-		& WrapperProps<"wrapper", HTMLAttributes>
-		& WrapperProps<"previews", HTMLAttributes>
+	= & WrapperProps<
+		"input",
+		// https://github.com/vuejs/core/pull/14237
+		Omit<InputHTMLAttributes, "autocomplete">
+	>
+	& WrapperProps<"wrapper", HTMLAttributes>
+	& WrapperProps<"previews", HTMLAttributes>
 
 type RealProps
 	= & LinkableByIdProps
@@ -375,7 +379,12 @@ type RealProps
 interface Props
 	extends
 	/** @vue-ignore */
-	Partial<Omit<InputHTMLAttributes, "class" | "multiple" | "formats" | "compact"> & TailwindClassProp>,
+	Partial<Omit<
+		InputHTMLAttributes,
+		"class" | "multiple" | "formats" | "compact"
+		// https://github.com/vuejs/core/pull/14237
+		| "autocomplete"
+	> & TailwindClassProp>,
 	/** @vue-ignore */
 	Partial<WrapperTypes>,
 	RealProps { }

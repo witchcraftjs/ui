@@ -147,6 +147,8 @@ interface Props
 		| "disabled"
 		| "onSubmit"
 		| "onInput"
+		// https://github.com/vuejs/core/pull/14237
+		| "autocomplete"
 	> & TailwindClassProp>,
 	RealProps
 {}

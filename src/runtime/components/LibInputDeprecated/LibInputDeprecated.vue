@@ -407,7 +407,12 @@ type RealProps
 interface Props
 	extends
 	/** @vue-ignore */
-	Partial<Omit<InputHTMLAttributes, "class" | "readonly" | "disabled" | "onSubmit"> & TailwindClassProp>,
+	Partial<Omit<
+		InputHTMLAttributes,
+		"class" | "readonly" | "disabled" | "onSubmit"
+		// https://github.com/vuejs/core/pull/14237
+		| "autocomplete"
+	> & TailwindClassProp>,
 	/** @vue-ignore */
 	Partial<WrapperTypes>,
 	RealProps { }

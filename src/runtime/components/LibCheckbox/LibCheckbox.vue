@@ -121,8 +121,10 @@ interface Props
 	Partial<Omit<
 		InputHTMLAttributes,
 		"class" | "readonly" | "disabled" | "onSumbit"
+		// https://github.com/vuejs/core/pull/14237
+		| "autocomplete"
 	> & TailwindClassProp>,
-	/** @vue-ignore */
+	// /** @vue-ignore */
 	WrapperTypes,
 	RealProps
 {}
