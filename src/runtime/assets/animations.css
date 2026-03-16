@@ -1,10 +1,10 @@
 @utility animate-from-* {
-	--animate-from: --value([length, percentage]);
+	--animate-from: --value([length], [percentage]);
 	--animate-from: calc(var(--spacing) * --value(integer));
 }
 
 @utility -animate-from-* {
-	--animate-from: --value([length, percentage]);
+	--animate-from: --value([length], [percentage]);
 	--animate-from: calc(var(--spacing) * -1 * --value(integer));
 }
 
