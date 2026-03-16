@@ -55,7 +55,7 @@
 		"build:only": "nuxt-module-build build",
 		"dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
 		"dev": "nuxi dev playground",
-		"storybook": "BROWSER=none storybook dev -p 6006",
+		"storybook": "BROWSER=none storybook dev -p 6006 --no-open",
 		"storybook:clear-cache": "BROWSER=none storybook dev -p 6006 --no-manager-cache",
 		"storybook:build": "pnpm nuxt prepare && storybook build -o docs/storybook",
 		"storybook:test": "pnpm storybook:build && pnpm concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"pnpm http-server docs/storybook --port 6006 --silent\" \"pnpm wait-on tcp:6006 && pnpm test-storybook --excludeTags 'skip-smoke-test'\"",
