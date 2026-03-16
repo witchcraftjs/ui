@@ -77,27 +77,25 @@
 				data-[state=open]:animate-contentShow
 				max-sm:data-[state=open]:animate-slideInUp
 				fixed
-				flex
-				max-h-[80dvh]
-				top-[50%]
-				left-[50%]
+				flex justify-center
+				top-1/2
+				left-1/2
+				w-full
 				sm:translate-x-[-50%]
 				sm:translate-y-[-50%]
-				max-w-[700px]
-				max-sm:bottom-2
+				p-2
+				max-sm:bottom-0
 				max-sm:top-[unset]
-				max-sm:left-2
-				max-sm:right-2
-				max-sm:w-[calc(100%-var(--spacing)*4)]
+				max-sm:left-0
 				z-100
 			"
+			@interact-outside="topNotifications[0] && NotificationHandler.dismiss(topNotifications[0])"
 		>
 			<lib-notification
 				class="
 					w-full
 					sm:max-w-[700px]
-					max-w-full
-					max-h-full
+					max-h-[80dvh]
 					top-notification
 					text-md
 					gap-2

@@ -157,3 +157,18 @@ export const CustomMessageComponent: Story = {
 		})
 	}
 }
+
+export const CustomNotificationProps: Story = {
+	...Primary,
+	args: {
+		...Primary.args,
+		// @ts-expect-error calling protected method
+		notification: handler._createEntry({
+			...Primary.args!.notification,
+			message: "Should be 300px wide",
+			notificationProps: {
+				class: "w-[300px]!"
+			}
+		})
+	}
+}

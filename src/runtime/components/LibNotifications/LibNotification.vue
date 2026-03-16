@@ -20,8 +20,11 @@
 		focus:border-accent-500
 		focus-within:border-accent-500
 	`,
-		($attrs as any).class)"
-	v-bind="{ ...$attrs, class: undefined }"
+		($attrs as any).class,
+		notification.notificationProps?.class
+	)
+	"
+	v-bind="{ ...$attrs, ...(notification?.notificationProps ?? {}), class: undefined }"
 	tabindex="0"
 	:data-id="notification.id"
 	ref="notificationEl"

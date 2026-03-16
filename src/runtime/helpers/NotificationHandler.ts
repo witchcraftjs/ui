@@ -97,7 +97,6 @@ export class NotificationHandler<
 			requiresAction: false,
 			options: ["Ok", "Cancel"],
 			default: "Ok",
-			cancellable: rawEntry.cancellable,
 			...rawEntry,
 			component: rawEntry.component && typeof rawEntry.component !== "string" ? markRaw(rawEntry.component) : undefined,
 			dangerous: rawEntry.dangerous ?? [],
@@ -218,18 +217,36 @@ export type RawNotificationEntry<
 	options?: TOptions
 	/** @default false */
 	requiresAction?: boolean
+	/**
+	 *  If true or a string (the cancel option) ensures the option exists and that is the "default" cancel action when a notification is dismissed in some manner that is not clicking one of the options (escaped, background click, etc.).
+	 *
+	 * This also enables cancelling via those secondary methods, otherwise the notification won't allow itself to be dismissed.
+	 *
+	 * @default undefined / false
+	 */
 	cancellable?: TCancellable
 	/** @default "Ok" */
 	default?: TOptions[number]
 	/** @default [] */
 	dangerous?: TOptions[number][]
-	/** @default false if cancellable, otherwise the default timeout */
+	/**
+	 * Overrides the default timeout, can be set to true to just enable it. An entry must be cancellable to have a timeout.
+	 *
+	 * @default global timeout / false if cancellable is false
+	 */
 	timeout?: number | boolean
 	icon?: string
 	message: string
 	component?: string | Component
-	/** By default the component is passed the message and the messageClasses. Both will be overriden if you set them on componentProps. */
+	/** Props for the custom component. By default the component is passed the message and the messageClasses. Both will be overriden if you set them on componentProps. */
 	componentProps?: Record<string, any>
+	/**
+	 * Props for the notification component itself. They are bound to the root of the element and the class property is merged with twMerge.
+	 *
+	 * The most likely use is needing to adjust the width of fullscreen notifications, but fullscreen notifications have two widths (one for big screens and one for small ones (sm). You will usually want to do something like `{notificationProps: {class: 'sm:max-w-[90dvw]'}}` to change only the large one.
+	 *
+	 */
+	notificationProps?: Record<string, any>
 }
 
 export type NotificationEntry<

@@ -34,14 +34,16 @@ export const Primary: Story = {
 			const paragraphs = `\n Simulating lots of text:\n${faker.lorem.paragraphs(20)}`
 			const extraText = computed(() => lotsOfText.value ? paragraphs : "")
 
-			const notifyRequiresAction = () => {
+			const notifyRequiresAction = (options: any) => {
 				count++
 				void handler.notify({
 					title: withTitle.value ? `Notification(${count})` : undefined,
-					message: `This is a notification that requires action. Pick an option:${extraText.value}`,
+					message: `This is a cancellable notification that requires action. Pick an option:${extraText.value}`,
 					requiresAction: true,
 					options: ["Ok", "Default Answer", "Cancel"],
-					default: "Default Answer"
+					default: "Default Answer",
+					cancellable: true,
+					...options
 				})
 			}
 
@@ -49,8 +51,9 @@ export const Primary: Story = {
 				count++
 				void handler.notify({
 					title: withTitle.value ? `Notification(${count})` : undefined,
-					message: `This is a notification that has a dangerous option. Pick an option:${extraText.value}`,
+					message: `This is a cancellable notification that has a dangerous option. Pick an option:${extraText.value}`,
 					options: ["Ok", "Default Answer", "Dangerous Option", "Cancel"],
+					cancellable: true,
 					default: "Default Answer",
 					dangerous: ["Dangerous Option"]
 				})
@@ -105,9 +108,10 @@ export const Primary: Story = {
 		template: `
 	<lib-root :outline="args.outline" :notification-handler="handler">
 		<lib-button :label="'Notify Timeoutable'" @click="notifyTimeoutable()"></lib-button>
-		<lib-button :label="'Notify RequiresAction'" @click="notifyRequiresAction()"></lib-button>
+		<lib-button :label="'Notify RequiresAction (Cancellable)'" @click="notifyRequiresAction()"></lib-button>
+		<lib-button :label="'Notify RequiresAction (Cancellable) - Custom Width'" @click="notifyRequiresAction({cancellable:true,notificationProps: {class: 'sm:max-w-[90dvw]'}})"></lib-button>
 		<lib-button :label="'Notify Non-Cancellable that RequiresAction'" @click="notifyNonCancellableRequiresAction()"></lib-button>
-		<lib-button :label="'Notify With Dangerous Option'" @click="notifyWithDangerousOption()"></lib-button>
+		<lib-button :label="'Notify With Dangerous Option (Cancellable)'" @click="notifyWithDangerousOption()"></lib-button>
 		<lib-button :label="'Notify Non-Cancellable'" @click="notifyNonCancellable()"></lib-button>
 		<lib-checkbox v-model="lotsOfText">Use lots of text</lib-checkbox>
 		<lib-checkbox v-model="disableTimeout">Disable Timeout</lib-checkbox>
