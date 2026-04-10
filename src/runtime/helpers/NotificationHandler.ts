@@ -71,12 +71,6 @@ export class NotificationHandler<
 					`)
 			}
 		}
-		if (entry.timeout !== undefined && !entry.cancellable) {
-			throw new Error(
-				crop`Cannot timeout notification that is not cancellable:
-					${indent(pretty(entry), 5)}
-					`)
-		}
 		if (entry.timeout !== undefined && entry.requiresAction) {
 			throw new Error(
 				crop`Cannot timeout notification that requires action:
@@ -177,7 +171,11 @@ export class NotificationHandler<
 		const remaining = notification.timeout - notification._timer.elapsedBeforePause
 		clearTimeout(notification._timer.id)
 		notification._timer.id = setTimeout(() => {
-			notification.resolve(notification.cancellable)
+			if (notification.cancellable) {
+				notification.resolve(notification.cancellable)
+			} else {
+				notification.resolve(notification.default)
+			}
 		}, remaining)
 	}
 
@@ -238,8 +236,8 @@ export type RawNotificationEntry<
 	icon?: string
 	message: string
 	component?: string | Component
-	/** Props for the custom component. By default the component is passed the message and the messageClasses. Both will be overriden if you set them on componentProps. */
-	componentProps?: Record<string, any>
+	/** Props for the custom component. By default the component is passed the message, the messageClasses, and the full notification. Both will be overriden if you set them on componentProps. */
+	componentProps?: Record<string, any> & { notification: NotificationEntry, message: string, messageClasses: string }
 	/**
 	 * Props for the notification component itself. They are bound to the root of the element and the class property is merged with twMerge.
 	 *
