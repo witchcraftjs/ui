@@ -115,6 +115,49 @@
 	--bars-fg-width: calc(--value(integer) * 1%, 50%);
 }
 
+/* Mix utils can be used like bg-(--mix) mix-from-red-500 mix-to-blue-500/20 (where 20 is the percentage of "to"). It mixes with transparent if no from/to. There are also tint-* and shade-* variants to mix with white and black respectively. */
+@utility mix-from-* {
+	--mix-from: --value(--color-*);
+	--mix: color-mix(
+		in srgb, 
+		var(--mix-from), 
+		var(--mix-to, transparent) var(--mix-percentage, 50%)
+	);
+}
+
+@utility mix-to-* {
+	--mix-to: --value(--color-*);
+	--mix-percentage: calc(--modifier(integer) * 1%);
+	--mix: color-mix(
+		in srgb, 
+		var(--mix-from), 
+		var(--mix-to, transparent) var(--mix-percentage, 50%)
+	);
+}
+
+@utility tint-* {	
+	--mix-from: --value(--color-*);
+	--mix-to: white; 
+	--mix-percentage: calc(--modifier(integer) * 1%);
+	--mix: color-mix(
+		in srgb, 
+		var(--mix-from), 
+		var(--mix-to) var(--mix-percentage, 20%)
+	);
+}
+
+@utility shade-* {
+	--mix-from: --value(--color-*);
+	--mix-to: black;
+	--mix-percentage: calc(--modifier(integer) * 1%);
+	--mix: color-mix(
+		in srgb, 
+		var(--mix-from), 
+		var(--mix-to) var(--mix-percentage)
+	);
+}
+
+
 @utility scrollbar-hidden {
 	/* IE and Edge */
 	-ms-overflow-style: none;
