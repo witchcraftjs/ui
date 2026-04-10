@@ -1,25 +1,28 @@
 <template>
 <div
-	:id="id"
 	tabindex="-1"
 	:class="twMerge(
 		(showOutline ? 'group outlined outlined-visible' : '[&_*]:outline-hidden'),
 		darkMode && ' dark',
-		($attrs['wrapperAttrs'] as any)?.class
+		wrapperAttrs?.class
 	)"
-	v-bind="{ ...($attrs['wrapperAttrs']), attrs: undefined, class: undefined }"
+	v-bind="{
+		id: 'app',
+		...wrapperAttrs,
+		class: undefined
+	}"
 	:ref="handleRef"
 >
 	<!-- id root is useful for teleports, so they are at the topmost level where they can still be styled -->
 	<!-- See TestControls for why the margins here -->
 	<div
 		id="root"
-		v-bind="{ ...$attrs.attrs, class: undefined, wrapperAttrs: undefined }"
+		v-bind="{ ...$attrs, class: undefined }"
 		:class="twMerge(`
-			dark:bg-fg
-			dark:text-bg
-			bg-bg
-			text-fg
+			dark:bg-neutral-900
+			dark:text-white
+			bg-neutral-50
+			text-black
 		`,
 			testWrapperMode && `
 			px-10
@@ -30,7 +33,7 @@
 			flex
 			flex-col
 		`,
-			($attrs as any).attrs?.class)"
+			($attrs as any).class)"
 	>
 		<TestControls
 			v-if="testWrapperMode"
@@ -48,10 +51,10 @@
 <script setup lang="ts">
 import { unreachable } from "@alanscodelog/utils/unreachable"
 import type { Theme } from "metamorphosis"
-import { type ComponentPublicInstance, computed, onBeforeUnmount, onMounted, ref, toRaw } from "vue"
+import type { ComponentPublicInstance, HTMLAttributes } from "vue"
+import { computed, onBeforeUnmount, onMounted, ref, toRaw, useAttrs } from "vue"
 
 import { useAccesibilityOutline } from "../../composables/useAccesibilityOutline.js"
-import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
 import { useNotificationHandler } from "../../composables/useNotificationHandler.js"
 import { useSetupDarkMode } from "../../composables/useSetupDarkMode.js"
 import { useSetupI18n } from "../../composables/useSetupI18n.js"
@@ -59,19 +62,19 @@ import { useSetupLocale } from "../../composables/useSetupLocale.js"
 import { useShowDevOnlyKey } from "../../composables/useShowDevOnlyKey.js"
 import { NotificationHandler } from "../../helpers/NotificationHandler.js"
 import { theme as defaultTheme } from "../../theme.js"
+import type { TailwindClassProp } from "../../types/index.js"
 import { twMerge } from "../../utils/twMerge.js"
 import Notifications from "../LibNotifications/LibNotifications.vue"
 import TestControls from "../TestControls/TestControls.vue"
 
-const $attrs = useDivideAttrs(["wrapper"])
 
 defineOptions({ name: "Root", inheritAttrs: false, suspensible: false })
+const $attrs = useAttrs()
 const props = withDefaults(defineProps<{
 	theme?: Theme
 	outline?: boolean
 	forceOutline?: boolean
 	testWrapperMode?: boolean
-	id?: string
 	/** You can set a ref to the root element by passing :getRef="_ => el = _" */
 	getRef?: (el: HTMLElement | null) => void
 	/** True by default, should be passed import.meta.client if using nuxt, or false when running server side. */
@@ -79,12 +82,12 @@ const props = withDefaults(defineProps<{
 	useBuiltinTranslations?: boolean
 	useNotifications?: boolean
 	notificationHandler?: NotificationHandler
+	wrapperAttrs?: Omit<HTMLAttributes, "class"> & TailwindClassProp
 }>(), {
 	theme: undefined,
 	testWrapperMode: false,
 	outline: true,
 	forceOutline: false,
-	id: "app",
 	getRef: undefined,
 	isClientSide: true,
 	useBuiltinTranslations: true,

@@ -239,12 +239,12 @@ export type RawNotificationEntry<
 	/** Props for the custom component. By default the component is passed the message, the messageClasses, and the full notification. Both will be overriden if you set them on componentProps. */
 	componentProps?: Record<string, any> & { notification: NotificationEntry, message: string, messageClasses: string }
 	/**
-	 * Props for the notification component itself. They are bound to the root of the element and the class property is merged with twMerge.
+	 * Attributes for the notification component itself. They are bound to the root of the element and the class property is merged with twMerge.
 	 *
 	 * The most likely use is needing to adjust the width of fullscreen notifications, but fullscreen notifications have two widths (one for big screens and one for small ones (sm). You will usually want to do something like `{notificationProps: {class: 'sm:max-w-[90dvw]'}}` to change only the large one.
 	 *
 	 */
-	notificationProps?: Record<string, any>
+	notificationAttrs?: Record<string, any>
 }
 
 export type NotificationEntry<

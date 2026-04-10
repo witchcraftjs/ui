@@ -19,7 +19,9 @@ defineOptions({
 
 const $attrs = useAttrs() as any
 
-/* const props =  */defineProps<Props>()
+defineProps<
+	& /** @vue-ignore */ Omit<HTMLAttributes, "class">
+>()
 </script>
 
 <script lang="ts">
@@ -30,10 +32,5 @@ const $attrs = useAttrs() as any
  * 		<icon><i-...></icon>
  * ``
  */
-
-interface Props
-	extends
-	/** @vue-ignore */
-	Partial<Omit<HTMLAttributes, "class">
-	> { }
+export default { name: "Icon" }
 </script>

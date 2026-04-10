@@ -1,6 +1,6 @@
 <template>
 <div
-	:id="id ?? fallbackId"
+	:id="finalId"
 	:aria-label="t('color-picker.aria')"
 	:class="twMerge(`color-picker
 			[--slider-size:calc(var(--spacing)_*_4)]
@@ -11,7 +11,7 @@
 			max-w-[300px]
 			flex flex-col items-center justify-center
 			bg-neutral-50
-			dark:bg-neutral-950
+			dark:bg-neutral-800
 			gap-3
 			p-3
 		`,
@@ -20,7 +20,12 @@
 			[--bg:rgb(var(--contrast-dark))]
 		`,
 		border && `
-			border rounded-sm border-neutral-600
+			border
+			rounded-sm
+			border-neutral-300
+			dark:border-neutral-900
+			shadow-md
+			shadow-black/30
 		`,
 		($attrs as any)?.class
 	)"
@@ -43,9 +48,9 @@
 			ref="pickerEl"
 		/>
 		<div
-			aria-live="assertive"
+			role="slider"
 			:aria-description="ariaDescription"
-			:aria-label="`${t('color-picker.aria.saturation')}: ${localColor.percent.s}, ${t('color-picker.aria.value')}: ${localColor.percent.s}`"
+			:aria-valuetext="`${t('color-picker.aria.saturation')}: ${localColor.percent.s}, ${t('color-picker.aria.value')}: ${localColor.percent.v}`"
 			:class="`
 					color-picker--all-handle
 					${handleClasses}
@@ -102,7 +107,7 @@
 		<div
 			role="slider"
 			:aria-label="t('color-picker.aria.alpha-slider')"
-			:aria-valuenow="`${localColor.percent.h}`"
+			:aria-valuenow="`${localColor.percent.a}`"
 			:aria-valuemin="0"
 			:aria-valuemax="100"
 			:aria-description="ariaDescription"
@@ -150,7 +155,7 @@
 					:aria-label="t('copy')"
 					@click="copy(copyTransform?.(localColor.val, localColorString) ?? localColorString)"
 				>
-					<icon><i-fa6-regular-copy/></icon>
+					<icon><i-lucide-copy/></icon>
 				</lib-button>
 			</slot>
 		</div>
@@ -186,8 +191,9 @@ import { safeConvertToHsva } from "./utils/safeConvertToHsva.js"
 import { safeConvertToRgba } from "./utils/safeConvertToRgba.js"
 import { toLowPrecisionRgbaString } from "./utils/toLowPrecisionRgbaString.js"
 
-import IFa6RegularCopy from "~icons/fa-regular/copy"
+import ILucideCopy from "~icons/lucide/copy"
 
+import { useFallbackId } from "../../composables/useFallbackId.js"
 import { useInjectedI18n } from "../../composables/useInjectedI18n.js"
 import { copy } from "../../helpers/copy.js"
 import type { HsvaColor, RgbaColor } from "../../types/index.js"
@@ -195,7 +201,6 @@ import { twMerge } from "../../utils/twMerge.js"
 import Icon from "../Icon/Icon.vue"
 import LibButton from "../LibButton/LibButton.vue"
 import LibSimpleInput from "../LibSimpleInput/LibSimpleInput.vue"
-import { getFallbackId, type LabelProps, type LinkableByIdProps } from "../shared/props.js"
 
 defineOptions({
 	name: "LibColorPicker"
@@ -235,9 +240,9 @@ const emits = defineEmits<{
 }>()
 
 const props = withDefaults(defineProps<
-	LabelProps
-	& LinkableByIdProps
 	& {
+		id?: string
+		label?: string
 		allowAlpha?: boolean
 		/**
 		 * The precision of the rgba string representation of the color. Defaults to 3. Extra trailing zeros are removed for a prettier number.
@@ -264,9 +269,8 @@ const props = withDefaults(defineProps<
 	customRepresentation: undefined,
 	valid: true
 })
-
+const finalId = useFallbackId(props)
 const ariaDescription = t("color-picker.aria.description")
-const fallbackId = getFallbackId()
 
 const $value = defineModel<RgbaColor>({ required: false, default: () => ({ r: 0, g: 0, b: 0 }) })
 const $tempValue = defineModel<RgbaColor | undefined>("tempValue", { required: false, default: () => (undefined) })
@@ -274,6 +278,10 @@ const $tempValue = defineModel<RgbaColor | undefined>("tempValue", { required: f
 const pickerEl = ref<HTMLCanvasElement | null>(null)
 const hueSliderEl = ref<HTMLCanvasElement | null>(null)
 const alphaSliderEl = ref<HTMLCanvasElement | null>(null)
+
+let pickerCtx: CanvasRenderingContext2D | null = null
+let hueSliderCtx: CanvasRenderingContext2D | null = null
+let alphaSliderCtx: CanvasRenderingContext2D | null = null
 
 type Config = Record<string, {
 	el: Ref<HTMLCanvasElement>
@@ -338,7 +346,8 @@ function onBlurFixInvalidValue() {
 }
 
 function updatePicker(el: HTMLCanvasElement, hue: number): void {
-	const ctx = el.getContext("2d")!
+	if (!pickerCtx) return
+	const ctx = pickerCtx
 	const { height, width } = el
 	ctx.clearRect(0, 0, width, height)
 
@@ -357,8 +366,8 @@ function updatePicker(el: HTMLCanvasElement, hue: number): void {
 	ctx.globalCompositeOperation = "source-over"
 }
 
-function updateSlider(el: HTMLCanvasElement, stops: ((i: number) => string) | string[], length: number = 360): void {
-	const ctx = el.getContext("2d")!
+function updateSlider(el: HTMLCanvasElement, ctx: CanvasRenderingContext2D | null, stops: ((i: number) => string) | string[], length: number = 360): void {
+	if (!ctx) return
 	const { height, width } = el
 	ctx.clearRect(0, 0, width, height)
 
@@ -438,7 +447,7 @@ const slider = {
 		}
 	},
 	pointerdown: (e: PointerEvent, type: Types) => {
-		const focusTargetClass = `#${props.id ?? fallbackId} .color-picker--${type}-handle`
+		const focusTargetClass = `#${finalId} .color-picker--${type}-handle`
 		const focusTarget = document.querySelector(focusTargetClass)
 		// allows enter to work when the user drags any slider as the even will be captured by the keydown listener
 		if (focusTarget instanceof HTMLElement) focusTarget.focus()
@@ -476,9 +485,9 @@ function updateSliders(_: HsvaColor): void {
 		hsl0.alpha = 0
 		const hsl1 = color.clone()
 		hsl1.alpha = 1
-		updateSlider(alphaSliderEl.value, [hsl0.toString(), hsl1.toString()])
+		updateSlider(alphaSliderEl.value, alphaSliderCtx!, [hsl0.toString(), hsl1.toString()])
 	}
-	updateSlider(hueSliderEl.value!, i => `hsl(${i} 100% 50%)`)
+	updateSlider(hueSliderEl.value!, hueSliderCtx!, i => `hsl(${i} 100% 50%)`)
 	updatePicker(pickerEl.value!, _.h)
 }
 
@@ -530,8 +539,12 @@ onMounted(() => {
 		convertAndUpdateAll($tempValue.value)
 	}
 
-	const handle = document.querySelector(`#${props.id ?? fallbackId} .color-picker--all-handle`)
+	const handle = document.querySelector(`#${finalId} .color-picker--all-handle`)
 	if (handle instanceof HTMLElement) handle.focus()
+
+	pickerCtx = pickerEl.value?.getContext("2d") ?? null
+	hueSliderCtx = hueSliderEl.value?.getContext("2d") ?? null
+	alphaSliderCtx = alphaSliderEl.value?.getContext("2d") ?? null
 })
 
 watch($value, () => {

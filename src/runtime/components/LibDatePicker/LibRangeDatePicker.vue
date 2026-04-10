@@ -7,11 +7,11 @@ import { onBeforeUnmount, ref, toRaw, useAttrs, watch } from "vue"
 
 import { convertDateWithFallback, getNow, toEmittableDate } from "./helpers.js"
 
-import IRadixIconsCalendar from "~icons/radix-icons/calendar"
-import IRadixIconsChevronLeft from "~icons/radix-icons/chevron-left"
-import IRadixIconsChevronRight from "~icons/radix-icons/chevron-right"
-import IRadixIconsDoubleArrowLeft from "~icons/radix-icons/double-arrow-left"
-import IRadixIconsDoubleArrowRight from "~icons/radix-icons/double-arrow-right"
+import ILucideCalendarRange from "~icons/lucide/calendar-range"
+import ILucideChevronLeft from "~icons/lucide/chevron-left"
+import ILucideChevronRight from "~icons/lucide/chevron-right"
+import ILucideChevronsLeft from "~icons/lucide/chevrons-left"
+import ILucideChevronsRight from "~icons/lucide/chevrons-right"
 
 import { useInjectedLocale } from "../../composables/useInjectedLocale.js"
 import type { RangeDate } from "../../types/index.js"
@@ -213,7 +213,7 @@ const locale = useInjectedLocale().timeLocale
 			"
 		>
 			<Icon>
-				<i-radix-icons-calendar/>
+				<i-lucide-calendar-range/>
 			</Icon>
 		</DateRangePickerTrigger>
 	</DateRangePickerField>
@@ -270,7 +270,7 @@ const locale = useInjectedLocale().timeLocale
 					:prev-page="(date: DateValue) => date.subtract({ years: 1 })"
 				>
 					<Icon class="scale-150">
-						<i-radix-icons-double-arrow-left/>
+						<i-lucide-chevrons-left/>
 					</Icon>
 				</DateRangePickerPrev>
 				<DateRangePickerPrev
@@ -287,7 +287,7 @@ const locale = useInjectedLocale().timeLocale
 						"
 				>
 					<Icon class="scale-150">
-						<i-radix-icons-chevron-left/>
+						<i-lucide-chevron-left/>
 					</Icon>
 				</DateRangePickerPrev>
 
@@ -306,7 +306,7 @@ const locale = useInjectedLocale().timeLocale
 					"
 				>
 					<Icon class="scale-150">
-						<i-radix-icons-chevron-right/>
+						<i-lucide-chevron-right/>
 					</Icon>
 				</DateRangePickerNext>
 				<DateRangePickerNext
@@ -324,7 +324,7 @@ const locale = useInjectedLocale().timeLocale
 					:next-page="(date: DateValue) => date.add({ years: 1 })"
 				>
 					<Icon class="scale-150">
-						<i-radix-icons-double-arrow-right/>
+						<i-lucide-chevrons-right/>
 					</Icon>
 				</DateRangePickerNext>
 			</DateRangePickerHeader>

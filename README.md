@@ -55,23 +55,6 @@ To make it easier to style parts of components or override behavior, some compon
 
 I think this is nicer in general than having to pass an object with extra attributes. The only weird part, is because of how vue changes the case of props, for attributes like `innerHTML` you will need to pass `{prefix}-inner-h-t-m-l`, but all components have proper types to help this. Similarly events look like `{prefix}-on-click`.
 
-# Slots
-
-Usually it is possible to do most modifications through props, but slots to replace parts of components are available.
-
-Most slots where possible are passed all properties needed to replace them except classes so you can do something like this, to for example replace the simple input component inside the input component.
-
-```vue
-<lib-simple-input-deprecated>
-	<template #input="slotProps">
-		<lib-simple-input
-			:class="'completely custom styles'"
-			v-bind="slotProps"
-		></lib-simple-input>
-	</template>
-</lib-simple-input>
-
-```
 
 # Other
 
@@ -167,56 +150,66 @@ Note that using the strictTemplates compiler option can cause weird issues with 
 
 ## Props
 
-Due to issues with vue 3 removing $listeners and the fact that we can't inherit from an existing HTML attribute types to specify props for wrapper components (most of them), we have to declare props in a convoluted way to get proper types when we consume the components.
+Props and attribute typing used to have a lot of issues with vue. It's improved a bit. A typical component looks like this:
 
-Here is an example of the needed code for props to work correctly:
 ```vue
+<template>
+<div
+	:class="twMerge(`
+		our-classes
+	`, ($attrs as any).class)"
+	v-bind="{ ...$attrs, class: undefined }"
+>
+	...
+</div>
+</template>
 <script lang="ts">
-// this is done in a seperate script so that it actually compiles
-// and we can have interface merging, a setup script cannot interface merge
+import type { BaseInteractiveProps } from "../../types/index.js"
 
-import type { BaseInteractiveProps } from "../shared/props.js"
-
-// real props vue can understand, they will show up under props.*
-type RealProps =
-// simple types are okay
-& BaseInteractiveProps
-& {
-	// any ignored props that we need to use in the component template 
-	// will need to be re-defined so vue can see them
-	// in a way vue can see them if it's one of the problem properties
-	id?: InputHTMLAttributes["id"]
-}
-
-interface Props
-	extends
-	// we need to ignore the complex InputHTMLAttributes type
-	// otherwise vue compilation fails
-	// if we ignore it, all it's properties are passed as fallback attrs
-	// NOT to props as normal
-	// we also need to omit properties or events that the component overrides with a different type
-	/** @vue-ignore */
-	Partial<Omit<InputHTMLAttributes,"class" | "onSubmit"> & {
-		//	overrides for the components
-		// usually, for example, class can only be a string (because of tailwind)
-		// this will be passed as an attr
-		class?:string
-	}>,
-	/** @vue-ignore */
-	RealProps
-{ }
-</script>
-
-<script lang="ts" setup>
-const props = withDefaults(defineProps<Props>(), {
-	id: "",
-	unstyle: false, disabled:false, readonly:false, border:true,
-})
+// only if it makes sense, otherwise prefer a prop (___Attrs for attributes, ___Props if it wraps reka-ui props)
+// we do this regardless of whether we pass to the root or not (since we never allow non-tailwind classes)
 const $attrs = useAttrs()
-</script>
-```
+const props = withDefaults(defineProps<
+	& BaseInteractiveProps
+	& {
+		// if we need an id for hydration or some internal aria connection
+		id?: string
+		// if we allow setting a label via text
+		label?: string
+		// note we omitted it above, will be available via props.disabled
+		disabled?: boolean
+		// if we just need to pass "attributes" to the root
+		inputAttrs?: Omit<InputHTMLAttributes, "class"> & TailwindClassProp
+		// if we need to pass, to for example, a reka-ui Content component
+		contentProps?: PopoverContentProps & EmitsToProps<DialogContentEmits> & Omit<HTMLAttributes, "class"> & TailwindClassProp
+	}
+	// the parts under the ignore type the $attrs and are NOT available on props.*
+	// they must be accessed via $attrs and are not reactive
+	// if we need to change the type or need access to the prop via props.* we can omit it here
+	& /** @vue-ignore */ Omit<InputHTMLAttributes, "class" | "disabled">
+	& /** @vue-ignore */ TailwindClassProp
+>(), {
+	label: "",
+	// the defaults for BaseInteractiveProps that are not false by default, and no, they can't be spread
+	// see https://github.com/nuxt/module-builder/issues/649
+	border: true
+})
+// uses useId if id is not set so we have an id if we need it for hydration
+const finalId = useFallbackId(props)
+const modelValue = defineModel<string>({ required: false, default: "" })
+// use for inputs or elements where it's highly likely the user can start setting a value before hydration
+usePreHydrationValue(finalId, modelValue)
 
-For prop types that don't error, I think we can just define them normally, but then it turns into a mess, some components will have their values in props, some in $attrs, this way. This is consistent and also more in line with what we expect.
+</script>
+<script lang="ts">
+/**
+ * If the component requires general docs, they should be written here over the export default.
+ */
+export default {
+	name: "WComponentName"
+	// https://v3.vuejs.org/guide/typescript-support.html#annotating-props
+}
+</script>```
 
 Related Links:
 - https://github.com/vuejs/rfcs/discussions/397

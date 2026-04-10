@@ -2,8 +2,10 @@
 import type { Meta, StoryObj } from "@storybook/vue3"
 import { ref, watchEffect } from "vue"
 
+import { vExtractRootEl } from "../../directives/vExtractRootEl.js"
 import { createRecorderHandler, createRecorderWatchEffect } from "../../helpers/storybook.js"
 import * as components from "../index.js"
+
 /**
  * This is a special input component designed to record any type of event.
  *
@@ -15,7 +17,6 @@ const meta: Meta<typeof components.LibRecorder> = {
 	component: components.LibRecorder,
 	title: "Components/Recorder",
 	args: {
-		label: "Some Label",
 		recordingTitle: "Recording. Press enter or click away to accept. Press escape to cancel.",
 		modelValue: "K E Y S"
 	}
@@ -27,6 +28,7 @@ type Story = StoryObj<typeof components.LibRecorder>
 export const Primary: Story = {
 	render: args => ({
 		components,
+		directives: { vExtractRootEl },
 		setup: () => {
 			const recording = ref(false)
 			const recordingValue = ref("")
@@ -51,7 +53,8 @@ export const Primary: Story = {
 				:recorder="recorder"
 				v-model:recording="recording"
 				v-model="modelValue"
-				@recorder:click="recording = !recording"
+				@recorder:pointerdown="recording = !recording"
+				@recorder:blur="recordingValue = modelValue; recording = false"
 			/>
 		`
 	})

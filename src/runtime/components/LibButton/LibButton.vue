@@ -1,7 +1,6 @@
 <template>
 <button
-	:id="id ?? fallbackId"
-	:class="!($attrs as any).unstyle && twMerge(`
+	:class="!unstyle && twMerge(`
 		button
 		flex
 		cursor-pointer
@@ -26,7 +25,8 @@
 		border && `
 			transition-all
 			bg-neutral-100
-			dark:bg-neutral-800
+			dark:tint-neutral-800/10
+			dark:bg-(--mix)
 			shadow-[0_1px_1px_0]
 			shadow-neutral-950/20
 			hover:shadow-[0_1px_3px_0]
@@ -41,6 +41,7 @@
 			after:shadow-[0_1px_0_0_inset]
 			after:shadow-bg/20
 			hover:after:shadow-bg/60
+			disabled:after:hidden
 			dark:after:shadow-bg/10
 			dark:hover:after:shadow-bg/50
 			after:pointer-events-none
@@ -49,15 +50,16 @@
 			active:shadow-fg/20
 			active:border-transparent
 			border
-			border-neutral-300
+			border-black/10
 			disabled:border-neutral-200
-			disabled:bg-neutral-50
+			disabled:bg-neutral-100
 			dark:hover:shadow-neutral-950/70
 			dark:active:shadow-fg/40
 			dark:active:border-neutral-900
-			dark:border-neutral-900
+			dark:border-black/50
 			dark:disabled:border-neutral-800
-			dark:disabled:bg-neutral-900
+			dark:disabled:bg-(--mix)
+			dark:disabled:shade-neutral-900/10
 		`,
 		border && (!color || color === `secondary`) && `
 			after:shadow-bg/90
@@ -153,26 +155,24 @@
 		`,
 		($attrs as any)?.class
 	)"
-	:type="$attrs.type as any"
+	:type="($attrs as any)?.type || 'button'"
 	:tabindex="0"
 	:disabled="disabled"
 	:data-border="border"
 	:data-color="color"
-	:aria-disabled="disabled"
 	v-bind="{
-		...autoTitle,
 		...$attrs,
-		class: undefined,
-		...ariaLabel
+		class: undefined
 	}"
 >
 	<slot
 		name="label"
-		v-bind="{ id: `label-${id ?? fallbackId}`, classes: 'button--label pointer-events-none flex flex-1 items-center justify-center gap-1' }"
+		v-bind="{
+			classes: 'button--label pointer-events-none flex flex-1 items-center justify-center gap-1'
+		}"
 	>
-		<label
-			:id="`label-${id ?? fallbackId}`"
-			class="button--label pointer-events-none flex flex-1 items-center justify-center gap-1"
+		<div
+			:class="!unstyle && 'button--label pointer-events-none flex flex-1 items-center justify-center gap-1'"
 		>
 			<slot name="icon"/>
 			<slot
@@ -183,57 +183,41 @@
 				</span>
 			</slot>
 			<slot name="icon-after"/>
-		</label>
+		</div>
 	</slot>
 </button>
 </template>
 
 <script setup  lang="ts">
 import { isBlank } from "@alanscodelog/utils/isBlank"
-import { type ButtonHTMLAttributes, computed, useAttrs } from "vue"
+import { type ButtonHTMLAttributes, useAttrs } from "vue"
 
-import { useAriaLabel } from "../../composables/useAriaLabel.js"
+import type { BaseInteractiveProps, TailwindClassProp } from "../../types/index.js"
 import { twMerge } from "../../utils/twMerge.js"
-import { type BaseInteractiveProps, type ButtonProps, getFallbackId, type LabelProps, type LinkableByIdProps, type TailwindClassProp } from "../shared/props.js"
+
 
 const $attrs = useAttrs()
 
 defineOptions({
-	name: "LibButton"
+	name: "LibButton",
+	inheritAttrs: false
 })
 
-const fallbackId = getFallbackId()
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<
+	& BaseInteractiveProps
+	& {
+		label?: string
+		border?: boolean
+		color?: "warning" | "ok" | "danger" | "primary" | "secondary" | false
+	}
+
+	& /** @vue-ignore */ Omit<ButtonHTMLAttributes, "class" | "color">
+	& /** @vue-ignore */ TailwindClassProp
+>(), {
 	color: false,
 	label: "",
-	unstyle: false, disabled: false, readonly: false, border: true
+	border: true
 })
-
-const ariaLabel = useAriaLabel(props, fallbackId)
-const autoTitle = computed(() => ({
-	title: props.autoTitleFromAria
-		? ($attrs["aria-label"] ?? props.label) as string
-		: undefined
-}))
 </script>
 
-<script lang="ts">
-type RealProps
-	= & LinkableByIdProps
-		& LabelProps
-		& BaseInteractiveProps
-		& ButtonProps
-
-interface Props
-	extends
-	/** @vue-ignore */
-	Partial<Omit<ButtonHTMLAttributes, "class" | "color" | "disabled">
-	& TailwindClassProp
-	& {
-		// why is this not already a part of button?
-		// eslint-disable-next-line @typescript-eslint/naming-convention
-		"aria-label": string
-	}>,
-	RealProps {}
-</script>

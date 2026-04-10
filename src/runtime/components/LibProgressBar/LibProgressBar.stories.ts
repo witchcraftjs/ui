@@ -6,61 +6,77 @@ import LibProgressBar from "./LibProgressBar.vue"
 
 import * as components from "../index.js"
 
+type ExtraTestArgs = {
+	_start?: number
+	_timeout?: number
+	_add?: number
+}
 const meta: Meta<typeof LibProgressBar> = {
 	component: LibProgressBar,
 	title: "Components/ProgressBar",
 	args: {
 		label: "Label",
-		// @ts-expect-error .
-		_timeout: 1000,
-		_add: 10,
-		_start: 50
+		...{
+			_timeout: 1000,
+			_add: 10,
+			_start: 50
+		} satisfies ExtraTestArgs as any
 	}
 }
 
 export default meta
-type Story = StoryObj<typeof LibProgressBar>
+type Story = StoryObj<typeof LibProgressBar> & { args?: ExtraTestArgs }
 
 export const Primary: Story = {
-	render: args => ({
-		components,
-		setup: () => {
-			const progress = ref((args as any)._start as number)
-			if (args.progress) {
-				progress.value = args.progress
-			} else {
-				const interval = setInterval(() => {
-					if (progress.value >= 100) {
-						progress.value = 0
-					} else {
-						progress.value += (args as any)._add as number
-					}
-				}, (args as any)._timeout as number)
-				onUnmounted(() => {
-					clearInterval(interval)
-				})
-			}
-			return {
-				args: { ...args },
-				progress
-			}
-		},
-		template: `
-			<lib-progress-bar class="flex-1" v-bind="args" :progress="progress"></lib-progress-bar>
+	render: args => {
+		const extraArgs = args as ExtraTestArgs
+		return {
+			components,
+			setup: () => {
+				const forceFull = ref(false)
+				const progress = ref(extraArgs._start as number)
+				if (args.progress) {
+					progress.value = args.progress
+				} else {
+					let justHitFull = false
+					const interval = setInterval(() => {
+						if (justHitFull) return
+						if (progress.value >= 100) {
+							justHitFull = true
+							// give it time to hide
+							setTimeout(() => {
+								progress.value = 0
+								justHitFull = false
+							}, 2000)
+						} else {
+							progress.value += extraArgs._add as number
+						}
+					}, extraArgs._timeout as number)
+					onUnmounted(() => {
+						clearInterval(interval)
+					})
+				}
+				return {
+					args: { ...args },
+					forceFull,
+					progress
+				}
+			},
+			template: `
+<lib-checkbox v-model="forceFull">Force 100%</lib-checkbox>
+<lib-progress-bar class="flex-1" v-bind="args" :progress="forceFull ? 100 : progress"></lib-progress-bar>
 			<br/>
 			Stretched in flexbox:
 			<div class="flex w-full">
-				<lib-progress-bar class="flex-1" v-bind="args" :progress="progress"></lib-progress-bar>
+				<lib-progress-bar class="flex-1" v-bind="args" :progress="forceFull ? 100 : progress"></lib-progress-bar>
 			</div>
+			<hr class="mt-2"/>
 		`
-	})
-}
-export const Secondary: Story = {
-	...Primary,
-	args: {
-		...Primary.args
+		}
 	}
 }
+
+
 export const ReallyLongLabel: Story = {
 	...Primary,
 	args: {
@@ -82,8 +98,21 @@ export const AutoHiding: Story = {
 		...Primary.args,
 		autohideOnComplete: 500,
 		clamp: [10, 100],
-		_start: 0,
 		// keepSpaceWhenHidden: true,
+		_start: 0,
+		_timeout: 1000,
+		_add: 10
+	}
+}
+
+export const AutoHidingNoKeepSpace: Story = {
+	...Primary,
+	args: {
+		...Primary.args,
+		autohideOnComplete: 500,
+		keepSpaceWhenHidden: false,
+		clamp: [10, 100],
+		_start: 0,
 		_timeout: 1000,
 		_add: 10
 	}

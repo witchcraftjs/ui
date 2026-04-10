@@ -11,39 +11,42 @@ import * as components from "../index.js"
 // faker is slow, we can just choose from a few hundred pre-generated sentences
 const fakerSentences = Array.from({ length: 100 }).fill(0).map(_ => faker.lorem.sentence(faker.number.int({ min: 1, max: 50 })))
 
+
+type ExtraTestArgs = {
+	_slots?: string
+}
 const meta: Meta<typeof LibTable> = {
 	component: LibTable as any,
 	title: "Components/Table"
 }
 
 export default meta
-type Story = StoryObj<typeof LibTable> & { args: {
-	slots?: string
-	["wrapper-class"]?: string
-} }
+type Story = StoryObj<typeof LibTable> & { args: ExtraTestArgs }
 
 export const Primary: Story = {
-	render: args => ({
-		components,
-		setup: () => {
-			const show = ref(true)
-			const debugGrips = ref(false)
-			// careful, storybook passes refs as is causing issues
-			const argsReactive = reactive({
-				...args,
-				resizable: {
-					enabled: true,
-					...args.resizable
-				}
-			})
+	render: args => {
+		const extraArgs = args as ExtraTestArgs
+		return {
+			components,
+			setup: () => {
+				const show = ref(true)
+				const debugGrips = ref(false)
+				// careful, storybook passes refs as is causing issues
+				const argsReactive = reactive({
+					...args,
+					resizable: {
+						enabled: true,
+						...args.resizable
+					}
+				})
 
-			return {
-				args: argsReactive,
-				debugGrips,
-				show
-			}
-		},
-		template: `
+				return {
+					args: argsReactive,
+					debugGrips,
+					show
+				}
+			},
+			template: `
 				<div class="p-2 flex flex-col gap-2 border rounded-md mb-10">
 					Controls:
 					<LibButton class="flex-1" @click="args.resizable.enabled = !args.resizable.enabled">Toggle Resizable (currently {{args.resizable.enabled}})</LibButton>
@@ -56,13 +59,14 @@ export const Primary: Story = {
 						v-if="show"
 						v-bind="args"
 					>
-						${(args as any).slots}
+						${extraArgs._slots}
 					</lib-table>
 				</div>
 		`
-	}),
+		}
+	},
 	args: {
-		cols: ["prop1", "prop2", "prop3"],
+		cols: ["prop1", "prop2", "prop3"] as any,
 		values: [
 			{ prop1: "Item1 Prop 1", prop2: "Item1 Prop 2", prop3: "Item1 Prop 3" },
 			{ prop1: "Item2 Prop 1", prop2: "Item2 Prop 2", prop3: "Item2 Prop 3" },
@@ -148,7 +152,7 @@ export const InitialSize: Story = {
 			[&:not(.resizable-cols-setup)_thead_tr]:flex-nowrap
 			[&:not(.resizable-cols-setup)_thead_th:not(.override-initial)]:flex-1
 		`,
-		slots: `
+		_slots: `
 			<template #header-prop3="colProps">
 				<th
 					:class="\`\${colProps.class} [table:not(.resizable-cols-setup)_&]:w-[min-content] whitespace-nowrap override-initial\`"
@@ -183,9 +187,11 @@ export const StickyHeader: Story = {
 		// moving the border to the wrapper is to hide the little bits of border sticking out
 		// added back the right straight border otherwise the scrollbar looks ass
 		// this is ever so slightly visible if there is no scrollbar
-		["wrapper-class"]: `
-			max-h-[50dvh]
-		`,
+		wrapperAttrs: {
+			class: `
+				max-h-[50dvh]
+			`
+		},
 		values: Array.from({ length: 200 }).fill(0).map((_, i) => ({
 			prop1: `Item${i + 1} Prop 1`,
 			prop2: `Item${i + 1} Prop 2`,
@@ -206,9 +212,11 @@ export const VirtualizedFixedHeight: Story = {
 			enabled: true
 		},
 		stickyHeader: true,
-		["wrapper-class"]: `
-			max-h-[50dvh]
-		`,
+		wrapperAttrs: {
+			class: `
+				max-h-[50dvh]
+			`
+		},
 		values: Array.from({ length: 10000 }).fill(0).map((_, i) => ({
 			prop1: `Item${i + 1} Prop 1`,
 			prop2: `Item${i + 1} Prop 2`,
@@ -259,9 +267,9 @@ export const VirtualizedFitWidthFalse: Story = {
 			[&:not(.resizable-cols-setup)]:w-max
 			[&:not(.resizable-cols-setup)_th]:w-max
 		`,
-		["wrapper-class"]: `
-			max-h-[50dvh]
-		`,
+		wrapperAttrs: {
+			class: `max-h-[50dvh]`
+		},
 		values: Array.from({ length: 10000 }).fill(0).map((_, i) => ({
 			prop1: `Item${i + 1} Prop 1`,
 			prop2: `Item${i + 1} Prop 2`,

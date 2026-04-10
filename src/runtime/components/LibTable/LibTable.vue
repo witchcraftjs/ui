@@ -50,7 +50,9 @@
 		mergedVirtualizerOpts.enabled && mergedVirtualizerOpts.method === 'dynamic' && `
 		relative
 		`,
-		($attrs as any)['wrapper-class'])"
+		wrapperAttrs?.class
+	)"
+	v-bind="{ ...wrapperAttrs, class: undefined }"
 	ref="parentRef"
 >
 	<div
@@ -63,12 +65,12 @@
 	>
 		<!-- https://github.com/TanStack/virtual/issues/640#issuecomment-2795731690 -->
 		<table
-			:style="{
+			:style="[{
 				...(stickyHeader && mergedVirtualizerOpts.enabled
 					? { '--table-sticky-fix': `${totalSize-tableHeight}px` }
-					: {}),
-				...($attrs as any).style ?? {}
-			}"
+					: {})
+
+			}, $attrs?.style]"
 			:class="twMerge(`
 				table
 				table-fixed
@@ -107,6 +109,7 @@
 				dark:[&_.grip]:hover:bg-neutral-700
 			`,
 				($attrs as any).class)"
+			v-bind="{ ...$attrs, class: undefined, style: undefined }"
 			v-resizable-cols="resizableOptions"
 		>
 			<thead
@@ -163,7 +166,7 @@
 			>
 				<template
 					v-for="(virtual, index) in virtualList"
-					:key="virtual.key"
+					:key="virtual.key as any"
 				>
 					<tr
 						:class="twMerge(`
@@ -196,7 +199,7 @@
 							<slot
 								:name="col"
 								:item="values[virtual.index]"
-								:value="values[virtual.index][col]"
+								:value="values[virtual.index]![col]"
 								:style="{ width: widths[j] }"
 								:class="classes[`${virtual.index}-${j}`]"
 							>
@@ -204,7 +207,7 @@
 									:style="{ width: widths[j] }"
 									:class="classes[`${virtual.index}-${j}`]"
 								>
-									{{ values[virtual.index][col] }}
+									{{ values[virtual.index]![col] }}
 								</td>
 							</slot>
 						</template>
@@ -222,32 +225,96 @@ import type { MakeRequired } from "@alanscodelog/utils"
 import { keys } from "@alanscodelog/utils/keys"
 import { throttle } from "@alanscodelog/utils/throttle"
 import { useVirtualizer, type VirtualizerOptions } from "@tanstack/vue-virtual"
-import { computed, onMounted, ref, type TableHTMLAttributes } from "vue"
+import { computed, type HTMLAttributes, onMounted, ref, type TableHTMLAttributes, useAttrs } from "vue"
 
 import { useGlobalResizeObserver } from "../../composables/useGlobalResizeObserver.js"
 import { vResizableCols } from "../../directives/vResizableCols.js"
-import type { ResizableOptions, TableColConfig } from "../../types/index.js"
+import type { ResizableOptions, TableColConfig, TailwindClassProp } from "../../types/index.js"
 import { twMerge } from "../../utils/twMerge.js"
-import type { TailwindClassProp } from "../shared/props.js"
 
 defineOptions({
 	name: "LibTable",
 	inheritAttrs: false
 })
 
-const props = withDefaults(defineProps<Props>(), {
+const $attrs = useAttrs()
+const props = withDefaults(defineProps<
+	& {
+		resizable?: Partial<ResizableOptions>
+		values: T[]
+		/** Let's the table know the shape of the data since values might be empty. */
+		cols?: (keyof T)[]
+		rounded?: boolean
+		border?: boolean
+		cellBorder?: boolean
+		/** Disables the header. This also sets the selector to `tr:first-child > td` instead to avoid issues with the vResizableCols directive. */
+		header?: boolean
+		colConfig?: TableColConfig<T>
+		/**
+		 * See tanstack/vue-virtual {@link https://tanstack.com/virtual/latest/docs/api/virtualizer}
+		 *
+		 * The defaults are:
+		 *
+		 * - enabled: false
+		 * - method: "fixed"
+		 * - overscan: (50 if fixed, 10 if dynamic)
+		 * - estimateSize: () => { return 33 }
+		 *
+		 * This also has an additional option, `method`, which can be set to `fixed` or `dynamic` (experimental).
+		 *
+		 * Notes:
+		 *
+		 * - Because of how virtualization works, initial layout (before .resizable-cols-setup class is applied) will only have access to the headers and not the rows. This can cause cols to look very small, especially if using resizable.fitWidth false.
+		 *
+		 * ### Fixed
+		 *
+		 * `fixed` is the default and will set the height of ALL items to the height of the first item onMounted (tanstack does not do this and if your estimateSize if off, the scrolling is weird).
+		 *
+		 * Since the table now truncates rows by default, they will always be the same height unless you change the inner styling. In fixed mode, `forceRecalculateFixedVirtualizer` is exposed if you need to force re-calculation.
+		 *
+		 * If using slots, be sure to at least pass the `class` slot prop to the td element. `style` with width is also supplied but is not required if you're displaying the table as a table.
+		 *
+		 * ### Dynamic (experimental)
+		 *
+		 * In `dynamic` mode we use tanstack's measureElement method. This is more expensive, but it will work with any heights.
+		 *
+		 * Dynamic mode also requires the table displays itself using grid and flex post setup as otherwise dynamic mode doesn't work.
+		 *
+		 * You don't need to do anything unless using slots. If using slots, pass the given `ref` slot prop to ref (internally this is tanstack's measureElement) and the class and style slot props at the very least:
+		 * ```vue
+		 * <template #[`${colName}`]="slotProps">
+		 * 	<td
+		 * 		:ref="slotProps.ref"
+		 * 		:class="slotProps.class"
+		 * 		:style="slotProps.style"
+		 * 	>
+		 * 		{{ slotProps.value }}
+		 * 	</td>
+		 * </template>
+		 * ```
+		 */
+		virtualizerOptions?: Partial<VirtualizerOptions<any, any>> & { method?: "fixed" | "dynamic" }
+		/** Whether to enable sticky header styles. This requires `border:false`. This moves the border to the wrapper and styles a straight border between the scroll bar and the rounded border. */
+		stickyHeader?: boolean
+		/** Which key to use for the rows (only if not using virtualization). */
+		itemKey?: keyof T | ((item: T) => string)
+		/** Pass attributes to the wrapper div. To pass to the table you can use regular top level attributes. */
+		wrapperAttrs?: Omit<HTMLAttributes, "class"> & TailwindClassProp
+	}
+	& /** @vue-ignore */ Omit<TableHTMLAttributes, "class" | "readonly" | "disabled">
+	& /** @vue-ignore */ TailwindClassProp
+>(), {
 	resizable: () => ({}),
-	values: () => [] as T[],
 	cols: () => [] as (keyof T)[],
 	rounded: true,
 	border: true,
 	cellBorder: true,
 	header: true,
-	colConfig: () => ({}),
+	colConfig: () => ({} as any),
 	virtualizerOptions: () => ({ }),
-	enableStickyHeader: false,
-	itemKey: ""
+	enableStickyHeader: false
 })
+
 
 const widths = ref([])
 
@@ -402,73 +469,3 @@ defineExpose({
 })
 </script>
 
-<script lang="ts">
-// generic isn't working here :/
-type T = any
-
-type RealProps = {
-	resizable?: Partial<ResizableOptions>
-	values?: T[]
-	/** Let's the table know the shape of the data since values might be empty. */
-	cols?: (keyof T)[]
-	rounded?: boolean
-	border?: boolean
-	cellBorder?: boolean
-	/** Disables the header. This also sets the selector to `tr:first-child > td` instead to avoid issues with the vResizableCols directive. */
-	header?: boolean
-	colConfig?: TableColConfig<T>
-	/**
-	 * See tanstack/vue-virtual {@link https://tanstack.com/virtual/latest/docs/api/virtualizer}
-	 *
-	 * The defaults are:
-	 *
-	 * - enabled: false
-	 * - method: "fixed"
-	 * - overscan: (50 if fixed, 10 if dynamic)
-	 * - estimateSize: () => { return 33 }
-	 *
-	 * This also has an additional option, `method`, which can be set to `fixed` or `dynamic` (experimental).
-	 *
-	 * Notes:
-	 *
-	 * - Because of how virtualization works, initial layout (before .resizable-cols-setup class is applied) will only have access to the headers and not the rows. This can cause cols to look very small, especially if using resizable.fitWidth false.
-	 *
-	 * ### Fixed
-	 *
-	 * `fixed` is the default and will set the height of ALL items to the height of the first item onMounted (tanstack does not do this and if your estimateSize if off, the scrolling is weird).
-	 *
-	 * Since the table now truncates rows by default, they will always be the same height unless you change the inner styling. In fixed mode, `forceRecalculateFixedVirtualizer` is exposed if you need to force re-calculation.
-	 *
-	 * If using slots, be sure to at least pass the `class` slot prop to the td element. `style` with width is also supplied but is not required if you're displaying the table as a table.
-	 *
-	 * ### Dynamic (experimental)
-	 *
-	 * In `dynamic` mode we use tanstack's measureElement method. This is more expensive, but it will work with any heights.
-	 *
-	 * Dynamic mode also requires the table displays itself using grid and flex post setup as otherwise dynamic mode doesn't work.
-	 *
-	 * You don't need to do anything unless using slots. If using slots, pass the given `ref` slot prop to ref (internally this is tanstack's measureElement) and the class and style slot props at the very least:
-	 * ```vue
-	 * <template #[`${colName}`]="slotProps">
-	 * 	<td
-	 * 		:ref="slotProps.ref"
-	 * 		:class="slotProps.class"
-	 * 		:style="slotProps.style"
-	 * 	>
-	 * 		{{ slotProps.value }}
-	 * 	</td>
-	 * </template>
-	 * ```
-	 */
-	virtualizerOptions?: Partial<VirtualizerOptions<any, any>> & { method?: "fixed" | "dynamic" }
-	/** Whether to enable sticky header styles. This requires `border:false`. This moves the border to the wrapper and styles a straight border between the scroll bar and the rounded border. */
-	stickyHeader?: boolean
-	/** Which key to use for the rows (only if not using virtualization). */
-	itemKey?: keyof T | ((item: T) => string)
-}
-interface Props
-	extends
-	/** @vue-ignore */
-	Partial<Omit<TableHTMLAttributes, "class" | "readonly" | "disabled"> & TailwindClassProp>,
-	RealProps { }
-</script>

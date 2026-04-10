@@ -6,9 +6,14 @@
 		items-center
 		gap-1
 	`,
-		($.wrapperAttrs as any)?.class
+		(disabled || readonly) && `
+			cursor-not-allowed
+			text-neutral-500
+		`,
+
+		wrapperAttrs?.class
 	)"
-	v-bind="{ ...$.wrapperAttrs, class: undefined }"
+	v-bind="{ ...wrapperAttrs, class: undefined }"
 	ref="el"
 >
 	<slot name="left"/>
@@ -19,113 +24,102 @@
 			items-center
 			gap-1
 		`,
-			($.labelAttrs as any)?.class
+			labelAttrs?.class
 		)"
-		v-bind="{ ...$.labelAttrs, class: undefined }"
-		:for="id ?? fallbackId"
+		v-bind="{ ...labelAttrs, class: undefined }"
 	>
-		<input
-			:id="id ?? fallbackId"
-			:class="!($attrs as any).unstyle && twMerge(`
+		<CheckboxRoot
+			:id="finalId"
+			:disabled="disabled || readonly"
+			:class="!unstyle && twMerge(`
 				checkbox
+				flex
+				items-center
+				justify-center
 				focus-outline-no-offset
 				m-0
-				p-[0.4em]
-				bg-bg
-				dark:bg-fg
-				appearance-none
+				h-[1.2em]
+				w-[1.2em]
+				aspect-square
+				bg-neutral-500/10
+				text-white
+				dark:text-white
 				border
 				border-neutral-500
+				data-[state=checked]:border-accent-800/50
+				data-[state=checked]:bg-accent-500
+				data-[state=checked]:shadow-2xs
+				data-[state=checked]:shadow-black/20
+				data-[state=unchecked]:inset-shadow-2xs
+				data-[state=unchecked]:inset-shadow-black/20
 				focus:border-accent-600
 				rounded-sm
-				aspect-square
 				relative
-				checked:after:content
-				checked:after:absolute
-				checked:after:w-full
-				checked:after:h-full
-				checked:after:border-2
-				checked:after:border-bg
-				dark:checked:after:border-fg
-				checked:after:rounded-sm
-				checked:after:top-0
-				checked:after:left-0
-				checked:after:bg-accent-700
-				disabled:border-neutral-500
-				disabled:checked:after:bg-neutral-700
-			`, !disabled && `cursor-pointer`,
-				($.attrs as any).class
+				transition-colors
+				dark:disabled:bg-neutral-800
+				cursor-pointer
+				disabled:text-neutral-500
+				disabled:bg-neutral-500/50
+				disabled:cursor-not-allowed
+				disabled:data-[state=checked]:border-neutral-500
+			`,
+				($attrs as any)?.class
 			)"
-			type="checkbox"
-			:disabled="disabled"
-			ref="inputEl"
-			v-model="$value"
-			v-bind="{ ...$.attrs, class: undefined }"
+			v-bind="{ ...$attrs, class: undefined }"
+
+			v-model="modelValue"
 		>
+			<CheckboxIndicator class="checkbox--indicator">
+				<Icon class="scale-110 mt-[2px] ml-[0.5px] [&_path]:stroke-3"><i-lucide-check/></Icon>
+			</CheckboxIndicator>
+		</CheckboxRoot>
+
 		<slot/> {{ label }}
 	</label>
 </div>
 </template>
 
-<script setup  lang="ts">
-import { type HTMLAttributes, type InputHTMLAttributes, ref } from "vue"
+<script setup lang="ts">
+import { CheckboxIndicator, CheckboxRoot } from "reka-ui"
+import type { HTMLAttributes, InputHTMLAttributes } from "vue"
+import { useAttrs } from "vue"
 
-import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
+import ILucideCheck from "~icons/lucide/check"
+
+import { useFallbackId } from "../../composables/useFallbackId.js"
 import { usePreHydrationValue } from "../../composables/usePreHydrationValue.js"
+import type { BaseInteractiveProps, TailwindClassProp } from "../../types/index.js"
 import { twMerge } from "../../utils/twMerge.js"
-import { type BaseInteractiveProps, getFallbackId, type LabelProps, type LinkableByIdProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
+import Icon from "../Icon/Icon.vue"
+
+const $attrs = useAttrs()
 
 defineOptions({
 	name: "LibCheckbox",
 	inheritAttrs: false
 })
 
-const $ = useDivideAttrs(["label", "wrapper"])
-/* todo multi states */
-
-const fallbackId = getFallbackId()
-const props = withDefaults(defineProps<Props>(), {
-	unstyle: false, disabled: false, readonly: false, border: true
-})
-
-/* const emits =  */defineEmits<{
-	/* User presses enter. */
-	(e: "submit", val: boolean): void
-}>()
-
-const el = ref<null | HTMLElement>(null)
-const inputEl = ref<null | HTMLElement>(null)
-const $value = defineModel<boolean>("modelValue", { default: false })
-
-usePreHydrationValue(props.id ?? fallbackId, $value)
-</script>
-
-<script lang="ts">
-type WrapperTypes = Partial<WrapperProps<"label", HTMLAttributes, {
-	/** Tailwind classes. */
-	class?: string
-}>>
-
-type RealProps
-
-	= & LinkableByIdProps
-		& LabelProps
-		& BaseInteractiveProps
-		& {
-			unstyle?: boolean
-		}
-
-interface Props
-	extends
-	/** @vue-ignore */
-	Partial<Omit<
+const props = withDefaults(defineProps<
+	& BaseInteractiveProps
+	& {
+		id?: string
+		label?: string
+		labelAttrs?: Omit<HTMLAttributes, "class"> & TailwindClassProp
+		wrapperAttrs?: Omit<HTMLAttributes, "class"> & TailwindClassProp
+	}
+	& /** @vue-ignore */Omit<
 		InputHTMLAttributes,
 		"class" | "readonly" | "disabled" | "onSumbit"
-		// https://github.com/vuejs/core/pull/14237
+	// https://github.com/vuejs/core/pull/14237
 		| "autocomplete"
-	> & TailwindClassProp>,
-	// /** @vue-ignore */
-	WrapperTypes,
-	RealProps
-{}
+	>
+	& /** @vue-ignore */ TailwindClassProp
+>(), {
+	border: true
+})
+
+const modelValue = defineModel<boolean | "indeterminate">("modelValue", { default: false })
+const finalId = useFallbackId(props)
+usePreHydrationValue(finalId, modelValue)
 </script>
+

@@ -1,166 +1,189 @@
 <template>
-<nav
+<PaginationRoot
+	:total="total"
+	:items-per-page="itemsPerPage"
+	:sibling-count="siblingCount"
+	show-edges
 	:class="twMerge(`
 		pagination--wrapper
 		flex flex-wrap items-center justify-center gap-2
 	`, ($attrs as any).class)"
-	role="navigation"
-	:aria-label="t('pagination.aria')"
+	v-model:page="current"
+	v-bind="{ ...$attrs, class: undefined }"
 >
-	<slot
-		v-if="prevLink.i > 0 && prevLink.i !== currentLink.i"
-		name="link"
-		:i="prevLink.i"
-		:href="prevLink.href"
-		:text="t('pagination.previous-page')"
-		:aria-label=" t('pagination.aria.go-to-previous-page', { count: prevLink.i })"
-		:class="`pagination--link ${pageClasses}`"
+	<PaginationList
+		v-slot="{ items }"
+		class="flex items-center gap-2 w-full"
 	>
-		<a
+		<PaginationFirst
+			as-child
 			:class="`pagination--link ${pageClasses}`"
-			:href="prevLink.href"
-			:aria-label=" t('pagination.aria.go-to-previous-page', { count: prevLink.i })"
-		/>
-	</slot>
-	<div class="pagination--spacer flex-1"/>
-	<slot
-		v-if="firstLink.i !== currentLink.i"
-		name="link"
-		:i="0"
-		:href="firstLink.href"
-		:text="firstLink.i"
-		:aria-label="t('pagination.aria.go-to-page', { count: firstLink.i })"
-		:class="`pagination--link pagination--first-link ${pageClasses}`"
-	>
-		{{ firstLink.href }}
-		<a
-			:class="`pagination--link pagination--first-link ${pageClasses}`"
-			:href="firstLink.href"
-			:aria-label="t('pagination.aria.go-to-page', { count: firstLink.i })"
-		>
-			{{ firstLink.i }}
-		</a>
-	</slot>
-	<div
-		v-if="prevLink.i - extraPages > firstLink.i"
-		class="pagination--page-fill"
-	>
-		...
-	</div>
-	<template
-		v-for="entry in extraPagesPrev"
-		:key="entry.i"
-	>
-		<slot
-			name="link"
-			:class="`pagination--link ${pageClasses}`"
-			:i="entry.i"
-			:href="entry.href"
-			:aria-label="t('pagination.aria.go-to-page', { count: entry.i })"
 		>
 			<a
-				:class="`pagination--link ${pageClasses}`"
-				:href="entry.href"
-				:aria-label="t('pagination.aria.go-to-page', { count: entry.i })"
+				:href="customRoute(route, 1).href"
+				:aria-label="t('pagination.aria.go-to-first-page')"
 			>
-				{{ entry.i }}
+				<slot name="first">
+					<i-lucide-chevrons-left class="w-4 h-4"/>
+				</slot>
 			</a>
-		</slot>
-	</template>
-	<slot
-		name="current"
-		:class="`pagination--link ${currentPageClasses}`"
-		tabindex="0"
-		:i="currentLink.i"
-		:aria-label="t('pagination.aria.current-page', { count: currentLink.i })"
-		:aria_current="true"
-	>
-		<div
-			:class="`pagination--current-page a ${currentPageClasses}`"
-			tabindex="0"
-			:aria-label="t('pagination.aria.current-page', { count: currentLink.i })"
-			aria-current="true"
-			@click="$event.preventDefault()"
-		>
-			{{ currentLink.i }}
-		</div>
-	</slot>
-	<template
-		v-for="entry in extraPagesNext"
-		:key="entry.i"
-	>
-		<slot
-			name="link"
+		</PaginationFirst>
+
+		<PaginationPrev
+			as-child
 			:class="`pagination--link ${pageClasses}`"
-			:i="entry.i"
-			:href="entry.href"
-			:aria-label="t('pagination.aria.go-to-page', { count: entry.i })"
 		>
 			<a
-				:class="`pagination--link ${pageClasses}`"
-				:href="entry.href"
-				:aria-label="t('pagination.aria.go-to-page', { count: entry.i })"
+				:href="customRoute(route, current - 1).href"
+				:aria-label="t('pagination.aria.go-to-previous-page')"
+				@click="onLinkClick($event, current - 1)"
 			>
-				{{ entry.i }}
+				<slot name="prev">
+					<i-lucide-chevron-left class="w-4 h-4"/>
+				</slot>
 			</a>
-		</slot>
-	</template>
-	<div
-		v-if="nextLink.i + extraPages < total"
-		class="pagination--page-fill"
-		aria-hidden="true"
-	>
-		...
-	</div>
-	<slot
-		v-if="lastLink.i !== currentLink.i"
-		name="link"
-		:class="`pagination--link ${pageClasses}`"
-		:i="lastLink.i"
-		:href="lastLink.href"
-		:text="total"
-		:aria-label="t('pagination.aria.go-to-page', { count: lastLink.i })"
-	>
-		<a
+		</PaginationPrev>
+
+		<div class="pagination--spacer flex-1"/>
+
+		<template v-for="(page, index) in items">
+			<PaginationListItem
+				v-if="page.type === 'page'"
+				:value="page.value"
+				as-child
+				:key="index"
+			>
+				<a
+					:href="customRoute(route, page.value).href"
+					:aria-label="t('pagination.aria.go-to-page', { count: page.value })"
+					:class="page.value === current ? currentPageClasses : pageClasses"
+					@click="onLinkClick($event, page.value)"
+				>
+					<slot
+						name="page"
+						:value="page.value"
+					>
+						{{ page.value }}
+					</slot>
+				</a>
+			</PaginationListItem>
+
+			<!-- @vue-expect-error index is a prop... -->
+			<PaginationEllipsis
+				v-else
+				:index="index"
+				class="pagination--page-fill flex items-center justify-center w-8 h-8"
+				:key="page.type"
+			>
+				...
+			</PaginationEllipsis>
+		</template>
+
+		<div class="pagination--spacer flex-1"/>
+
+		<PaginationNext
+			as-child
 			:class="`pagination--link ${pageClasses}`"
-			:href="lastLink.href"
-			:aria-label="t('pagination.aria.go-to-page', { count: lastLink.i })"
 		>
-			{{ total }}
-		</a>
-	</slot>
-	<div class="pagination--spacer flex-1"/>
-	<slot
-		v-if="nextLink.i <= total && nextLink.i !== currentLink.i"
-		:class="`pagination--link ${pageClasses}`"
-		name="link"
-		:i="nextLink.i"
-		:href="nextLink.href"
-		:text="t('pagination.next-page')"
-		:aria-label="t('pagination.aria.go-to-next-page', { count: nextLink.i })"
-	>
-		<a
+			<a
+				:href="customRoute(route, current + 1).href"
+				:aria-label="t('pagination.aria.go-to-next-page')"
+				@click="onLinkClick($event, current + 1)"
+			>
+				<slot name="next">
+					<i-lucide-chevron-right class="w-4 h-4"/>
+				</slot>
+			</a>
+		</PaginationNext>
+
+		<PaginationLast
+			as-child
 			:class="`pagination--link ${pageClasses}`"
-			:href="nextLink.href"
-			:aria-label="t('pagination.aria.go-to-next-page', { count: nextLink.i })"
 		>
-			Next
-		</a>
-	</slot>
-</nav>
+			<a
+				:href="customRoute(route, Math.ceil(total / itemsPerPage)).href"
+				:aria-label="t('pagination.aria.go-to-last-page')"
+				@click="onLinkClick($event, Math.ceil(total / itemsPerPage))"
+			>
+				<slot name="last">
+					<i-lucide-chevrons-right class="w-4 h-4"/>
+				</slot>
+			</a>
+		</PaginationLast>
+	</PaginationList>
+</PaginationRoot>
 </template>
 
 <script setup lang="ts">
-import { computed, type HTMLAttributes, useAttrs, watch } from "vue"
+import {
+	PaginationEllipsis,
+	PaginationFirst,
+	PaginationLast,
+	PaginationList,
+	PaginationListItem,
+	PaginationNext,
+	PaginationPrev,
+	PaginationRoot,
+	type PaginationRootProps
+} from "reka-ui"
+import { type HTMLAttributes, useAttrs } from "vue"
+
+import ILucideChevronLeft from "~icons/lucide/chevron-left"
+import ILucideChevronRight from "~icons/lucide/chevron-right"
+import ILucideChevronsLeft from "~icons/lucide/chevrons-left"
+import ILucideChevronsRight from "~icons/lucide/chevrons-right"
 
 import { useInjectedI18n } from "../../composables/useInjectedI18n.js"
+import type { TailwindClassProp } from "../../types/index.js"
 import { twMerge } from "../../utils/twMerge.js"
-import type { TailwindClassProp } from "../shared/props.js"
+
+defineOptions({
+	name: "LibPagination",
+	inheritAttrs: false
+})
 
 const t = useInjectedI18n()
+const $attrs = useAttrs()
+
+const props = withDefaults(defineProps<
+	& /** @vue-ignore */ Omit<HTMLAttributes, "class">
+	& /** @vue-ignore */ TailwindClassProp
+	& Pick<PaginationRootProps, "defaultPage" | "siblingCount" | "itemsPerPage">
+	& {
+		route: string
+		customRoute?: (route: string, i: number) => { i: number, href: string }
+		total: number
+	}
+>(), {
+	customRoute: (route: string = "", i: number) => {
+		if (i <= 1) return { href: route, i: 1 }
+		return { href: `${route}${i}`, i }
+	},
+	siblingCount: 1,
+	defaultPage: 1,
+	itemsPerPage: 1
+})
+
+const current = defineModel<number>("current", { required: true })
+
+const emit = defineEmits<{
+	/**
+	 * Fired when a link is clicked. Can be used to prevent navigation. Is passed the href calculated by customRoute.
+	 */
+	(e: "link-click", event: MouseEvent, payload: { i: number, href: string }): void
+}>()
+
+function onLinkClick(event: MouseEvent, pageNum: number) {
+	const routeInfo = props.customRoute(props.route, pageNum)
+	emit("link-click", event, routeInfo)
+}
 
 const commonClasses = `
-	block
+	flex
+	items-center
+	justify-center
+	w-8
+	h-8
 	focus-outline
 	border-b-2
 	border-transparent
@@ -180,95 +203,5 @@ const currentPageClasses = `
 	border-b-accent-500
 	scale-125
 `
-defineOptions({
-	name: "LibPagination",
-	inheritAttrs: false
-})
-
-const props = withDefaults(defineProps<Props>(), {
-	customRoute: (route: string, i: number) => {
-		if (i === 0 || i === 1) {
-			const num = 1
-			return { href: route, i: num }
-		}
-		return { href: route + i.toString(), i }
-	},
-	extraPages: 3
-})
-const $attrs = useAttrs()
-
-const currentLink = computed(() => props.customRoute(props.route, props.current))
-const currentIsInvalid = computed(() => currentLink.value.i < 0 || currentLink.value.i > props.total)
-
-watch(() => currentIsInvalid.value, () => {
-	if (currentIsInvalid.value) {
-		throw new Error(`Current page is out of range: 0 - ${props.total}`)
-	}
-})
-
-const prevLink = computed(() => props.customRoute(props.route, props.current - 1))
-
-const nextLink = computed(() => {
-	const maybeNextLink = props.customRoute(props.route, props.current + 1)
-	if (maybeNextLink.i === currentLink.value.i) {
-		return props.customRoute(props.route, props.current + 2)
-	}
-	return maybeNextLink
-})
-
-const firstLink = computed(() => props.customRoute(props.route, 0))
-const lastLink = computed(() => props.customRoute(props.route, props.total))
-
-type HrefInfo = { href: string, i: number }
-const extraPagesPrev = computed(() => [...Array(props.extraPages)].map((_, _i) => {
-	const num = currentLink.value.i - (props.extraPages - _i)
-	if (num <= firstLink.value.i || num >= lastLink.value.i || num >= currentLink.value.i) return undefined
-	return props.customRoute(props.route, num)
-}).filter(entry => entry !== undefined) as HrefInfo[])
-
-const extraPagesNext = computed(() => [...Array(props.extraPages + 1)].map((_, i) => {
-	const num = currentLink.value.i + i
-	if (num <= firstLink.value.i || num >= lastLink.value.i || num <= currentLink.value.i) return undefined
-	return props.customRoute(props.route, num)
-}).filter(entry => entry !== undefined).slice(0, props.extraPages) as HrefInfo[])
 </script>
 
-<script lang="ts">
-/**
- * Pagination component.
- *
- * Can be passed a slot like so to use a custom link element (like NuxtLink):
- * ```vue
- * <template #link="{ href, i, text, ariaLabel, ariaCurrent}">
- * 	<NuxtLink :to="href" :aria-label="ariaLabel" :aria-current="ariaCurrent ?? false">{{ text ?? i }}</NuxtLink>
- * </template>
- * ```
- */
-export default {
-	name: "LibPagination"
-}
-type RealProps = {
-	/** The total number of pages. */
-	total: number
-	/** The number of the current page. It must be valid, between 0 - total or the component will throw an error. */
-	current: number
-	/** The base route/link path for the page. Should end with a forward slash `/`. */
-	route: string
-	/**
-	 * A function to customize the output href and page link number. By default, page 0 is page 1, page 1 is 1, then everything else is normal.
-	 *
-	 * This is because usually we have routes like: `/page/1`, `/page/2`, not `/page/0`.
-	 *
-	 * You can use this function to customize things further. For example, make `/page/1` just `/`
-	 */
-	customRoute?: (route: string, i: number) => { i: number, href: string }
-	/** How many extra pages to show to each side of the current page. */
-	extraPages?: number
-}
-interface Props
-	extends
-	/** @vue-ignore */
-	Partial<Omit<HTMLAttributes, "class"> & TailwindClassProp>,
-	RealProps
-{}
-</script>

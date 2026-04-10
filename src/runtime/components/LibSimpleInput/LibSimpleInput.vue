@@ -1,7 +1,7 @@
 <template>
 <input
-	:id="id ?? fallbackId"
-	:class="twMerge(`
+	:id="finalId"
+	:class="!unstyle && twMerge(`
 		simple-input
 		flex-1
 		grow-[999999]
@@ -70,12 +70,11 @@
 	)"
 	:data-border="border"
 	:data-invalid="!valid"
-	:type="type"
-	:placeholder="placeholder"
-	:disabled="disabled"
-	:readonly="readonly"
 	v-model="modelValue"
-	v-bind="{ ...$attrs, class: undefined, ...ariaLabel }"
+	v-bind="{
+		...$attrs,
+		class: undefined
+	}"
 	@keydown="handleKeydown"
 	@input="emit('input', $event as InputEvent)"
 >
@@ -84,27 +83,42 @@
 <script lang="ts" setup generic="T">
 import { type InputHTMLAttributes, useAttrs } from "vue"
 
-import { useAriaLabel } from "../../composables/useAriaLabel.js"
+import { useFallbackId } from "../../composables/useFallbackId.js"
 import { usePreHydrationValue } from "../../composables/usePreHydrationValue.js"
 import { hasModifiers } from "../../helpers/hasModifiers.js"
+import type { BaseInteractiveProps, TailwindClassProp } from "../../types/index.js"
 import { twMerge } from "../../utils/twMerge.js"
-import { type BaseInteractiveProps, getFallbackId, type LabelProps, type LinkableByIdProps, type TailwindClassProp } from "../shared/props.js"
 
 defineOptions({
 	name: "LibSimpleInput",
 	inheritAttrs: false
 })
 
-const fallbackId = getFallbackId()
 
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<
+	& /** @vue-ignore */ Omit<
+		InputHTMLAttributes,
+		| "class" | "readonly" | "disabled" | "onSubmit" | "onInput" | "type"
+		// https://github.com/vuejs/core/pull/14237
+		| "autocomplete"
+	>
+	& /** @vue-ignore */ TailwindClassProp
+	& Pick<BaseInteractiveProps, "unstyle" | "border">
+	& {
+		id?: string
+		label?: string
+		valid?: boolean
+		type?: InputHTMLAttributes["type"]
+	}
+>(), {
 	id: "",
 	placeholder: "",
 	valid: true,
 	label: "",
 	type: undefined,
-	unstyle: false, disabled: false, readonly: false, border: true
+	border: true
 })
+const finalId = useFallbackId(props)
 
 const modelValue = defineModel<T>({ required: true })
 
@@ -114,42 +128,12 @@ const emit = defineEmits<{
 	(e: "input", val: InputEvent): void
 }>()
 const $attrs = useAttrs()
-const ariaLabel = useAriaLabel(props, fallbackId)
 
 function handleKeydown(e: KeyboardEvent) {
 	if (e.key === "Enter" && !hasModifiers(e)) {
 		emit("submit", modelValue.value)
 	}
 }
-usePreHydrationValue(props.id ?? fallbackId, modelValue)
+usePreHydrationValue(finalId, modelValue)
 </script>
 
-<script lang="ts">
-type RealProps
-	= & LinkableByIdProps
-		& LabelProps
-		& BaseInteractiveProps
-		& {
-			placeholder?: InputHTMLAttributes["placeholder"]
-			disabled?: InputHTMLAttributes["disabled"]
-			id?: InputHTMLAttributes["id"]
-			type?: InputHTMLAttributes["type"]
-			valid?: boolean
-		}
-
-interface Props
-	extends
-	/** @vue-ignore */
-	Partial<Omit<
-		InputHTMLAttributes,
-		| "class"
-		| "readonly"
-		| "disabled"
-		| "onSubmit"
-		| "onInput"
-		// https://github.com/vuejs/core/pull/14237
-		| "autocomplete"
-	> & TailwindClassProp>,
-	RealProps
-{}
-</script>

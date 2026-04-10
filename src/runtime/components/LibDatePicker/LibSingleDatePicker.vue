@@ -5,11 +5,11 @@ import { onBeforeUnmount, ref, toRaw, useAttrs, watch } from "vue"
 
 import { convertDateWithFallback, getNow, toEmittableDate } from "./helpers.js"
 
-import IRadixIconsCalendar from "~icons/radix-icons/calendar"
-import IRadixIconsChevronLeft from "~icons/radix-icons/chevron-left"
-import IRadixIconsChevronRight from "~icons/radix-icons/chevron-right"
-import IRadixIconsDoubleArrowLeft from "~icons/radix-icons/double-arrow-left"
-import IRadixIconsDoubleArrowRight from "~icons/radix-icons/double-arrow-right"
+import ILucideCalendarDays from "~icons/lucide/calendar-days"
+import ILucideChevronLeft from "~icons/lucide/chevron-left"
+import ILucideChevronRight from "~icons/lucide/chevron-right"
+import ILucideChevronsLeft from "~icons/lucide/chevrons-left"
+import ILucideChevronsRight from "~icons/lucide/chevrons-right"
 
 import { useInjectedLocale } from "../../composables/useInjectedLocale.js"
 import type { SingleDate } from "../../types/index.js"
@@ -153,7 +153,7 @@ onBeforeUnmount(() => {
 			"
 		>
 			<Icon>
-				<i-radix-icons-calendar/>
+				<i-lucide-calendar-days/>
 			</Icon>
 		</DatePickerTrigger>
 	</DatePickerField>
@@ -218,7 +218,7 @@ onBeforeUnmount(() => {
 					:prev-page="(date: DateValue) => date.subtract({ years: 1 })"
 				>
 					<Icon class="scale-150">
-						<i-radix-icons-double-arrow-left/>
+						<i-lucide-chevrons-left/>
 					</Icon>
 				</DatePickerPrev>
 				<DatePickerPrev
@@ -235,7 +235,7 @@ onBeforeUnmount(() => {
 					"
 				>
 					<Icon class="scale-150">
-						<i-radix-icons-chevron-left/>
+						<i-lucide-chevron-left/>
 					</Icon>
 				</DatePickerPrev>
 
@@ -254,7 +254,7 @@ onBeforeUnmount(() => {
 					"
 				>
 					<Icon class="scale-150">
-						<i-radix-icons-chevron-right/>
+						<i-lucide-chevron-right/>
 					</Icon>
 				</DatePickerNext>
 				<DatePickerNext
@@ -272,7 +272,7 @@ onBeforeUnmount(() => {
 					:next-page="(date: DateValue) => date.add({ years: 1 })"
 				>
 					<Icon class="scale-150">
-						<i-radix-icons-double-arrow-right/>
+						<i-lucide-chevrons-right/>
 					</Icon>
 				</DatePickerNext>
 			</DatePickerHeader>
