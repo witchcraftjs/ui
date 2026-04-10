@@ -6,58 +6,64 @@ import IconFaSolidBell from "~icons/fa-solid/bell"
 
 import * as components from "../index.js"
 
+type ExtraTestArgs = {
+	_iconAfter?: boolean
+}
 const meta: Meta<typeof components.LibButton> = {
 	component: components.LibButton,
 	title: "Components/Button",
 	args: {
 		label: "Label",
-		// @ts-expect-error - custom prop for story
-		_iconAfter: true
+		...{
+			_iconAfter: true
+		} satisfies ExtraTestArgs as any
 	}
 }
 
 export default meta
-type Story = StoryObj<typeof components.LibButton>
+type Story = StoryObj<typeof components.LibButton> & { args?: ExtraTestArgs }
 
 export const Primary: Story = {
-	render: (args: any) => ({
-		components: {
-			...components,
-			IconFaSolidBell
-		},
-		setup: () => ({ args, capitalize }),
-		template: `
-		<div class="flex gap-4 justify-center">
-			<template v-for="type of [false, 'ok', 'warning', 'danger', 'primary', 'secondary' ]">
-				<lib-button v-bind="{...args, color: type, label: !args.label ? undefined : args.label + ' ' + capitalize(type || 'false')}">
-					<template #icon>
-						<icon class="w-[1em]"><icon-fa-solid-bell /></icon>
+	render: args => {
+		const extraArgs = args as ExtraTestArgs
+		return {
+			components: {
+				...components,
+				IconFaSolidBell
+			},
+			setup: () => ({ args, capitalize }),
+			template: `
+				<div class="flex gap-4 justify-center">
+					<template v-for="type of [false, 'ok', 'warning', 'danger', 'primary', 'secondary' ]">
+						<lib-button v-bind="{...args, color: type, label: !args.label ? undefined : args.label + ' ' + capitalize(type || 'false')}">
+							<template #icon>
+								<icon class="w-[1em]"><icon-fa-solid-bell /></icon>
+							</template>
+						</lib-button>
 					</template>
-				</lib-button>
-			</template>
-		</div>
-		<div class="flex flex-col gap-4 pt-10">
-			<template v-for="type of [false, 'ok', 'warning', 'danger', 'primary', 'secondary']">
-				<lib-button v-bind="{...args, color: type , label: !args.label ? undefined : args.label + ' ' + capitalize(type || 'false') }">
-					${args._iconAfter
-			? `
-						<template #icon-after>
-							<icon class="w-[1em]"><icon-fa-solid-bell /></icon>
-						</template>
-					`
-			: ``}
-				</lib-button>
-			</template>
-		</div>
-		`
-	})
+				</div>
+				<div class="flex flex-col gap-4 pt-10">
+					<template v-for="type of [false, 'ok', 'warning', 'danger', 'primary', 'secondary']">
+						<lib-button v-bind="{...args, color: type , label: !args.label ? undefined : args.label + ' ' + capitalize(type || 'false') }">
+							${extraArgs._iconAfter
+								? `
+								<template #icon-after>
+									<icon class="w-[1em]"><icon-fa-solid-bell /></icon>
+								</template>
+							`
+								: ``}
+						</lib-button>
+					</template>
+				</div>
+			`
+		}
+	}
 }
 
 export const IconAfter: Story = {
 	...Primary,
 	args: {
 		...Primary.args,
-		// @ts-expect-error - .
 		_iconAfter: true
 	}
 }
@@ -92,7 +98,7 @@ export const BorderlessDisabled: Story = {
 	}
 }
 export const WithDivInside: Story = {
-	render: (args: any) => ({
+	render: args => ({
 		components,
 		setup: () => ({ args }),
 		template: `

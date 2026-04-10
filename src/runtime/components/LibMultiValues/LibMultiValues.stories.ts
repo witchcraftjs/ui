@@ -14,10 +14,10 @@ const meta = {
 		border: true
 	},
 	tags: ["!test"]
-} satisfies Meta<typeof LibMultiValues> & Meta<{ custom: string }>
+} satisfies Meta<typeof LibMultiValues>
 
 export default meta
-type Story = StoryObj<typeof LibMultiValues> // & StoryObj<typeof extraArgs>
+type Story = StoryObj<typeof LibMultiValues>
 
 /**
  * The multi-value component is just the values part beneath the input.

@@ -1,6 +1,9 @@
 <template>
 <div
 	v-if="notification"
+	:role="notification.requiresAction ? 'alertdialog' : 'status'"
+	:aria-labelledby="notification.title ? `title-${notification.id}` : undefined"
+	:aria-describedby="notification.message ? `msg-${notification.id}` : undefined"
 	:class="twMerge(`
 		notification
 		bg-neutral-50
@@ -21,41 +24,42 @@
 		focus-within:border-accent-500
 	`,
 		($attrs as any).class,
-		notification.notificationProps?.class
+		notification.notificationAttrs?.class
 	)
 	"
-	v-bind="{ ...$attrs, ...(notification?.notificationProps ?? {}), class: undefined }"
+	v-bind="{ ...$attrs, ...(notification?.notificationAttrs ?? {}), class: undefined }"
 	tabindex="0"
 	:data-id="notification.id"
 	ref="notificationEl"
 	@keydown.enter.self="NotificationHandler.resolveToDefault(notification)"
-	@pointerenter="notification.timeout && !notification.isPaused && emit('pause', notification)"
 >
 	<slot
 		name="top"
 		:notification="notification"
 	/>
+
+
 	<div
 		class="
-			notification--header
-			flex-reverse
-			flex
-			justify-between
-			items-center
-		"
+		notification--header
+		flex-reverse
+		flex
+		justify-between
+		items-center
+	"
 	>
 		<slot
 			v-if="notification.title"
 			name="title"
 			v-bind="setSlotVar('title', {
+				id: `title-${notification.id}`,
 				title: notification.title,
 				class: `
 					notification--title
 					focus-outline
 					rounded-sm
 					font-bold
-				`,
-				tabindex: 0
+				`
 			})"
 		>
 			<div
@@ -68,6 +72,7 @@
 		<div class="notification--actions flex">
 			<LibButton
 				:border="false"
+				aria-label="Copy notification content"
 				class="
 					notification--title-button
 					notification--copy-button
@@ -76,10 +81,11 @@
 				"
 				@click="copy(handler ? handler.stringify(notification) : JSON.stringify(notification))"
 			>
-				<icon><i-fa6-regular-copy/></icon>
+				<icon><i-lucide-copy/></icon>
 			</LibButton>
 			<lib-button
 				v-if="notification.cancellable"
+				aria-label="Dismiss notification"
 				class="
 					notification--title-button
 					notification--cancel-button
@@ -87,7 +93,7 @@
 				:border="false"
 				@click="NotificationHandler.dismiss(notification)"
 			>
-				<icon><i-fa6-solid-xmark/></icon>
+				<icon><i-lucide-x/></icon>
 			</lib-button>
 		</div>
 	</div>
@@ -104,12 +110,12 @@
 				dark:text-neutral-200
 				mb-1
 			`,
-			message: notification.message,
-			tabindex: 0
+			message: notification.message
 		})"
 	>
 		<div
 			v-bind="slotVars.message"
+			:id="`msg-${notification.id}`"
 		>
 			{{ notification.message }}
 		</div>
@@ -118,6 +124,7 @@
 		v-if="notification.component"
 		:is="notification.component"
 		v-bind="{
+			notification,
 			message: notification.message,
 			messageClasses: `
 					notification--message
@@ -167,18 +174,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed, type HTMLAttributes, onBeforeUnmount, onMounted, ref, useAttrs } from "vue"
-
-import IFa6RegularCopy from "~icons/fa6-regular/copy"
-import IFa6SolidXmark from "~icons/fa6-solid/xmark"
+import { computed, type HTMLAttributes, onMounted, ref, useAttrs } from "vue"
 
 import { useSlotVars } from "../../composables/useSlotVars.js"
 import { copy } from "../../helpers/copy.js"
 import { type NotificationEntry, NotificationHandler } from "../../helpers/NotificationHandler.js"
+import type { TailwindClassProp } from "../../types/index.js"
 import { twMerge } from "../../utils/twMerge.js"
 import Icon from "../Icon/Icon.vue"
 import LibButton from "../LibButton/LibButton.vue"
-import type { TailwindClassProp } from "../shared/props.js"
 
 defineOptions({
 	name: "LibNotification",
@@ -189,14 +193,17 @@ const $attrs = useAttrs()
 const { setSlotVar, slotVars } = useSlotVars()
 
 
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<
+	& {
+		notification: NotificationEntry
+		handler?: NotificationHandler
+	}
+	& /** @vue-ignore */ Omit<HTMLAttributes, "class">
+	& /** @vue-ignore */ TailwindClassProp
+>(), {
 	handler: undefined
 })
 
-const emit = defineEmits<{
-	(e: "pause", notification: NotificationEntry): void
-	(e: "resume", notification: NotificationEntry): void
-}>()
 
 const getColor = (notification: NotificationEntry, option: string): "ok" | "primary" | "danger" | "secondary" => {
 	return notification.dangerous.includes(option)
@@ -206,32 +213,16 @@ const getColor = (notification: NotificationEntry, option: string): "ok" | "prim
 			: "secondary"
 }
 
-/* Todo make this more flexible? */
 
+/* Todo make this more flexible? */
 const buttonColors = computed(() => props.notification.options.map((option: any /* what ??? */) => getColor(props.notification, option)))
 
 const notificationEl = ref<null | HTMLElement>(null)
 
-const mousedownAbortController = new AbortController()
-
 onMounted(() => {
-	notificationEl.value?.focus()
-	if (props.notification.timeout) {
-		window.addEventListener("pointerdown", e => {
-			if (!e.target || !(e.target instanceof HTMLElement)) return
-			if (e.target === notificationEl.value || notificationEl.value?.contains(e.target)) {
-				if (props.notification.isPaused) return
-				emit("pause", props.notification)
-			} else {
-				if (!props.notification.isPaused) return
-				emit("resume", props.notification)
-			}
-		}, { signal: mousedownAbortController.signal })
+	if (props.notification.requiresAction) {
+		notificationEl.value?.focus()
 	}
-})
-
-onBeforeUnmount(() => {
-	mousedownAbortController.abort()
 })
 
 defineExpose({
@@ -239,18 +230,4 @@ defineExpose({
 		notificationEl.value?.focus()
 	}
 })
-</script>
-
-<script lang="ts">
-type RealProps = {
-	notification: NotificationEntry
-	handler?: NotificationHandler
-}
-
-interface Props
-	extends
-	/** @vue-ignore */
-	Partial<Omit<HTMLAttributes, "class"> & TailwindClassProp>,
-	RealProps
-{}
 </script>

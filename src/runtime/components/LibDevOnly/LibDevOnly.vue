@@ -40,10 +40,6 @@ const doShow = computed(() => props.show || injectedShow.value)
 </script>
 
 <script lang="ts">
-export interface Props {
-	show?: boolean
-}
-
 // Not sure why nuxt's types aren't correctly getting detected
 // This should be enough to bypass the type lint error.
 declare module "vue" {

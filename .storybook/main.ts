@@ -6,9 +6,14 @@ const config: StorybookConfig = {
 			// 👇 Sets the directory containing your stories
 			directory: "../src/runtime/",
 			// 👇 Storybook will load all files that match this glob
-			files: "**/*.stories.*",
-		},
+			files: "**/*.stories.*"
+		}
 	],
+	tags: {
+		deprecated: {
+			excludeFromSidebar: true // Automatically hides anything with this tag
+		}
+	},
 	addons: [
 		"@storybook/addon-links",
 		"@storybook/addon-essentials",
@@ -21,8 +26,8 @@ const config: StorybookConfig = {
 	framework: {
 		name: "@storybook/vue3-vite",
 		options: {
-				docgen: 'vue-component-meta',
-		},
+			docgen: "vue-component-meta"
+		}
 	},
 	typescript: { check: false }
 }

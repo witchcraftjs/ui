@@ -1,14 +1,14 @@
 <template>
 <lib-button
 	v-bind="{ ...$attrs, class: undefined }"
-	:class="!($attrs as any).unstyle && twMerge(`
+	:class="!unstyle && twMerge(`
 			dark-mode-switcher
 			rounded-full
 			after:rounded-full
 		`,
 		($attrs as any)?.class
 	)"
-	:title="`${t('dark-mode-switcher.title')}${t(`dark-mode-switcher.${darkModeState}`)}`"
+	:aria-label="`${t('dark-mode-switcher.title')}${t(`dark-mode-switcher.${darkModeState}`)}`"
 	@click="cycleDarkMode"
 >
 	<!-- content-vertical-holder will keep the icon the height of a text line regardless of the svg used -->
@@ -39,10 +39,10 @@ import IPhSunBold from "~icons/ph/sun-bold"
 
 import { useInjectedDarkMode } from "../../composables/useInjectedDarkMode.js"
 import { useInjectedI18n } from "../../composables/useInjectedI18n.js"
+import type { BaseInteractiveProps, TailwindClassProp } from "../../types/index.js"
 import { twMerge } from "../../utils/twMerge.js"
 import Icon from "../Icon/Icon.vue"
 import LibButton from "../LibButton/LibButton.vue"
-import type { TailwindClassProp } from "../shared/props.js"
 
 const t = useInjectedI18n()
 
@@ -54,7 +54,16 @@ const emit = defineEmits<{
 }>()
 const $attrs = useAttrs()
 
-withDefaults(defineProps<Props>(), { showLabel: true })
+withDefaults(defineProps<
+	& Pick<BaseInteractiveProps, "border">
+	& {
+		disabled?: boolean
+		unstyle?: boolean
+		showLabel?: boolean
+	}
+	& /** @vue-ignore */ Omit<ButtonHTMLAttributes, "class">
+	& /** @vue-ignore */ TailwindClassProp
+>(), { showLabel: true })
 
 const {
 	darkMode,
@@ -70,23 +79,3 @@ onMounted(() => {
 })
 </script>
 
-<script lang="ts">
-export default {
-	name: "LibDarkModeSwitcher"
-}
-type RealProps = {
-	showLabel?: boolean
-}
-
-interface Props
-	extends
-	/** @vue-ignore */
-	Partial<Omit<ButtonHTMLAttributes, "class" | "color" | "disabled">
-	& TailwindClassProp
-	& {
-		disabled?: boolean
-		unstyle?: boolean
-	}>,
-	RealProps
-{ }
-</script>

@@ -1,5 +1,4 @@
 <template>
-<!-- todo aria errors -->
 <div
 	:class="twMerge(`
 		file-input
@@ -23,11 +22,11 @@
 			rounded-xl
 			p-2
 		`,
-		errors.length > 0 && errorFlashing && `border-danger-400`,
 		isHovered && `bg-accent-500/10`,
-		($.wrapperAttrs as any).class
+		errors.length > 0 && isErrored && `errored border-red-400 hover:border-red-500`,
+		wrapperAttrs?.class
 	)"
-	v-bind="{ ...$.wrapperAttrs, class: undefined }"
+	v-bind="{ ...wrapperAttrs, class: undefined }"
 	@drop="onDrop"
 	@dragover.prevent="isHovered = true"
 	@dragleave="isHovered = false"
@@ -49,7 +48,7 @@
 		)"
 	>
 		<label
-			:for="id ?? fallbackId"
+			:for="finalId"
 			:class="twMerge(`
 				file-input--label
 				pointer-events-none
@@ -65,7 +64,7 @@
 				v-if="compact || multiple || files.length === 0"
 				name="icon"
 			>
-				<icon><i-fa6-solid-arrow-up-from-bracket/></icon>
+				<icon><i-lucide-upload/></icon>
 			</slot>
 			<slot name="label">
 				<div class="text-ellipsis overflow-hidden shrink-1 hidden @min-[15ch]:block">
@@ -110,7 +109,7 @@
 			</div>
 		</label>
 		<input
-			:id="id ?? fallbackId"
+			:id="finalId"
 			:class="twMerge(`
 				file-input--input
 				absolute
@@ -120,13 +119,15 @@
 				text-[0]
 				opacity-0
 			`,
-				($.inputAttrs as any)?.class
+				inputAttrs?.class
 			)"
 			type="file"
 			:accept="formats.join(', ')"
 			:multiple="multiple"
+			v-bind="{ ...inputAttrs, class: undefined }"
+			:aria-invalid="errors.length > 0"
+			:aria-errormessage="errors.map(_ => _.message).join(', ')"
 			ref="el"
-			v-bind="{ ...$.inputAttrs, class: undefined }"
 			@input="(inputFile as any)"
 			@click="($event.target! as any).value = null"
 		>
@@ -139,8 +140,7 @@
 			`,
 			multiple && `
 				w-full
-			`,
-			($.previewsAttrs as any)?.class
+			`
 		)"
 	>
 		<div
@@ -176,7 +176,7 @@
 					:aria-label="`Remove file ${entry.file.name}`"
 					@click="removeFile(entry)"
 				>
-					<icon><i-fa6-solid-xmark/></icon>
+					<icon><i-lucide-x/></icon>
 				</lib-button>
 				<div
 					class="file-input--preview-filename min-w-0 flex-1 basis-0 truncate break-all rounded-sm text-sm"
@@ -197,7 +197,7 @@
 				>
 					<img
 						class="max-h-full w-auto"
-						:src="getSrc(entry.file)"
+						:src="entry.previewUrl"
 					>
 				</div>
 				<div
@@ -207,41 +207,82 @@
 					flex-1 basis-full flex-wrap items-center justify-center
 					"
 				>
-					<icon><i-fa6-regular-file class="text-4xl opacity-50"/></icon>
+					<icon><i-lucide-file class="text-4xl opacity-50"/></icon>
 				</div>
 			</div>
+		</div>
+	</div>
+	<div
+		v-if="!compact && errors.length > 0"
+		class="file-input--errors flex flex-col gap-2 text-sm text-red-600 dark:text-red-400 items-center px-2"
+	>
+		<div
+			class="file-input--error text-center"
+			v-for="error of errors"
+			:key="error.message"
+		>
+			{{ error.message }}
 		</div>
 	</div>
 </div>
 </template>
 
 <script setup lang="ts">
-import { computed, type HTMLAttributes, type InputHTMLAttributes, ref, shallowReactive, watch } from "vue"
+import type { HTMLAttributes, InputHTMLAttributes } from "vue"
+import { computed, onBeforeUnmount, ref, shallowReactive, watch } from "vue"
 
-import IFa6RegularFile from "~icons/fa6-regular/file"
-import IFa6SolidArrowUpFromBracket from "~icons/fa6-solid/arrow-up-from-bracket"
-import IFa6SolidXmark from "~icons/fa6-solid/xmark"
-
-import { useDivideAttrs } from "../../composables/useDivideAttrs.js"
+import { useFallbackId } from "../../composables/useFallbackId.js"
 import { useInjectedI18n } from "../../composables/useInjectedI18n.js"
-import type { FileInputError } from "../../types/index.js"
+import type { FileInputError, TailwindClassProp } from "../../types/index.js"
 import { twMerge } from "../../utils/twMerge.js"
 import Icon from "../Icon/Icon.vue"
 import LibButton from "../LibButton/LibButton.vue"
-import { getFallbackId, type LinkableByIdProps, type TailwindClassProp, type WrapperProps } from "../shared/props.js"
 
 const t = useInjectedI18n()
 const el = ref<null | HTMLInputElement>(null)
-type Entry = { file: File, isImg: boolean }
+
+
+const props = withDefaults(defineProps<
+	& {
+		id?: string
+		multiple?: boolean
+		/**
+		 * A list of extensions or mime types to add to the input's accept. Basic validations are done so that files match an extension and mimeType, but note that a file could still be lying, all files should be validated server side.
+		 *
+		 * Pass an empty array to allow any filetype.
+		 */
+		formats?: string[]
+		compact?: boolean
+		inputAttrs?: Omit<InputHTMLAttributes, "class"> & TailwindClassProp
+		wrapperAttrs?: Omit<HTMLAttributes, "class"> & TailwindClassProp
+	}
+>(), {
+	multiple: false,
+	formats: () => ["image/*", ".jpeg", ".jpg", ".png"],
+	compact: false
+})
+const finalId = useFallbackId(props)
+
+const emits = defineEmits<{
+	(e: "input", val: File[], clearFiles: () => void): void
+	(e: "errors", val: FileInputError[], clearErrors: () => void): void
+}>()
+
+type Entry = { file: File } & ({ isImg: true, previewUrl: string } | { isImg: false, previewUrl: undefined })
 
 const files = shallowReactive<(Entry)[]>([])
 const errors = shallowReactive<(FileInputError)[]>([])
-const errorFlashing = ref(false)
+const isErrored = ref(false)
 const isHovered = ref(false)
 
-
 function clearFiles() {
-	el.value!.value = ""
+	if (el.value) {
+		// not sure why sometimes el.value is undefined but it can be
+		el.value.value = ""
+	}
+	for (const entry of files) {
+		if (entry.previewUrl) URL.revokeObjectURL(entry.previewUrl)
+	}
 	files.splice(0, files.length)
 }
 
@@ -250,45 +291,37 @@ watch(files, () => {
 })
 watch(errors, () => {
 	if (errors.length > 0) {
-		errorFlashing.value = true
-		setTimeout(() => {
-			errorFlashing.value = false
-		}, 500)
-		emits("errors", [...errors])
-		errors.splice(0, errors.length)
+		isErrored.value = true
+		emits("errors", [...errors], clearErrors)
 	}
 })
+
+function clearErrors() {
+	isErrored.value = false
+	errors.splice(0, errors.length)
+}
 
 defineOptions({
 	name: "LibFileInput",
 	inheritAttrs: false
 })
-const $ = useDivideAttrs(["wrapper", "input", "previews"] as const)
-
-const emits = defineEmits<{
-	(e: "input", val: File[], clearFiles: () => void): void
-	(e: "errors", val: FileInputError[]): void
-}>()
-
-const fallbackId = getFallbackId()
-const props = withDefaults(defineProps<Props>(), {
-	multiple: false,
-	formats: () => ["image/*", ".jpeg", ".jpg", ".png"],
-	compact: false
-})
 
 const mimeTypes = computed(() => props.formats?.filter(_ => !_.startsWith(".")) ?? [])
 const extensions = computed(() => props.formats?.filter(_ => _.startsWith(".")) ?? [])
 
-const getSrc = (file: File) => {
-	const src = URL.createObjectURL(file)
-	return src
+
+onBeforeUnmount(() => {
+	for (const entry of files) {
+		if (entry.previewUrl) URL.revokeObjectURL(entry.previewUrl)
+	}
+})
+
+function removeFile(entry: Entry) {
+	if (entry.previewUrl) URL.revokeObjectURL(entry.previewUrl)
+	const index = files.indexOf(entry)
+	if (index > -1) files.splice(index, 1)
 }
 
-const removeFile = (entry: Entry) => {
-	const index = files.indexOf(entry)
-	files.splice(index, 1)
-}
 const extensionsList = computed(() => extensions.value.join(", "))
 
 function onDrop(e: DragEvent) {
@@ -327,13 +360,14 @@ function updateFiles(filesList: FileList): boolean | undefined {
 			errs.push(err)
 			continue
 		}
+		const previewUrl = isImg ? URL.createObjectURL(file) : undefined
 		if (errs.length > 0) continue
 		if (!files.find(_ => _.file === file)) {
 			if ((props.multiple || files.length < 1)
 			) {
-				files.push({ file, isImg })
+				files.push({ file, isImg, previewUrl: previewUrl as any })
 			} else {
-				files.splice(0, files.length, { file, isImg })
+				files.splice(0, files.length, { file, isImg, previewUrl: previewUrl as any })
 			}
 		}
 	}
@@ -341,51 +375,14 @@ function updateFiles(filesList: FileList): boolean | undefined {
 		errors.splice(0, errors.length, ...errs)
 		return false
 	} else if (errors.length > 0) {
-		errors.splice(0, errors.length)
+		clearErrors()
 	}
 	return undefined
 }
 
 defineExpose({
-	clearFiles
+	clearFiles,
+	clearErrors
 })
 </script>
 
-<script lang="ts">
-export default { name: "LibFileInput" }
-
-type WrapperTypes
-	= & WrapperProps<
-		"input",
-		// https://github.com/vuejs/core/pull/14237
-		Omit<InputHTMLAttributes, "autocomplete">
-	>
-	& WrapperProps<"wrapper", HTMLAttributes>
-	& WrapperProps<"previews", HTMLAttributes>
-
-type RealProps
-	= & LinkableByIdProps
-		& {
-			multiple?: boolean
-			/**
-			 * A list of extensions or mime types to add to the input's accept. Basic validations are done so that files match an extension and mimeType, but note that a file could still be lying, all files should be validated server side.
-			 *
-			 * Pass an empty array to allow any filetype.
-			 */
-			formats?: string[]
-			compact?: boolean
-		}
-
-interface Props
-	extends
-	/** @vue-ignore */
-	Partial<Omit<
-		InputHTMLAttributes,
-		"class" | "multiple" | "formats" | "compact"
-		// https://github.com/vuejs/core/pull/14237
-		| "autocomplete"
-	> & TailwindClassProp>,
-	/** @vue-ignore */
-	Partial<WrapperTypes>,
-	RealProps { }
-</script>

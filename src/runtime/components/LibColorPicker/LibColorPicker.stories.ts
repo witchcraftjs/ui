@@ -39,14 +39,14 @@ export const Primary: Story = {
 		},
 		template: `
 			<lib-root :outline="args.outline">
-	 		{{args.color}}
-	 		<lib-color-picker
-	 			:modelValue="args.color.value"
+			{{args.color}}
+			<lib-color-picker
+				:modelValue="args.color.value"
 				v-bind="args"
-	 			@update:modelValue="handleChange"
-	 		>
-	 		</lib-color-picker>
-	 		</lib-root>
+				@update:modelValue="handleChange"
+			>
+			</lib-color-picker>
+			</lib-root>
 		`
 	})
 }

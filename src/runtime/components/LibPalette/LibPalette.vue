@@ -25,24 +25,19 @@
 </div>
 </template>
 
-<script lang="ts">
-export default { name: "LibPalette" }
-</script>
-
-<script setup  lang="ts">
+<script setup lang="ts">
 import { keys } from "@alanscodelog/utils/keys"
 import type { Theme } from "metamorphosis"
 
-import type { BaseInteractiveProps, LinkableByIdProps } from "../shared/props.js"
+import type { BaseInteractiveProps } from "../../types/index.js"
 
 const props = withDefaults(defineProps<
-	& LinkableByIdProps
 	& BaseInteractiveProps
 	& {
 		theme?: Theme
 	}>(), {
 	theme: () => ({} as any),
-	unstyle: false, disabled: false, readonly: false, border: true
+	border: true
 })
 
 const exclude = ["--color-bg", "--color-fg"]

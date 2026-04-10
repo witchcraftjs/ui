@@ -1,13 +1,7 @@
 import type { InjectionKey, Ref } from "vue"
 
-import type { DarkModeCommands, DarkModeState } from "./composables/useDarkMode.js"
 import type { TranslationFunction } from "./composables/useSetupI18n.js"
-
-/** @deprecated */
-export const isDarkModeInjectionKey = Symbol("isDarkMode") as InjectionKey<Ref<boolean>>
-
-/** @deprecated */
-export const manualDarkModeInjectionKey = Symbol("manualDarkMode") as InjectionKey<Ref<boolean | undefined>>
+import type { DarkModeCommands, DarkModeState } from "./types/index.js"
 
 export const darkModeCommandsInjectionKey = Symbol("darkModeCommands") as InjectionKey<DarkModeCommands>
 

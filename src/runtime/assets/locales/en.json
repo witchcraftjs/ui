@@ -25,6 +25,8 @@
 		"pagination.aria.go-to-next-page": "Go to next page. Page {count}",
 		"pagination.aria.go-to-page": "Go to page {count}",
 		"pagination.aria.current-page": "Current page {count}",
+		"pagination.aria.go-to-first-page": "Go to first page",
+		"pagination.aria.go-to-last-page": "Go to last page",
 		"pagination.previous-page": "Prev",
 		"pagination.next-page": "Next",
 		"recorder.recording": "Recording",

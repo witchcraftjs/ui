@@ -22,8 +22,11 @@ export const Primary: Story = {
 		components,
 		setup() {
 			const num = ref(1)
+			const interceptClick = ref(false)
 			const changePage = ($event: any, i: any) => {
-				$event.preventDefault()
+				if (interceptClick.value) {
+					$event.preventDefault()
+				}
 				if (i >= 10) num.value = 10
 				if (i <= 1) num.value = 1
 				num.value = i
@@ -32,16 +35,15 @@ export const Primary: Story = {
 			return {
 				changePage,
 				args,
-				num
+				num,
+				interceptClick
 			}
 		},
 		template: `
-			<lib-pagination v-bind="{...args, current: num, route:'#'}">
-				<template #link="linkProps">
-					<a v-bind="linkProps" @click="changePage($event, linkProps.i)">{{ linkProps.text ?? linkProps.i }}</a>
-				</template>
+			<lib-checkbox v-model="interceptClick">Intercept Click (url should change when off)</lib-checkbox>
+			<lib-pagination v-bind="{...args, current: num, route:'#'}" @link-click="changePage($event, num)">
 			</lib-pagination>
-			<lib-simple-input :label="'Change Page'" :modelValue="num.toString()" @update:modelValue="num = parseInt($event)" type="number" min="0" :max="args.total">
+			<lib-simple-input class="mt-5" :label="'Change Page'" :modelValue="num.toString()" @update:modelValue="num = parseInt($event)" type="number" min="0" :max="args.total">
 
 			</lib-simple-input>
 		`

@@ -40,8 +40,6 @@
 		"
 		v-for="notification of notifications"
 		:key="notification.id"
-		@pause="handler.pause(notification)"
-		@resume="handler.resume(notification)"
 	>
 		<template #top>
 			<LibProgressBar
@@ -67,7 +65,7 @@
 	<AlertDialogPortal :to="'#root'">
 		<AlertDialogOverlay
 			class="
-				fixed inset-0 z-30
+				fixed inset-0 z-90
 				bg-neutral-950/20
 				data-[state=open]:animate-overlayShow
 			"
@@ -134,7 +132,8 @@ import {
 	AlertDialogRoot,
 	AlertDialogTitle
 } from "reka-ui"
-import { computed } from "vue"
+import type { HTMLAttributes } from "vue"
+import { computed, onBeforeUnmount, onMounted, useAttrs } from "vue"
 
 import { calculateNotificationProgress } from "./calculateNotificationProgress.js"
 import LibNotification from "./LibNotification.vue"
@@ -142,16 +141,27 @@ import LibNotification from "./LibNotification.vue"
 import { useNotificationHandler } from "../../composables/useNotificationHandler.js"
 import { useTimeConditionally } from "../../composables/useTimeConditionally.js"
 import { NotificationHandler } from "../../helpers/NotificationHandler.js"
+import type { TailwindClassProp } from "../../types/index.js"
 import { twMerge } from "../../utils/twMerge.js"
 import LibProgressBar from "../LibProgressBar/LibProgressBar.vue"
-import type { LinkableByIdProps, TailwindClassProp } from "../shared/props.js"
+
 
 defineOptions({
 	name: "LibNotifications",
 	inheritAttrs: false
 })
 
-const props = defineProps<Props>()
+const $attrs = useAttrs()
+
+const props = defineProps<
+	& {
+		/** If not provided, uses the global handler (this requires useNotificationHandler be called and configured). */
+		handler?: NotificationHandler
+		progressUpdateInterval?: number
+	}
+	& /** @vue-ignore */ Omit<HTMLAttributes, "class">
+	& /** @vue-ignore */ TailwindClassProp
+>()
 
 const handler = props.handler ?? useNotificationHandler()
 
@@ -163,23 +173,35 @@ const fetchTime = computed(() => {
 })
 
 const { time } = useTimeConditionally(fetchTime, { refreshInterval: props.progressUpdateInterval })
-</script>
 
-<script lang="ts">
-import type { HTMLAttributes } from "vue"
+function handleGlobalPointerDown(e: PointerEvent) {
+	const target = e.target as HTMLElement
+	const notificationEl = target.closest(".notification") as HTMLElement
+	const rawId = notificationEl?.dataset.id
+	const clickedId = rawId ? Number.parseInt(rawId, 10) : null
 
-type RealProps
-	= & LinkableByIdProps
-		& {
-		/** If not provided, uses the global handler (this requires useNotificationHandler be called and configured). */
-			handler?: NotificationHandler
-			progressUpdateInterval?: number
+	if (clickedId !== null) {
+		// User clicked a specific notification -> Pause it
+		const entry = handler.queue.find(n => n.id === clickedId)
+		if (entry && entry.timeout && !entry.isPaused) {
+			handler.pause(entry)
 		}
+	} else {
+		// User clicked outside -> Resume all paused ephemeral notifications
+		handler.queue.forEach(entry => {
+			if (entry.timeout && entry.isPaused) {
+				handler.resume(entry)
+			}
+		})
+	}
+}
 
-interface Props
-	extends
-	/** @vue-ignore */
-	Partial<Omit<HTMLAttributes, "class"> & TailwindClassProp>,
-	RealProps
-{}
+onMounted(() => {
+	window.addEventListener("pointerdown", handleGlobalPointerDown)
+})
+
+onBeforeUnmount(() => {
+	window.removeEventListener("pointerdown", handleGlobalPointerDown)
+})
 </script>
+

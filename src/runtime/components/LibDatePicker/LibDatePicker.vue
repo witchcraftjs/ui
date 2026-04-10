@@ -6,13 +6,11 @@ import LibRangeDatePicker from "./LibRangeDatePicker.vue"
 import LibSingleDatePicker from "./LibSingleDatePicker.vue"
 
 import type { RangeDate, SingleDate } from "../../types/index.js"
-import { getFallbackId } from "../shared/props.js"
 
 const attrs = useAttrs()
 
 withDefaults(defineProps<{
 	showTime?: boolean
-	id?: string
 	/** The fallback suggested date when the modelValue is undefined (it will not update modelValue, it only serves as a suggestions and is used internally in the temporary value). If ignoring the time element, you should probably use the {@link createNoonTodayUtc} function (`createNonTodayUtc().toDate(())`) in the helpers, otherwise `new Date()` (the default) will do. */
 	fallbackDate?: Date
 	/** The local user's timezone, defaults to @internationalized/date's getLocalTimeZone(). */
@@ -23,7 +21,6 @@ withDefaults(defineProps<{
 	fallbackDate: () => new Date(),
 	timeZone: getLocalTimeZone()
 })
-const fallbackId = getFallbackId()
 
 /**
  * modelValue can be undefined or an object with start/end undefined, but it must be passed, otherwise we can't tell the difference between a single date and a range date.
@@ -38,12 +35,11 @@ const isRange = computed(() => date.value !== undefined && !(date.value instance
 
 <template>
 <component
-	:id="id ?? fallbackId"
 	v-bind="attrs"
 	:use-time="showTime"
 	:time-zone="timeZone"
 	:fallback-date="fallbackDate"
-	:is="isRange ? LibRangeDatePicker : LibSingleDatePicker"
+	:is="isRange ? LibRangeDatePicker : LibSingleDatePicker as any"
 	v-model="date as any"
 >
 	<template #default="slotProps">

@@ -1,19 +1,21 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import type { Meta, StoryObj } from "@storybook/vue3"
+import type { StoryObj } from "@storybook/vue3"
+
+import LibSimpleInput from "./LibSimpleInput.vue"
 
 import * as components from "../index.js"
 
 const meta = {
-	component: components.LibSimpleInput,
+	component: LibSimpleInput,
 	title: "Components/Input",
 	args: {
 		modelValue: "Value",
 		placeholder: "Placeholder"
 	}
-} satisfies Meta<typeof components.LibSimpleInput> & Meta<{ custom: string }>
+}
 
 export default meta
-type Story = StoryObj<typeof components.LibSimpleInput> // & StoryObj<typeof extraArgs>
+type Story = StoryObj<typeof components.LibSimpleInput>
 
 /** Input */
 export const Primary: Story = {
@@ -45,10 +47,7 @@ export const InsideAFlexbox: Story = {
 					<div class="border-1 border-danger-500 flex-1 whitespace-nowrap">Flex Grow: 1</div>
 				</div>
 		`
-	}),
-	args: {
-		stretch: true
-	}
+	})
 }
 
 export const Disabled = {

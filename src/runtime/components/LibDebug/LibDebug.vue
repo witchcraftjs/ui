@@ -18,16 +18,15 @@
 			class="debug--copy-button w-min-content"
 			@click="copy()"
 		>
-			<icon><i-fa6-regular-copy/></icon>
+			<icon><i-lucide-copy/></icon>
 		</LibButton>
 	</div>
 	<pre
 		v-if="value"
 		:class="`
 			debug--value
-			[tab-size:${tab}]
-		`
-		"
+		`"
+		:style="`tab-size:${tab}`"
 	>{{ getStringValue(value) }}</pre>
 	<pre v-if="value === undefined"><slot/></pre>
 </div>
@@ -35,8 +34,6 @@
 
 <script setup lang="ts">
 import { useSlots } from "vue"
-
-import IFa6RegularCopy from "~icons/fa-regular/copy"
 
 import Icon from "../Icon/Icon.vue"
 import LibButton from "../LibButton/LibButton.vue"

@@ -28,8 +28,8 @@
 		}
 	}
 
-	--animate-slideBgInf: slide-bg 10s ease-in-out linear-infinite;
-	@keyframes slide {
+	--animate-slideBgInf: slideBg 10s ease-in-out linear-infinite;
+	@keyframes slideBg {
 		0% {
 			background-position:0%;
 		}
@@ -60,7 +60,7 @@
 		}
 	}
 
-	--animate-slideInRight: slideInLeft 500ms cubic-bezier(0.16, 1, 0.3, 1);
+	--animate-slideInRight: slideInRight 500ms cubic-bezier(0.16, 1, 0.3, 1);
 	@keyframes slideInRight {
 		from {
 			transform: translateX(var(--animate-from, -100%));

@@ -84,38 +84,6 @@ export type ScrollNearContainerEdgesOptions = {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export type SimpleDOMRect = Omit<DOMRect, "toJSON">
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export interface IPopupReference { getBoundingClientRect: () => SimpleDOMRect }
-export type PopupPosition = { x: number, y: number, maxWidth?: number, maxHeight?: number }
-export type PopupSpaceInfo = {
-	left: number
-	right: number
-	leftLeft: number
-	rightRight: number
-	leftFromCenter: number
-	rightFromCenter: number
-	topFromCenter: number
-	bottomFromCenter: number
-	top: number
-	bottom: number
-}
-export type PopupPositioner = (
-	/** Reference is only undefined, if you did not specify a button element or use the exposed setReference. The function is still called, because there are other ways you might want to still position the popup (e.g. center-screen or some similar variation). */
-	reference: SimpleDOMRect | undefined,
-	popup: SimpleDOMRect | DOMRect,
-	bg: SimpleDOMRect | DOMRect,
-	space: PopupSpaceInfo
-) => number
-
-export type PopupPositionModifier = (
-	pos: PopupPosition,
-/** This will only be called with the reference element as undefined when one of the preferred positions is center-screen or it's a function. */
-	reference: SimpleDOMRect | undefined,
-	popup: SimpleDOMRect | DOMRect,
-	bg: SimpleDOMRect | DOMRect,
-	space: PopupSpaceInfo
-) => PopupPosition
-
 export type SingleDate = Date | undefined
 
 export type RangeDate = {
@@ -126,4 +94,109 @@ export type RangeDate = {
 export type CustomNotificationComponentProps = {
 	message: string
 	messageClasses?: string
+}
+
+
+export type BaseInteractiveProps = {
+	/** Default is false. */
+	disabled?: boolean
+	/** Default is false. */
+	readonly?: boolean
+	/** Default is true. */
+	border?: boolean
+	/** Removes styles from the component. Default is false. */
+	unstyle?: boolean
+}
+
+
+export type TailwindClassProp = {
+	/** Tailwind classes. */
+	class?: string | false
+}
+
+
+export const defaultDarkModeOrder = ["system", "dark", "light"] as const
+
+
+export type DarkModeOptions = {
+	/* Whether to save the manual dark mode to local storage. Uses the key "prefersColorSchemeDark" by default. You can pass a key instead of true to use that as the key instead. */
+	useLocalStorage?: boolean | string
+	/* The order of the string dark modes when using `cycleDarkMode`. Defaults to `["system", "dark", "light"]` */
+	darkModeOrder?: readonly ("system" | "dark" | "light")[]
+	/** True by default, should be passed import.meta.client if using nuxt, or false when running server side. */
+	isClientSide?: boolean
+	/**
+	 * Whether to use the view transition to animate the dark mode switch (you just need to add the css).
+	 *
+	 * Note that the transitition is NOT triggered if visually the mode does not change (e.g. system mode is dark and the user switches from system to dark, visually nothing changes so transitioning is skipped).
+	 *
+	 * There is an example in storybook. But basically:
+	 *
+	 * ```css
+	 *
+	 * #root { // the dark mode switcher works on the WRoot component not the html root
+	 *		view-transition-name: wroot;
+	 *		height: 100dvh;
+	 *		padding: 0;
+	 *	}
+	 *
+	 * ::view-transition-new(wroot) {
+	 * 	animation: grow var(--story-anim-length) ease-in-out;
+	 * 	animation-fill-mode: both;
+	 * 	z-index: 2;
+	 * 	mask: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><circle cx="20" cy="20" r="20" fill="white"/></svg>') center / 0 no-repeat;
+	 * }
+	 *
+	 * ::view-transition-old(wroot) {
+	 * 	animation: none;
+	 * 	animation-fill-mode: both;
+	 * 	z-index: 1;
+	 * }
+	 *
+	 * @keyframes grow {
+	 * 	from {
+	 * 		mask-size: 0dvw;
+	 * 	}
+	 * 	to {
+	 * 		mask-size: 300dvw;
+	 * 	}
+	 * }
+	 * ```
+	 *
+	 * See https://theme-toggle.rdsx.dev/ for more ideas.
+	 *
+	 * @default true
+	 */
+	useViewTransition?: boolean
+}
+
+export interface DarkModeCommands {
+	setDarkMode: (value: "dark" | "light" | "system") => void
+	cycleDarkMode: () => void
+}
+
+export interface DarkModeState {
+	/** Whether the dark mode should be enabled or not */
+	darkMode: Ref<boolean>
+	/** The current state of the darkMode but as a string (dark, light, system) */
+	darkModeState: Ref<"dark" | "light" | "system">
+	/** The value of the manuably controllable dark mode. You can set this to true/false or undefined to allow the systemDarkMode to take priority. Alternatively use setDarkMode instead. */
+	manualDarkMode: Ref<boolean | undefined>
+	/** The value of the system dark mode. This is automatically set depending on the user's `prefer-color-scheme` and should not be set directly. */
+	systemDarkMode: Ref<boolean>
+
+}
+export type PopupConstrainToProps = {
+	constrainWidthTo?: number | "trigger" | "available" | string | null
+	constrainHeightTo?: number | "trigger" | "available" | string | null
+}
+
+
+export type EmitsToProps<T> = {
+	[K in keyof T as K extends string ? `on${Capitalize<K>}` : never]?:
+	T[K] extends (...args: infer Args) => any
+		? (...args: Args) => void
+		: T[K] extends any[]
+			? (...args: T[K]) => void
+			: T[K]
 }
