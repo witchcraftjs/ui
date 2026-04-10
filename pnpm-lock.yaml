@@ -16,10 +16,10 @@ catalogs:
       specifier: ^6.0.2
       version: 6.0.2
     '@alanscodelog/tsconfigs':
-      specifier: ^6.2.0
+      specifier: ^6.3.0
       version: 6.2.0
     '@alanscodelog/utils':
-      specifier: ^6.1.0
+      specifier: ^6.2.0
       version: 6.1.0
     '@alanscodelog/vite-config':
       specifier: ^0.0.7
@@ -58,7 +58,7 @@ catalogs:
       specifier: ^9.5.6
       version: 9.5.6
     '@playwright/test':
-      specifier: ^1.58.2
+      specifier: '=1.58.2'
       version: 1.58.2
     '@rollup/plugin-node-resolve':
       specifier: ^16.0.3
@@ -172,14 +172,14 @@ catalogs:
       specifier: ^4.4.2
       version: 4.2.2
     playwright:
-      specifier: ^1.58.2
+      specifier: '=1.58.2'
       version: 1.58.2
     playwright-core:
-      specifier: ^1.58.2
+      specifier: '=1.58.2'
       version: 1.58.2
     reka-ui:
-      specifier: ^2.9.2
-      version: 2.9.2
+      specifier: ^2.9.5
+      version: 2.9.5
     semantic-release:
       specifier: ^24.2.9
       version: 24.2.9
@@ -276,7 +276,7 @@ importers:
         version: 0.6.1(colorjs.io@0.6.0-alpha.1)(tailwindcss@4.2.1)
       reka-ui:
         specifier: 'catalog:'
-        version: 2.9.2(vue@3.5.30(typescript@5.9.3))
+        version: 2.9.5(vue@3.5.30(typescript@5.9.3))
       tailwind-merge:
         specifier: 'catalog:'
         version: 3.5.0
@@ -361,7 +361,7 @@ importers:
         version: 8.6.18(storybook@8.6.18(prettier@3.8.1))
       '@storybook/test-runner':
         specifier: 'catalog:'
-        version: 0.22.1(@swc/helpers@0.5.19)(@types/node@24.12.0)(storybook@8.6.18(prettier@3.8.1))(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.19))(@types/node@24.12.0)(typescript@5.9.3))
+        version: 0.22.1(@swc/helpers@0.5.21)(@types/node@24.12.0)(storybook@8.6.18(prettier@3.8.1))(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.21))(@types/node@24.12.0)(typescript@5.9.3))
       '@storybook/vue3':
         specifier: 'catalog:'
         version: 8.6.18(storybook@8.6.18(prettier@3.8.1))(vue@3.5.30(typescript@5.9.3))
@@ -439,7 +439,7 @@ importers:
         version: 4.2.1
       ts-node:
         specifier: 'catalog:'
-        version: 10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.19))(@types/node@24.12.0)(typescript@5.9.3)
+        version: 10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.21))(@types/node@24.12.0)(typescript@5.9.3)
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -3542,6 +3542,9 @@ packages:
   '@swc/helpers@0.5.19':
     resolution: {integrity: sha512-QamiFeIK3txNjgUTNppE6MiG3p7TdninpZu0E0PbqVh1a9FNLT2FRhisaa4NcaX52XVhA5l7Pk58Ft7Sqi/2sA==}
 
+  '@swc/helpers@0.5.21':
+    resolution: {integrity: sha512-jI/VAmtdjB/RnI8GTnokyX7Ug8c+g+ffD6QRLa6XQewtnGyukKkKSk3wLTM3b5cjt1jNh9x0jfVlagdN2gDKQg==}
+
   '@swc/jest@0.2.39':
     resolution: {integrity: sha512-eyokjOwYd0Q8RnMHri+8/FS1HIrIUKK/sRrFp8c1dThUOfNeCWbLmBP1P5VsKdvmkd25JaH+OKYwEYiAYg9YAA==}
     engines: {npm: '>= 7.0.0'}
@@ -5302,6 +5305,9 @@ packages:
 
   defu@6.1.4:
     resolution: {integrity: sha512-mEQCMmwJu317oSz8CwdIOdwf3xMif1ttiM8LTufzc3g6kR+9Pe236twL8j3IYT1F7GfRgGcW6MWxzZjLIkuHIg==}
+
+  defu@6.1.7:
+    resolution: {integrity: sha512-7z22QmUWiQ/2d0KkdYmANbRUVABpZ9SNYyH5vx6PZ+nE5bcC0l7uFvEfHlyld/HcGBFTL536ClDt3DEcSlEJAQ==}
 
   delayed-stream@1.0.0:
     resolution: {integrity: sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==}
@@ -8693,8 +8699,8 @@ packages:
     resolution: {integrity: sha512-NZQZdC5wOE/H3UT28fVGL+ikOZcEzfMGk/c3iN9UGxzWHMa1op7274oyiUVrAG4B2EuFhus8SvkaYnhvW92p9Q==}
     hasBin: true
 
-  reka-ui@2.9.2:
-    resolution: {integrity: sha512-/t4e6y1hcG+uDuRfpg6tbMz3uUEvRzNco6NeYTufoJeUghy5Iosxos5YL/p+ieAsid84sdMX9OrgDqpEuCJhBw==}
+  reka-ui@2.9.5:
+    resolution: {integrity: sha512-6cZGIMgEeslpFLJ7IihaCSMPp1cJgl2eDkZ2vBMdl+HPUVBaV/iDPMWu3abT2KUkj1lir+oyHq5KelOTT9OheQ==}
     peerDependencies:
       vue: '>= 3.4.0'
 
@@ -10088,8 +10094,8 @@ packages:
   vue-component-type-helpers@2.2.12:
     resolution: {integrity: sha512-YbGqHZ5/eW4SnkPNR44mKVc6ZKQoRs/Rux1sxC6rdwXb4qpbOSYfDr9DsTHolOTGmIKgM9j141mZbBeg05R1pw==}
 
-  vue-component-type-helpers@3.2.5:
-    resolution: {integrity: sha512-tkvNr+bU8+xD/onAThIe7CHFvOJ/BO6XCOrxMzeytJq40nTfpGDJuVjyCM8ccGZKfAbGk2YfuZyDMXM56qheZQ==}
+  vue-component-type-helpers@3.2.6:
+    resolution: {integrity: sha512-O02tnvIfOQVmnvoWwuSydwRoHjZVt8UEBR+2p4rT35p8GAy5VTlWP8o5qXfJR/GWCN0nVZoYWsVUvx2jwgdBmQ==}
 
   vue-demi@0.14.10:
     resolution: {integrity: sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==}
@@ -11487,7 +11493,7 @@ snapshots:
 
   '@internationalized/number@3.6.5':
     dependencies:
-      '@swc/helpers': 0.5.19
+      '@swc/helpers': 0.5.21
 
   '@intlify/bundle-utils@10.0.1(vue-i18n@10.0.8(vue@3.5.30(typescript@5.9.3)))':
     dependencies:
@@ -11606,7 +11612,7 @@ snapshots:
       jest-util: 29.7.0
       slash: 3.0.0
 
-  '@jest/core@29.7.0(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.19))(@types/node@24.12.0)(typescript@5.9.3))':
+  '@jest/core@29.7.0(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.21))(@types/node@24.12.0)(typescript@5.9.3))':
     dependencies:
       '@jest/console': 29.7.0
       '@jest/reporters': 29.7.0
@@ -11620,7 +11626,7 @@ snapshots:
       exit: 0.1.2
       graceful-fs: 4.2.11
       jest-changed-files: 29.7.0
-      jest-config: 29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.19))(@types/node@24.12.0)(typescript@5.9.3))
+      jest-config: 29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.21))(@types/node@24.12.0)(typescript@5.9.3))
       jest-haste-map: 29.7.0
       jest-message-util: 29.7.0
       jest-regex-util: 29.6.3
@@ -13702,7 +13708,7 @@ snapshots:
       prettier: 3.8.1
       storybook: 8.6.18(prettier@3.8.1)
 
-  '@storybook/test-runner@0.22.1(@swc/helpers@0.5.19)(@types/node@24.12.0)(storybook@8.6.18(prettier@3.8.1))(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.19))(@types/node@24.12.0)(typescript@5.9.3))':
+  '@storybook/test-runner@0.22.1(@swc/helpers@0.5.21)(@types/node@24.12.0)(storybook@8.6.18(prettier@3.8.1))(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.21))(@types/node@24.12.0)(typescript@5.9.3))':
     dependencies:
       '@babel/core': 7.29.0
       '@babel/generator': 7.29.1
@@ -13710,17 +13716,17 @@ snapshots:
       '@babel/types': 7.29.0
       '@jest/types': 29.6.3
       '@storybook/csf': 0.1.13
-      '@swc/core': 1.15.18(@swc/helpers@0.5.19)
-      '@swc/jest': 0.2.39(@swc/core@1.15.18(@swc/helpers@0.5.19))
+      '@swc/core': 1.15.18(@swc/helpers@0.5.21)
+      '@swc/jest': 0.2.39(@swc/core@1.15.18(@swc/helpers@0.5.21))
       expect-playwright: 0.8.0
-      jest: 29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.19))(@types/node@24.12.0)(typescript@5.9.3))
+      jest: 29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.21))(@types/node@24.12.0)(typescript@5.9.3))
       jest-circus: 29.7.0
       jest-environment-node: 29.7.0
       jest-junit: 16.0.0
-      jest-playwright-preset: 4.0.0(jest-circus@29.7.0)(jest-environment-node@29.7.0)(jest-runner@29.7.0)(jest@29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.19))(@types/node@24.12.0)(typescript@5.9.3)))
+      jest-playwright-preset: 4.0.0(jest-circus@29.7.0)(jest-environment-node@29.7.0)(jest-runner@29.7.0)(jest@29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.21))(@types/node@24.12.0)(typescript@5.9.3)))
       jest-runner: 29.7.0
       jest-serializer-html: 7.1.0
-      jest-watch-typeahead: 2.2.2(jest@29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.19))(@types/node@24.12.0)(typescript@5.9.3)))
+      jest-watch-typeahead: 2.2.2(jest@29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.21))(@types/node@24.12.0)(typescript@5.9.3)))
       nyc: 15.1.0
       playwright: 1.58.2
       storybook: 8.6.18(prettier@3.8.1)
@@ -13778,7 +13784,7 @@ snapshots:
       ts-dedent: 2.2.0
       type-fest: 2.19.0
       vue: 3.5.30(typescript@5.9.3)
-      vue-component-type-helpers: 3.2.5
+      vue-component-type-helpers: 3.2.6
 
   '@stylistic/eslint-plugin@5.10.0(eslint@9.39.4(jiti@2.6.1))':
     dependencies:
@@ -13820,7 +13826,7 @@ snapshots:
   '@swc/core-win32-x64-msvc@1.15.18':
     optional: true
 
-  '@swc/core@1.15.18(@swc/helpers@0.5.19)':
+  '@swc/core@1.15.18(@swc/helpers@0.5.21)':
     dependencies:
       '@swc/counter': 0.1.3
       '@swc/types': 0.1.25
@@ -13835,7 +13841,7 @@ snapshots:
       '@swc/core-win32-arm64-msvc': 1.15.18
       '@swc/core-win32-ia32-msvc': 1.15.18
       '@swc/core-win32-x64-msvc': 1.15.18
-      '@swc/helpers': 0.5.19
+      '@swc/helpers': 0.5.21
 
   '@swc/counter@0.1.3': {}
 
@@ -13843,10 +13849,14 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@swc/jest@0.2.39(@swc/core@1.15.18(@swc/helpers@0.5.19))':
+  '@swc/helpers@0.5.21':
+    dependencies:
+      tslib: 2.8.1
+
+  '@swc/jest@0.2.39(@swc/core@1.15.18(@swc/helpers@0.5.21))':
     dependencies:
       '@jest/create-cache-key-function': 30.3.0
-      '@swc/core': 1.15.18(@swc/helpers@0.5.19)
+      '@swc/core': 1.15.18(@swc/helpers@0.5.21)
       '@swc/counter': 0.1.3
       jsonc-parser: 3.3.1
 
@@ -15618,13 +15628,13 @@ snapshots:
       crc-32: 1.2.2
       readable-stream: 4.7.0
 
-  create-jest@29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.19))(@types/node@24.12.0)(typescript@5.9.3)):
+  create-jest@29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.21))(@types/node@24.12.0)(typescript@5.9.3)):
     dependencies:
       '@jest/types': 29.6.3
       chalk: 4.1.2
       exit: 0.1.2
       graceful-fs: 4.2.11
-      jest-config: 29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.19))(@types/node@24.12.0)(typescript@5.9.3))
+      jest-config: 29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.21))(@types/node@24.12.0)(typescript@5.9.3))
       jest-util: 29.7.0
       prompts: 2.4.2
     transitivePeerDependencies:
@@ -15853,6 +15863,8 @@ snapshots:
       object-keys: 1.1.1
 
   defu@6.1.4: {}
+
+  defu@6.1.7: {}
 
   delayed-stream@1.0.0: {}
 
@@ -17639,16 +17651,16 @@ snapshots:
       - babel-plugin-macros
       - supports-color
 
-  jest-cli@29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.19))(@types/node@24.12.0)(typescript@5.9.3)):
+  jest-cli@29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.21))(@types/node@24.12.0)(typescript@5.9.3)):
     dependencies:
-      '@jest/core': 29.7.0(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.19))(@types/node@24.12.0)(typescript@5.9.3))
+      '@jest/core': 29.7.0(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.21))(@types/node@24.12.0)(typescript@5.9.3))
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
       chalk: 4.1.2
-      create-jest: 29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.19))(@types/node@24.12.0)(typescript@5.9.3))
+      create-jest: 29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.21))(@types/node@24.12.0)(typescript@5.9.3))
       exit: 0.1.2
       import-local: 3.2.0
-      jest-config: 29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.19))(@types/node@24.12.0)(typescript@5.9.3))
+      jest-config: 29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.21))(@types/node@24.12.0)(typescript@5.9.3))
       jest-util: 29.7.0
       jest-validate: 29.7.0
       yargs: 17.7.2
@@ -17658,7 +17670,7 @@ snapshots:
       - supports-color
       - ts-node
 
-  jest-config@29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.19))(@types/node@24.12.0)(typescript@5.9.3)):
+  jest-config@29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.21))(@types/node@24.12.0)(typescript@5.9.3)):
     dependencies:
       '@babel/core': 7.29.0
       '@jest/test-sequencer': 29.7.0
@@ -17684,7 +17696,7 @@ snapshots:
       strip-json-comments: 3.1.1
     optionalDependencies:
       '@types/node': 24.12.0
-      ts-node: 10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.19))(@types/node@24.12.0)(typescript@5.9.3)
+      ts-node: 10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.21))(@types/node@24.12.0)(typescript@5.9.3)
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
@@ -17772,10 +17784,10 @@ snapshots:
       '@types/node': 24.12.0
       jest-util: 29.7.0
 
-  jest-playwright-preset@4.0.0(jest-circus@29.7.0)(jest-environment-node@29.7.0)(jest-runner@29.7.0)(jest@29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.19))(@types/node@24.12.0)(typescript@5.9.3))):
+  jest-playwright-preset@4.0.0(jest-circus@29.7.0)(jest-environment-node@29.7.0)(jest-runner@29.7.0)(jest@29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.21))(@types/node@24.12.0)(typescript@5.9.3))):
     dependencies:
       expect-playwright: 0.8.0
-      jest: 29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.19))(@types/node@24.12.0)(typescript@5.9.3))
+      jest: 29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.21))(@types/node@24.12.0)(typescript@5.9.3))
       jest-circus: 29.7.0
       jest-environment-node: 29.7.0
       jest-process-manager: 0.4.0
@@ -17931,11 +17943,11 @@ snapshots:
       leven: 3.1.0
       pretty-format: 29.7.0
 
-  jest-watch-typeahead@2.2.2(jest@29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.19))(@types/node@24.12.0)(typescript@5.9.3))):
+  jest-watch-typeahead@2.2.2(jest@29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.21))(@types/node@24.12.0)(typescript@5.9.3))):
     dependencies:
       ansi-escapes: 6.2.1
       chalk: 5.6.2
-      jest: 29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.19))(@types/node@24.12.0)(typescript@5.9.3))
+      jest: 29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.21))(@types/node@24.12.0)(typescript@5.9.3))
       jest-regex-util: 29.6.3
       jest-watcher: 29.7.0
       slash: 5.1.0
@@ -17960,12 +17972,12 @@ snapshots:
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
-  jest@29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.19))(@types/node@24.12.0)(typescript@5.9.3)):
+  jest@29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.21))(@types/node@24.12.0)(typescript@5.9.3)):
     dependencies:
-      '@jest/core': 29.7.0(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.19))(@types/node@24.12.0)(typescript@5.9.3))
+      '@jest/core': 29.7.0(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.21))(@types/node@24.12.0)(typescript@5.9.3))
       '@jest/types': 29.6.3
       import-local: 3.2.0
-      jest-cli: 29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.19))(@types/node@24.12.0)(typescript@5.9.3))
+      jest-cli: 29.7.0(@types/node@24.12.0)(ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.21))(@types/node@24.12.0)(typescript@5.9.3))
     transitivePeerDependencies:
       - '@types/node'
       - babel-plugin-macros
@@ -20099,7 +20111,7 @@ snapshots:
     dependencies:
       jsesc: 3.1.0
 
-  reka-ui@2.9.2(vue@3.5.30(typescript@5.9.3)):
+  reka-ui@2.9.5(vue@3.5.30(typescript@5.9.3)):
     dependencies:
       '@floating-ui/dom': 1.7.6
       '@floating-ui/vue': 1.1.11(vue@3.5.30(typescript@5.9.3))
@@ -20109,7 +20121,7 @@ snapshots:
       '@vueuse/core': 14.2.1(vue@3.5.30(typescript@5.9.3))
       '@vueuse/shared': 14.2.1(vue@3.5.30(typescript@5.9.3))
       aria-hidden: 1.2.6
-      defu: 6.1.4
+      defu: 6.1.7
       ohash: 2.0.11
       vue: 3.5.30(typescript@5.9.3)
     transitivePeerDependencies:
@@ -20945,7 +20957,7 @@ snapshots:
 
   ts-map@1.0.3: {}
 
-  ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.19))(@types/node@24.12.0)(typescript@5.9.3):
+  ts-node@10.9.2(@swc/core@1.15.18(@swc/helpers@0.5.21))(@types/node@24.12.0)(typescript@5.9.3):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.12
@@ -20963,7 +20975,7 @@ snapshots:
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
     optionalDependencies:
-      '@swc/core': 1.15.18(@swc/helpers@0.5.19)
+      '@swc/core': 1.15.18(@swc/helpers@0.5.21)
 
   tsconfck@3.1.6(typescript@5.9.3):
     optionalDependencies:
@@ -21649,7 +21661,7 @@ snapshots:
 
   vue-component-type-helpers@2.2.12: {}
 
-  vue-component-type-helpers@3.2.5: {}
+  vue-component-type-helpers@3.2.6: {}
 
   vue-demi@0.14.10(vue@3.5.30(typescript@5.9.3)):
     dependencies:

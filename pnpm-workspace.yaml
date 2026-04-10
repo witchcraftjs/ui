@@ -8,8 +8,8 @@ catalog:
   '@alanscodelog/commitlint-config': ^3.1.2
   '@alanscodelog/eslint-config': ^6.3.1
   '@alanscodelog/semantic-release-config': ^6.0.2
-  '@alanscodelog/tsconfigs': ^6.2.0
-  '@alanscodelog/utils': ^6.1.0
+  '@alanscodelog/tsconfigs': ^6.3.0
+  '@alanscodelog/utils': ^6.2.0
   '@alanscodelog/vite-config': ^0.0.7
   '@chromatic-com/storybook': ^3.2.7
   '@commitlint/cli': ^20.5.0
@@ -22,7 +22,7 @@ catalog:
   '@nuxt/schema': ^4.4.2
   '@nuxt/types': ^2.18.1
   '@nuxtjs/i18n': ^9.5.6
-  '@playwright/test': ^1.58.2
+  '@playwright/test': =1.58.2
   '@rollup/plugin-node-resolve': ^16.0.3
   '@storybook/addon-a11y': ^8.6.18
   '@storybook/addon-actions': ^8.6.18
@@ -60,9 +60,9 @@ catalog:
   madge: ^7.0.0
   metamorphosis: ^0.6.1
   nuxt: ^4.4.2
-  playwright: ^1.58.2
-  playwright-core: ^1.58.2
-  reka-ui: ^2.9.2
+  playwright: =1.58.2
+  playwright-core: =1.58.2
+  reka-ui: ^2.9.5
   semantic-release: ^24.2.9
   storybook: ^8.6.18
   storybook-dark-mode: ^4.0.2

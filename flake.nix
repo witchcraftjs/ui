@@ -14,7 +14,7 @@
     };
     # IMPORTANT: this must be pinned to the same version in package.json
     # and no reading it directly is not supported (https://github.com/NixOS/nix/issues/4945)
-    playwright.url = "github:pietdevries94/playwright-web-flake/1.54.0";
+    playwright.url = "github:pietdevries94/playwright-web-flake/1.58.2";
   };
   nixConfig = {
     extra-trusted-public-keys = "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw=";
@@ -60,7 +60,7 @@
                   ({ pkgs, config, ... }: {
                     custom.js.nodejs.package = pkgs.nodejs_24;
                     custom.js.setupPlaywright = true;
-                    custom.js.playwrightPackage = pkgs.playwright;
+                    custom.js.playwrightDriverPackage = pkgs.playwright-driver;
                   })
                 ];
             };
