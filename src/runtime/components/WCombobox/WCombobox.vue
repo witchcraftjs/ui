@@ -92,6 +92,7 @@
 					</WIcon>
 				</slot>
 			</Transition>
+			<slot name="right"/>
 			<ComboboxTrigger
 				:as-child="true"
 			>
