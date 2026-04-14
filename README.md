@@ -206,7 +206,7 @@ usePreHydrationValue(finalId, modelValue)
  * If the component requires general docs, they should be written here over the export default.
  */
 export default {
-	name: "LibComponentName"
+	name: "WComponentName"
 	// https://v3.vuejs.org/guide/typescript-support.html#annotating-props
 }
 </script>```
