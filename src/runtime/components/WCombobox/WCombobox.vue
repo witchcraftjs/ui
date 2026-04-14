@@ -36,7 +36,7 @@
 					border
 					border-neutral-300
 					dark:border-neutral-700
-					bg-neutral-100
+					bg-white
 					dark:bg-neutral-800/50
 					focus:bg-bg
 					dark:focus:bg-neutral-800
@@ -102,7 +102,7 @@
 				>
 					<WButton
 						:border="false"
-						class="combobox--toggle p-0"
+						class="combobox--toggle p-0 text-neutral-800 dark:text-neutral-200"
 						:aria-label="open ? 'Close' : 'Open'"
 					>
 						<slot

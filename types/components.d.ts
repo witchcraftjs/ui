@@ -11,6 +11,7 @@ declare module 'vue' {
     ILucideCalendarDays: typeof import('~icons/lucide/calendar-days')['default']
     ILucideCalendarRange: typeof import('~icons/lucide/calendar-range')['default']
     ILucideCheck: typeof import('~icons/lucide/check')['default']
+    ILucideChevronDown: typeof import('~icons/lucide/chevron-down')['default']
     ILucideChevronLeft: typeof import('~icons/lucide/chevron-left')['default']
     ILucideChevronRight: typeof import('~icons/lucide/chevron-right')['default']
     ILucideChevronsLeft: typeof import('~icons/lucide/chevrons-left')['default']
