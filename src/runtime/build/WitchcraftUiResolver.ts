@@ -15,7 +15,7 @@ export const WitchcraftUiResolver = (
 ): { from: string } | undefined => {
 	if (componentName.startsWith(prefix)) {
 		const n = componentName.slice(1)
-		const filename = prefixless.includes(n) ? n : `Lib${n}`
+		const filename = prefixless.includes(n) ? n : `W${n}`
 		if (!filter(n)) {
 			return undefined
 		}
