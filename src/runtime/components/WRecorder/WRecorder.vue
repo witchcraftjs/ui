@@ -1,0 +1,243 @@
+<template>
+<!--
+	We use a custom element for the recorder so we don't have to deal with the input event.
+	contenteditable=false is because of storybook, it's shortcuts interfere when not using real input elements
+	-->
+<div
+	:class="twMerge(`
+			recorder
+			flex items-center
+			gap-2
+			px-2
+			grow-[999999]
+			focus-outline-no-offset
+			rounded-sm
+		`,
+		border && `
+			border
+			border-neutral-500
+			focus:border-accent-500
+		`,
+		(disabled || readonly) && `
+			text-neutral-400
+			dark:text-neutral-600
+		`,
+		(disabled || readonly) && border && `
+			bg-neutral-50
+			dark:bg-neutral-950
+			border-neutral-400
+			dark:border-neutral-600
+		`,
+		($attrs as any).class)"
+	:aria-readonly="readonly"
+	:tabindex="disabled ? -1 : 0"
+	:title="recording ? recordingTitle : tempValue"
+	contenteditable="false"
+	v-bind="{ ...$attrs, class: undefined }"
+	role="button"
+	:aria-pressed="recording"
+	:aria-disabled="disabled"
+	ref="recorderEl"
+	@blur="handleBlurRecorder($event)"
+	@keydown.space.prevent.capture="handlePointerdownRecorder($event, true)"
+>
+	<span
+		class="sr-only"
+		aria-live="polite"
+	>
+		{{ recording ? (recordingTitle || t('recorder.recording')) : '' }}
+	</span>
+	<div
+		:class="twMerge(`
+			recorder--indicator
+			inline-block
+			bg-red-700
+			rounded-full
+			w-[1em]
+			h-[1em]
+			shrink-0
+		`,
+			recording && `
+				animate-blinkInf
+				bg-red-500
+			`,
+			(disabled || readonly) && `
+				bg-neutral-500
+			`,
+			!(disabled || readonly) && `
+				hover:bg-red-500
+			`
+		)"
+		ref="recorderIndicatorEl"
+		@pointerdown.capture.prevent="handlePointerdownRecorder($event)"
+	/>
+	<div class="recorder--value before:content-vertical-holder truncate">
+		{{ recording
+			? recordingValue ?? t("recorder.recording")
+			: tempValue }}
+	</div>
+</div>
+</template>
+
+<script setup lang="ts">
+import { keys } from "@alanscodelog/utils/keys"
+import type { HTMLAttributes } from "vue"
+import { computed, onBeforeUnmount, onMounted, ref, useAttrs, watch, watchPostEffect } from "vue"
+
+import { useInjectedI18n } from "../../composables/useInjectedI18n.js"
+import type { BaseInteractiveProps, TailwindClassProp } from "../../types/index.js"
+import { twMerge } from "../../utils/twMerge.js"
+
+
+defineOptions({
+	name: "WRecorder",
+	inheritAttrs: false
+})
+const t = useInjectedI18n()
+
+const emits = defineEmits<{
+	/** Recorder is blurred */
+	(e: "recorder:blur", $event: FocusEvent): void
+	/** Recorder pointerdown event. The component's indicator and recorder elements are passed to help filter out those clicks. */
+	(e: "recorder:pointerdown", { event, indicator, input }: { event: MouseEvent | KeyboardEvent, indicator: HTMLElement, input: HTMLInputElement }): void
+	/* User presses enter. Not emitted when multiple values are used. */
+	(e: "focus:parent"): void
+}>()
+
+const $attrs = useAttrs()
+
+const props = withDefaults(defineProps<
+	& /** @vue-ignore */ Omit<HTMLAttributes, "class">
+	& /** @vue-ignore */ TailwindClassProp
+	& BaseInteractiveProps
+	& {
+		border?: boolean
+		/** A value to display while recording, if none given the i18n `recorder.recording` key is used. */
+		recordingValue?: string
+		/** A title to display on the input div while recording. Is also used as the aria-description. */
+		recordingTitle?: string
+		/**
+		 * The recorder object is a series of event listeners to attach to the input div while recording is started. If you need to bind directly to the element, see the `binders` prop.
+		 *
+		 * The listeners are then unbound when recording is set to false again.
+		 *
+		 * Note that the component does not handle the setting of `recording` (unless the component is disabled), `modelValue`,  or `recordingValue` at all and has no mechanism for cancelling a recording. It is left to the recorder listeners and any `recorder:*` handlers to determine what to do.
+		 */
+		recorder?: undefined | Record<string, any>
+		/** This provides a way to manually attach/remove event listeners to/from the element. It is an alternative to the `recorder` prop, see it for more details. Both cannot be specified at the same time. */
+		binders?: undefined | { bind: (el: HTMLElement) => void, unbind: (el: HTMLElement) => void }
+	}
+>(), {
+	recordingTitle: "",
+	binders: undefined,
+	recorder: undefined,
+	border: true
+})
+/**
+ * Puts the element into recording mode if true. See {@link props.recorder}.
+ */
+const recording = defineModel<boolean>("recording", { required: false, default: false })
+
+/** The final value of the recorder. For intermediate values while recording, pass a recorder and set an appropriate recording value. */
+const modelValue = defineModel<string>({ required: true })
+
+const recorderEl = ref<HTMLElement | null>(null)
+const recorderIndicatorEl = ref<HTMLElement | null>(null)
+const canEdit = computed(() => !props.disabled && !props.readonly)
+const tempValue = ref(modelValue.value)
+
+watch([() => props.binders, () => props.recorder], () => {
+	if (recording.value) {
+		throw new Error("Component was not designed to allow swapping out of binders/recorders while recording")
+	}
+})
+
+watch(modelValue, () => {
+	tempValue.value = modelValue.value
+})
+
+const boundListeners: Record<string, any> = {}
+let isBound = false
+
+const unbindListeners = (): void => {
+	if (!isBound) return
+	isBound = false
+	if (props.recorder) {
+		for (const key of keys(boundListeners)) {
+			recorderEl.value?.removeEventListener(key, boundListeners[key])
+			delete boundListeners[key]
+		}
+	}
+	if (props.binders && recorderEl.value) {
+		props.binders.unbind(recorderEl.value)
+	}
+}
+
+const bindListeners = (): void => {
+	if (!props.recorder && !props.binders) {
+		throw new Error("Recording is true but no recorder or binders props was passed")
+	}
+	if (props.recorder && props.binders) {
+		throw new Error("Recording is true and was passed both a recorder and a binders prop. Both cannot be used at the same time.")
+	}
+	isBound = true
+	if (props.recorder) {
+		for (const key of keys(props.recorder)) {
+			recorderEl.value?.addEventListener(key, props.recorder[key], { passive: false })
+			boundListeners[key] = props.recorder[key]
+		}
+	}
+	if (props.binders && recorderEl.value) {
+		props.binders.bind(recorderEl.value)
+	}
+}
+
+watchPostEffect(() => {
+	if (!canEdit.value) {
+		unbindListeners()
+		recording.value = false
+		return
+	}
+	if (recording.value) {
+		bindListeners()
+	} else {
+		if ((props.recorder || props.binders) && isBound) {
+			unbindListeners()
+			// if we just blur the input then we can't shift+tab backwards
+			// this way we can go forwards or backwards without actually focusing since parentEl is not focusable
+			// parentEl.value?.focus()
+			emits("focus:parent")
+		}
+	}
+})
+
+onBeforeUnmount(() => {
+	unbindListeners()
+})
+
+onMounted(() => {
+	if (recording.value) {
+		bindListeners()
+	}
+})
+
+const handleBlurRecorder = (e: FocusEvent): void => {
+	if (!canEdit.value) return
+	if (props.recorder || props.binders) {
+		emits("recorder:blur", e)
+	}
+}
+
+const handlePointerdownRecorder = (e: MouseEvent | KeyboardEvent, isSpaceKey: boolean = false): void => {
+	if (!canEdit.value) return
+	if (!recording.value) {
+		recorderEl.value?.focus()
+	}
+	// toggle if clicking on the recording indicator, otherwise only allow starting recording, so if needed, clicks can be recorded
+	if (props.recorder || props.binders) {
+		if (isSpaceKey) { return }
+		emits("recorder:pointerdown", { event: e as MouseEvent, indicator: recorderIndicatorEl.value! as HTMLElement, input: recorderEl.value! as HTMLInputElement })
+	}
+}
+</script>
+

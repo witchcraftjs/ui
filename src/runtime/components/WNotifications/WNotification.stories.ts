@@ -1,0 +1,174 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+import type { Meta, StoryObj } from "@storybook/vue3"
+
+import WNotification from "./WNotification.vue"
+import WNotificationTestMessageComponent from "./WNotificationTestMessageComponent.vue"
+
+import { NotificationHandler } from "../../helpers/NotificationHandler.js"
+import * as components from "../index.js"
+
+const handler = new NotificationHandler()
+
+const meta: Meta<typeof WNotification> = {
+	component: WNotification,
+	title: "Components/Notification",
+	args: {
+
+	}
+}
+
+export default meta
+type Story = StoryObj<typeof WNotification>
+
+export const Primary: Story = {
+	render: args => ({
+		components: {
+			...components,
+			WNotification,
+			WNotificationTestMessageComponent
+		},
+		setup() {
+			return { args }
+		},
+		backgrounds: { disable: true },
+		template: `
+			<WNotification v-bind="args"/>
+		`
+	}),
+	args: {
+		// @ts-expect-error calling protected method
+		notification: { ...handler._createEntry({
+			title: `Notification`,
+			message: `This is a notification. Pick an option:`
+		}),
+
+		resolve: () => { } }
+	}
+}
+export const WithoutTitle: Story = {
+	...Primary,
+	args: {
+		...Primary.args,
+		// @ts-expect-error calling protected method
+		notification: handler._createEntry({
+			...Primary.args!.notification,
+			title: undefined
+		})
+	}
+}
+export const WithCode: Story = {
+	...Primary,
+	args: {
+		...Primary.args,
+		// @ts-expect-error calling protected method
+		notification: handler._createEntry({
+			...Primary.args!.notification,
+			code: "0001"
+		})
+	}
+}
+export const RequiresAction: Story = {
+	...Primary,
+	args: {
+		...Primary.args,
+		// @ts-expect-error calling protected method
+		notification: handler._createEntry({
+			...Primary.args!.notification,
+			requiresAction: true
+		})
+	}
+}
+
+/** Should not have cancel cross in top corner. */
+
+export const Uncancellable: Story = {
+	...Primary,
+	args: {
+		...Primary.args,
+		// @ts-expect-error calling protected method
+		notification: handler._createEntry({
+			...Primary.args!.notification,
+			options: ["Ok"],
+			cancellable: false
+		})
+	}
+}
+
+export const CustomOptions: Story = {
+	...Primary,
+	args: {
+		...Primary.args,
+		// @ts-expect-error calling protected method
+		notification: handler._createEntry({
+			...Primary.args!.notification,
+			options: ["Ok", "Default Answer", "Cancel"]
+		})
+	}
+}
+export const CustomDefaultOption: Story = {
+	...Primary,
+	args: {
+		...Primary.args,
+		// @ts-expect-error calling protected method
+		notification: handler._createEntry({
+			...CustomOptions.args!.notification,
+			default: "Default Answer"
+		})
+	}
+}
+export const CustomDangerousOption: Story = {
+	...Primary,
+	args: {
+		...Primary.args,
+		// @ts-expect-error calling protected method
+		notification: handler._createEntry({
+			...CustomOptions.args!.notification,
+			options: ["Ok", "Dangerous Option", "Cancel"],
+			dangerous: ["Dangerous Option"]
+		})
+	}
+}
+export const CustomDefaultAndDangerousOption: Story = {
+	...Primary,
+	args: {
+		...Primary.args,
+		// @ts-expect-error calling protected method
+		notification: handler._createEntry({
+			...CustomOptions.args!.notification,
+			options: ["Ok", "Default Answer", "Dangerous Option", "Cancel"],
+			default: "Default Answer",
+			dangerous: ["Dangerous Option"]
+		})
+	}
+}
+
+
+export const CustomMessageComponent: Story = {
+	...Primary,
+	args: {
+		...Primary.args,
+		// @ts-expect-error calling protected method
+		notification: handler._createEntry({
+			...Primary.args!.notification,
+			component: WNotificationTestMessageComponent,
+			componentProps: {
+				customProp: "Custom Prop"
+			}
+		})
+	}
+}
+
+export const CustomNotificationProps: Story = {
+	...Primary,
+	args: {
+		...Primary.args,
+		// @ts-expect-error calling protected method
+		notification: handler._createEntry({
+			...Primary.args!.notification,
+			message: "Should be 300px wide",
+			notificationProps: {
+				class: "w-[300px]!"
+			}
+		})
+	}
+}

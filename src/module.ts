@@ -35,7 +35,7 @@ const componentsInfo: {
 	`!**/Template/**.vue`
 ], [], (filepath: string, name: string) => ({
 	originalName: name,
-	name: name.startsWith("Lib") ? name.replace("Lib", "PREFIX") : `PREFIX${name}`,
+	name: name.startsWith("W") ? name.replace("W", "PREFIX") : `PREFIX${name}`,
 	filepath
 }))
 
