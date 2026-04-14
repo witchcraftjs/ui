@@ -185,7 +185,7 @@
 									transform: mergedVirtualizerOpts.method === 'fixed'
 										? `translateY(${virtual.start - index * virtual.size!}px)`
 										: `translateY(${virtual.start}px)`,
-									height: `${virtual.size}px`
+									height: mergedVirtualizerOpts.method === 'fixed' ? `${virtual.size}px` : undefined
 								}
 								: {})
 						}"
