@@ -1,12 +1,9 @@
 import "../src/runtime/assets/tailwind.css"
-
 // import toReact from "@egoist/vue-to-react"
 import { type Parameters,type Preview } from "@storybook/vue3"
-
-import LibRoot from "../src/runtime/components/LibRoot/LibRoot.vue"
+import WRoot from "../src/runtime/components/WRoot/WRoot.vue"
 import { vExtractRootEl } from "../src/runtime/directives/vExtractRootEl.js"
 import "./storybook.css"
-
 
 export const parameters: Parameters = {
 	docs: {
@@ -38,7 +35,6 @@ export const parameters: Parameters = {
 	},
 }
 
-
 const preview: Preview = {
 	parameters: {
 		options: {
@@ -53,10 +49,10 @@ const preview: Preview = {
 	},
 	decorators: [(story, { args }) => ({
 		directives: { vExtractRootEl },
-		components: { LibRoot, story },
+		components: { WRoot, story },
 		setup: () => ({ args }),
 		template: `
-			<lib-root :test-wrapper-mode="true" :outline="args.outline"><story/></lib-root>
+			<w-root :test-wrapper-mode="true" :outline="args.outline"><story/></w-root>
 		`,
 	})],
 	args: {
