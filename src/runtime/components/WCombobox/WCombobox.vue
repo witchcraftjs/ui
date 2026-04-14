@@ -111,7 +111,7 @@
 							<WIcon
 								:class="twMerge(`combobox--toggle scale-150`, open && `rotate-180`)"
 							>
-								<i-chevron-caret-down/>
+								<i-lucide-chevron-down/>
 							</WIcon>
 						</slot>
 					</WButton>
