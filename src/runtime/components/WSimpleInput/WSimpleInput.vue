@@ -98,7 +98,7 @@ defineOptions({
 const props = withDefaults(defineProps<
 	& /** @vue-ignore */ Omit<
 		InputHTMLAttributes,
-		| "class" | "readonly" | "disabled" | "onSubmit" | "onInput"
+		| "class" | "readonly" | "disabled" | "onSubmit" | "onInput" | "type"
 		// https://github.com/vuejs/core/pull/14237
 		| "autocomplete"
 	>
@@ -108,6 +108,7 @@ const props = withDefaults(defineProps<
 		id?: string
 		label?: string
 		valid?: boolean
+		type?: InputHTMLAttributes["type"]
 	}
 >(), {
 	id: "",
