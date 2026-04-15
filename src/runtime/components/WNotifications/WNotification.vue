@@ -176,6 +176,9 @@
 <script setup lang="ts">
 import { computed, type HTMLAttributes, onMounted, ref, useAttrs } from "vue"
 
+import ILucideCopy from "~icons/lucide/copy"
+import ILucideX from "~icons/lucide/x"
+
 import { useSlotVars } from "../../composables/useSlotVars.js"
 import { copy } from "../../helpers/copy.js"
 import { type NotificationEntry, NotificationHandler } from "../../helpers/NotificationHandler.js"

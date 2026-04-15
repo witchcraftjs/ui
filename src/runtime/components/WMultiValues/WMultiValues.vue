@@ -83,6 +83,8 @@
 import { removeIfIn } from "@alanscodelog/utils/removeIfIn"
 import { computed, type HTMLAttributes, nextTick, ref, useAttrs } from "vue"
 
+import ILucideX from "~icons/lucide/x"
+
 import { copy } from "../../helpers/copy.js"
 import type { BaseInteractiveProps, TailwindClassProp } from "../../types/index.js"
 import { twMerge } from "../../utils/twMerge.js"

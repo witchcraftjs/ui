@@ -191,6 +191,8 @@ import { safeConvertToHsva } from "./utils/safeConvertToHsva.js"
 import { safeConvertToRgba } from "./utils/safeConvertToRgba.js"
 import { toLowPrecisionRgbaString } from "./utils/toLowPrecisionRgbaString.js"
 
+import ILucideCopy from "~icons/lucide/copy"
+
 import { useFallbackId } from "../../composables/useFallbackId.js"
 import { useInjectedI18n } from "../../composables/useInjectedI18n.js"
 import { copy } from "../../helpers/copy.js"

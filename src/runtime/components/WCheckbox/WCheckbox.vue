@@ -84,6 +84,8 @@ import { CheckboxIndicator, CheckboxRoot } from "reka-ui"
 import type { HTMLAttributes, InputHTMLAttributes } from "vue"
 import { useAttrs } from "vue"
 
+import ILucideCheck from "~icons/lucide/check"
+
 import { useFallbackId } from "../../composables/useFallbackId.js"
 import { usePreHydrationValue } from "../../composables/usePreHydrationValue.js"
 import type { BaseInteractiveProps, TailwindClassProp } from "../../types/index.js"

@@ -231,6 +231,10 @@
 import type { HTMLAttributes, InputHTMLAttributes } from "vue"
 import { computed, onBeforeUnmount, ref, shallowReactive, watch } from "vue"
 
+import ILucideFile from "~icons/lucide/file"
+import ILucideUpload from "~icons/lucide/upload"
+import ILucideX from "~icons/lucide/x"
+
 import { useFallbackId } from "../../composables/useFallbackId.js"
 import { useInjectedI18n } from "../../composables/useInjectedI18n.js"
 import type { FileInputError, TailwindClassProp } from "../../types/index.js"

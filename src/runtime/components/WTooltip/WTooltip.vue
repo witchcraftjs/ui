@@ -92,6 +92,8 @@
 <script setup lang="ts">
 import { TooltipArrow, TooltipContent, TooltipPortal, TooltipProvider, TooltipRoot, TooltipTrigger } from "reka-ui"
 
+import ILucideInfo from "~icons/lucide/info"
+
 import { usePopupConstrainToStyle } from "../../composables/usePopupConstrainToStyle.js"
 import type { PopupConstrainToProps } from "../../types/index.js"
 import { twMerge } from "../../utils/twMerge.js"

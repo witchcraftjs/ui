@@ -5,6 +5,12 @@ import { onBeforeUnmount, ref, toRaw, useAttrs, watch } from "vue"
 
 import { convertDateWithFallback, getNow, toEmittableDate } from "./helpers.js"
 
+import ILucideCalendarDays from "~icons/lucide/calendar-days"
+import ILucideChevronLeft from "~icons/lucide/chevron-left"
+import ILucideChevronRight from "~icons/lucide/chevron-right"
+import ILucideChevronsLeft from "~icons/lucide/chevrons-left"
+import ILucideChevronsRight from "~icons/lucide/chevrons-right"
+
 import { useInjectedLocale } from "../../composables/useInjectedLocale.js"
 import type { SingleDate } from "../../types/index.js"
 import { twMerge } from "../../utils/twMerge.js"

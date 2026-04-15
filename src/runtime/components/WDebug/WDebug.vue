@@ -35,6 +35,8 @@
 <script setup lang="ts">
 import { useSlots } from "vue"
 
+import ILucideCopy from "~icons/lucide/copy"
+
 import WButton from "../WButton/WButton.vue"
 import WIcon from "../WIcon/WIcon.vue"
 

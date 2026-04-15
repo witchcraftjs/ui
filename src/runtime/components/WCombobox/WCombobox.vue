@@ -307,6 +307,9 @@ import {
 import type { EmitsToProps, HTMLAttributes, InputHTMLAttributes } from "vue"
 import { computed, nextTick, ref, useAttrs, useSlots, useTemplateRef, watch } from "vue"
 
+import ILucideChevronDown from "~icons/lucide/chevron-down"
+import ILucideLoaderCircle from "~icons/lucide/loader-circle"
+
 import { useDelayedLoadingIndicator } from "../../composables/useDelayedLoadingIndicator.js"
 import { type SuggestionsDisplayProps, useDisplayForReka } from "../../composables/useDisplayForReka.js"
 import { useFallbackId } from "../../composables/useFallbackId.js"
