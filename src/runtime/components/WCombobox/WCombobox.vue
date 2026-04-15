@@ -46,8 +46,8 @@
 					has-[input:invalid]:border-danger-500
 					invalid:border-danger-500
 				`,
-				open && popupSide === 'top' && `rounded-tl-none rounded-tr-none`,
-				open && popupSide === 'bottom' && `rounded-bl-none rounded-br-none`
+				filtered.length > 0 && open && popupSide === 'top' && `rounded-tl-none rounded-tr-none`,
+				filtered.length > 0 && open && popupSide === 'bottom' && `rounded-bl-none rounded-br-none`
 			)"
 		>
 			<!-- @vue-expect-error aria/keydown can be defined -->
