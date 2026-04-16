@@ -14,7 +14,7 @@
 		<transition>
 			<div
 				v-if="showBackdrop && modelValue"
-				:class="twMerge(`popup--backdrop absolute inset-0 bg-black/50`, backdropClass)"
+				:class="twMerge(`popover--backdrop absolute inset-0 bg-black/50`, backdropClass)"
 				@click="modelValue = false"
 			/>
 		</transition>
@@ -37,7 +37,7 @@
 			}"
 			:style="contentStyle"
 			:class="twMerge(`
-				popup--content-wrapper
+				popover--content-wrapper
 				focus:outline-none
 				overflow-auto
 				scrollbar-hidden
@@ -74,7 +74,7 @@
 		>
 			<div
 				:class="twMerge(`
-						popup--content
+						popover--content
 						flex
 						flex-col
 						bg-neutral-50
@@ -94,13 +94,15 @@
 			</div>
 
 			<PopoverArrow
-				class="
+				:class="twMerge(`
+					popover--arrow
 					-mt-px
 					fill-neutral-50
 					dark:fill-neutral-800
 					drop-shadow-[0_2px_1px_rgba(0,0,0,0.3)]
 					relative
-				"
+					stroke-black/30
+				`)"
 			/>
 		</PopoverContent>
 	</PopoverPortal>
@@ -127,7 +129,7 @@ import { twMerge } from "../../utils/twMerge.js"
 
 /** Wrapper around reka-ui's `Popover` component. */
 defineOptions({
-	name: "WPopup",
+	name: "WPopover",
 	inheritAttrs: false
 })
 
@@ -136,7 +138,7 @@ const props = withDefaults(defineProps<
 	& PopupConstrainToProps
 	& {
 		backdropClass?: string
-		/* If true, a backdrop is shown behind the popup. Whether interaction is allowed outside the popover is still determined by `disableOutsidePointerEvents`. */
+		/* If true, a backdrop is shown behind the popover. Whether interaction is allowed outside the popover is still determined by `disableOutsidePointerEvents`. */
 		showBackdrop?: boolean
 		animationDirection?: "use-side" | "use-align" | "left" | "right" | "up" | "down"
 		/** Overrides teleport target. */
