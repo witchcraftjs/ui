@@ -74,7 +74,7 @@
 					</slot>
 					<slot name="extra"/>
 				</slot>
-				<DialogCloseButton as-child>
+				<DialogClose as-child>
 					<slot name="close">
 						<WButton
 							class="justify-self-end"
@@ -83,7 +83,7 @@
 							Close
 						</WButton>
 					</slot>
-				</DialogCloseButton>
+				</DialogClose>
 			</div>
 		</DialogContent>
 	</DialogPortal>
@@ -95,8 +95,17 @@ import type {
 	DialogContentEmits,
 	DialogContentProps,
 	DialogRootEmits,
-	DialogRootProps } from "reka-ui"
-import { DialogContent, DialogOverlay, DialogPortal, DialogRoot, DialogTrigger } from "reka-ui"
+	DialogRootProps
+} from "reka-ui"
+import {
+	DialogClose,
+	DialogContent,
+	DialogDescription,
+	DialogOverlay,
+	DialogPortal,
+	DialogRoot,
+	DialogTitle,
+	DialogTrigger } from "reka-ui"
 import type { EmitsToProps, HTMLAttributes } from "vue"
 
 import type { TailwindClassProp } from "../../types/index.js"
