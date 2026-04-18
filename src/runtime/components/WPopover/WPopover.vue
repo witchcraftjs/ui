@@ -97,6 +97,7 @@
 			</div>
 
 			<PopoverArrow
+				v-if="showArrow"
 				:class="twMerge(`
 					popover--arrow
 					-mt-px
@@ -143,6 +144,7 @@ const props = withDefaults(defineProps<
 		backdropClass?: string
 		/* If true, a backdrop is shown behind the popover. Whether interaction is allowed outside the popover is still determined by `disableOutsidePointerEvents`. */
 		showBackdrop?: boolean
+		showArrow?: boolean
 		animationDirection?: "use-side" | "use-align" | "left" | "right" | "up" | "down" | "show" | "none"
 		/** Overrides teleport target. */
 		to?: string
@@ -153,6 +155,7 @@ const props = withDefaults(defineProps<
 	}
 >(), {
 	showBackdrop: false,
+	showArrow: true,
 	constrainWidthTo: 400,
 	constrainHeightTo: "available",
 	animationDirection: "use-side",
