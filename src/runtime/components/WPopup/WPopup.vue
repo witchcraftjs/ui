@@ -52,9 +52,38 @@
 					bg-neutral-100
 					dark:bg-neutral-800
 					rounded-md
+					flex
+					flex-col
+					gap-3
+					p-2
 				`)"
 			>
-				<slot name="popup"/>
+				<slot name="popup">
+					<slot name="title">
+						<DialogTitle
+							v-if="title"
+							class="text-lg font-bold"
+						>
+							{{ title }}
+						</DialogTitle>
+					</slot>
+					<slot name="description">
+						<DialogDescription v-if="description">
+							{{ description }}
+						</DialogDescription>
+					</slot>
+					<slot name="extra"/>
+				</slot>
+				<DialogCloseButton as-child>
+					<slot name="close">
+						<WButton
+							class="justify-self-end"
+							@click="modelValue = false"
+						>
+							Close
+						</WButton>
+					</slot>
+				</DialogCloseButton>
 			</div>
 		</DialogContent>
 	</DialogPortal>
@@ -72,11 +101,14 @@ import type { EmitsToProps, HTMLAttributes } from "vue"
 
 import type { TailwindClassProp } from "../../types/index.js"
 import { twMerge } from "../../utils/twMerge.js"
+import WButton from "../WButton/WButton.vue"
 
 defineOptions({ name: "WPopup", inheritAttrs: false })
 
 withDefaults(defineProps<
 	& {
+		title?: string
+		description?: string
 		backdropClass?: string
 		/** Overrides reka-ui's DialogContentProps */
 		contentProps?: DialogContentProps & EmitsToProps<DialogContentEmits> & Omit<HTMLAttributes, "class"> & TailwindClassProp
