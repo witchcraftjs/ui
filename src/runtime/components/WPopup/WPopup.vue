@@ -28,7 +28,7 @@
 		<DialogContent
 			v-bind="{ ...contentProps, class: undefined }"
 			:class="twMerge(`
-				popup--content-wrapper
+				popup--content
 				z-100
 				focus:outline-none
 				fixed
@@ -46,7 +46,7 @@
 		>
 			<div
 				:class="twMerge(`
-					popup--content
+					popup--content-inner
 					flex
 					flex-col
 					bg-neutral-100

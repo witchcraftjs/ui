@@ -37,7 +37,7 @@
 			}"
 			:style="contentStyle"
 			:class="twMerge(`
-				popover--content-wrapper
+				popover--content
 				focus:outline-none
 				overflow-auto
 				scrollbar-hidden
@@ -77,7 +77,7 @@
 		>
 			<div
 				:class="twMerge(`
-						popover--content
+						popover--content-inner
 						flex
 						flex-col
 						bg-neutral-50
