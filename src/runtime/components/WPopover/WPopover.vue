@@ -70,6 +70,9 @@
 				animationDirection === `down` && `
 					animate-slideInDown
 				`,
+				animationDirection === `show` && `
+					animate-contentShow
+				`,
 				contentProps?.class)"
 		>
 			<div
@@ -140,7 +143,7 @@ const props = withDefaults(defineProps<
 		backdropClass?: string
 		/* If true, a backdrop is shown behind the popover. Whether interaction is allowed outside the popover is still determined by `disableOutsidePointerEvents`. */
 		showBackdrop?: boolean
-		animationDirection?: "use-side" | "use-align" | "left" | "right" | "up" | "down"
+		animationDirection?: "use-side" | "use-align" | "left" | "right" | "up" | "down" | "show" | "none"
 		/** Overrides teleport target. */
 		to?: string
 		/** Overrides reka-ui's PopoverRootProps */
