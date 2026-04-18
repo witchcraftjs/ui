@@ -77,21 +77,20 @@
 		>
 			<div
 				:class="twMerge(`
-						popover--content-inner
-						flex
-						flex-col
-						bg-neutral-50
-						dark:bg-neutral-900
-						rounded-sm
-						p-2
-						text-sm
-						shadow-sm
-						shadow-black/30
-						border
-						border-black/30
-						whitespace-pre-wrap
-						overflow-auto
-					`)"
+					popover--content-inner
+					flex
+					flex-col
+					bg-neutral-50
+					dark:bg-neutral-900
+					rounded-sm
+					p-2
+					shadow-sm
+					shadow-black/30
+					border
+					border-black/30
+					whitespace-pre-wrap
+					overflow-auto
+				`)"
 			>
 				<slot name="popover"/>
 			</div>
