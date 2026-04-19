@@ -237,7 +237,7 @@ export type RawNotificationEntry<
 	message: string
 	component?: string | Component
 	/** Props for the custom component. By default the component is passed the message, the messageClasses, and the full notification. Both will be overriden if you set them on componentProps. */
-	componentProps?: Record<string, any> & { notification: NotificationEntry, message: string, messageClasses: string }
+	componentProps?: Record<string, any> & Partial<{ notification: NotificationEntry, message: string, messageClasses: string }>
 	/**
 	 * Attributes for the notification component itself. They are bound to the root of the element and the class property is merged with twMerge.
 	 *
