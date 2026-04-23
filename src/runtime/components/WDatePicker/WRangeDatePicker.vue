@@ -22,7 +22,7 @@ const attrs = useAttrs()
 
 const props = withDefaults(defineProps<{
 	useTime?: boolean
-	id: string
+	id?: string
 	fallbackDate?: Date
 	timeZone?: string
 	updateInterval?: number
