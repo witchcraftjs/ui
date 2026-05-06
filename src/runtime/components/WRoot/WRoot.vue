@@ -29,7 +29,7 @@
 			pb-10
 		`,
 			!testWrapperMode && `
-			min-h-dvh
+			min-h-screen
 			flex
 			flex-col
 		`,
