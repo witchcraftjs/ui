@@ -1,7 +1,12 @@
 name: Setup
+description: Installs dependencies.
 inputs:
   USE_LOCKFILE:
     required: true
+  INSTALL_PLAYWRIGHT:
+    required: false
+    default: false
+
 
 # note it cannot contain the checkout, the must be checked out in the calling workflow or it will not be able to find the composite action
 runs:
@@ -30,3 +35,26 @@ runs:
       if: "inputs.USE_LOCKFILE != 'true'"
       shell: bash
 
+    - name: Get Playwright version
+      if: "inputs.INSTALL_PLAYWRIGHT == 'true'"
+      id: playwright-version
+      shell: bash
+      run: echo "version=$(node -p "require('playwright-core/package.json').version")" >> "$GITHUB_OUTPUT"
+
+    - name: Cache Playwright browsers
+      if: "inputs.INSTALL_PLAYWRIGHT == 'true'"
+      id: playwright-cache
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/ms-playwright
+        key: playwright-${{ runner.os }}-${{ steps.playwright-version.outputs.version }}
+
+    - name: Install Playwright Browsers
+      if: "inputs.INSTALL_PLAYWRIGHT == 'true'"
+      shell: bash
+      run: |
+        if [ "${{ steps.playwright-cache.outputs.cache-hit }}" = "true" ]; then
+          npx playwright install-deps
+        else
+          npx playwright install --with-deps
+        fi

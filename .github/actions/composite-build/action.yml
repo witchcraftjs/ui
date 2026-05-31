@@ -1,7 +1,18 @@
 name: Build
+description: Builds, lints, and tests the project
 inputs:
   USE_LOCKFILE:
     required: true
+  build_script: 
+    required: false
+    default: "pnpm build"
+  lint_script:
+    required: false
+    default: "pnpm lint"
+  test_script:
+    required: false
+    default: "pnpm test"
+
 
 # note it cannot contain the checkout, the must be checked out in the calling workflow or it will not be able to find the composite action
 runs:
@@ -10,17 +21,18 @@ runs:
     - run: pnpm build
       shell: bash
 
-    - run: pnpm lint
+    - run: ${{ inputs.lint_script }} 
       shell: bash
 
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
+    - run: ${{ inputs.test_script }}
+      if: ${{ !env.ACT }}
       shell: bash
 
-    - run: pnpm test
+    - run: ${{ inputs.build_script }}
       shell: bash
-    
+   
     - name: Coverage
       if: ${{ github.event_name == 'pull_request' }}
       uses: romeovs/lcov-reporter-action@v0.3.1
+
 

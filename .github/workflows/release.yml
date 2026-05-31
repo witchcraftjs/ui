@@ -16,6 +16,7 @@ permissions:
 jobs:
   release:
     runs-on: blacksmith-4vcpu-ubuntu-2404
+    timeout-minutes: 30
     strategy:
       matrix:
         node-version: ["lts/*"]
@@ -29,20 +30,18 @@ jobs:
 
     - name: Setup
       uses: ./.github/actions/composite-setup
+      timeout-minutes: 15
       with:
         USE_LOCKFILE: ${{ secrets.USE_LOCKFILE }}
+        INSTALL_PLAYWRIGHT: true
 
     - run: pnpm i --frozen-lockfile
       working-directory: playground 
-
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
 
     - name: Build 
       uses: ./.github/actions/composite-build
       with:
         USE_LOCKFILE: ${{ secrets.USE_LOCKFILE }}
-
 
     - name: Release
       if: "env.ENABLE_RELEASE == 'true' && ! contains('refs/heads/build ', github.ref)"
@@ -58,3 +57,13 @@ jobs:
 
     - run: echo "env.ENABLE_RELEASE is ${{ env.ENABLE_RELEASE == 'true' }} and branch is ${{ github.ref }}, no release can be published." && exit 1
       if: "env.ENABLE_RELEASE != 'true' || contains('refs/heads/build ', github.ref)"
+
+    # Keep the runner alive for 10 minutes on failure so it can be SSH'd into
+    # for debugging via the Blacksmith dashboard.
+    - name: Hold runner open on failure for debugging
+      if: failure()
+      timeout-minutes: 11
+      run: |
+        echo "Job failed. Holding runner open for 10 minutes for SSH debugging."
+        echo "See https://docs.blacksmith.sh/blacksmith-runners/ssh-into-runners for SSH instructions."
+        sleep 600

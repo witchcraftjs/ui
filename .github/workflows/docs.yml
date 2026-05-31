@@ -13,6 +13,7 @@ on:
 jobs:
   docs:
     runs-on: blacksmith-4vcpu-ubuntu-2404
+    timeout-minutes: 20
     strategy:
       matrix:
         node-version: ["lts/*"]
@@ -23,6 +24,7 @@ jobs:
     - name: Setup
       uses: ./.github/actions/composite-setup
       if: "env.ENABLE_DOCS == 'true'"
+      timeout-minutes: 15
       with:
         USE_LOCKFILE: ${{ env.USE_LOCKFILE }}
 
@@ -31,6 +33,7 @@ jobs:
       if: "env.ENABLE_DOCS == 'true'"
       with:
         USE_LOCKFILE: ${{ env.USE_LOCKFILE }}
+        test_script: "echo 'skipping tests'"
 
     - run: pnpm doc
       if: "env.ENABLE_DOCS == 'true'"
@@ -44,3 +47,13 @@ jobs:
         build_dir: docs
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    # Keep the runner alive for 10 minutes on failure so it can be SSH'd into
+    # for debugging via the Blacksmith dashboard.
+    - name: Hold runner open on failure for debugging
+      if: failure()
+      timeout-minutes: 11
+      run: |
+        echo "Job failed. Holding runner open for 10 minutes for SSH debugging."
+        echo "See https://docs.blacksmith.sh/blacksmith-runners/ssh-into-runners for SSH instructions."
+        sleep 600
