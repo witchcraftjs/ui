@@ -2,6 +2,16 @@ packages:
   - ./
   - playground/
 
+allowBuilds:
+  '@alanscodelog/eslint-config': false
+  '@alanscodelog/tsconfigs': false
+  '@parcel/watcher': false
+  '@swc/core': false
+  core-js: false
+  esbuild: true
+  unrs-resolver: false
+  vue-demi: false
+
 allowUnusedPatches: true
 
 catalog:
