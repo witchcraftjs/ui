@@ -61,6 +61,7 @@
                     custom.js.nodejs.package = pkgs.nodejs_24;
                     custom.js.setupPlaywright = true;
                     custom.js.playwrightDriverPackage = pkgs.playwright-driver;
+                    packages = [ pkgs.actionlint ];
                   })
                 ];
             };
