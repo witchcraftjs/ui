@@ -3,20 +3,20 @@ import type { InjectionKey, Ref } from "vue"
 import type { TranslationFunction } from "./composables/useSetupI18n.js"
 import type { DarkModeCommands, DarkModeState } from "./types/index.js"
 
-export const darkModeCommandsInjectionKey = Symbol("darkModeCommands") as InjectionKey<DarkModeCommands>
+export const darkModeCommandsInjectionKey = Symbol.for("@witchcraft/ui:darkModeCommands") as InjectionKey<DarkModeCommands>
 
-export const darkModeStateInjectionKey = Symbol("darkModeState") as InjectionKey<DarkModeState>
-
-
-export const languageLocaleInjectionKey = Symbol("witchcraftUiLanguageLocale") as InjectionKey<Ref<string>>
-
-export const timeLocaleInjectionKey = Symbol("witchcraftUiTimeLocale") as InjectionKey<Ref<string>>
+export const darkModeStateInjectionKey = Symbol.for("@witchcraft/ui:darkModeState") as InjectionKey<DarkModeState>
 
 
-export const i18nInjectionKey = Symbol("witchcraftUiI18n") as InjectionKey<TranslationFunction>
+export const languageLocaleInjectionKey = Symbol.for("@witchcraft/ui:languageLocale") as InjectionKey<Ref<string>>
 
-export const translationMessagesInjectionKey = Symbol("witchcraftUiI18nMessages") as InjectionKey<Ref<Record<string, any>>>
+export const timeLocaleInjectionKey = Symbol.for("@witchcraft/ui:timeLocale") as InjectionKey<Ref<string>>
 
 
-export const showDevOnlyInjectionKey = Symbol("showDevOnly") as InjectionKey<Ref<boolean>>
+export const i18nInjectionKey = Symbol.for("@witchcraft/ui:i18n") as InjectionKey<TranslationFunction>
+
+export const translationMessagesInjectionKey = Symbol.for("@witchcraft/ui:i18nMessages") as InjectionKey<Ref<Record<string, any>>>
+
+
+export const showDevOnlyInjectionKey = Symbol.for("@witchcraft/ui:showDevOnly") as InjectionKey<Ref<boolean>>
 

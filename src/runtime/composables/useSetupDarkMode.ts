@@ -6,8 +6,8 @@ import type { DarkModeCommands, DarkModeOptions, DarkModeState } from "../types/
 import { defaultDarkModeOrder } from "../types/index.js"
 
 
-const isDarkModeInjectionKey = Symbol("isDarkMode") as InjectionKey<Ref<boolean>>
-const manualDarkModeInjectionKey = Symbol("manualDarkMode") as InjectionKey<Ref<boolean | undefined>>
+const isDarkModeInjectionKey = Symbol.for("@witchcraft/ui:isDarkMode") as InjectionKey<Ref<boolean>>
+const manualDarkModeInjectionKey = Symbol.for("@witchcraft/ui:manualDarkMode") as InjectionKey<Ref<boolean | undefined>>
 const defaultLocalStorageKey = "prefersColorSchemeDark"
 
 /**
