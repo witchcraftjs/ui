@@ -96,3 +96,10 @@ patchedDependencies:
 settings:
   catalogMode: strict
   cleanupUnusedCatalogs: false
+
+strictPeerDependencies: false
+minimumReleaseAge: 20160
+blockExoticSubdeps: true
+minimumReleaseAgeExclude:
+  - "@alanscodelog/*"
+  - "@witchcraft/*"

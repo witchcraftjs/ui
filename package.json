@@ -5,6 +5,7 @@
 	"type": "module",
 	"main": "./dist/runtime/main.lib.js",
 	"sideEffects": false,
+	"packageManager": "pnpm@11.5.0",
 	"exports": {
 		".": {
 			"types": "./types/index.d.ts",
