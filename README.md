@@ -1,7 +1,9 @@
 ### 🚧 WORK IN PROGRESS 🚧
-[![Docs](https://github.com/witchcraftjs/ui/workflows/Docs/badge.svg)](https://github.com/witchcraftjs/ui/actions/workflows/docs.yml)
-[![Release](https://github.com/witchcraftjs/ui/actions/workflows/release.yml/badge.svg)](https://github.com/witchcraftjs/ui/actions/workflows/release.yml)
-[![NPM Version (with latest tag)](https://img.shields.io/npm/v/%40witchcraft%2Fui/latest)](https://www.npmjs.com/package/@witchcraft/ui/v/latest)
+[![Docs][docs-src]][docs-href]
+[![Release][release-src]][release-href]
+[![npm version][npm-version-src]][npm-version-href]
+[![License][license-src]][license-href]
+[![Nuxt][nuxt-src]][nuxt-href]
 
 Opinionated, batteries included, vue/nuxt component library + some related utils.
 
@@ -216,3 +218,15 @@ Related Links:
 - https://github.com/vuejs/core/issues/8522
 - https://github.com/vuejs/rfcs/pull/477
 - https://github.com/vuejs/language-tools/issues/1232#issuecomment-1118176103
+
+<!-- Badges -->
+[docs-src]: https://github.com/witchcraftjs/ui/actions/workflows/docs.yml/badge.svg
+[docs-href]: https://github.com/witchcraftjs/ui/actions/workflows/docs.yml
+[release-src]: https://github.com/witchcraftjs/ui/actions/workflows/release.yml/badge.svg
+[release-href]: https://github.com/witchcraftjs/ui/actions/workflows/release.yml
+[npm-version-src]: https://img.shields.io/npm/v/@witchcraft/ui/latest
+[npm-version-href]: https://www.npmjs.com/package/@witchcraft/ui/v/latest
+[license-src]: https://img.shields.io/npm/l/@witchcraft/ui.svg?style=flat&colorA=020420&colorB=00DC82
+[license-href]: https://npmjs.com/package/@witchcraft/ui
+[nuxt-src]: https://img.shields.io/badge/Nuxt-020420?logo=nuxt.js
+[nuxt-href]: https://nuxt.com

@@ -1,8 +1,4 @@
-name: Docs 
-
-env:
-  USE_LOCKFILE: ${{ secrets.USE_LOCKFILE }}
-  ENABLE_DOCS: ${{ secrets.ENABLE_DOCS }}
+name: Docs
 
 on:
   push:
@@ -12,51 +8,36 @@ on:
 
 jobs:
   docs:
+    if: "vars.ENABLE_DOCS == 'true'"
     timeout-minutes: 20
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: ['24.15.0']
-        # node-version: ["lts/*"]
     steps:
-    - uses: actions/checkout@v6
-      if: "env.ENABLE_DOCS == 'true'"
+      - uses: actions/checkout@v6
 
-    - name: Setup
-      uses: ./.github/actions/composite-setup
-      if: "env.ENABLE_DOCS == 'true'"
-      timeout-minutes: 15
-      with:
-        USE_LOCKFILE: ${{ env.USE_LOCKFILE }}
-        # for storybook's testing
-        INSTALL_PLAYWRIGHT: true
+      - name: Setup
+        timeout-minutes: 15
+        uses: alanscodelog/actions/.github/actions/setup@master
+        with:
+          USE_LOCKFILE: ${{ vars.USE_LOCKFILE }}
+          INSTALL_PLAYWRIGHT: true
 
-    - name: Build 
-      uses: ./.github/actions/composite-build
-      if: "env.ENABLE_DOCS == 'true'"
-      with:
-        USE_LOCKFILE: ${{ env.USE_LOCKFILE }}
-        test_script: "echo 'skipping tests'"
+      - name: Build
+        uses: alanscodelog/actions/.github/actions/build@master
+        with:
+          test_script: "echo 'skipping tests'"
 
-    - run: pnpm doc
-      if: "env.ENABLE_DOCS == 'true'"
+      - name: Deploy Docs
+        uses: alanscodelog/actions/.github/actions/docs@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Documentation
-      uses: crazy-max/ghaction-github-pages@v4
-      if: "env.ENABLE_DOCS == 'true'"
-      with:
-        jekyll: false
-        target_branch: gh-pages
-        build_dir: docs
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    # Keep the runner alive for 10 minutes on failure so it can be SSH'd into
-    # for debugging via the Blacksmith dashboard.
-    - name: Hold runner open on failure for debugging
-      if: failure()
-      timeout-minutes: 11
-      run: |
-        echo "Job failed. Holding runner open for 10 minutes for SSH debugging."
-        echo "See https://docs.blacksmith.sh/blacksmith-runners/ssh-into-runners for SSH instructions."
-        sleep 600
+      - name: Hold runner open on failure for debugging
+        if: failure()
+        timeout-minutes: 11
+        run: |
+          echo "Job failed. Holding runner open for 10 minutes for SSH debugging."
+          echo "See https://docs.blacksmith.sh/blacksmith-runners/ssh-into-runners for SSH instructions."
+          sleep 600
