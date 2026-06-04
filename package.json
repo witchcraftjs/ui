@@ -76,15 +76,11 @@
 	},
 	"peerDependencies": {
 		"tailwindcss": "catalog:",
-		"unplugin-icons": "catalog:",
-		"vue": "catalog:"
+		"unplugin-icons": "catalog:"
 	},
 	"peerDependenciesMeta": {
 		"tailwindcss": {
 			"optional": true
-		},
-		"vue": {
-			"optional": false
 		}
 	},
 	"dependencies": {
