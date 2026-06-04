@@ -59,7 +59,6 @@ import { useNotificationHandler } from "../../composables/useNotificationHandler
 import { useSetupDarkMode } from "../../composables/useSetupDarkMode.js"
 import { useSetupI18n } from "../../composables/useSetupI18n.js"
 import { useSetupLocale } from "../../composables/useSetupLocale.js"
-import { useShowDevOnlyKey } from "../../composables/useShowDevOnlyKey.js"
 import { NotificationHandler } from "../../helpers/NotificationHandler.js"
 import { theme as defaultTheme } from "../../theme.js"
 import type { TailwindClassProp } from "../../types/index.js"
@@ -129,8 +128,6 @@ if (props.isClientSide) {
 const darkModeSetup = useSetupDarkMode({ isClientSide: props.isClientSide })
 
 const darkMode = darkModeSetup.darkMode
-
-useShowDevOnlyKey()
 
 defineExpose({
 	darkMode: darkModeSetup

@@ -48,4 +48,10 @@ declare module "vue" {
 		DevOnly: any
 	}
 }
+/**
+ * @deprecated This component is deprecated. Use `NuxtUtilsDevOnly` from @witchcraft/nuxt-utils instead.
+ */
+export default {
+	name: "WDevOnly"
+}
 </script>

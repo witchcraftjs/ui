@@ -6,6 +6,8 @@ import { showDevOnlyInjectionKey } from "../injectionKeys.js"
 	* For nuxt only.
 	*
 	* Communicates with the dev only component to show/hide it depending on a keypress (single key, no modifiers, `F1` by default). 	*
+	*
+	* @deprecated See WDevOnly
 	*/
 export function useShowDevOnlyKey(key: string = "F1"): void {
 	if (!(import.meta as any).dev) return
