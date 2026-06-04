@@ -31,13 +31,11 @@ jobs:
 
       - name: Deploy Docs
         uses: alanscodelog/actions/.github/actions/docs@master
+        with:
+          use_storybook: "true"
+          # we do have a playground but it's currently for me to play
+          use_playground: "false"
+          use_nuxt_docs: "true"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Hold runner open on failure for debugging
-        if: failure()
-        timeout-minutes: 11
-        run: |
-          echo "Job failed. Holding runner open for 10 minutes for SSH debugging."
-          echo "See https://docs.blacksmith.sh/blacksmith-runners/ssh-into-runners for SSH instructions."
-          sleep 600
