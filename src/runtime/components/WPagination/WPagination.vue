@@ -68,10 +68,8 @@
 				</a>
 			</PaginationListItem>
 
-			<!-- @vue-expect-error index is a prop... -->
 			<PaginationEllipsis
 				v-else
-				:index="index"
 				class="pagination--page-fill flex items-center justify-center w-8 h-8"
 				:key="page.type"
 			>

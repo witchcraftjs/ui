@@ -62,17 +62,20 @@
 		"storybook:test": "pnpm storybook:build && pnpm concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"pnpm http-server docs-storybook --port 6006 --silent\" \"pnpm wait-on tcp:6006 && pnpm test-storybook --excludeTags 'skip-smoke-test'\"",
 		"test": "pnpm storybook:test && pnpm lint:types",
 		"test:dev": "pnpm concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"pnpm storybook\" \"pnpm wait-on tcp:6006 && pnpm test-storybook --watch\"",
-		"doc": "pnpm test && pnpm storybook:build",
+		"doc": "pnpm test && pnpm storybook:build && pnpm docs-site:build",
 		"doc:dev": "pnpm storybook",
-		"lint:eslint": "eslint \"src/**/*.{js,ts,vue,cjs}\" \"*.{js,ts}\" --max-warnings=5 --report-unused-disable-directives",
-		"lint:types": "vue-tsc --noEmit --pretty --project tsconfig.types.json",
+		"lint:eslint": "eslint \"src/**/*.{js,ts,vue,cjs}\" \"docs-site/**/*.{js,ts,vue,cjs}\" \"*.{js,ts}\" --max-warnings=5 --report-unused-disable-directives",
+		"lint:types": "nuxi typecheck && nuxi typecheck --cwd=docs-site",
 		"lint:commits": "commitlint --from-last-tag --to HEAD --verbose",
 		"lint:imports": "madge --circular --extensions ts ./src",
 		"lint": "pnpm lint:eslint && pnpm lint:types && pnpm lint:commits && pnpm lint:imports",
 		"//actions:debug": "echo For debugging github build action locally with nektos/act. Requires act and docker. Note: Cache will never work locally because of https://github.com/nektos/act/issues/285",
 		"actions:debug": "act -r -j release",
 		"gen:exports": "indexit update --ignore **.d.ts **.stories.ts **.vue -o '${path}.js'",
-		"gen:theme": "echo src/runtime/build/generateTheme.ts"
+		"gen:theme": "echo src/runtime/build/generateTheme.ts",
+		"docs-site:dev": "nuxt dev docs-site --port 3001",
+		"docs-site:build": "nuxt build docs-site",
+		"docs-site:generate": "nuxt generate docs-site"
 	},
 	"peerDependencies": {
 		"tailwindcss": "catalog:",
@@ -163,6 +166,7 @@
 	},
 	"author": "Alan <alanscodelog@gmail.com>",
 	"repository": "https://github.com/witchcraftjs/ui",
+	"homepage": "https://witchcraftjs.github.io/ui/",
 	"license": "MIT",
 	"files": [
 		"src",
@@ -191,5 +195,6 @@
 	},
 	"publishConfig": {
 		"access": "public"
-	}
+	},
+	"optionalDependencies": {}
 }

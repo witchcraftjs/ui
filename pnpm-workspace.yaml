@@ -1,6 +1,7 @@
 packages:
   - ./
   - playground/
+  - docs-site/
 
 allowBuilds:
   '@alanscodelog/eslint-config': false
@@ -9,6 +10,7 @@ allowBuilds:
   '@swc/core': false
   core-js: false
   esbuild: true
+  sharp: true
   unrs-resolver: false
   vue-demi: false
 
@@ -25,8 +27,16 @@ catalog:
   '@commitlint/cli': ^20.5.0
   '@faker-js/faker': ^10.3.0
   '@iconify/json': ^2.2.450
+  '@iconify-json/lucide': ^1.2.111
+  '@iconify-json/simple-icons': ^1.2.84
+  '@iconify-json/vscode-icons': ^1.2.53
   '@internationalized/date': ^3.12.0
+  '@nuxt/content': ^3.14.0
+  '@nuxt/eslint': ^1.15.2
   '@nuxt/eslint-config': ^1.15.2
+  '@nuxt/image': ^2.0.0
+  '@nuxt/ui': ^4.8.1
+  '@nuxtjs/mdc': ^0.22.0
   '@nuxt/kit': ^4.4.2
   '@nuxt/module-builder': ^1.0.2
   '@nuxt/schema': ^4.4.2
@@ -46,6 +56,7 @@ catalog:
   '@storybook/test-runner': ^0.22.1
   '@storybook/vue3': ^8.6.18
   '@storybook/vue3-vite': ^8.6.18
+  '@takumi-rs/core': ^1.6.0
   '@tailwindcss/cli': ^4.2.1
   '@tailwindcss/postcss': ^4.2.1
   '@tailwindcss/vite': ^4.2.1
@@ -69,7 +80,11 @@ catalog:
   indexit: 2.1.0-beta.3
   madge: ^7.0.0
   metamorphosis: ^0.6.1
+  minimark: ^0.2.0
   nuxt: ^4.4.2
+  nuxt-component-meta: ^0.17.2
+  nuxt-llms: 0.2.0
+  nuxt-og-image: ^6.5.1
   playwright: =1.58.2
   playwright-core: =1.58.2
   reka-ui: ^2.9.5
@@ -83,12 +98,17 @@ catalog:
   unbuild: ^3.6.1
   unplugin-icons: ^22.5.0
   unplugin-vue-components: ^28.8.0
+  ufo: ^1.6.4
+  unist-util-visit: ^5.1.0
   vite: ^7.3.1
   vite-tsconfig-paths: ^6.1.1
   vue: ^3.5.30
   vue-component-type-helpers: ^2.2.12
   vue-tsc: 3.2.4
   wait-on: ^8.0.5
+  zod: ^4.4.3
+  scule: ^1.3.0
+  vue-component-meta: ^3.3.1
 
 patchedDependencies:
   '@nuxt/module-builder': patches/@nuxt__module-builder.patch
@@ -100,11 +120,18 @@ settings:
 strictPeerDependencies: false
 minimumReleaseAge: 20160
 blockExoticSubdeps: true
+# TEMPORARY, remove next time
 minimumReleaseAgeExclude:
   - "@alanscodelog/*"
   - "@witchcraft/*"
   - '@anolilab/rc@4.0.3'
   - '@anolilab/semantic-release-pnpm@8.1.15'
+  - '@takumi-rs/*'
+  - '@iconify-json/lucide@1.2.111'
+  - '@iconify-json/simple-icons@1.2.84'
+  - '@iconify-json/vscode-icons@1.2.53'
+  - '@nuxt/ui@4.8.1'
+  - 'reka-ui@2.9.8'
   - '@typescript-eslint/eslint-plugin@8.60.1'
   - '@typescript-eslint/parser@8.60.1'
   - '@typescript-eslint/project-service@8.60.1'

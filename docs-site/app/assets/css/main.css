@@ -1,0 +1,14 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+@source "../../../content/**/*";
+
+@theme static {
+	--container-8xl: 90rem;
+	--font-brand: 'Metamorphous', sans-serif;
+	--font-sans: 'Public Sans', sans-serif;
+}
+
+:root {
+	--ui-container: var(--container-8xl);
+}

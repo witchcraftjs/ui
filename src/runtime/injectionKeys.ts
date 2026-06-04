@@ -18,6 +18,6 @@ export const i18nInjectionKey = Symbol.for("@witchcraft/ui:i18n") as InjectionKe
 export const translationMessagesInjectionKey = Symbol.for("@witchcraft/ui:i18nMessages") as InjectionKey<Ref<Record<string, any>>>
 
 
-/** @deprecated, see WDevOnly */
+/** @deprecated see WDevOnly */
 export const showDevOnlyInjectionKey = Symbol.for("@witchcraft/ui:showDevOnly") as InjectionKey<Ref<boolean>>
 

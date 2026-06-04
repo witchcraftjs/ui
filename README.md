@@ -5,15 +5,16 @@
 [![License][license-src]][license-href]
 [![Nuxt][nuxt-src]][nuxt-href]
 
+<!-- keep in sync with docs-site/content/ -->
 Opinionated, batteries included, vue/nuxt component library + some related utils.
 
 - Built with accessibility in mind.
-- Themable via [metamorphosis](https://github.com/alanscodelog/metamorphosis) which allows providing a custom set of tailwind variables for easier application theming (e.g. \*-fg, \*-bg, \*-accent). No regular tailwind colors are used except neutral.
-- Easily tweak parts of a component via props without having to pass complicate objects. For example, the input component can take a `wrapper-class` attribute to style it's wrapper.
-- Simple components have an `unstyle` option to use them minimally styled if needed\* 
+- Themable via [metamorphosis](https://github.com/alanscodelog/metamorphosis).
+- Simple components have an `unstyle` option to use them minimally styled if needed\*
 
 This is unfortunately not true styleless since the tailwind classes are still in the build output.
 
+# [Docs](https://witchcraftjs.github.io/ui)
 # [Storybook](https://witchcraftjs.github.io/ui/storybook)
 
 # Usage with Nuxt
@@ -50,13 +51,6 @@ There are some additional helpers that are not auto imported. These can be impor
 Anything else that might be needed can be imported from `#witchcraft-ui`.
 
 # General Usage
-
-# Props
-
-To make it easier to style parts of components or override behavior, some components can accept additional prefixed attributes, for example, you can pass `wrapper-class` to the input component to style it's wrapper.
-
-I think this is nicer in general than having to pass an object with extra attributes. The only weird part, is because of how vue changes the case of props, for attributes like `innerHTML` you will need to pass `{prefix}-inner-h-t-m-l`, but all components have proper types to help this. Similarly events look like `{prefix}-on-click`.
-
 
 # Other
 

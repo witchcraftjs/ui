@@ -1,0 +1,38 @@
+{
+	"name": "docs",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "nuxt dev --port 3001",
+		"build": "NODE_OPTIONS='--max-old-space-size=8192' nuxt build",
+		"generate": "nuxt generate",
+		"lint:types": "nuxi typecheck"
+	},
+	"dependencies": {
+		"@alanscodelog/utils": "catalog:",
+		"@iconify-json/lucide": "catalog:",
+		"@iconify-json/simple-icons": "catalog:",
+		"@iconify-json/vscode-icons": "catalog:",
+		"@nuxt/content": "catalog:",
+		"@nuxt/image": "catalog:",
+		"@nuxt/ui": "catalog:",
+		"@nuxtjs/mdc": "catalog:",
+		"@takumi-rs/core": "catalog:",
+		"@vueuse/core": "catalog:",
+		"@witchcraft/ui": "workspace:*",
+		"minimark": "catalog:",
+		"nuxt": "catalog:",
+		"nuxt-llms": "catalog:",
+		"nuxt-og-image": "catalog:",
+		"scule": "catalog:",
+		"tailwindcss": "catalog:",
+		"ufo": "catalog:",
+		"unist-util-visit": "catalog:",
+		"vue-component-meta": "catalog:",
+		"zod": "catalog:"
+	},
+	"devDependencies": {
+		"@nuxt/eslint": "catalog:",
+		"nuxt-component-meta": "catalog:"
+	}
+}
