@@ -1,6 +1,8 @@
 import type { ErrorW } from "@alanscodelog/utils"
 import type { Ref } from "vue"
 
+export * from "../components/WMetamorphosisTheme/types.js"
+
 export type ResizableOptions = {
 	/**
 	 * ### true (default)

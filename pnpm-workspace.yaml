@@ -79,7 +79,7 @@ catalog:
   husky: ^9.1.7
   indexit: 2.1.0-beta.3
   madge: ^7.0.0
-  metamorphosis: ^0.6.1
+  metamorphosis: ^0.7.1
   minimark: ^0.2.0
   nuxt: ^4.4.2
   nuxt-component-meta: ^0.17.2
@@ -124,6 +124,7 @@ blockExoticSubdeps: true
 minimumReleaseAgeExclude:
   - "@alanscodelog/*"
   - "@witchcraft/*"
+  - "metamorphosis"
   - '@anolilab/rc@4.0.3'
   - '@anolilab/semantic-release-pnpm@8.1.15'
   - '@takumi-rs/*'

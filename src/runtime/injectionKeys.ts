@@ -1,4 +1,5 @@
-import type { InjectionKey, Ref } from "vue"
+import type { Theme } from "metamorphosis/Theme"
+import type { InjectionKey, Ref, ShallowRef } from "vue"
 
 import type { TranslationFunction } from "./composables/useSetupI18n.js"
 import type { DarkModeCommands, DarkModeState } from "./types/index.js"
@@ -20,4 +21,7 @@ export const translationMessagesInjectionKey = Symbol.for("@witchcraft/ui:i18nMe
 
 /** @deprecated see WDevOnly */
 export const showDevOnlyInjectionKey = Symbol.for("@witchcraft/ui:showDevOnly") as InjectionKey<Ref<boolean>>
+
+
+export const themeInjectionKey = Symbol.for("@witchcraft/ui:theme") as InjectionKey<ShallowRef<Theme<any>>>
 

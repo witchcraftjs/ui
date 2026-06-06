@@ -52,15 +52,15 @@
 import { unreachable } from "@alanscodelog/utils/unreachable"
 import type { Theme } from "metamorphosis"
 import type { ComponentPublicInstance, HTMLAttributes } from "vue"
-import { computed, onBeforeUnmount, onMounted, ref, toRaw, useAttrs } from "vue"
+import { computed, ref, useAttrs } from "vue"
 
 import { useAccesibilityOutline } from "../../composables/useAccesibilityOutline.js"
 import { useNotificationHandler } from "../../composables/useNotificationHandler.js"
 import { useSetupDarkMode } from "../../composables/useSetupDarkMode.js"
 import { useSetupI18n } from "../../composables/useSetupI18n.js"
 import { useSetupLocale } from "../../composables/useSetupLocale.js"
+import { useSetupTheme } from "../../composables/useSetupTheme.js"
 import { NotificationHandler } from "../../helpers/NotificationHandler.js"
-import { theme as defaultTheme } from "../../theme.js"
 import type { TailwindClassProp } from "../../types/index.js"
 import { twMerge } from "../../utils/twMerge.js"
 import TestControls from "../TestControls/TestControls.vue"
@@ -70,7 +70,8 @@ import Notifications from "../WNotifications/WNotifications.vue"
 defineOptions({ name: "Root", inheritAttrs: false, suspensible: false })
 const $attrs = useAttrs()
 const props = withDefaults(defineProps<{
-	theme?: Theme
+	/** Metamorphosis theme to use. If not provided, the default theme is used. Be sure to mark it raw to avoid having vue proxy it, it's not needed. */
+	theme?: Theme<any>
 	outline?: boolean
 	forceOutline?: boolean
 	testWrapperMode?: boolean
@@ -111,19 +112,11 @@ const autoOutline = useAccesibilityOutline(el).outline
 
 const showOutline = computed(() => (props.outline && autoOutline.value) || props.forceOutline)
 
-const theme = computed(() => props.theme ?? defaultTheme)
-const themeCb = (): void => {
-	toRaw(theme.value).attach(el.value!)
-}
-if (props.isClientSide) {
-	onMounted(() => {
-		toRaw(theme.value).on("change", themeCb)
-		themeCb()
-	})
-	onBeforeUnmount(() => {
-		toRaw(theme.value).off("change", themeCb)
-	})
-}
+useSetupTheme({
+	props,
+	attachElement: el,
+	isClientSide: props.isClientSide
+})
 
 const darkModeSetup = useSetupDarkMode({ isClientSide: props.isClientSide })
 
