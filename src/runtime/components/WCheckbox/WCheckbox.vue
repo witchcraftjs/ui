@@ -110,7 +110,7 @@ const props = withDefaults(defineProps<
 	& /** @vue-ignore */Omit<
 		InputHTMLAttributes,
 		"class" | "readonly" | "disabled" | "onSumbit"
-	// https://github.com/vuejs/core/pull/14237
+		// autocomplete excluded because of https://github.com/vuejs/core/pull/14237 and https://github.com/vuejs/core/issues/10514
 		| "autocomplete"
 	>
 	& /** @vue-ignore */ TailwindClassProp

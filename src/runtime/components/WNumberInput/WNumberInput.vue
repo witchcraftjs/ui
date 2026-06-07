@@ -4,10 +4,10 @@
 	:max="props.max"
 	:step="props.step"
 	:format-options="{
-		signDisplay: 'exceptZero',
 		...rootProps?.formatOptions
 	}"
 	:class="twMerge(`
+		number-input--root
 		flex
 		items-center
 		justify-center
@@ -24,6 +24,7 @@
 >
 	<NumberFieldDecrement
 		class="
+			number-input--decrement
 			px-1
 			flex-1
 			hover:bg-neutral-200
@@ -35,12 +36,13 @@
 			disabled:cursor-not-allowed
 		"
 	>
-		<WIcon><i-radix-icons-minus/></WIcon>
+		<WIcon><i-lucide-minus/></WIcon>
 	</NumberFieldDecrement>
 
 	<NumberFieldInput
 		:class="twMerge(
 			`
+				number-input--input
 				bg-transparent
 				tabular-nums
 				text-center
@@ -62,6 +64,7 @@
 
 	<NumberFieldIncrement
 		class="
+			number-input--increment
 			px-1
 			flex-1
 			hover:bg-neutral-200
@@ -73,7 +76,7 @@
 			disabled:cursor-not-allowed
 		"
 	>
-		<WIcon><i-radix-icons-plus/></WIcon>
+		<WIcon><i-lucide-plus/></WIcon>
 	</NumberFieldIncrement>
 </NumberFieldRoot>
 </template>
@@ -84,10 +87,17 @@ import type {
 	NumberFieldRootEmits,
 	NumberFieldRootProps
 } from "reka-ui"
+import {
+	NumberFieldDecrement,
+	NumberFieldIncrement,
+	NumberFieldInput,
+	NumberFieldRoot
+} from "reka-ui"
 import type { HTMLAttributes, InputHTMLAttributes } from "vue"
 
 import type { EmitsToProps, TailwindClassProp } from "../../types/index.js"
 import { twMerge } from "../../utils/twMerge.js"
+import WIcon from "../WIcon/WIcon.vue"
 
 const props = withDefaults(defineProps<
 	& {
@@ -96,7 +106,8 @@ const props = withDefaults(defineProps<
 		min?: NumberFieldRootProps["min"]
 		step?: NumberFieldRootProps["step"]
 		isValid?: (value: any) => boolean
-		inputProps?: NumberFieldInputProps & Omit<InputHTMLAttributes, "class"> & TailwindClassProp
+		// autocomplete excluded because of https://github.com/vuejs/core/pull/14237 and https://github.com/vuejs/core/issues/10514
+		inputProps?: NumberFieldInputProps & Omit<InputHTMLAttributes, "class" | "autocomplete"> & TailwindClassProp
 		rootProps?: NumberFieldRootProps & EmitsToProps<NumberFieldRootEmits> & Omit<HTMLAttributes, "class"> & TailwindClassProp
 	}
 >(), {

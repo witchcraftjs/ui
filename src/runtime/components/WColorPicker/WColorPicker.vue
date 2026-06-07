@@ -51,13 +51,13 @@
 			role="slider"
 			:aria-description="ariaDescription"
 			:aria-valuetext="`${t('color-picker.aria.saturation')}: ${localColor.percent.s}, ${t('color-picker.aria.value')}: ${localColor.percent.v}`"
-			:class="`
+			:class="twMerge(`
 					color-picker--all-handle
 					${handleClasses}
 					border-[var(--fg)]
 					hover:shadow-black
 					active:shadow-black
-				`"
+				`)"
 			tabindex="0"
 			:style="`
 					left: calc(${localColor.percent.s}% - var(--slider-size)/2);

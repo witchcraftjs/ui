@@ -6,6 +6,9 @@ import WFileInput from "./WFileInput.vue"
 
 import * as components from "../index.js"
 
+type ExtraTestArgs = {
+	_slot?: string
+}
 const meta: Meta<typeof WFileInput> = {
 	component: WFileInput,
 	title: "Components/FileInput",
@@ -15,22 +18,29 @@ const meta: Meta<typeof WFileInput> = {
 }
 
 export default meta
-type Story = StoryObj<typeof WFileInput>
+type Story = StoryObj<typeof WFileInput> & { args?: ExtraTestArgs }
 
 export const SingleFile: Story = {
-	render: args => ({
-		components,
-		setup: () => {
-			const errors = ref([])
-			function errorHandler(errs: any) {
+	render: args => {
+		const extraArgs = args as ExtraTestArgs
+		return {
+			components,
+			setup: () => {
+				const errors = ref([])
+				function errorHandler(errs: any) {
 				// eslint-disable-next-line no-console
-				console.log(errs)
-				errors.value = errs
-			}
-			return { args, errorHandler, errors }
-		},
-		template: `
-			<WFileInput v-bind="{...args}" @errors="errorHandler"></WFileInput>
+					console.log(errs)
+					errors.value = errs
+				}
+				return { args, errorHandler, errors }
+			},
+			template: `
+			<!-- compact breaks in flexbox if not styled correctly -->
+			<div class="flex w-full">
+				<WFileInput v-bind="{...args}" @errors="errorHandler">
+					${extraArgs._slot}
+				</WFileInput>
+			</div>
 			<div
 				v-if="errors.length > 0"
 				class="border-2 border-red-500 rounded-lg p-2 mt-2 w-full"
@@ -40,7 +50,8 @@ export const SingleFile: Story = {
 				</div>
 			</div>
 		`
-	})
+		}
+	}
 }
 
 export const MultipleFile: Story = {
@@ -64,7 +75,13 @@ export const Compact: Story = {
 	...SingleFile,
 	args: {
 		...SingleFile.args,
-		compact: true
+		label: "Compact",
+		compact: true,
+		_slot: `
+			<template #label>
+				Upload
+			</template>
+		`
 	}
 }
 

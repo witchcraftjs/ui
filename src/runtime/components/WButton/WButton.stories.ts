@@ -37,7 +37,7 @@ export const Primary: Story = {
 					<template v-for="type of [false, 'ok', 'warning', 'danger', 'primary', 'secondary' ]">
 						<WButton v-bind="{...args, color: type, label: !args.label ? undefined : args.label + ' ' + capitalize(type || 'false')}">
 							<template #icon>
-								<icon class="w-[1em]"><icon-fa-solid-bell /></icon>
+								<WIcon class="w-[1em]"><icon-fa-solid-bell /></WIcon>
 							</template>
 						</WButton>
 					</template>
@@ -48,7 +48,7 @@ export const Primary: Story = {
 							${extraArgs._iconAfter
 								? `
 								<template #icon-after>
-									<icon class="w-[1em]"><icon-fa-solid-bell /></icon>
+									<WIcon class="w-[1em]"><icon-fa-solid-bell /></WIcon>
 								</template>
 							`
 								: ``}

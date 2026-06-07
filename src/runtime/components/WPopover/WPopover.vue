@@ -76,7 +76,7 @@
 				contentProps?.class)"
 		>
 			<div
-				:class="twMerge(`
+				:class="`
 					popover--content-inner
 					flex
 					flex-col
@@ -90,14 +90,14 @@
 					border-black/30
 					whitespace-pre-wrap
 					overflow-auto
-				`)"
+				`"
 			>
 				<slot name="popover"/>
 			</div>
 
 			<PopoverArrow
 				v-if="showArrow"
-				:class="twMerge(`
+				:class="`
 					popover--arrow
 					-mt-px
 					fill-neutral-50
@@ -105,7 +105,7 @@
 					drop-shadow-[0_2px_1px_rgba(0,0,0,0.3)]
 					relative
 					stroke-black/30
-				`)"
+				`"
 			/>
 		</PopoverContent>
 	</PopoverPortal>

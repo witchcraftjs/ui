@@ -250,6 +250,7 @@
 							class="
 								combobox--suggestion
 								flex
+								items-center
 								justify-between
 								gap-2
 								px-2
@@ -356,7 +357,8 @@ const props = withDefaults(defineProps<
 		/** If false, modelValue is set to the search term (so long as it's valid). */
 		restrictToSuggestions?: boolean
 		/** Input attributes or reka-ui ComboboxInput props. */
-		inputProps?: Omit<InputHTMLAttributes, "class"> & { class?: string } & HTMLAttributes & ComboboxInputProps & EmitsToProps<ComboboxInputEmits>
+		// autocomplete excluded because of https://github.com/vuejs/core/pull/14237 and https://github.com/vuejs/core/issues/10514
+		inputProps?: Omit<InputHTMLAttributes, "class" | "autocomplete"> & { class?: string } & HTMLAttributes & ComboboxInputProps & EmitsToProps<ComboboxInputEmits>
 	}>(), {
 	border: true,
 	ignoreFilter: false,

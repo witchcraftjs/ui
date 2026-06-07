@@ -1,11 +1,18 @@
 <template>
 <WPopover
 	:root-props="{
-		class: 'color-input--popover-root',
+		class: `
+			color-input--popover-root
+		`,
 		...rootProps
 	}"
 	:content-props="{
-		onInteractOutside: () => { $tempValue = undefined;emit('cancel') }
+		onInteractOutside: () => { $tempValue = undefined;emit('cancel') },
+		class: `
+			[&_.popover--content-inner]:p-0
+			[&_.popover--content-inner]:border-0
+			[&_.popover--content-inner]:overflow-none
+		`
 	}"
 	v-model="showPopover"
 >
@@ -19,7 +26,7 @@
 	</template>
 	<template #popover>
 		<div
-			class="color-input--popover-wrapper p-5"
+			class="color-input--popover-wrapper"
 		>
 			<WColorPicker
 				v-if="showPopover"

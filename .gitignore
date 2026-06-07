@@ -20,7 +20,6 @@ coverage
 
 worktree*/**/*
 
-!flake.lock
 .direnv
 src/assets/variables.scss
 **/*.wip.*

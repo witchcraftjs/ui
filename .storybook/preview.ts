@@ -1,6 +1,7 @@
 import "../src/runtime/assets/tailwind.css"
 // import toReact from "@egoist/vue-to-react"
-import { type Parameters,type Preview } from "@storybook/vue3"
+import type { Parameters, Preview } from "@storybook/vue3"
+
 import WRoot from "../src/runtime/components/WRoot/WRoot.vue"
 import { vExtractRootEl } from "../src/runtime/directives/vExtractRootEl.js"
 import "./storybook.css"
@@ -11,9 +12,9 @@ export const parameters: Parameters = {
 	controls: {
 		matchers: {
 			color: /(background|color)$/i,
-			date: /Date$/i,
+			date: /Date$/i
 		},
-		controls: { expanded: true },
+		controls: { expanded: true }
 	},
 	layout: "fullscreen",
 	backgrounds: {
@@ -21,30 +22,30 @@ export const parameters: Parameters = {
 		values: [
 			{
 				name: "light",
-				value: "var(--cGray0)",
+				value: "var(--cGray0)"
 			},
 			{
 				name: "dark",
-				value: "var(--cGray10)",
+				value: "var(--cGray10)"
 			},
 			{
 				name: "default",
-				value: "var(--cBg)",
-			},
-		],
-	},
+				value: "var(--cBg)"
+			}
+		]
+	}
 }
 
 const preview: Preview = {
 	parameters: {
 		options: {
 			storySort: {
-				order: ["Components", "Composables", "Other"],
-			},
+				order: ["Components", "Composables", "Other"]
+			}
 		},
 		// for dark mode addon
 		darkMode: {
-			current: 'dark'
+			current: "dark"
 		}
 	},
 	decorators: [(story, { args }) => ({
@@ -53,12 +54,11 @@ const preview: Preview = {
 		setup: () => ({ args }),
 		template: `
 			<w-root :test-wrapper-mode="true" :outline="args.outline"><story/></w-root>
-		`,
+		`
 	})],
 	args: {
-		outline: true,
+		outline: true
 	},
-
 	// not working right, prepareForInline not working either, and neither is inlineStories false
 	// tags: ["autodocs"]
 }

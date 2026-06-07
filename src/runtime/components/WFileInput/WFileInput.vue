@@ -36,7 +36,6 @@
 			file-input--wrapper
 			relative
 			justify-center
-			@container
 		`,
 			compact && `flex gap-2`,
 			!compact && `
@@ -58,6 +57,7 @@
 				justify-center
 				whitespace-nowrap
 				max-w-full
+				px-1
 			`)"
 		>
 			<slot
@@ -257,7 +257,9 @@ const props = withDefaults(defineProps<
 		 */
 		formats?: string[]
 		compact?: boolean
-		inputAttrs?: Omit<InputHTMLAttributes, "class"> & TailwindClassProp
+		// autocomplete excluded because of https://github.com/vuejs/core/pull/14237 and https://github.com/vuejs/core/issues/10514
+
+		inputAttrs?: Omit<InputHTMLAttributes, "class" | "autocomplete"> & TailwindClassProp
 		wrapperAttrs?: Omit<HTMLAttributes, "class"> & TailwindClassProp
 	}
 >(), {

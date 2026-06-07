@@ -211,9 +211,10 @@ export default {
 	name: "WComponentName"
 	// https://v3.vuejs.org/guide/typescript-support.html#annotating-props
 }
-</script>```
+</script>
+```
 
-Related Links:
+### Related Links:
 - https://github.com/vuejs/rfcs/discussions/397
 - https://github.com/vuejs/core/issues/8522
 - https://github.com/vuejs/rfcs/pull/477

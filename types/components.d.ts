@@ -8,19 +8,13 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    ILucideCalendarDays: typeof import('~icons/lucide/calendar-days')['default']
-    ILucideCalendarRange: typeof import('~icons/lucide/calendar-range')['default']
-    ILucideCheck: typeof import('~icons/lucide/check')['default']
-    ILucideChevronDown: typeof import('~icons/lucide/chevron-down')['default']
-    ILucideChevronLeft: typeof import('~icons/lucide/chevron-left')['default']
-    ILucideChevronRight: typeof import('~icons/lucide/chevron-right')['default']
-    ILucideChevronsLeft: typeof import('~icons/lucide/chevrons-left')['default']
-    ILucideChevronsRight: typeof import('~icons/lucide/chevrons-right')['default']
-    ILucideCopy: typeof import('~icons/lucide/copy')['default']
-    ILucideFile: typeof import('~icons/lucide/file')['default']
-    ILucideInfo: typeof import('~icons/lucide/info')['default']
-    ILucideLoaderCircle: typeof import('~icons/lucide/loader-circle')['default']
-    ILucideUpload: typeof import('~icons/lucide/upload')['default']
-    ILucideX: typeof import('~icons/lucide/x')['default']
+    IIcRoundLogin: typeof import('~icons/ic/round-login')['default']
+    ILucideKeyboard: typeof import('~icons/lucide/keyboard')['default']
+    ILucideMinus: typeof import('~icons/lucide/minus')['default']
+    ILucidePlus: typeof import('~icons/lucide/plus')['default']
+    IMdiLocal: typeof import('~icons/mdi/local')['default']
+    IPhUserDuotone: typeof import('~icons/ph/user-duotone')['default']
+    IPhUserPlusDuotone: typeof import('~icons/ph/user-plus-duotone')['default']
+    IRadixIconsTrash: typeof import('~icons/radix-icons/trash')['default']
   }
 }

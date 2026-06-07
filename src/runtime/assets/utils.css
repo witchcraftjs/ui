@@ -40,11 +40,15 @@
 	@apply outlined-within:outline-2 outlined-within:outline-accent-500 outlined-within:outline-offset-2;
 }
 
+@utility focus-outline-within-no-offset {
+	@apply outlined-within:outline-2 outlined-within:outline-accent-500 outlined-within:outline-offset-0;
+}
+
 @utility focus-outline {
 	@apply outlined:outline-2 outlined:outline-accent-500 outlined:outline-offset-2;
 }
 @utility focus-outline-no-offset {
-	@apply outlined:outline-2 outlined:outline-accent-500;
+	@apply outlined:outline-2 outlined:outline-accent-500 outlined:outline-offset-0;
 }
 @utility focus-outline-hidden {
 	@apply outlined:outline-none;
