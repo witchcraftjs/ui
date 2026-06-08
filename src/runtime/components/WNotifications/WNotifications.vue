@@ -5,13 +5,14 @@
 	tag="div"
 	:class="twMerge(`
 		notifications
+		[--_notification-width:calc(100dvw-var(--spacing)*4)]
 		[--notification-width:calc(100dvw-var(--spacing)*4)]
 		sm:[--notification-width:300px]
 		fixed
 		top-0
 		z-50
-		right-[calc(var(--notification-width)*-1)]
-		w-[calc(var(--spacing)*2+var(--notification-width)*2)]
+		right-[calc(var(--notification-width,var(--_notification-width))*-1)]
+		w-[calc(var(--spacing)*2+var(--notification-width,var(--_notification-width))*2)]
 		max-h-[100dvh]
 		flex
 		flex-col
@@ -32,7 +33,7 @@
 			overflow-hidden
 			my-2
 			max-h-[300px]
-			w-[var(--notification-width)]
+			w-[var(--notification-width,var(--_notification-width))]
 			shrink-0
 			max-sm:[&_.notification--button]:p-2
 			max-sm:[&_.notification--button]:py-1

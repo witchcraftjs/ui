@@ -3,4 +3,10 @@ title: 'WProgressBar'
 path: '/components/w-progress-bar'
 ---
 
-<ComponentDocs />
+<ComponentDocs>
+
+| Variable | Description |
+|---|---|
+| `--progress` | Progress value for the progress bar |
+
+</ComponentDocs>

@@ -3,11 +3,16 @@
 	:id="finalId"
 	:aria-label="t('color-picker.aria')"
 	:class="twMerge(`color-picker
+			[--_slider-size:calc(var(--spacing)_*_4)]
+			[--_contrast-dark:var(--color-neutral-100)]
+			[--_contrast-light:var(--color-neutral-800)]
+			[--_fg:rgb(var(--_contrast-dark))]
+			[--_bg:rgb(var(--_contrast-light))]
 			[--slider-size:calc(var(--spacing)_*_4)]
 			[--contrast-dark:var(--color-neutral-100)]
 			[--contrast-light:var(--color-neutral-800)]
-			[--fg:rgb(var(--contrast-dark))]
-			[--bg:rgb(var(--contrast-light))]
+			[--fg:rgb(var(--contrast-dark,var(--_contrast-dark)))]
+			[--bg:rgb(var(--contrast-light,var(--_contrast-light)))]
 			max-w-[300px]
 			flex flex-col items-center justify-center
 			bg-neutral-50
@@ -16,8 +21,10 @@
 			p-3
 		`,
 		invertColors && `
-			[--fg:rgb(var(--contrast-light))]
-			[--bg:rgb(var(--contrast-dark))]
+			[--fg:rgb(var(--contrast-light,var(--_contrast-light)))]
+			[--bg:rgb(var(--contrast-dark,var(--_contrast-dark)))]
+			[--_fg:rgb(var(--_contrast-light))]
+			[--_bg:rgb(var(--_contrast-dark))]
 		`,
 		border && `
 			border
@@ -54,14 +61,14 @@
 			:class="twMerge(`
 					color-picker--all-handle
 					${handleClasses}
-					border-[var(--fg)]
+					border-[var(--fg,var(--_fg))]
 					hover:shadow-black
 					active:shadow-black
 				`)"
 			tabindex="0"
 			:style="`
-					left: calc(${localColor.percent.s}% - var(--slider-size)/2);
-					top: calc(${localColor.percent.v}% - var(--slider-size)/2);
+					left: calc(${localColor.percent.s}% - var(--slider-size,var(--_slider-size))/2);
+					top: calc(${localColor.percent.v}% - var(--slider-size,var(--_slider-size))/2);
 					background: ${asRgbaString};
 				`"
 			@keydown="slider.keydown($event, 'all')"
@@ -87,7 +94,7 @@
 				color-picker--hue-handle
 				${handleClasses}
 			`"
-			:style="`left: calc(${localColor.percent.h}% - var(--slider-size)/2)`"
+			:style="`left: calc(${localColor.percent.h}% - var(--slider-size,var(--_slider-size))/2)`"
 			@keydown="slider.keydown($event, 'hue')"
 		/>
 	</div>
@@ -113,7 +120,7 @@
 			:aria-description="ariaDescription"
 			tabindex="0"
 			:class="`color-picker--alpha-handle ${handleClasses}`"
-			:style="`left: calc(${localColor.percent.a}% - var(--slider-size)/2)`"
+			:style="`left: calc(${localColor.percent.a}% - var(--slider-size,var(--_slider-size))/2)`"
 			@keydown="slider.keydown($event, 'alpha')"
 		/>
 	</div>
@@ -123,7 +130,7 @@
 				bg-transparency-squares
 				relative
 				aspect-square
-				h-[calc(var(--slider-size)*3)]
+				h-[calc(var(--slider-size,var(--_slider-size))*3)]
 				rounded-full
 				shadow-xs
 			"
@@ -221,8 +228,8 @@ const sliderClasses = `
 
 const handleClasses = `
 	handle
-	h-[var(--slider-size)]
-	w-[var(--slider-size)]
+	h-[var(--slider-size,var(--_slider-size))]
+	w-[var(--slider-size,var(--_slider-size))]
 	shadow-xs
 	shadow-black/50
 	border-2 border-neutral-700

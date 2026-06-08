@@ -3,4 +3,10 @@ title: 'WNotifications'
 path: '/components/w-notifications'
 ---
 
-<ComponentDocs />
+<ComponentDocs >
+
+| Variable | Description |
+|---|---|
+| `--notification-width` | Width of notification elements |
+
+</ComponentDocs>
