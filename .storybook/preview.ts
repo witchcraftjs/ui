@@ -60,6 +60,6 @@ const preview: Preview = {
 		outline: true
 	},
 	// not working right, prepareForInline not working either, and neither is inlineStories false
-	// tags: ["autodocs"]
+	tags: ["autodocs"]
 }
 export default preview
