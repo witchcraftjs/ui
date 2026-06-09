@@ -2,15 +2,13 @@
 import type { Meta, StoryObj } from "@storybook/vue3"
 import { ref } from "vue"
 
-import WFileInput from "./WFileInput.vue"
-
 import * as components from "../index.js"
 
 type ExtraTestArgs = {
 	_slot?: string
 }
-const meta: Meta<typeof WFileInput> = {
-	component: WFileInput,
+const meta: Meta<typeof components.WFileInput> = {
+	component: components.WFileInput,
 	title: "Components/FileInput",
 	args: {
 
@@ -18,13 +16,13 @@ const meta: Meta<typeof WFileInput> = {
 }
 
 export default meta
-type Story = StoryObj<typeof WFileInput> & { args?: ExtraTestArgs }
+type Story = StoryObj<typeof components.WFileInput> & { args?: ExtraTestArgs }
 
 export const SingleFile: Story = {
-	render: args => {
-		const extraArgs = args as ExtraTestArgs
+	render: _args => {
+		const args = _args as any as NonNullable<Story["args"]>
 		return {
-			components,
+			components: components as any,
 			setup: () => {
 				const errors = ref([])
 				function errorHandler(errs: any) {
@@ -38,7 +36,7 @@ export const SingleFile: Story = {
 			<!-- compact breaks in flexbox if not styled correctly -->
 			<div class="flex w-full">
 				<WFileInput v-bind="{...args}" @errors="errorHandler">
-					${extraArgs._slot}
+					${args._slot}
 				</WFileInput>
 			</div>
 			<div
@@ -87,7 +85,7 @@ export const Compact: Story = {
 
 export const ErrorHandling: Story = {
 	render: args => ({
-		components,
+		components: components as any,
 		setup: () => {
 			const errors = ref([])
 			const errorHandler = (e: any) => errors.value = e

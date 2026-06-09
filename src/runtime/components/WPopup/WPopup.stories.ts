@@ -2,15 +2,13 @@
 import type { Meta, StoryObj } from "@storybook/vue3"
 import { ref } from "vue"
 
-import WPopup from "./WPopup.vue"
-
 import * as components from "../index.js"
 
 type ExtraTestArgs = {
 	_slots: string
 }
-const meta: Meta<typeof WPopup> = {
-	component: WPopup,
+const meta: Meta<typeof components.WPopup> = {
+	component: components.WPopup,
 	title: "Components/Popup",
 	args: {
 		title: "Popup Title",
@@ -19,13 +17,13 @@ const meta: Meta<typeof WPopup> = {
 }
 
 export default meta
-type Story = StoryObj<typeof WPopup> & { args?: ExtraTestArgs }
+type Story = StoryObj<typeof components.WPopup> & { args?: ExtraTestArgs }
 
 export const Primary: Story = {
-	render: args => {
-		const extraArgs = args as ExtraTestArgs
+	render: _args => {
+		const args = _args as any as NonNullable<Story["args"]>
 		return {
-			components,
+			components: components as any,
 			setup: () => {
 				const value = ref(false)
 				return { args, value }
@@ -38,7 +36,7 @@ export const Primary: Story = {
 					v-model="value"
 					v-bind="args"
 				>
-					${extraArgs._slots}
+					${args._slots}
 					<template #button>
 						<WButton>Open Modal Popup</WButton>
 					</template>

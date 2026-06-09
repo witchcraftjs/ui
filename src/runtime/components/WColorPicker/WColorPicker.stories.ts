@@ -3,12 +3,10 @@ import type { Meta, StoryObj } from "@storybook/vue3"
 import Color from "colorjs.io"
 import { ref } from "vue"
 
-import WColorPicker from "./WColorPicker.vue"
-
 import * as components from "../index.js"
 
-const meta: Meta<typeof WColorPicker> = {
-	component: WColorPicker,
+const meta: Meta<typeof components.WColorPicker> = {
+	component: components.WColorPicker,
 	title: "Components/ColorPicker",
 	args: {
 
@@ -16,11 +14,11 @@ const meta: Meta<typeof WColorPicker> = {
 }
 
 export default meta
-type Story = StoryObj<typeof WColorPicker>
+type Story = StoryObj<typeof components.WColorPicker>
 
 export const Primary: Story = {
 	render: args => ({
-		components,
+		components: components as any,
 		setup: () => {
 			const color = ref({ r: 0, g: 0, b: 0/* , a: 0.5 */, ...(args.modelValue) })
 			delete (args as any).modelValue

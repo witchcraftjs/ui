@@ -28,7 +28,7 @@ type Story = StoryObj<{}>
 
 export const Primary: Story = {
 	render: args => ({
-		components,
+		components: components as any,
 		setup: () => {
 			const el = ref<HTMLElement | null>(null)
 			onMounted(() => {
@@ -57,7 +57,7 @@ export const OutlineFalse: Story = {
 /* We can also allow focus-visible outlines regardless of the state of outline, by wrapping in `.group.outlined-visible`. This is the default for the test wrapper. */
 export const AlwaysAllowFocusVisible: Story = {
 	render: args => ({
-		components,
+		components: components as any,
 		setup: () => args,
 		template: `
 		<div class="outlined-visible group">${template}</div>

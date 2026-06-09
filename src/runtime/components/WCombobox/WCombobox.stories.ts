@@ -3,13 +3,12 @@ import type { Meta, StoryObj } from "@storybook/vue3"
 import { ref, watch } from "vue"
 
 import { playAllowNewValues, playBasic, playBasicClickSelect, playBasicKeyboardSelect, playValidation } from "./storyPlays.js"
-import WCombobox from "./WCombobox.vue"
 
 import * as components from "../index.js"
 
 
-const meta: Meta<typeof WCombobox> = {
-	component: WCombobox as any,
+const meta: Meta<typeof components.WCombobox> = {
+	component: components.WCombobox as any,
 	title: "Components/Combobox",
 	args: {
 		modelValue: "",
@@ -27,23 +26,23 @@ type ExtraTestArgs = {
 	_headerTemplate?: string
 }
 
-type Story = StoryObj<typeof WCombobox> & { args?: ExtraTestArgs }
+type Story = StoryObj<typeof components.WCombobox> & { args?: ExtraTestArgs }
 
 /**
  * Primary story setup to match the DOM structure expected by the
  * migrated play functions (specifically looking for data-testid="model-value").
  */
 export const Primary: Story = {
-	render: args => {
-		const extraArgs = args as ExtraTestArgs
+	render: _args => {
+		const args = _args as any as NonNullable<Story["args"]>
 		return {
-			components,
+			components: components as any,
 			setup() {
 				const modelValue = ref(args.modelValue)
 				const searchTerm = ref(args.searchTerm)
 				const suggestions = ref([...args.suggestions!])
 				const loading = ref(false)
-				const simulateLoading = ref((extraArgs)._simulateLoading)
+				const simulateLoading = ref((args)._simulateLoading)
 				// the component takes care of extending this so we can actually see the icon on quick loads like this
 				watch(searchTerm, () => {
 					if (simulateLoading.value) {
@@ -54,7 +53,7 @@ export const Primary: Story = {
 					}
 				})
 				function save(value: string) {
-					if (!(extraArgs)._allowSave) return
+					if (!(args)._allowSave) return
 					const newValue: any
 						= typeof value === "string" && typeof suggestions.value[0] === "object"
 							? { name: value, id: "new-id" }
@@ -69,8 +68,7 @@ export const Primary: Story = {
 					suggestions,
 					loading,
 					simulateLoading,
-					save,
-					extraArgs
+					save
 				}
 			},
 			template: `
@@ -99,7 +97,7 @@ export const Primary: Story = {
 						:suggestions="suggestions"
 						:loading="loading"
 					>
-						${(extraArgs)._headerTemplate ?? ""}
+						${(args)._headerTemplate ?? ""}
 					</WCombobox>
 				</div>
 			</div>

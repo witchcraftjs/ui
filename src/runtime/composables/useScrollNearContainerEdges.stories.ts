@@ -10,57 +10,60 @@ const meta = {
 }
 
 export default meta
-type Story = StoryObj // & StoryObj<typeof extraArgs>
+type ExtraTestArgs = Record<string, never>
+type Story = StoryObj
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Primary: Story = {
-	render: args => ({
-		setup: () => {
-			const containerEl = ref<HTMLElement | null>(null)
-			const {
-				resetScrollIndicator,
-				scrollEdges,
-				endScroll,
-				scrollIndicator,
-				isScrolling
-			} = useScrollNearContainerEdges({
-				containerEl,
-				scrollMargin: 20,
-				outerScrollMargin: 20
-			})
-			const pos = ref({ x: 0, y: 0 })
-			onMounted(() => {
-				pos.value.x = containerEl.value!.getBoundingClientRect().left
-				pos.value.y = containerEl.value!.getBoundingClientRect().top
-			})
-			const moveDrag = (e: MouseEvent): void => {
-				pos.value.x = e.clientX
-				pos.value.y = e.clientY
-				scrollEdges(e.clientX, e.clientY)
-			}
-			const endDrag = (_e: MouseEvent): void => {
-				endScroll()
-				document.removeEventListener("mousemove", moveDrag)
-				document.removeEventListener("mouseup", endDrag)
-			}
-			const startDrag = (_e: MouseEvent): void => {
-				document.addEventListener("mousemove", moveDrag)
-				document.addEventListener("mouseup", endDrag)
-			}
-			return {
-				args,
-				containerEl,
-				resetScrollIndicator,
-				scrollEdges,
-				endScroll,
-				startDrag,
-				scrollIndicator,
-				isScrolling,
-				twMerge,
-				pos
-			}
-		},
+	render: _args => {
+		const args = _args as any as NonNullable<Story["args"]>
+		return {
+			setup: () => {
+				const containerEl = ref<HTMLElement | null>(null)
+				const {
+					resetScrollIndicator,
+					scrollEdges,
+					endScroll,
+					scrollIndicator,
+					isScrolling
+				} = useScrollNearContainerEdges({
+					containerEl,
+					scrollMargin: 20,
+					outerScrollMargin: 20
+				})
+				const pos = ref({ x: 0, y: 0 })
+				onMounted(() => {
+					pos.value.x = containerEl.value!.getBoundingClientRect().left
+					pos.value.y = containerEl.value!.getBoundingClientRect().top
+				})
+				const moveDrag = (e: MouseEvent): void => {
+					pos.value.x = e.clientX
+					pos.value.y = e.clientY
+					scrollEdges(e.clientX, e.clientY)
+				}
+				const endDrag = (_e: MouseEvent): void => {
+					endScroll()
+					document.removeEventListener("mousemove", moveDrag)
+					document.removeEventListener("mouseup", endDrag)
+				}
+				const startDrag = (_e: MouseEvent): void => {
+					document.addEventListener("mousemove", moveDrag)
+					document.addEventListener("mouseup", endDrag)
+				}
+				return {
+					args,
+					containerEl,
+					resetScrollIndicator,
+					scrollEdges,
+					endScroll,
+					startDrag,
+					scrollIndicator,
+					isScrolling,
+					twMerge,
+					pos
+				}
+			},
 
-		template: `
+			template: `
 		<div>
 			<p>Scroll the container by dragging the red box (which represents the dragging mouse position).</p>
 			<p>It should drag slow, then faster as the mouse nears the edges and scroll indicators should appear on the scrolling edges.</p>
@@ -89,5 +92,6 @@ export const Primary: Story = {
 			</div>
 		</div>
 		`
-	})
+		}
+	}
 }

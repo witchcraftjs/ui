@@ -2,6 +2,7 @@
 import type { Meta, StoryObj } from "@storybook/vue3"
 import { ref } from "vue"
 
+// we import because it's not part of the publicly exported components
 import WMultiValues from "./WMultiValues.vue"
 
 import * as components from "../index.js"
@@ -28,7 +29,10 @@ type Story = StoryObj<typeof WMultiValues>
  */
 export const Primary: Story = {
 	render: args => ({
-		components: { ...components, WMultiValues },
+		components: {
+			...components as any,
+			WMultiValues
+		},
 		setup: () => {
 			const inputValue = ref("B")
 			const multiValueEl = ref<typeof WMultiValues | null>(null)

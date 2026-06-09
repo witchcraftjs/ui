@@ -32,15 +32,15 @@ function toUTC(m: Date, timeZone: string) {
 	return toTimeZone(fromDate(m, timeZone), "UTC").toAbsoluteString()
 }
 export const Primary: Story = {
-	render: args => {
-		const extraArgs = args as ExtraTestArgs
+	render: _args => {
+		const args = _args as any as NonNullable<Story["args"]>
 		return {
 			components: {
 				...components
 			},
 			setup: () => {
 				const modelValue = ref(args.modelValue)
-				const timeZone = ref(extraArgs._timeZone)
+				const timeZone = ref(args._timeZone)
 				const debugUtcDate = computed(() => {
 					const m = modelValue.value
 					const z = timeZone.value!
@@ -66,7 +66,7 @@ export const Primary: Story = {
 			</div>
 			<div class="border border-neutral-500">
 				<WDatePicker v-bind="args" v-model="modelValue" :time-zone="timeZone">
-					${extraArgs._slot}
+					${args._slot}
 				</WDatePicker>
 			</div>
 		`

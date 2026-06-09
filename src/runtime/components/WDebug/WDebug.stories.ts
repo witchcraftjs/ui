@@ -2,12 +2,10 @@
 import { crop } from "@alanscodelog/utils/crop"
 import type { Meta, StoryObj } from "@storybook/vue3"
 
-import WDebug from "./WDebug.vue"
-
 import * as components from "../index.js"
 
-const meta: Meta<typeof WDebug> = {
-	component: WDebug,
+const meta: Meta<typeof components.WDebug> = {
+	component: components.WDebug,
 	title: "Components/Debug",
 	args: {
 		value: { any: ["any", { value: "any" }] }
@@ -15,11 +13,11 @@ const meta: Meta<typeof WDebug> = {
 }
 
 export default meta
-type Story = StoryObj<typeof WDebug>
+type Story = StoryObj<typeof components.WDebug>
 
 export const Primary: Story = {
 	render: args => ({
-		components,
+		components: components as any,
 		setup: () => ({ args }),
 		template: `
 			<WDebug v-bind="args" />

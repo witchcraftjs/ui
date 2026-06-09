@@ -2,12 +2,10 @@
 import type { Meta, StoryObj } from "@storybook/vue3"
 import { ref } from "vue"
 
-import WPagination from "./WPagination.vue"
-
 import * as components from "../index.js"
 
-const meta: Meta<typeof WPagination> = {
-	component: WPagination,
+const meta: Meta<typeof components.WPagination> = {
+	component: components.WPagination,
 	title: "Components/Pagination",
 	args: {
 		total: 10
@@ -15,11 +13,11 @@ const meta: Meta<typeof WPagination> = {
 }
 
 export default meta
-type Story = StoryObj<typeof WPagination>
+type Story = StoryObj<typeof components.WPagination>
 
 export const Primary: Story = {
 	render: args => ({
-		components,
+		components: components as any,
 		setup() {
 			const num = ref(1)
 			const interceptClick = ref(false)

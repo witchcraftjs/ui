@@ -2,12 +2,10 @@
 import type { Meta, StoryObj } from "@storybook/vue3"
 import { ref } from "vue"
 
-import WColorInput from "./WColorInput.vue"
-
 import * as components from "../index.js"
 
-const meta: Meta<typeof WColorInput> = {
-	component: WColorInput,
+const meta: Meta<typeof components.WColorInput> = {
+	component: components.WColorInput,
 	title: "Components/ColorInput",
 	args: {
 
@@ -15,11 +13,11 @@ const meta: Meta<typeof WColorInput> = {
 }
 
 export default meta
-type Story = StoryObj<typeof WColorInput>
+type Story = StoryObj<typeof components.WColorInput>
 
 export const Primary: Story = {
 	render: args => ({
-		components,
+		components: components as any,
 		setup: () => {
 			const color = ref({ r: 0, g: 0, b: 0/* , a: 0.5 */ })
 			const handleChange = (e: any): void => {

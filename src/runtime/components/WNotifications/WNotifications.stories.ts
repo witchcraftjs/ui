@@ -3,6 +3,7 @@ import { faker } from "@faker-js/faker"
 import type { Meta, StoryObj } from "@storybook/vue3"
 import { computed, ref } from "vue"
 
+// we import because it's not part of the publicly exported components
 import WNotifications from "./WNotifications.vue"
 
 import { NotificationHandler } from "../../helpers/NotificationHandler.js"
@@ -26,16 +27,16 @@ type Story = StoryObj<typeof WNotifications> & {
 }
 
 export const Primary: Story = {
-	render: args => {
-		const extraArgs = args as ExtraTestArgs
+	render: _args => {
+		const args = _args as any as NonNullable<Story["args"]>
 		return {
-			components,
+			components: components as any,
 			setup() {
 				const handler = new NotificationHandler({})
 
 				let count = 0
 
-				const withTitle = ref(extraArgs._withTitle)
+				const withTitle = ref(args._withTitle)
 				const disableTimeout = ref(false)
 				const lotsOfText = ref(false)
 				const paragraphs = `\n Simulating lots of text:\n${faker.lorem.paragraphs(20)}`
@@ -114,24 +115,26 @@ export const Primary: Story = {
 			// <WDebug>{{args.handler}}</WDebug>
 			template: `
 	<WRoot :outline="args.outline" :notification-handler="handler">
-		<WButton :label="'Notify Timeoutable'" @click="notifyTimeoutable()"></WButton>
-		<WButton :label="'Notify RequiresAction (Cancellable)'" @click="notifyRequiresAction()"></WButton>
-		<WButton :label="'Notify RequiresAction (Cancellable) - Custom Width'" @click="notifyRequiresAction({cancellable:true,notificationProps: {class: 'sm:max-w-[90dvw]'}})"></WButton>
-		<WButton :label="'Notify Non-Cancellable that RequiresAction'" @click="notifyNonCancellableRequiresAction()"></WButton>
-		<WButton :label="'Notify With Dangerous Option (Cancellable)'" @click="notifyWithDangerousOption()"></WButton>
-		<WButton :label="'Notify Non-Cancellable'" @click="notifyNonCancellable()"></WButton>
-		<WCheckbox v-model="lotsOfText">Use lots of text</WCheckbox>
-		<WCheckbox v-model="disableTimeout">Disable Timeout</WCheckbox>
-		<WCheckbox v-model="withTitle">With Title</WCheckbox>
-		<WNotifications :handler="handler" />
-		History:
-		<WDebug>
-			<template v-for="entry in handler.history">
-				Message: {{entry.message}}
-				Resolution: {{entry.resolution}}
-				<br>
-			</template>
-		</WDebug>
+		<div class="flex flex-col gap-1"> 
+			<WButton :label="'Notify Timeoutable'" @click="notifyTimeoutable()"></WButton>
+			<WButton :label="'Notify RequiresAction (Cancellable)'" @click="notifyRequiresAction()"></WButton>
+			<WButton :label="'Notify RequiresAction (Cancellable) - Custom Width'" @click="notifyRequiresAction({cancellable:true,notificationProps: {class: 'sm:max-w-[90dvw]'}})"></WButton>
+			<WButton :label="'Notify Non-Cancellable that RequiresAction'" @click="notifyNonCancellableRequiresAction()"></WButton>
+			<WButton :label="'Notify With Dangerous Option (Cancellable)'" @click="notifyWithDangerousOption()"></WButton>
+			<WButton :label="'Notify Non-Cancellable'" @click="notifyNonCancellable()"></WButton>
+			<WCheckbox v-model="lotsOfText">Use lots of text</WCheckbox>
+			<WCheckbox v-model="disableTimeout">Disable Timeout</WCheckbox>
+			<WCheckbox v-model="withTitle">With Title</WCheckbox>
+			<WNotifications :handler="handler" />
+			History:
+			<WDebug>
+				<template v-for="entry in handler.history">
+					Message: {{entry.message}}
+					Resolution: {{entry.resolution}}
+					<br>
+				</template>
+			</WDebug>
+		</div> 
 	</WRoot>
 	`
 		}

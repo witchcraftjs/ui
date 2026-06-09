@@ -24,11 +24,11 @@ export default meta
 type Story = StoryObj<typeof components.WButton> & { args?: ExtraTestArgs }
 
 export const Primary: Story = {
-	render: args => {
-		const extraArgs = args as ExtraTestArgs
+	render: _args => {
+		const args = _args as any as NonNullable<Story["args"]>
 		return {
 			components: {
-				...components,
+				...components as any,
 				IconFaSolidBell
 			},
 			setup: () => ({ args, capitalize }),
@@ -45,7 +45,7 @@ export const Primary: Story = {
 				<div class="flex flex-col gap-4 pt-10">
 					<template v-for="type of [false, 'ok', 'warning', 'danger', 'primary', 'secondary']">
 						<WButton v-bind="{...args, color: type , label: !args.label ? undefined : args.label + ' ' + capitalize(type || 'false') }">
-							${extraArgs._iconAfter
+							${args._iconAfter
 								? `
 								<template #icon-after>
 									<WIcon class="w-[1em]"><icon-fa-solid-bell /></WIcon>
@@ -99,7 +99,7 @@ export const BorderlessDisabled: Story = {
 }
 export const WithDivInside: Story = {
 	render: args => ({
-		components,
+		components: components as any,
 		setup: () => ({ args }),
 		template: `
 		<div class="flex gap-4 justify-center">

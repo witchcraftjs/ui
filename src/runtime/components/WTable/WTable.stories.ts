@@ -3,8 +3,6 @@ import { faker } from "@faker-js/faker"
 import type { Meta, StoryObj } from "@storybook/vue3"
 import { reactive, ref } from "vue"
 
-import WTable from "./WTable.vue"
-
 // todo
 import * as components from "../index.js"
 
@@ -15,19 +13,19 @@ const fakerSentences = Array.from({ length: 100 }).fill(0).map(_ => faker.lorem.
 type ExtraTestArgs = {
 	_slots?: string
 }
-const meta: Meta<typeof WTable> = {
-	component: WTable as any,
+const meta: Meta<typeof components.WTable> = {
+	component: components.WTable as any,
 	title: "Components/Table"
 }
 
 export default meta
-type Story = StoryObj<typeof WTable> & { args: ExtraTestArgs }
+type Story = StoryObj<typeof components.WTable> & { args: ExtraTestArgs }
 
 export const Primary: Story = {
-	render: args => {
-		const extraArgs = args as ExtraTestArgs
+	render: _args => {
+		const args = _args as any as NonNullable<Story["args"]>
 		return {
-			components,
+			components: components as any,
 			setup: () => {
 				const show = ref(true)
 				const debugGrips = ref(false)
@@ -59,7 +57,7 @@ export const Primary: Story = {
 						v-if="show"
 						v-bind="args"
 					>
-						${extraArgs._slots}
+						${args._slots}
 					</WTable>
 				</div>
 		`
@@ -281,7 +279,7 @@ export const VirtualizedFitWidthFalse: Story = {
 
 export const ThreeColSomeColsNotResizable: Story = {
 	render: args => ({
-		components,
+		components: components as any,
 		setup: () => {
 			const debugGrips = ref(false)
 			return { args, debugGrips }

@@ -3,13 +3,11 @@
 import type { Meta, StoryObj } from "@storybook/vue3"
 import { ref } from "vue"
 
-import WDarkModeSwitcher from "./WDarkModeSwitcher.vue"
-
 // todo, maybe don't do this for perf reasons
 import * as components from "../index.js"
 
-const meta: Meta<typeof WDarkModeSwitcher> = {
-	component: WDarkModeSwitcher,
+const meta: Meta<typeof components.WDarkModeSwitcher> = {
+	component: components.WDarkModeSwitcher,
 	title: "Components/DarkModeSwitcher",
 	args: {
 
@@ -17,12 +15,12 @@ const meta: Meta<typeof WDarkModeSwitcher> = {
 }
 
 export default meta
-type Story = StoryObj<typeof WDarkModeSwitcher>
+type Story = StoryObj<typeof components.WDarkModeSwitcher>
 
 
 export const Primary: Story = {
 	render: args => ({
-		components,
+		components: components as any,
 		setup: () => {
 			const darkMode = ref(false)
 			return {

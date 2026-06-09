@@ -27,7 +27,7 @@ type Story = StoryObj<typeof components.WRecorder>
 
 export const Primary: Story = {
 	render: args => ({
-		components,
+		components: components as any,
 		directives: { vExtractRootEl },
 		setup: () => {
 			const recording = ref(false)

@@ -23,7 +23,7 @@ export const Primary: Story = {
 		modelValue: "some value"
 	},
 	render: args => ({
-		components,
+		components: components as any,
 		// eslint-disable-next-line no-console
 		setup: () => ({ args, test: () => console.log("Enter") }),
 		template: `
@@ -38,7 +38,7 @@ export const Primary: Story = {
 /** Has more reasonable min-width inside a flexbox. */
 export const InsideAFlexbox: Story = {
 	render: args => ({
-		components,
+		components: components as any,
 		setup: () => ({ args }),
 		template: `
 				Inside a flexbox:

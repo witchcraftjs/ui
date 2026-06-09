@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { Meta, StoryObj } from "@storybook/vue3"
 
+// we import because it's not part of the publicly exported components
 import WNotification from "./WNotification.vue"
 import WNotificationTestMessageComponent from "./WNotificationTestMessageComponent.vue"
 
@@ -23,7 +24,7 @@ type Story = StoryObj<typeof WNotification>
 export const Primary: Story = {
 	render: args => ({
 		components: {
-			...components,
+			...components as any,
 			WNotification,
 			WNotificationTestMessageComponent
 		},

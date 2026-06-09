@@ -2,15 +2,13 @@
 import type { Meta, StoryObj } from "@storybook/vue3"
 import { computed, ref, useTemplateRef, watch } from "vue"
 
-import WPopover from "./WPopover.vue"
-
 import * as components from "../index.js"
 
 type ExtraTestArgs = {
 	container?: Record<string, string>
 }
-const meta: Meta<typeof WPopover> = {
-	component: WPopover,
+const meta: Meta<typeof components.WPopover> = {
+	component: components.WPopover,
 	title: "Components/Popover",
 	args: {
 
@@ -18,13 +16,13 @@ const meta: Meta<typeof WPopover> = {
 }
 
 export default meta
-type Story = StoryObj<typeof WPopover> & { args?: ExtraTestArgs }
+type Story = StoryObj<typeof components.WPopover> & { args?: ExtraTestArgs }
 
 export const Primary: Story = {
-	render: args => {
-		const extraArgs = args as ExtraTestArgs
+	render: _args => {
+		const args = _args as any as NonNullable<Story["args"]>
 		return {
-			components,
+			components: components as any,
 			setup: () => {
 				const collisionBoundary = useTemplateRef("collisionBoundary")
 				const value = ref(false)
@@ -58,8 +56,7 @@ export const Primary: Story = {
 					autoRotatePos,
 					buttonStyle,
 					value,
-					collisionBoundary,
-					extraArgs
+					collisionBoundary
 				}
 			},
 			template: `
@@ -91,7 +88,7 @@ export const Primary: Story = {
 							height: '80vh',
 							padding: '50px',
 							border: '1px solid black',
-							...extraArgs.container
+							...args.container
 						}"
 					>
 								

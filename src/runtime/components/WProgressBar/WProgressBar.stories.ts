@@ -2,8 +2,6 @@
 import type { Meta, StoryObj } from "@storybook/vue3"
 import { onUnmounted, ref } from "vue"
 
-import WProgressBar from "./WProgressBar.vue"
-
 import * as components from "../index.js"
 
 type ExtraTestArgs = {
@@ -11,8 +9,8 @@ type ExtraTestArgs = {
 	_timeout?: number
 	_add?: number
 }
-const meta: Meta<typeof WProgressBar> = {
-	component: WProgressBar,
+const meta: Meta<typeof components.WProgressBar> = {
+	component: components.WProgressBar,
 	title: "Components/ProgressBar",
 	args: {
 		label: "Label",
@@ -25,16 +23,16 @@ const meta: Meta<typeof WProgressBar> = {
 }
 
 export default meta
-type Story = StoryObj<typeof WProgressBar> & { args?: ExtraTestArgs }
+type Story = StoryObj<typeof components.WProgressBar> & { args?: ExtraTestArgs }
 
 export const Primary: Story = {
-	render: args => {
-		const extraArgs = args as ExtraTestArgs
+	render: _args => {
+		const args = _args as any as NonNullable<Story["args"]>
 		return {
-			components,
+			components: components as any,
 			setup: () => {
 				const forceFull = ref(false)
-				const progress = ref(extraArgs._start as number)
+				const progress = ref(args._start as number)
 				if (args.progress) {
 					progress.value = args.progress
 				} else {
@@ -49,9 +47,9 @@ export const Primary: Story = {
 								justHitFull = false
 							}, 2000)
 						} else {
-							progress.value += extraArgs._add as number
+							progress.value += args._add as number
 						}
-					}, extraArgs._timeout as number)
+					}, args._timeout as number)
 					onUnmounted(() => {
 						clearInterval(interval)
 					})

@@ -25,8 +25,7 @@
 			text-black
 		`,
 			testWrapperMode && `
-			px-10
-			pb-10
+			p-10 pt-5
 		`,
 			!testWrapperMode && `
 			min-h-screen

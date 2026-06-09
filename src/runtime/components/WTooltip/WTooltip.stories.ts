@@ -2,12 +2,10 @@
 import type { Meta, StoryObj } from "@storybook/vue3"
 import { ref } from "vue"
 
-import WTooltip from "./WTooltip.vue"
-
 import * as components from "../index.js"
 
-const meta: Meta<typeof WTooltip> = {
-	component: WTooltip as any,
+const meta: Meta<typeof components.WTooltip> = {
+	component: components.WTooltip as any,
 	title: "Components/Tooltip",
 	args: {
 		content: "This is a tooltip"
@@ -21,29 +19,28 @@ type ExtraTestArgs = {
 	_testTrigger?: string
 }
 
-type Story = StoryObj<typeof WTooltip> & {
+type Story = StoryObj<typeof components.WTooltip> & {
 	args?: ExtraTestArgs
 }
 
 export const Primary: Story = {
-	render: args => {
-		const extraArgs = args as ExtraTestArgs
+	render: _args => {
+		const args = _args as any as NonNullable<Story["args"]>
 		return {
-			components,
+			components: components as any,
 			setup() {
 				const showTooltip = ref(false)
 				return {
 					showTooltip,
-					extraArgs,
 					args
 				}
 			},
 			template: `
 			<div class="flex flex-col gap-3 items-center pt-10">
 				<WTooltip v-bind="args">
-					${extraArgs._testTrigger ?? ""}
+					${args._testTrigger ?? ""}
 					<template #content>
-					${extraArgs._testContent ?? "This is a tooltip"}
+					${args._testContent ?? "This is a tooltip"}
 					</template>
 				</WTooltip>
 			</div>
