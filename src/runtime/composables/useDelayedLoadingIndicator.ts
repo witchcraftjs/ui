@@ -12,7 +12,7 @@ export function useDelayedLoadingIndicator(
 	loading: Ref<boolean>,
 	timeout: number = 200
 ) {
-	const showLoadingIndicator = ref(false)
+	const showLoadingIndicator = ref(loading.value)
 	let loadingTimeout: number | NodeJS.Timeout | undefined
 	watch(loading, newVal => {
 		clearTimeout(loadingTimeout)
