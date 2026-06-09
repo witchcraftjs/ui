@@ -92,6 +92,8 @@
 		"@nuxt/kit": "catalog:",
 		"@nuxt/schema": "catalog:",
 		"@nuxt/types": "catalog:",
+		"@regle/core": "catalog:",
+		"@regle/rules": "catalog:",
 		"@tailwindcss/vite": "catalog:",
 		"@witchcraft/nuxt-utils": "catalog:",
 		"colord": "catalog:",
@@ -103,7 +105,8 @@
 		"tailwind-merge": "catalog:",
 		"unplugin-icons": "catalog:",
 		"unplugin-vue-components": "catalog:",
-		"vue-component-type-helpers": "catalog:"
+		"vue-component-type-helpers": "catalog:",
+		"zod": "catalog:"
 	},
 	"devDependencies": {
 		"@alanscodelog/commitlint-config": "catalog:",

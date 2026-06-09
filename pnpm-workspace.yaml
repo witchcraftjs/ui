@@ -87,6 +87,8 @@ catalog:
   nuxt-og-image: ^6.5.1
   playwright: =1.58.2
   playwright-core: =1.58.2
+  '@regle/core': ^1.26.1
+  '@regle/rules': ^1.26.1
   reka-ui: ^2.9.5
   semantic-release: ^24.2.9
   storybook: ^8.6.18

@@ -30,6 +30,19 @@
 		"pagination.previous-page": "Prev",
 		"pagination.next-page": "Next",
 		"recorder.recording": "Recording",
-		"":"hate forgetting json can't handle a trailing comma"
+		"auth.local.create": "Create Local User",
+		"auth.local.username": "Username:",
+		"auth.local.select-user": "Select Local User:",
+		"auth.local.create-and-switch": "Create and Switch",
+		"auth.local.aria.sign-in": "Sign In with Selected Local User",
+		"auth.local.aria.remove": "Remove Selected Local User",
+		"auth.local.switching-user": "Switching user...",
+		"auth.local.removing-user": "Removing user...",
+		"auth.local.username-taken": "Username already exists.",
+		"auth.local.remove-notification.title": "Warning:",
+		"auth.local.remove-notification.message": "Are you sure you want to remove this user?",
+		"auth.local.remove-notification.button": "Remove",
+		"auth.sign-in-register": "Sign in / Register with",
+		"": "hate forgetting json can't handle a trailing comma"
 	}
 }
