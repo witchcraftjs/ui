@@ -13,10 +13,13 @@ export default defineNuxtConfig({
 	devtools: {
 		enabled: true
 	},
+	app: {
+		baseURL: "/ui/"
+	},
 
 	css: ["~/assets/css/main.css"],
 	site: {
-		url: "https://witchcraftjs.github.io/ui",
+		url: "https://witchcraftjs.github.io",
 		name: "@witchcraft/ui"
 	},
 	content: {

@@ -3,6 +3,8 @@ title: 'WColorPicker'
 path: '/components/w-color-picker'
 ---
 
+<StorybookEmbed />
+
 <ComponentDocs>
 
 | Variable | Description |

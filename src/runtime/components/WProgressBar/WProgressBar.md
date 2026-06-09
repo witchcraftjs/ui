@@ -3,6 +3,8 @@ title: 'WProgressBar'
 path: '/components/w-progress-bar'
 ---
 
+<StorybookEmbed />
+
 <ComponentDocs>
 
 | Variable | Description |

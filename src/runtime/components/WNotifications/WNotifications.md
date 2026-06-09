@@ -3,6 +3,8 @@ title: 'WNotifications'
 path: '/components/w-notifications'
 ---
 
+<StorybookEmbed />
+
 <ComponentDocs >
 
 | Variable | Description |
