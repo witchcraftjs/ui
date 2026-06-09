@@ -202,3 +202,23 @@ export type EmitsToProps<T> = {
 			? (...args: T[K]) => void
 			: T[K]
 }
+
+
+/** An auth local user entry. */
+export type AuthLocalUser = {
+	/** Unique identifier. */
+	id: string
+	/** Display username. */
+	username: string
+	isLocal: boolean
+}
+
+/** Style configuration for a single login provider button. */
+export type AuthProviderStyle = {
+	/** Display name shown on the button. */
+	name: string
+	/** Vue component (icon) to render on the button. */
+	logo: any
+	/** Additional classes for the button. */
+	class?: string
+}

@@ -1,5 +1,7 @@
 /* Manually Generated Index */
 
+export { default as WAuth } from "./WAuth/WAuth.vue"
+export { default as WAuthLocalUsers } from "./WAuth/WAuthLocalUsers.vue"
 export { default as WButton } from "./WButton/WButton.vue"
 export { default as WCheckbox } from "./WCheckbox/WCheckbox.vue"
 export { default as WColorInput } from "./WColorInput/WColorInput.vue"
