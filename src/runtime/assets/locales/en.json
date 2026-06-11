@@ -43,6 +43,9 @@
 		"auth.local.remove-notification.message": "Are you sure you want to remove this user?",
 		"auth.local.remove-notification.button": "Remove",
 		"auth.sign-in-register": "Sign in / Register with",
+		"async-validated-input.checking": "Checking...",
+		"async-validated-input.valid": "Valid.",
+		"async-validated-input.invalid": "Invalid.",
 		"": "hate forgetting json can't handle a trailing comma"
 	}
 }

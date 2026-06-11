@@ -93,6 +93,9 @@ catalogs:
     '@rollup/plugin-node-resolve':
       specifier: ^16.0.3
       version: 16.0.3
+    '@standard-schema/spec':
+      specifier: ^1.1.0
+      version: 1.1.0
     '@storybook/addon-a11y':
       specifier: ^8.6.18
       version: 8.6.18
@@ -163,8 +166,8 @@ catalogs:
       specifier: ^13.9.0
       version: 13.9.0
     '@witchcraft/nuxt-utils':
-      specifier: ^0.3.6
-      version: 0.3.7
+      specifier: ^0.3.10
+      version: 0.3.10
     autoprefixer:
       specifier: ^10.4.27
       version: 10.5.0
@@ -317,12 +320,15 @@ importers:
       '@regle/rules':
         specifier: 'catalog:'
         version: 1.26.1(vue@3.5.34(typescript@5.9.3))
+      '@standard-schema/spec':
+        specifier: 'catalog:'
+        version: 1.1.0
       '@tailwindcss/vite':
         specifier: 'catalog:'
         version: 4.3.0(vite@7.3.3(@types/node@24.12.4)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.47.1)(yaml@2.9.0))
       '@witchcraft/nuxt-utils':
         specifier: 'catalog:'
-        version: 0.3.7(magicast@0.5.3)
+        version: 0.3.10(magicast@0.5.3)(vue@3.5.34(typescript@5.9.3))
       colord:
         specifier: 'catalog:'
         version: 2.9.3
@@ -5072,8 +5078,8 @@ packages:
   '@webcontainer/env@1.1.1':
     resolution: {integrity: sha512-6aN99yL695Hi9SuIk1oC88l9o0gmxL1nGWWQ/kNy81HigJ0FoaoTXpytCj6ItzgyCEwA9kF1wixsTuv5cjsgng==}
 
-  '@witchcraft/nuxt-utils@0.3.7':
-    resolution: {integrity: sha512-BVBImUPNL/hVj7KOaqjpNs9gn9Qih8stV7rLCB64LKBkjzTFG5k4efuPlDQ2cw1g0tzqJBYL7euSjl/VRYGqww==}
+  '@witchcraft/nuxt-utils@0.3.10':
+    resolution: {integrity: sha512-X5YksvLXTJiLP0ORP62b+D60ASk/ITN3j4GwcSQ99qjV6qg9hA50tWjj53dnOi4xEMpEd45j/FJyi000TgkmYA==}
     engines: {node: '>=20.0.0'}
 
   abbrev@3.0.1:
@@ -16913,15 +16919,20 @@ snapshots:
 
   '@webcontainer/env@1.1.1': {}
 
-  '@witchcraft/nuxt-utils@0.3.7(magicast@0.5.3)':
+  '@witchcraft/nuxt-utils@0.3.10(magicast@0.5.3)(vue@3.5.34(typescript@5.9.3))':
     dependencies:
       '@alanscodelog/utils': 6.2.1
       '@nuxt/kit': 4.4.6(magicast@0.5.3)
+      '@standard-schema/spec': 1.1.0
+      '@vueuse/core': 14.3.0(vue@3.5.34(typescript@5.9.3))
       change-case: 5.4.4
       defu: 6.1.7
       fast-glob: 3.3.3
+      tailwind-merge: 3.6.0
+      zod: 4.4.3
     transitivePeerDependencies:
       - magicast
+      - vue
 
   abbrev@3.0.1: {}
 
@@ -25364,6 +25375,7 @@ time:
   '@regle/core@1.26.1': '2026-05-21T12:44:45.048Z'
   '@regle/rules@1.26.1': '2026-05-21T12:44:51.737Z'
   '@rollup/plugin-node-resolve@16.0.3': '2025-10-13T00:33:10.742Z'
+  '@standard-schema/spec@1.1.0': '2025-12-15T20:49:46.431Z'
   '@storybook/addon-a11y@8.6.18': '2026-03-06T11:05:57.917Z'
   '@storybook/addon-actions@8.6.18': '2026-03-06T11:06:01.311Z'
   '@storybook/addon-essentials@8.6.18': '2026-03-06T11:06:07.552Z'
@@ -25387,7 +25399,7 @@ time:
   '@vue/runtime-dom@3.5.34': '2026-05-06T07:20:04.095Z'
   '@vueuse/components@13.9.0': '2025-09-01T11:42:46.111Z'
   '@vueuse/core@13.9.0': '2025-09-01T11:42:03.511Z'
-  '@witchcraft/nuxt-utils@0.3.7': '2026-06-02T21:56:21.890Z'
+  '@witchcraft/nuxt-utils@0.3.10': '2026-06-11T05:05:04.579Z'
   autoprefixer@10.5.0: '2026-04-13T20:41:45.117Z'
   colord@2.9.3: '2022-08-10T13:52:12.556Z'
   colorjs.io@0.6.0-alpha.1: '2024-12-26T17:42:13.193Z'
