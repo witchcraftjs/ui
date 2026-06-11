@@ -1,5 +1,6 @@
 /* Manually Generated Index */
 
+export { default as WAsyncValidatedInput } from "./WAsyncValidatedInput/WAsyncValidatedInput.vue"
 export { default as WAuth } from "./WAuth/WAuth.vue"
 export { default as WAuthLocalUsers } from "./WAuth/WAuthLocalUsers.vue"
 export { default as WButton } from "./WButton/WButton.vue"

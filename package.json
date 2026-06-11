@@ -94,6 +94,7 @@
 		"@nuxt/types": "catalog:",
 		"@regle/core": "catalog:",
 		"@regle/rules": "catalog:",
+		"@standard-schema/spec": "catalog:",
 		"@tailwindcss/vite": "catalog:",
 		"@witchcraft/nuxt-utils": "catalog:",
 		"colord": "catalog:",
@@ -198,6 +199,5 @@
 	},
 	"publishConfig": {
 		"access": "public"
-	},
-	"optionalDependencies": {}
+	}
 }
