@@ -195,5 +195,9 @@
 	},
 	"publishConfig": {
 		"access": "public"
+	},
+	"homepage": "https://github.com/witchcraftjs/ui#readme",
+	"bugs": {
+		"url": "https://github.com/witchcraftjs/ui/issues"
 	}
 }
