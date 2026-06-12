@@ -1,7 +1,7 @@
 import type { Theme } from "metamorphosis/Theme"
 import type { InjectionKey, Ref, ShallowRef } from "vue"
 
-import type { TranslationFunction } from "./composables/useSetupI18n.js"
+import type { InternalTranslationFunction } from "./composables/useSetupI18n.js"
 import type { DarkModeCommands, DarkModeState } from "./types/index.js"
 
 export const darkModeCommandsInjectionKey = Symbol.for("@witchcraft/ui:darkModeCommands") as InjectionKey<DarkModeCommands>
@@ -14,7 +14,7 @@ export const languageLocaleInjectionKey = Symbol.for("@witchcraft/ui:languageLoc
 export const timeLocaleInjectionKey = Symbol.for("@witchcraft/ui:timeLocale") as InjectionKey<Ref<string>>
 
 
-export const i18nInjectionKey = Symbol.for("@witchcraft/ui:i18n") as InjectionKey<TranslationFunction>
+export const i18nInjectionKey = Symbol.for("@witchcraft/ui:i18n") as InjectionKey<InternalTranslationFunction>
 
 export const translationMessagesInjectionKey = Symbol.for("@witchcraft/ui:i18nMessages") as InjectionKey<Ref<Record<string, any>>>
 

@@ -8,7 +8,8 @@ import {
 import { defaultTranslationFunction } from "../helpers/defaultTranslationFunction.js"
 import { i18nInjectionKey, translationMessagesInjectionKey } from "../injectionKeys.js"
 
-export type TranslationFunction = (key: string, replacements?: Record<string, any>) => string
+export type TranslationFunction = (key: string, replacements?: Record<string, any> | undefined) => string
+export type InternalTranslationFunction = (key: string, replacements: Record<string, any> | undefined, messages: Record<string, any>) => string
 
 
 const messagesGlob = import.meta.glob("../assets/locales/*.json")
@@ -47,7 +48,7 @@ export async function useSetupI18n({
 	/** To avoid having to wrap the component in a Suspense component because of the await on `useSetupI18n`, we can provide a dummy message proxy that just returns empty text until the messages are loaded. */
 	useDummyMessageSetWhileLoading?: boolean
 	/** A	custom translation function. The default requires the `useBuiltinTranslations` option to be true. */
-	translationFunction?: TranslationFunction
+	translationFunction?: InternalTranslationFunction
 }): Promise<void> {
 	provide(i18nInjectionKey, translationFunction)
 	if (useBuiltinTranslations) {
