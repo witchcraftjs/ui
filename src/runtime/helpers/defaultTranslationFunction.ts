@@ -19,8 +19,11 @@ import { translationMessagesInjectionKey } from "../injectionKeys.js"
  * Would return "This is a message".
  */
 
-export function defaultTranslationFunction(key: string, replacements?: Record<string, any>): string {
-	const messages = inject(translationMessagesInjectionKey)
+export function defaultTranslationFunction(
+	key: string,
+	replacements: Record<string, any> | undefined,
+	messages: Record<string, any>
+): string {
 	if (messages === undefined) throw new Error("witchcraft/ui: The default translation function requires the useSetupI18n `useBuiltinTranslations` options to be true. Did you set it?")
 	let value = (messages.value)["witchcraft-ui"][key]
 	if (value === undefined) throw new Error(`No translation for key ${key}.`)
