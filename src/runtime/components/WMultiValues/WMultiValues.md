@@ -3,6 +3,8 @@ title: 'WMultiValues'
 path: '/components/w-multi-values'
 ---
 
-<StorybookEmbed />
+::storybook-embed
+::
 
-<ComponentDocs />
+::component-docs 
+::

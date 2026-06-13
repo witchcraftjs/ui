@@ -3,6 +3,8 @@ title: 'WFileInput'
 path: '/components/w-file-input'
 ---
 
-<StorybookEmbed />
+::storybook-embed
+::
 
-<ComponentDocs />
+::component-docs 
+::

@@ -3,6 +3,8 @@ title: 'WPalette'
 path: '/components/w-palette'
 ---
 
-<StorybookEmbed />
+::storybook-embed
+::
 
-<ComponentDocs />
+::component-docs 
+::

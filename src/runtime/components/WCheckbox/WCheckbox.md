@@ -3,6 +3,8 @@ title: 'WCheckbox'
 path: '/components/w-checkbox'
 ---
 
-<StorybookEmbed />
+::storybook-embed
+::
 
-<ComponentDocs />
+::component-docs 
+::

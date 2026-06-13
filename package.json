@@ -59,7 +59,7 @@
 		"storybook": "BROWSER=none storybook dev -p 6006 --no-open",
 		"storybook:clear-cache": "BROWSER=none storybook dev -p 6006 --no-manager-cache",
 		"storybook:build": "pnpm nuxt prepare && storybook build -o docs-storybook",
-		"storybook:test": "pnpm storybook:build && pnpm concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"pnpm http-server docs-storybook --port 6006 --silent\" \"pnpm wait-on tcp:6006 && pnpm test-storybook --excludeTags 'skip-smoke-test'\"",
+		"storybook:test": "TEST=true pnpm storybook:build && pnpm concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"pnpm http-server docs-storybook --port 6006 --silent\" \"pnpm wait-on tcp:6006 && pnpm test-storybook --excludeTags 'skip-smoke-test'\"",
 		"test": "pnpm storybook:test && pnpm lint:types",
 		"test:dev": "pnpm concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"pnpm storybook\" \"pnpm wait-on tcp:6006 && pnpm test-storybook --watch\"",
 		"doc": "pnpm test && pnpm storybook:build && pnpm docs-site:build",
@@ -74,8 +74,8 @@
 		"gen:exports": "indexit update --ignore **.d.ts **.stories.ts **.vue -o '${path}.js'",
 		"gen:theme": "echo src/runtime/build/generateTheme.ts",
 		"docs-site:dev": "nuxt dev docs-site --port 3001",
-		"docs-site:build": "nuxt build docs-site",
-		"docs-site:generate": "nuxt generate docs-site"
+		"docs-site:build": "nuxt generate docs-site",
+		"docs-site:build:dev": "BUILD_ENV=development pnpm docs-site:build"
 	},
 	"peerDependencies": {
 		"tailwindcss": "catalog:",

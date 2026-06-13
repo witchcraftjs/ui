@@ -2,7 +2,8 @@
 title: 'WButton'
 path: '/components/w-button'
 ---
+::storybook-embed
+::
 
-<StorybookEmbed />
-
-<ComponentDocs />
+::component-docs
+::

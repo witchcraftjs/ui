@@ -29,6 +29,11 @@ const config: StorybookConfig = {
 			docgen: "vue-component-meta"
 		}
 	},
-	typescript: { check: false }
+	typescript: { check: false },
+	async viteFinal(config) {
+		if (process.env.TEST) return config
+		config.base = "/ui/storybook/"
+		return config
+	}
 }
 export default config

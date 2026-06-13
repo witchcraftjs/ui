@@ -3,6 +3,8 @@ title: 'WAuth'
 path: '/components/w-auth'
 ---
 
-<StorybookEmbed />
+::storybook-embed
+::
 
-<ComponentDocs />
+::component-docs 
+::

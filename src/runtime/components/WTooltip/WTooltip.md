@@ -3,6 +3,8 @@ title: 'WTooltip'
 path: '/components/w-tooltip'
 ---
 
-<StorybookEmbed />
+::storybook-embed
+::
 
-<ComponentDocs />
+::component-docs 
+::

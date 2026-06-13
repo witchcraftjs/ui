@@ -3,6 +3,8 @@ title: 'WIcon'
 path: '/components/w-icon'
 ---
 
-<StorybookEmbed />
+::storybook-embed
+::
 
-<ComponentDocs />
+::component-docs 
+::

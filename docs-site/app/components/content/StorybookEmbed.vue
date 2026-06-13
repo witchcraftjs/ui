@@ -29,17 +29,10 @@ const storybookBase = computed(() => import.meta.dev ? "http://localhost:6006" :
 
 const storybookLink = computed(() => `${storybookBase.value}/?path=/docs/${storybookTitle.value.replace("/", "-").toLowerCase()}--docs`)
 
-const { data } = await useFetchStorybookStories(storybookTitleSlug.value)
-// eslint-disable-next-line no-console
-if (!data) console.warn(`Failed to fetch storybook stories for ${storybookTitleSlug.value}`)
-
-const stories = computed(() => data.value?.stories ?? [])
 const activeIndex = ref(0)
 
-if (props.story && stories.value.length > 0) {
-	const idx = stories.value.findIndex(s => s.name === props.story)
-	if (idx !== -1) activeIndex.value = idx
-}
+const { data: meta } = await useFetchStorybookStories(storybookTitleSlug.value)
+const stories = computed(() => meta.value?.stories ?? [])
 
 const activeStory = computed(() => stories.value[activeIndex.value] ?? null)
 

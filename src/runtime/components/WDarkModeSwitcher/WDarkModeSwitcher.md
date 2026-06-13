@@ -3,6 +3,8 @@ title: 'WDarkModeSwitcher'
 path: '/components/w-dark-mode-switcher'
 ---
 
-<StorybookEmbed />
+::storybook-embed
+::
 
-<ComponentDocs />
+::component-docs 
+::

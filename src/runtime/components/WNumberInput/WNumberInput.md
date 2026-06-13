@@ -3,6 +3,8 @@ title: 'WNumberInput'
 path: '/components/w-number-input'
 ---
 
-<StorybookEmbed />
+::storybook-embed
+::
 
-<ComponentDocs />
+::component-docs 
+::

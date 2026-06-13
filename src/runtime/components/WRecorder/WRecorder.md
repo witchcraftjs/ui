@@ -3,6 +3,8 @@ title: 'WRecorder'
 path: '/components/w-recorder'
 ---
 
-<StorybookEmbed />
+::storybook-embed
+::
 
-<ComponentDocs />
+::component-docs 
+::

@@ -3,6 +3,8 @@ title: 'WPopover'
 path: '/components/w-popover'
 ---
 
-<StorybookEmbed />
+::storybook-embed
+::
 
-<ComponentDocs />
+::component-docs 
+::

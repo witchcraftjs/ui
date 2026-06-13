@@ -1,15 +1,13 @@
 export function useFetchStorybookStories(componentSlug: string) {
-	if (import.meta.server) {
-		const event = useRequestEvent()
-		event?.node.res.setHeader(
-			"x-nitro-prerender",
-			[event?.node.res.getHeader("x-nitro-prerender"), `/api/storybook-stories/${componentSlug}`].filter(Boolean).join(",")
-		)
-	}
-
+	const route = `/api/storybook-stories/${componentSlug}.json`
+	prerenderRoutes(route)
 	return useAsyncData<{ stories: { id: string, name: string, title: string }[], component: string }>(
 		`storybook-stories-${componentSlug}`,
-		() => $fetch(`/api/storybook-stories/${componentSlug}`).catch(() => ({ stories: [], component: componentSlug }) as any),
+		async () => $fetch<{ stories: { id: string, name: string, title: string }[], component: string }>(route).catch(error => {
+			// eslint-disable-next-line no-console
+			console.warn(`Failed to fetch storybook stories for ${componentSlug} (${(error as { data?: { status?: number } })?.data?.status ?? "unknown"})`)
+			return { stories: [], component: componentSlug }
+		}),
 		{
 			lazy: import.meta.client,
 			dedupe: "defer",

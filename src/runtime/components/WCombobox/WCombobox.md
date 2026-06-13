@@ -3,6 +3,8 @@ title: 'WCombobox'
 path: '/components/w-combobox'
 ---
 
-<StorybookEmbed />
+::storybook-embed
+::
 
-<ComponentDocs />
+::component-docs 
+::

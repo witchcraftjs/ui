@@ -3,6 +3,8 @@ title: 'WColorInput'
 path: '/components/w-color-input'
 ---
 
-<StorybookEmbed />
+::storybook-embed
+::
 
-<ComponentDocs />
+::component-docs 
+::

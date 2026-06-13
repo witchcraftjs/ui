@@ -3,6 +3,8 @@ title: 'WSimpleInput'
 path: '/components/w-simple-input'
 ---
 
-<StorybookEmbed />
+::storybook-embed
+::
 
-<ComponentDocs />
+::component-docs 
+::

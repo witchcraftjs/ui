@@ -3,6 +3,8 @@ title: 'WTable'
 path: '/components/w-table'
 ---
 
-<StorybookEmbed />
+::storybook-embed
+::
 
-<ComponentDocs />
+::component-docs 
+::

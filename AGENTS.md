@@ -134,9 +134,11 @@ title: 'WSomeComponent'
 path: '/components/w-some-component'
 ---
 
-<StorybookEmbed />
+::storybook-embed
+::
 
-<ComponentDocs />
+::component-docs 
+::
 ```
 
 ## Stories

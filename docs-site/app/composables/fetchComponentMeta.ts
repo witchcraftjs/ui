@@ -1,15 +1,10 @@
 import type { ComponentMeta } from "vue-component-meta"
 
 export function useFetchComponentMeta(name: string) {
-	if (import.meta.server) {
-		const event = useRequestEvent()
-		event?.node.res.setHeader(
-			"x-nitro-prerender",
-			[event?.node.res.getHeader("x-nitro-prerender"), `/api/component-meta/${name}.json`].filter(Boolean).join(",")
-		)
-	}
+	const route = `/api/component-meta/${name}.json`
+	prerenderRoutes(route)
 
-	return useAsyncData<{ meta: ComponentMeta }>(`component-meta-${name}`, () => $fetch(`/api/component-meta/${name}.json`).catch(() => ({}) as any), {
+	return useAsyncData<{ meta: ComponentMeta }>(`component-meta-${name}`, () => $fetch(route).catch(() => ({}) as any) as any, {
 		lazy: import.meta.client,
 		dedupe: "defer",
 		getCachedData: (key, nuxtApp) => nuxtApp.payload.data[key]

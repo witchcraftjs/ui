@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { camelCase, upperFirst } from "scule"
 
-import { useFetchComponentMeta } from "../composables/fetchComponentMeta.js"
+import { useFetchComponentMeta } from "../../composables/fetchComponentMeta.js"
 
 const props = withDefaults(defineProps<{
 	slug?: string
@@ -16,6 +16,8 @@ const camelName = camelCase(props.slug ?? route.path.split("/").pop() ?? "")
 const componentName = `${upperFirst(camelName)}`
 
 const { data: meta } = await useFetchComponentMeta(componentName as any)
+
+prerenderRoutes(`/api/component-meta/${componentName}.json`)
 
 const hasProps = computed(() => {
 	const all = meta.value?.meta?.props ?? []

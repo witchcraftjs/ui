@@ -3,6 +3,8 @@ title: 'WPopup'
 path: '/components/w-popup'
 ---
 
-<StorybookEmbed />
+::storybook-embed
+::
 
-<ComponentDocs />
+::component-docs 
+::

@@ -1,3 +1,5 @@
+// it's otherwise impossible to run locally
+const baseUrl = process.env.BUILD_ENV === "development" ? "" : "/ui"
 export default defineNuxtConfig({
 	modules: [
 		"@witchcraft/ui",
@@ -14,7 +16,7 @@ export default defineNuxtConfig({
 		enabled: true
 	},
 	app: {
-		baseURL: "/ui/"
+		baseURL: `${baseUrl}/`
 	},
 
 	css: ["~/assets/css/main.css"],
@@ -38,6 +40,12 @@ export default defineNuxtConfig({
 	ui: {
 		prose: true
 	},
+	routeRules: {
+		"/api/**": { prerender: true },
+
+		// disable attempt to crawl/prerender /docs/storybook
+		[`${baseUrl}/storybook/**`]: { prerender: false }
+	},
 
 	experimental: {
 		asyncContext: true
@@ -50,6 +58,7 @@ export default defineNuxtConfig({
 			autoSubfolderIndex: false
 		}
 	},
+
 	typescript: {
 		tsConfig: {
 			compilerOptions: {
@@ -58,7 +67,6 @@ export default defineNuxtConfig({
 			}
 		}
 	},
-
 	componentMeta: {
 		// cache: true,
 		transformers: [(component, code) => {
@@ -77,7 +85,7 @@ export default defineNuxtConfig({
 			"@comark/vue",
 			"nuxt/dist",
 			"nuxt-og-image",
-			"./app/components"
+			"app/components"
 		]
 	},
 
@@ -86,7 +94,7 @@ export default defineNuxtConfig({
 	},
 
 	llms: {
-		domain: "https://witchcraftjs.github.io/ui",
+		domain: `https://witchcraftjs.github.io${baseUrl}`,
 		title: "@witchcraft/ui",
 		description: "Vue component library built on Reka UI with Tailwind CSS, themable via Metamorphosis.",
 		full: {

@@ -3,6 +3,8 @@ title: 'WDatePicker'
 path: '/components/w-date-picker'
 ---
 
-<StorybookEmbed />
+::storybook-embed
+::
 
-<ComponentDocs />
+::component-docs 
+::

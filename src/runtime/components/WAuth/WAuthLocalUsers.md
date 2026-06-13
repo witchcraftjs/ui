@@ -1,8 +1,9 @@
 ---
 title: 'WAuthLocalUser'
-path: '/components/w-auth-local-user'
+path: '/components/w-auth-local-users'
 ---
 
 See [WAuth](/components/w-auth) for storybook stories.
 
-<ComponentDocs />
+::component-docs 
+::

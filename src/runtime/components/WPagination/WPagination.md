@@ -3,6 +3,8 @@ title: 'WPagination'
 path: '/components/w-pagination'
 ---
 
-<StorybookEmbed />
+::storybook-embed
+::
 
-<ComponentDocs />
+::component-docs 
+::
