@@ -79,7 +79,7 @@
 					text-neutral-700
 					dark:text-neutral-300
 				"
-				@click="copy(handler ? handler.stringify(notification) : JSON.stringify(notification))"
+				@click="copyToClipboard(handler ? handler.stringify(notification) : JSON.stringify(notification))"
 			>
 				<WIcon><i-lucide-copy/></WIcon>
 			</WButton>
@@ -174,13 +174,13 @@
 </template>
 
 <script setup lang="ts">
+import { copyToClipboard } from "@alanscodelog/utils/copyToClipboard"
 import { computed, type HTMLAttributes, onMounted, ref, useAttrs } from "vue"
 
 import ILucideCopy from "~icons/lucide/copy"
 import ILucideX from "~icons/lucide/x"
 
 import { useSlotVars } from "../../composables/useSlotVars.js"
-import { copy } from "../../helpers/copy.js"
 import { type NotificationEntry, NotificationHandler } from "../../helpers/NotificationHandler.js"
 import type { TailwindClassProp } from "../../types/index.js"
 import { twMerge } from "../../utils/twMerge.js"

@@ -19,8 +19,8 @@ catalogs:
       specifier: ^6.3.0
       version: 6.3.0
     '@alanscodelog/utils':
-      specifier: ^6.2.0
-      version: 6.2.1
+      specifier: ^6.3.0
+      version: 6.3.0
     '@alanscodelog/vite-config':
       specifier: ^0.0.7
       version: 0.0.7
@@ -301,7 +301,7 @@ importers:
     dependencies:
       '@alanscodelog/utils':
         specifier: 'catalog:'
-        version: 6.2.1
+        version: 6.3.0
       '@iconify/json':
         specifier: 'catalog:'
         version: 2.2.476
@@ -664,6 +664,10 @@ packages:
 
   '@alanscodelog/utils@6.2.1':
     resolution: {integrity: sha512-V1escbZY0PWsjmfL+c3VZ19wzK07swstAB9v5npX71GtlRppDxCoy0t0RqOVyYTR2OOvRTIrjWc8f1ImkHtSVQ==}
+    engines: {node: '>=20.0.0'}
+
+  '@alanscodelog/utils@6.3.0':
+    resolution: {integrity: sha512-g8slXo4V7jcXHEWebwR5aIhCQTPyMoLteabXgjnT3nidHcuHJsh4JNyQUaglCEHnd/rJzvvVC67BdHBq1sa2WA==}
     engines: {node: '>=20.0.0'}
 
   '@alanscodelog/vite-config@0.0.7':
@@ -11605,8 +11609,8 @@ packages:
   vue-component-type-helpers@3.3.1:
     resolution: {integrity: sha512-pu58kqxmVyEH6VfNYW1UyEfR3XAnJ27ZXT3yzXxxpjLxVzAbyC35Zk/nm/RMs7ijWnJNSd9fWkeex2OhUsx3MA==}
 
-  vue-component-type-helpers@3.3.2:
-    resolution: {integrity: sha512-l4Z2Y34m7nFMlx8vrslJaVtXxUpzgDMSESC7TakG/c5kwjYT/do+E0NcT2/vWDzaoIhsShg/2OKwX7Q4nbzC0g==}
+  vue-component-type-helpers@3.3.3:
+    resolution: {integrity: sha512-x4nsFpy5Pe8fqPzp/5vkTPeTTDBpAx4WVtV47Ejt0+2FQrq4pRRsJs7JmYRqMFzTu/LW+pCWEjQ3YVCkPV7f9g==}
 
   vue-demi@0.14.10:
     resolution: {integrity: sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==}
@@ -12032,6 +12036,8 @@ snapshots:
       core-js: 3.49.0
 
   '@alanscodelog/utils@6.2.1': {}
+
+  '@alanscodelog/utils@6.3.0': {}
 
   '@alanscodelog/vite-config@0.0.7(@types/node@24.12.4)(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.4.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.47.1)(typescript@5.9.3)(yaml@2.9.0)':
     dependencies:
@@ -15493,7 +15499,7 @@ snapshots:
       ts-dedent: 2.2.0
       type-fest: 2.19.0
       vue: 3.5.34(typescript@5.9.3)
-      vue-component-type-helpers: 3.3.2
+      vue-component-type-helpers: 3.3.3
 
   '@stylistic/eslint-plugin@5.10.0(eslint@9.39.4(jiti@2.7.0))':
     dependencies:
@@ -24935,7 +24941,7 @@ snapshots:
 
   vue-component-type-helpers@3.3.1: {}
 
-  vue-component-type-helpers@3.3.2: {}
+  vue-component-type-helpers@3.3.3: {}
 
   vue-demi@0.14.10(vue@3.5.34(typescript@5.9.3)):
     dependencies:
@@ -25350,7 +25356,7 @@ time:
   '@alanscodelog/eslint-config@6.3.2': '2026-06-02T19:32:43.740Z'
   '@alanscodelog/semantic-release-config@6.0.3': '2026-06-02T18:50:13.331Z'
   '@alanscodelog/tsconfigs@6.3.0': '2026-03-23T15:56:05.919Z'
-  '@alanscodelog/utils@6.2.1': '2026-06-02T19:34:35.701Z'
+  '@alanscodelog/utils@6.3.0': '2026-06-13T16:57:03.034Z'
   '@alanscodelog/vite-config@0.0.7': '2025-11-30T16:05:26.946Z'
   '@chromatic-com/storybook@3.2.7': '2025-06-20T08:02:12.227Z'
   '@commitlint/cli@20.5.3': '2026-04-30T08:16:16.929Z'
