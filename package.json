@@ -1,202 +1,205 @@
 {
-	"name": "@witchcraft/ui",
-	"version": "0.5.2",
-	"description": "Vue component library.",
-	"type": "module",
-	"main": "./dist/runtime/main.lib.js",
-	"sideEffects": false,
-	"packageManager": "pnpm@11.5.0",
-	"exports": {
-		".": {
-			"types": "./types/index.d.ts",
-			"import": "./dist/runtime/main.lib.js"
-		},
-		"./components": {
-			"types": "./dist/runtime/components/index.d.ts",
-			"import": "./dist/runtime/components/index.js"
-		},
-		"./components/*": {
-			"types": "./dist/runtime/components/*/*.vue.d.ts",
-			"import": "./dist/runtime/components/*/*.vue"
-		},
-		"./composables": {
-			"types": "./dist/runtime/composables/index.d.ts",
-			"import": "./dist/runtime/composables/index.js"
-		},
-		"./directives": {
-			"types": "./dist/runtime/directives/index.d.ts",
-			"import": "./dist/runtime/directives/index.js"
-		},
-		"./helpers": {
-			"types": "./dist/runtime/helpers/index.d.ts",
-			"import": "./dist/runtime/helpers/index.js"
-		},
-		"./utils.css": "./src/runtime/assets/utils.css",
-		"./base.css": "./src/runtime/assets/base.css",
-		"./animations.css": "./src/runtime/assets/animations.css",
-		"./nuxt": {
-			"types": "./dist/types.d.mts",
-			"import": "./dist/module.mjs"
-		},
-		"./types": {
-			"types": "./dist/runtime/types/index.d.ts",
-			"import": "./dist/runtime/types/index.js"
-		},
-		"./*": {
-			"import": "./dist/runtime/*.js",
-			"types": "./dist/runtime/*.d.ts"
-		}
-	},
-	"unbuild": {
-		"failOnWarn": false
-	},
-	"scripts": {
-		"prepare": "husky && pnpm gen:theme && pnpm build",
-		"build": "nuxt-module-build prepare && nuxt-module-build build && nuxi generate playground",
-		"build:only": "nuxt-module-build build",
-		"dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
-		"dev": "nuxi dev playground",
-		"storybook": "BROWSER=none storybook dev -p 6006 --no-open",
-		"storybook:clear-cache": "BROWSER=none storybook dev -p 6006 --no-manager-cache",
-		"storybook:build": "pnpm nuxt prepare && storybook build -o docs-storybook",
-		"storybook:test": "pnpm storybook:build && pnpm concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"pnpm http-server docs-storybook --port 6006 --silent\" \"pnpm wait-on tcp:6006 && pnpm test-storybook --excludeTags 'skip-smoke-test'\"",
-		"test": "pnpm storybook:test && pnpm lint:types",
-		"test:dev": "pnpm concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"pnpm storybook\" \"pnpm wait-on tcp:6006 && pnpm test-storybook --watch\"",
-		"doc": "pnpm test && pnpm storybook:build && pnpm docs-site:build",
-		"doc:dev": "pnpm storybook",
-		"lint:eslint": "eslint \"src/**/*.{js,ts,vue,cjs}\" \"docs-site/**/*.{js,ts,vue,cjs}\" \"*.{js,ts}\" --max-warnings=5 --report-unused-disable-directives",
-		"lint:types": "nuxi typecheck && nuxi typecheck --cwd=docs-site",
-		"lint:commits": "commitlint --from-last-tag --to HEAD --verbose",
-		"lint:imports": "madge --circular --extensions ts ./src",
-		"lint": "pnpm lint:eslint && pnpm lint:types && pnpm lint:commits && pnpm lint:imports",
-		"//actions:debug": "echo For debugging github build action locally with nektos/act. Requires act and docker. Note: Cache will never work locally because of https://github.com/nektos/act/issues/285",
-		"actions:debug": "act -r -j release",
-		"gen:exports": "indexit update --ignore **.d.ts **.stories.ts **.vue -o '${path}.js'",
-		"gen:theme": "echo src/runtime/build/generateTheme.ts",
-		"docs-site:dev": "nuxt dev docs-site --port 3001",
-		"docs-site:build": "nuxt generate docs-site"
-	},
-	"peerDependencies": {
-		"tailwindcss": "catalog:",
-		"unplugin-icons": "catalog:"
-	},
-	"peerDependenciesMeta": {
-		"tailwindcss": {
-			"optional": true
-		}
-	},
-	"dependencies": {
-		"@alanscodelog/utils": "catalog:",
-		"@iconify/json": "catalog:",
-		"@nuxt/kit": "catalog:",
-		"@nuxt/schema": "catalog:",
-		"@nuxt/types": "catalog:",
-		"@regle/core": "catalog:",
-		"@regle/rules": "catalog:",
-		"@standard-schema/spec": "catalog:",
-		"@tailwindcss/vite": "catalog:",
-		"@witchcraft/nuxt-utils": "catalog:",
-		"colord": "catalog:",
-		"colorjs.io": "catalog:",
-		"defu": "catalog:",
-		"fast-glob": "catalog:",
-		"metamorphosis": "catalog:",
-		"reka-ui": "catalog:",
-		"tailwind-merge": "catalog:",
-		"unplugin-icons": "catalog:",
-		"unplugin-vue-components": "catalog:",
-		"vue-component-type-helpers": "catalog:",
-		"zod": "catalog:"
-	},
-	"devDependencies": {
-		"@alanscodelog/commitlint-config": "catalog:",
-		"@alanscodelog/eslint-config": "catalog:",
-		"@alanscodelog/semantic-release-config": "catalog:",
-		"@alanscodelog/tsconfigs": "catalog:",
-		"@alanscodelog/vite-config": "catalog:",
-		"@chromatic-com/storybook": "catalog:",
-		"@commitlint/cli": "catalog:",
-		"@faker-js/faker": "catalog:",
-		"@internationalized/date": "catalog:",
-		"@nuxt/eslint-config": "catalog:",
-		"@nuxt/module-builder": "catalog:",
-		"@nuxtjs/i18n": "catalog:",
-		"@playwright/test": "catalog:",
-		"@rollup/plugin-node-resolve": "catalog:",
-		"@storybook/addon-a11y": "catalog:",
-		"@storybook/addon-actions": "catalog:",
-		"@storybook/addon-essentials": "catalog:",
-		"@storybook/addon-interactions": "catalog:",
-		"@storybook/addon-links": "catalog:",
-		"@storybook/addon-storysource": "catalog:",
-		"@storybook/blocks": "catalog:",
-		"@storybook/manager-api": "catalog:",
-		"@storybook/test": "catalog:",
-		"@storybook/test-runner": "catalog:",
-		"@storybook/vue3": "catalog:",
-		"@storybook/vue3-vite": "catalog:",
-		"@tailwindcss/cli": "catalog:",
-		"@tailwindcss/postcss": "catalog:",
-		"@tanstack/vue-virtual": "catalog:",
-		"@types/node": "catalog:",
-		"@vitejs/plugin-vue": "catalog:",
-		"@vue/runtime-core": "catalog:",
-		"@vue/runtime-dom": "catalog:",
-		"@vueuse/components": "catalog:",
-		"@vueuse/core": "catalog:",
-		"autoprefixer": "catalog:",
-		"concurrently": "catalog:",
-		"eslint": "catalog:",
-		"http-server": "catalog:",
-		"husky": "catalog:",
-		"indexit": "catalog:",
-		"madge": "catalog:",
-		"nuxt": "catalog:",
-		"playwright": "catalog:",
-		"playwright-core": "catalog:",
-		"semantic-release": "catalog:",
-		"storybook": "catalog:",
-		"storybook-dark-mode": "catalog:",
-		"tailwindcss": "catalog:",
-		"ts-node": "catalog:",
-		"typescript": "catalog:",
-		"unbuild": "catalog:",
-		"vite": "catalog:",
-		"vite-tsconfig-paths": "catalog:",
-		"vue": "catalog:",
-		"vue-tsc": "catalog:",
-		"wait-on": "catalog:"
-	},
-	"author": "Alan <alanscodelog@gmail.com>",
-	"repository": "https://github.com/witchcraftjs/ui",
-	"homepage": "https://witchcraftjs.github.io/ui/",
-	"license": "MIT",
-	"files": [
-		"src",
-		"dist",
-		"types"
-	],
-	"release": {
-		"extends": [
-			"@alanscodelog/semantic-release-config"
-		]
-	},
-	"commitlint": {
-		"extends": [
-			"@alanscodelog"
-		]
-	},
-	"madge": {
-		"detectiveOptions": {
-			"ts": {
-				"skipTypeImports": true
-			}
-		}
-	},
-	"engines": {
-		"node": ">=20.0.0"
-	},
-	"publishConfig": {
-		"access": "public"
-	}
+  "name": "@witchcraft/ui",
+  "version": "0.5.2",
+  "bugs": {
+    "url": "https://github.com/witchcraftjs/ui/issues"
+  },
+  "description": "Vue component library.",
+  "type": "module",
+  "main": "./dist/runtime/main.lib.js",
+  "sideEffects": false,
+  "packageManager": "pnpm@11.5.0",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./dist/runtime/main.lib.js"
+    },
+    "./components": {
+      "types": "./dist/runtime/components/index.d.ts",
+      "import": "./dist/runtime/components/index.js"
+    },
+    "./components/*": {
+      "types": "./dist/runtime/components/*/*.vue.d.ts",
+      "import": "./dist/runtime/components/*/*.vue"
+    },
+    "./composables": {
+      "types": "./dist/runtime/composables/index.d.ts",
+      "import": "./dist/runtime/composables/index.js"
+    },
+    "./directives": {
+      "types": "./dist/runtime/directives/index.d.ts",
+      "import": "./dist/runtime/directives/index.js"
+    },
+    "./helpers": {
+      "types": "./dist/runtime/helpers/index.d.ts",
+      "import": "./dist/runtime/helpers/index.js"
+    },
+    "./utils.css": "./src/runtime/assets/utils.css",
+    "./base.css": "./src/runtime/assets/base.css",
+    "./animations.css": "./src/runtime/assets/animations.css",
+    "./nuxt": {
+      "types": "./dist/types.d.mts",
+      "import": "./dist/module.mjs"
+    },
+    "./types": {
+      "types": "./dist/runtime/types/index.d.ts",
+      "import": "./dist/runtime/types/index.js"
+    },
+    "./*": {
+      "import": "./dist/runtime/*.js",
+      "types": "./dist/runtime/*.d.ts"
+    }
+  },
+  "unbuild": {
+    "failOnWarn": false
+  },
+  "scripts": {
+    "prepare": "husky && pnpm gen:theme && pnpm build",
+    "build": "nuxt-module-build prepare && nuxt-module-build build && nuxi generate playground",
+    "build:only": "nuxt-module-build build",
+    "dev:prepare": "nuxt-module-build build --stub && nuxt-module-build prepare && nuxi prepare playground",
+    "dev": "nuxi dev playground",
+    "storybook": "BROWSER=none storybook dev -p 6006 --no-open",
+    "storybook:clear-cache": "BROWSER=none storybook dev -p 6006 --no-manager-cache",
+    "storybook:build": "pnpm nuxt prepare && storybook build -o docs-storybook",
+    "storybook:test": "pnpm storybook:build && pnpm concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"pnpm http-server docs-storybook --port 6006 --silent\" \"pnpm wait-on tcp:6006 && pnpm test-storybook --excludeTags 'skip-smoke-test'\"",
+    "test": "pnpm storybook:test && pnpm lint:types",
+    "test:dev": "pnpm concurrently -k -s first -n \"SB,TEST\" -c \"magenta,blue\" \"pnpm storybook\" \"pnpm wait-on tcp:6006 && pnpm test-storybook --watch\"",
+    "doc": "pnpm test && pnpm storybook:build && pnpm docs-site:build",
+    "doc:dev": "pnpm storybook",
+    "lint:eslint": "eslint \"src/**/*.{js,ts,vue,cjs}\" \"docs-site/**/*.{js,ts,vue,cjs}\" \"*.{js,ts}\" --max-warnings=5 --report-unused-disable-directives",
+    "lint:types": "nuxi typecheck && nuxi typecheck --cwd=docs-site",
+    "lint:commits": "commitlint --from-last-tag --to HEAD --verbose",
+    "lint:imports": "madge --circular --extensions ts ./src",
+    "lint": "pnpm lint:eslint && pnpm lint:types && pnpm lint:commits && pnpm lint:imports",
+    "//actions:debug": "echo For debugging github build action locally with nektos/act. Requires act and docker. Note: Cache will never work locally because of https://github.com/nektos/act/issues/285",
+    "actions:debug": "act -r -j release",
+    "gen:exports": "indexit update --ignore **.d.ts **.stories.ts **.vue -o '${path}.js'",
+    "gen:theme": "echo src/runtime/build/generateTheme.ts",
+    "docs-site:dev": "nuxt dev docs-site --port 3001",
+    "docs-site:build": "nuxt generate docs-site"
+  },
+  "peerDependencies": {
+    "tailwindcss": "catalog:",
+    "unplugin-icons": "catalog:"
+  },
+  "peerDependenciesMeta": {
+    "tailwindcss": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@alanscodelog/utils": "catalog:",
+    "@iconify/json": "catalog:",
+    "@nuxt/kit": "catalog:",
+    "@nuxt/schema": "catalog:",
+    "@nuxt/types": "catalog:",
+    "@regle/core": "catalog:",
+    "@regle/rules": "catalog:",
+    "@standard-schema/spec": "catalog:",
+    "@tailwindcss/vite": "catalog:",
+    "@witchcraft/nuxt-utils": "catalog:",
+    "colord": "catalog:",
+    "colorjs.io": "catalog:",
+    "defu": "catalog:",
+    "fast-glob": "catalog:",
+    "metamorphosis": "catalog:",
+    "reka-ui": "catalog:",
+    "tailwind-merge": "catalog:",
+    "unplugin-icons": "catalog:",
+    "unplugin-vue-components": "catalog:",
+    "vue-component-type-helpers": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@alanscodelog/commitlint-config": "catalog:",
+    "@alanscodelog/eslint-config": "catalog:",
+    "@alanscodelog/semantic-release-config": "catalog:",
+    "@alanscodelog/tsconfigs": "catalog:",
+    "@alanscodelog/vite-config": "catalog:",
+    "@chromatic-com/storybook": "catalog:",
+    "@commitlint/cli": "catalog:",
+    "@faker-js/faker": "catalog:",
+    "@internationalized/date": "catalog:",
+    "@nuxt/eslint-config": "catalog:",
+    "@nuxt/module-builder": "catalog:",
+    "@nuxtjs/i18n": "catalog:",
+    "@playwright/test": "catalog:",
+    "@rollup/plugin-node-resolve": "catalog:",
+    "@storybook/addon-a11y": "catalog:",
+    "@storybook/addon-actions": "catalog:",
+    "@storybook/addon-essentials": "catalog:",
+    "@storybook/addon-interactions": "catalog:",
+    "@storybook/addon-links": "catalog:",
+    "@storybook/addon-storysource": "catalog:",
+    "@storybook/blocks": "catalog:",
+    "@storybook/manager-api": "catalog:",
+    "@storybook/test": "catalog:",
+    "@storybook/test-runner": "catalog:",
+    "@storybook/vue3": "catalog:",
+    "@storybook/vue3-vite": "catalog:",
+    "@tailwindcss/cli": "catalog:",
+    "@tailwindcss/postcss": "catalog:",
+    "@tanstack/vue-virtual": "catalog:",
+    "@types/node": "catalog:",
+    "@vitejs/plugin-vue": "catalog:",
+    "@vue/runtime-core": "catalog:",
+    "@vue/runtime-dom": "catalog:",
+    "@vueuse/components": "catalog:",
+    "@vueuse/core": "catalog:",
+    "autoprefixer": "catalog:",
+    "concurrently": "catalog:",
+    "eslint": "catalog:",
+    "http-server": "catalog:",
+    "husky": "catalog:",
+    "indexit": "catalog:",
+    "madge": "catalog:",
+    "nuxt": "catalog:",
+    "playwright": "catalog:",
+    "playwright-core": "catalog:",
+    "semantic-release": "catalog:",
+    "storybook": "catalog:",
+    "storybook-dark-mode": "catalog:",
+    "tailwindcss": "catalog:",
+    "ts-node": "catalog:",
+    "typescript": "catalog:",
+    "unbuild": "catalog:",
+    "vite": "catalog:",
+    "vite-tsconfig-paths": "catalog:",
+    "vue": "catalog:",
+    "vue-tsc": "catalog:",
+    "wait-on": "catalog:"
+  },
+  "author": "Alan <alanscodelog@gmail.com>",
+  "repository": "https://github.com/witchcraftjs/ui",
+  "homepage": "https://witchcraftjs.github.io/ui/",
+  "license": "MIT",
+  "files": [
+    "src",
+    "dist",
+    "types"
+  ],
+  "release": {
+    "extends": [
+      "@alanscodelog/semantic-release-config"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@alanscodelog"
+    ]
+  },
+  "madge": {
+    "detectiveOptions": {
+      "ts": {
+        "skipTypeImports": true
+      }
+    }
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }
