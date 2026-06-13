@@ -1,10 +1,11 @@
 import "../src/runtime/assets/tailwind.css"
+import "./storybook.css"
+
 // import toReact from "@egoist/vue-to-react"
 import type { Parameters, Preview } from "@storybook/vue3"
 
 import WRoot from "../src/runtime/components/WRoot/WRoot.vue"
 import { vExtractRootEl } from "../src/runtime/directives/vExtractRootEl.js"
-import "./storybook.css"
 
 export const parameters: Parameters = {
 	docs: {
@@ -38,6 +39,8 @@ export const parameters: Parameters = {
 
 const preview: Preview = {
 	parameters: {
+		// removes padding
+		layout: "fullscreen",
 		options: {
 			storySort: {
 				order: ["Components", "Composables", "Other"]
