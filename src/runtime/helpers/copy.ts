@@ -1,5 +1,8 @@
-// todo move to utils
 /* eslint-disable no-console */
+/**
+ * @deprecated
+ * moved to @alanscodelog/utils (contains improved copyToClipboard and also now readFromClipboard)
+ */
 export const copy = (text: string): void => {
 	if (navigator.clipboard) {
 		navigator.clipboard.writeText(text).catch(err => {

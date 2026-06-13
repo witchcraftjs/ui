@@ -61,7 +61,7 @@
 		v-for="(value, index) of $modelValue"
 		:key="value"
 		ref="itemRefs"
-		@keydown.ctrl.c.prevent="copy(value.toString())"
+		@keydown.ctrl.c.prevent="copyToClipboard(value.toString())"
 		@focus="activeIndex = index"
 	>
 		<span class="multivalues--label truncate">{{ value }}</span>
@@ -80,12 +80,12 @@
 </template>
 
 <script setup lang="ts" generic="T extends string | number">
+import { copyToClipboard } from "@alanscodelog/utils/copyToClipboard"
 import { removeIfIn } from "@alanscodelog/utils/removeIfIn"
 import { computed, type HTMLAttributes, nextTick, ref, useAttrs } from "vue"
 
 import ILucideX from "~icons/lucide/x"
 
-import { copy } from "../../helpers/copy.js"
 import type { BaseInteractiveProps, TailwindClassProp } from "../../types/index.js"
 import { twMerge } from "../../utils/twMerge.js"
 import WButton from "../WButton/WButton.vue"

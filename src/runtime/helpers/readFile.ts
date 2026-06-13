@@ -1,4 +1,7 @@
-// todo move to utils
+/**
+ * @deprecated
+ * Use file.arrayBuffer(), file.text(), or URL.createObjectURL(file) and avoid base64 urls instead.
+ */
 export const readFile = async <TType extends "DataUrl" | "ArrayBuffer" | "BinaryString" | "text" = "DataUrl">(
 	file?: File | Blob,
 	type: TType = "DataUrl" as TType

@@ -160,7 +160,7 @@
 				<WButton
 					class="color-picker--copy-button"
 					:aria-label="t('copy')"
-					@click="copy(copyTransform?.(localColor.val, localColorString) ?? localColorString)"
+					@click="copyToClipboard(copyTransform?.(localColor.val, localColorString) ?? localColorString)"
 				>
 					<WIcon><i-lucide-copy/></WIcon>
 				</Wbutton>
@@ -189,6 +189,7 @@
 <script setup lang="ts">
 /* todo change to colorjsio for less dependencies */
 import { castType } from "@alanscodelog/utils/castType"
+import { copyToClipboard } from "@alanscodelog/utils/copyToClipboard"
 import { isArray } from "@alanscodelog/utils/isArray"
 import { unreachable } from "@alanscodelog/utils/unreachable"
 import Color from "colorjs.io"
@@ -202,7 +203,6 @@ import ILucideCopy from "~icons/lucide/copy"
 
 import { useFallbackId } from "../../composables/useFallbackId.js"
 import { useInjectedI18n } from "../../composables/useInjectedI18n.js"
-import { copy } from "../../helpers/copy.js"
 import type { HsvaColor, RgbaColor } from "../../types/index.js"
 import { twMerge } from "../../utils/twMerge.js"
 import WButton from "../WButton/WButton.vue"
