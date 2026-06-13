@@ -74,8 +74,7 @@
 		"gen:exports": "indexit update --ignore **.d.ts **.stories.ts **.vue -o '${path}.js'",
 		"gen:theme": "echo src/runtime/build/generateTheme.ts",
 		"docs-site:dev": "nuxt dev docs-site --port 3001",
-		"docs-site:build": "nuxt build docs-site",
-		"docs-site:generate": "nuxt generate docs-site"
+		"docs-site:build": "nuxt generate docs-site"
 	},
 	"peerDependencies": {
 		"tailwindcss": "catalog:",
