@@ -10,8 +10,11 @@ const meta = {
 }
 
 export default meta
-type ExtraTestArgs = Record<string, never>
-type Story = StoryObj
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+type ExtraTestArgs = {}
+
+type Story = StoryObj & { args?: ExtraTestArgs }
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Primary: Story = {
 	render: _args => {

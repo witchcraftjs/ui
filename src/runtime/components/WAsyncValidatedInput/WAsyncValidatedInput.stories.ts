@@ -7,8 +7,8 @@ import WAsyncValidatedInput from "./WAsyncValidatedInput.vue"
 
 import * as components from "../index.js"
 
-type ExtraTestArgs = {
-}
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+type ExtraTestArgs = { }
 
 const meta: Meta<typeof WAsyncValidatedInput> = {
 	component: WAsyncValidatedInput,

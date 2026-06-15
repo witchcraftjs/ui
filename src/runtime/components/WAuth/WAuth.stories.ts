@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { delay } from "@alanscodelog/utils/delay"
 import type { Meta, StoryObj } from "@storybook/vue3"
 
 import GithubLogo from "~icons/logos/github-icon"

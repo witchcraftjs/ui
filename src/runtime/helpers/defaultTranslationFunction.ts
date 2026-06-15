@@ -1,8 +1,3 @@
-import { inject } from "vue"
-
-import { translationMessagesInjectionKey } from "../injectionKeys.js"
-
-
 /**
  * A default translation function to use with `useSetupI18n`. Requires at least one set of translation message sets (or a dummy) be loaded (the useSetupI18n function takes care of setting up a temporary dummy if you set `useBuiltinTranslations: true`).
  *

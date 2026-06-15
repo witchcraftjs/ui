@@ -67,7 +67,7 @@
 		</div>
 	</div>
 	<slot
-		v-if="errors && errors.length"
+		v-if="errors && errors.length && value !== ''"
 		name="error"
 		v-bind="{ errors, id: `${finalId}-error` }"
 	>
@@ -121,27 +121,12 @@ const props = withDefaults(defineProps<{
 	id?: string
 	errors: string[]
 	status?: string
-	statusText?: {
-		loading: string
-		valid: string
-		invalid: string
-	}
+	statusText?: string
 	canSubmit: boolean
 	inputValid: boolean
 }>(), {
 	statusText: undefined
 })
-const statusText = computed(() => {
-	if (props.statusText) {
-		return props.statusText
-	}
-	return {
-		loading: t("async-validated-input.checking"),
-		valid: t("async-validated-input.valid"),
-		invalid: t("async-validated-input.invalid")
-	}
-})
-
 const finalId = useFallbackId(props)
 
 const value = defineModel<string>({ required: true })
