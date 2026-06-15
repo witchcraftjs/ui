@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { camelCase, upperFirst } from "scule"
 
-const props = withDefaults(defineProps<{
+withDefaults(defineProps<{
 	/** Specific story name to show (e.g. "Primary"). If omitted, shows all stories as tabs. */
 	story?: string
 }>(), {

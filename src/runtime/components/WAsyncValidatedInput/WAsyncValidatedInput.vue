@@ -104,19 +104,15 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue"
-
 import IconCheck from "~icons/lucide/check"
 import IconSpinner from "~icons/lucide/loader-circle"
 import IconInvalid from "~icons/lucide/x"
 
 import { useFallbackId } from "../../composables/useFallbackId.js"
-import { useInjectedI18n } from "../../composables/useInjectedI18n.js"
 import { twMerge } from "../../utils/twMerge.js"
 import WIcon from "../WIcon/WIcon.vue"
 import WSimpleInput from "../WSimpleInput/WSimpleInput.vue"
 
-const t = useInjectedI18n()
 const props = withDefaults(defineProps<{
 	id?: string
 	errors: string[]
