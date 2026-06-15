@@ -67,7 +67,7 @@
 			)"
 			v-bind="{ ...$attrs, class: undefined }"
 
-			v-model="modelValue"
+			v-model="modelValue as any"
 		>
 			<CheckboxIndicator class="checkbox--indicator">
 				<WIcon class="scale-110 mt-[2px] ml-[0.5px] [&_path]:stroke-3"><i-lucide-check/></WIcon>
@@ -79,7 +79,7 @@
 </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends boolean | 'indeterminate' = boolean">
 import { CheckboxIndicator, CheckboxRoot } from "reka-ui"
 import type { HTMLAttributes, InputHTMLAttributes } from "vue"
 import { useAttrs } from "vue"
@@ -118,7 +118,7 @@ const props = withDefaults(defineProps<
 	border: true
 })
 
-const modelValue = defineModel<boolean | "indeterminate">("modelValue", { default: false })
+const modelValue = defineModel<T>("modelValue", { default: false as T })
 const finalId = useFallbackId(props)
 usePreHydrationValue(finalId, modelValue)
 </script>
