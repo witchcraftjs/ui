@@ -1,6 +1,6 @@
 <template>
 <div
-	class="
+	:class="twMerge(`
 		slider--wrapper
 		flex
 		flex-col
@@ -9,8 +9,10 @@
 		gap-1
 		[--_thumb-size:calc(var(--spacing)*3.5)]
 		[--_track-size:calc(var(--spacing)*1.5)]
-	"
+	`)"
+	v-bind="{ ...wrapperAttrs, calss: undefined }"
 >
+	<!-- modelValueWrapper is cast as any because slider root supports it being undefined, which is not possible how this is coded, an creates havoc -->
 	<SliderRoot
 		v-slot="{ modelValue: slotValue }"
 		:min="min"
@@ -28,7 +30,7 @@
 				w-full
 				h-[var(--thumb-size,var(--_thumb-size))]
 			`, ($attrs as any)?.class)"
-		v-model="modelValueWrapper"
+		v-model="modelValueWrapper as any"
 		v-bind="{ thumbAlignment: 'overflow', ...$attrs, ...rootProps, class: undefined }"
 	>
 		<SliderTrack
@@ -60,6 +62,7 @@
 				)"
 			/>
 		</SliderTrack>
+
 		<!-- @vue-expect-error blur/focus can be defined -->
 		<SliderThumb
 			:class="twMerge(`
@@ -70,8 +73,7 @@
 					items-center
 					gap-1
 					outline-hidden
-				`,
-				isDragging && `-mt-6`
+				`
 
 			)"
 			v-for="(val, i) in slotValue"
@@ -79,57 +81,70 @@
 			@focus="setDragging(true)"
 			@blur="setDragging(false)"
 		>
-			<div
-				v-if="isDragging"
-				class="
-					pointer-events-none
-					text-xs
-					font-medium
-					bg-white
-					dark:bg-neutral-600
-					rounded
-					px-1
-					py-0.5
-					shadow-sm
-					shadow-black/20
-				"
+			<WTooltip
+				:root-props="{ open: isDragging, delayDuration: 0, skipDelayDuration: true }"
+				:unstyle="true"
 			>
-				{{ val }} {{ unit }}
-			</div>
-			<div
-				:class="twMerge(`
-					slider--thumb
-					cursor-pointer
-					w-[var(--thumb-size,var(--_thumb-size))]
-					h-[var(--thumb-size,var(--_thumb-size))]
-					rounded-full
-					shadow-md
-					outline-1
-					outline-solid!
-					outline-black/20
-					bg-radial-[at_30%_30%]
-					from-white
-					to-neutral-300
-					dark:from-neutral-200
-					dark:to-neutral-400
-					from-50%
-				`,
-					(!disabled && !readonly) && `
-						active:shadow-accent-600
-						focus:shadow-lg
-						focus:shadow-accent-600
-						[.outlined_.slider--thumb:focus_&]:outline-accent-600
-						[.outlined_.slider--thumb:focus_&]:outline-2
-						[.outlined_.slider--thumb:active_&]:outline-2
-					`,
-					disabled && `hidden`,
-					readonly && `
-						bg-neutral-100
-						dark:bg-neutral-400
-						cursor-not-allowed
-					`
-				)"
-			/>
+				<template #default>
+					<!-- // isDragging && `-mt-6` -->
+					<div
+						:class="twMerge(
+							`
+								slider--thumb
+								cursor-pointer
+								w-[var(--thumb-size,var(--_thumb-size))]
+								h-[var(--thumb-size,var(--_thumb-size))]
+								rounded-full
+								shadow-md
+								outline-1
+								outline-solid!
+								outline-black/20
+								bg-radial-[at_30%_30%]
+								from-white
+								to-neutral-300
+								dark:from-neutral-200
+								dark:to-neutral-400
+								from-50%
+							`,
+							(!disabled && !readonly) && `
+								active:shadow-accent-600
+								focus:shadow-lg
+								focus:shadow-accent-600
+								[.outlined_.slider--thumb:focus_&]:outline-accent-600
+								[.outlined_.slider--thumb:focus_&]:outline-2
+								[.outlined_.slider--thumb:active_&]:outline-2
+							`,
+							disabled && `hidden`,
+							readonly && `
+								bg-neutral-100
+								dark:bg-neutral-400
+								cursor-not-allowed
+							`
+						)"
+					/>
+				</template>
+				<template #content>
+					<div
+						v-if="isDragging"
+						class="
+							slider--indicator
+							pointer-events-none
+							text-xs
+							font-medium
+							bg-white
+							dark:bg-neutral-600
+							rounded
+							px-1
+							py-0.5
+							shadow-sm
+							shadow-black/20
+							z-100
+						"
+					>
+						{{ val }} {{ unit }}
+					</div>
+				</template>
+			</WTooltip>
 		</SliderThumb>
 	</SliderRoot>
 	<div
@@ -149,9 +164,9 @@
 		>{{ min }} {{ unit }}</span>
 		<span
 			class="
-			text-xs
-			text-neutral-500
-		"
+				text-xs
+				text-neutral-500
+			"
 		>{{ max }} {{ unit }}</span>
 	</div>
 </div>
@@ -164,10 +179,12 @@ import {
 	type SliderRootProps,
 	SliderThumb,
 	SliderTrack } from "reka-ui"
+import type { HTMLAttributes } from "vue"
 import { computed, ref } from "vue"
 
-import type { BaseInteractiveProps } from "../../types/index.js"
+import type { BaseInteractiveProps, TailwindClassProp } from "../../types/index.js"
 import { twMerge } from "../../utils/twMerge.js"
+import WTooltip from "../WTooltip/WTooltip.vue"
 
 defineOptions({
 	name: "WSlider",
@@ -183,6 +200,7 @@ const props = withDefaults(defineProps<
 		unit?: string
 		/** Whether to visually highlight the range. Sometimes we might want to turn this off when we have more than 2 values v-modeled as it can be confusing. */
 		highlightRange?: boolean
+		wrapperAttrs?: Omit<HTMLAttributes, "class"> & TailwindClassProp
 	}
 >(), {
 	min: 0,
@@ -192,11 +210,11 @@ const props = withDefaults(defineProps<
 	highlightRange: true
 })
 
-const modelValue = defineModel<number | number[]>()
+const modelValue = defineModel<T>()
 
-const modelValueWrapper = computed({
-	get: () => typeof modelValue.value === "number" ? [modelValue.value] : modelValue.value,
-	set: val => {
+const modelValueWrapper = computed<number[]>({
+	get: () => typeof modelValue.value === "number" ? [modelValue.value] : modelValue.value as number[],
+	set: (val: any) => {
 		if (val === undefined) throw new Error("Invalid model value undefined")
 		modelValue.value = typeof modelValue.value === "number" ? val[0]! : [...val]
 	}
