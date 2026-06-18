@@ -27,35 +27,37 @@
 
 		<DialogContent
 			v-bind="{ ...contentProps, class: undefined }"
-			:class="twMerge(`
-				popup--content
-				z-100
-				focus:outline-none
-				fixed
-				top-1/2
-				left-1/2
-				-translate-x-1/2
-				-translate-y-1/2
-				animate-contentShow
-				max-w-[100dvw]
-				max-h-[100dvh]
-				overflow-auto
-				scrollbar-hidden
-				p-5
-			`, contentProps?.class)"
+			:class="twMerge(
+				`
+					popup--content-wrapper
+					z-100
+					focus:outline-none
+					fixed
+					top-1/2
+					left-1/2
+					-translate-x-1/2
+					-translate-y-1/2
+					animate-contentShow
+					max-w-[100dvw]
+					max-h-[100dvh]
+					overflow-auto
+					scrollbar-hidden
+				`,
+				!unstyle && `
+					p-5
+					bg-neutral-100
+					dark:bg-neutral-800
+					rounded-md
+				`,
+				contentProps?.class
+			)"
 		>
 			<div
 				:class="twMerge(`
 					popup--content-inner
 					flex
 					flex-col
-					bg-neutral-100
-					dark:bg-neutral-800
-					rounded-md
-					flex
-					flex-col
 					gap-3
-					p-2
 				`)"
 			>
 				<slot name="popup">
@@ -125,6 +127,8 @@ withDefaults(defineProps<
 		rootProps?: DialogRootProps & EmitsToProps<DialogRootEmits> & Omit<HTMLAttributes, "class"> & TailwindClassProp
 		/** Overrides teleport target. */
 		to?: string
+		/** Removes padding, border, and background from the content, and the arrow indicator (the fill/shadow), but leaves overflow, animations. */
+		unstyle?: boolean
 	}
 >(), {
 	to: "#root"

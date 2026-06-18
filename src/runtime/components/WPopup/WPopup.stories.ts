@@ -100,3 +100,9 @@ export const PopupTooBig = {
 		height: "110vh"
 	}
 }
+export const Unstyled = {
+	...Primary,
+	args: {
+		unstyle: true
+	}
+}

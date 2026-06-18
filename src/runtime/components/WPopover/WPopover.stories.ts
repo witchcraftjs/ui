@@ -213,3 +213,10 @@ export const RightMenuShapeExample = {
 		animationDirection: "use-align"
 	}
 }
+
+export const Unstyled = {
+	...Primary,
+	args: {
+		unstyle: true
+	}
+}

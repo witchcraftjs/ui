@@ -36,16 +36,20 @@
 					data-[side=right]:animate-slideLeftAndFade
 					data-[side=bottom]:animate-slideUpAndFade
 					data-[side=left]:animate-slideRightAndFade
-					bg-neutral-50
-					dark:bg-neutral-800
-					rounded-sm
-					shadow-sm
-					shadow-black/30
-					border
-					border-black/30
-					p-2
 					overflow-auto
 				`,
+					!unstyle && `
+						bg-neutral-50
+						dark:bg-neutral-800
+						rounded-sm
+						shadow-sm
+						shadow-black/30
+						border
+						border-black/30
+						p-2
+						whitespace-pre-wrap
+						text-sm
+					`,
 					contentProps?.class
 				) "
 				v-bind="{
@@ -58,9 +62,7 @@
 			>
 				<div
 					class="
-						tooltip--content-container
-						text-sm
-						whitespace-pre-wrap
+						tooltip--content-inner
 						flex
 						flex-col
 						justify-center
@@ -74,13 +76,17 @@
 					</slot>
 				</div>
 				<TooltipArrow
-					class="
-						tooltip--arrow
-						-mt-px
-						fill-neutral-50
-						dark:fill-neutral-800
-						drop-shadow-[0_2px_1px_rgba(0,0,0,0.3)]
-						relative
+					:class="twMerge(`
+							tooltip--arrow
+							-mt-px
+							relative
+						`,
+						unstyle && `fill-none`,
+						!unstyle && `
+							fill-neutral-50
+							dark:fill-neutral-800
+							drop-shadow-[0_2px_1px_rgba(0,0,0,0.3)]
+						`)
 					"
 				/>
 			</TooltipContent>
@@ -112,6 +118,8 @@ const props = withDefaults(defineProps<
 		rootProps?: any
 		/** Reka's TooltipContent props */
 		contentProps?: any
+		/** Removes padding, border, and background from the content, and the arrow indicator (the fill/shadow), but leaves overflow, animations. */
+		unstyle?: boolean
 	}>(),
 {
 	delayDuration: 200,

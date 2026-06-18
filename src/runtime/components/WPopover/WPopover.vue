@@ -37,17 +37,28 @@
 			}"
 			:style="contentStyle"
 			:class="twMerge(`
-				popover--content
+				popover--content-wrapper
 				focus:outline-none
 				overflow-auto
 				scrollbar-hidden
 			`,
+				!unstyle && `
+					bg-neutral-50
+					dark:bg-neutral-900
+					rounded-sm
+					p-2
+					shadow-sm
+					shadow-black/30
+					border
+					border-black/30
+					whitespace-pre-wrap
+				`,
 				animationDirection === `use-side` && `
-				data-[side=top]:animate-slideInUp
-				data-[side=bottom]:animate-slideInDown
-				data-[side=left]:animate-slideInLeft
-				data-[side=right]:animate-slideInRight
-			`,
+					data-[side=top]:animate-slideInUp
+					data-[side=bottom]:animate-slideInDown
+					data-[side=left]:animate-slideInLeft
+					data-[side=right]:animate-slideInRight
+				`,
 				animationDirection === `use-align` && (contentProps?.side === 'top' || contentProps?.side === 'bottom' || !contentProps?.side) && `
 					data-[align=start]:animate-slideInLeft
 					data-[align=end]:animate-slideInRight
@@ -80,16 +91,6 @@
 					popover--content-inner
 					flex
 					flex-col
-					bg-neutral-50
-					dark:bg-neutral-900
-					rounded-sm
-					p-2
-					shadow-sm
-					shadow-black/30
-					border
-					border-black/30
-					whitespace-pre-wrap
-					overflow-auto
 				`"
 			>
 				<slot name="popover"/>
@@ -97,15 +98,20 @@
 
 			<PopoverArrow
 				v-if="showArrow"
-				:class="`
-					popover--arrow
-					-mt-px
-					fill-neutral-50
-					dark:fill-neutral-800
-					drop-shadow-[0_2px_1px_rgba(0,0,0,0.3)]
-					relative
-					stroke-black/30
-				`"
+				:class="twMerge(
+					`
+						popover--arrow
+						-mt-px
+						relative
+					`,
+					unstyle && `fill-none`,
+					!unstyle && `
+						fill-neutral-50
+						dark:fill-neutral-800
+						drop-shadow-[0_2px_1px_rgba(0,0,0,0.3)]
+						stroke-black/30
+					`
+				)"
 			/>
 		</PopoverContent>
 	</PopoverPortal>
@@ -151,6 +157,8 @@ const props = withDefaults(defineProps<
 		rootProps?: PopoverRootProps & EmitsToProps<DialogRootEmits> & Omit<HTMLAttributes, "class"> & TailwindClassProp
 		/** Overrides reka-ui's PopoverContentProps */
 		contentProps?: PopoverContentProps & EmitsToProps<DialogContentEmits> & Omit<HTMLAttributes, "class"> & TailwindClassProp
+		/** Removes padding, border, and background from the content, and the arrow indicator (the fill/shadow), but leaves overflow, animations. */
+		unstyle?: boolean
 	}
 >(), {
 	showBackdrop: false,
