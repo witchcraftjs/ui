@@ -42,6 +42,7 @@
 <script setup lang="ts">
 import { twMerge } from "../../utils/twMerge.js"
 import WDarkModeSwitcher from "../WDarkModeSwitcher/WDarkModeSwitcher.vue"
+import WIcon from "../WIcon/WIcon.vue"
 
 defineOptions({ name: "TestControls" })
 defineProps<{
