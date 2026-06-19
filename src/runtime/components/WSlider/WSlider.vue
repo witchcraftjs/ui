@@ -82,7 +82,12 @@
 			@blur="setDragging(false)"
 		>
 			<WTooltip
-				:root-props="{ open: isDragging, delayDuration: 0, skipDelayDuration: true }"
+				:root-props="{
+					open: isDragging,
+					delayDuration: 0,
+					skipDelayDuration: true
+				}"
+				:content-props="{ updatePositionStrategy: 'always' }"
 				:unstyle="true"
 			>
 				<template #default>
