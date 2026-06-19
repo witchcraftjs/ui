@@ -82,16 +82,32 @@
 			@blur="setDragging(false)"
 		>
 			<WTooltip
+				:content="`${val} ${unit}`"
 				:root-props="{
 					open: isDragging,
 					delayDuration: 0,
 					skipDelayDuration: true
 				}"
-				:content-props="{ updatePositionStrategy: 'always' }"
+				:content-props="{
+					updatePositionStrategy: 'always',
+					class: `
+						slider--indicator
+						pointer-events-none
+						text-xs
+						font-medium
+						bg-white
+						dark:bg-neutral-600
+						rounded
+						px-1
+						py-0.5
+						shadow-sm
+						shadow-black/20
+						z-100
+					`
+				}"
 				:unstyle="true"
 			>
 				<template #default>
-					<!-- // isDragging && `-mt-6` -->
 					<div
 						:class="twMerge(
 							`
@@ -127,27 +143,6 @@
 							`
 						)"
 					/>
-				</template>
-				<template #content>
-					<div
-						v-if="isDragging"
-						class="
-							slider--indicator
-							pointer-events-none
-							text-xs
-							font-medium
-							bg-white
-							dark:bg-neutral-600
-							rounded
-							px-1
-							py-0.5
-							shadow-sm
-							shadow-black/20
-							z-100
-						"
-					>
-						{{ val }} {{ unit }}
-					</div>
 				</template>
 			</WTooltip>
 		</SliderThumb>
