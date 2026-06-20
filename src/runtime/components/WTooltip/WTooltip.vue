@@ -6,17 +6,31 @@
 		v-bind="rootProps"
 	>
 		<TooltipTrigger
-			v-if="triggerWhileDisabled"
+			v-if="triggerWhileDisabled || triggerAsChild"
 			as-child
 		>
-			<!-- https://reka-ui.com/docs/components/tooltip#displaying-a-tooltip-from-a-disabled-button -->
-			<span>
-				<slot>
+			<slot>
+				<!-- https://reka-ui.com/docs/components/tooltip#displaying-a-tooltip-from-a-disabled-button -->
+				<span
+					v-if="triggerWhileDisabled"
+					class="tooltip--trigger"
+				>
 					<WIcon class="text-neutral-500"><i-lucide-info/></WIcon>
-				</slot>
-			</span>
+				</span>
+				<button
+					v-else
+					class="tooltip--trigger"
+				>
+					<WIcon class="text-neutral-500">
+						<i-lucide-info/>
+					</WIcon>
+				</button>
+			</slot>
 		</TooltipTrigger>
-		<TooltipTrigger v-else>
+		<TooltipTrigger
+			v-else
+			class="tooltip--trigger"
+		>
 			<slot>
 				<WIcon class="text-neutral-500">
 					<i-lucide-info/>
@@ -110,7 +124,10 @@ const props = withDefaults(defineProps<
 	& {
 		delayDuration?: number
 		disabled?: boolean
+		/** Uses a span (this forces triggerAsChild also) without focus instead of a button as the trigger. Note that if you override the slot you will override the span and it will be like just using triggerAsChild. */
 		triggerWhileDisabled?: boolean
+		/** Uses the slots contents directly as the trigger. */
+		triggerAsChild?: boolean
 		content?: string
 		collisionBoundary?: Element | null
 		to?: string
