@@ -55,7 +55,8 @@ export type TableColConfig<T = {}> = Record<keyof T, { name?: string, resizable?
 
 export type ResizeCallback = (_rect: DOMRectReadOnly, el: Element) => void
 
-export type FileInputError = ErrorW<{ file: File, isValidMimeType: boolean, isValidExtension: boolean }>
+/** If the error is a schema error, isValidMimeType and isValidExtension won't be set. */
+export type FileInputError = ErrorW<{ file: File, isValidMimeType?: boolean, isValidExtension?: boolean }>
 
 /** h 0-360+ (deg), s 0-100%, v 0-100%, a 0-1 */
 export type HsvaColor = { h: number, s: number, v: number, a?: number }

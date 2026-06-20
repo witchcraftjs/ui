@@ -23,7 +23,7 @@
 			p-2
 		`,
 		isHovered && `bg-accent-500/10`,
-		errors.length > 0 && isErrored && `errored border-red-400 hover:border-red-500`,
+		allErrors.length > 0 && isErrored && `errored border-red-400 hover:border-red-500`,
 		wrapperAttrs?.class
 	)"
 	v-bind="{ ...wrapperAttrs, class: undefined }"
@@ -125,8 +125,8 @@
 			:accept="formats.join(', ')"
 			:multiple="multiple"
 			v-bind="{ ...inputAttrs, class: undefined }"
-			:aria-invalid="errors.length > 0"
-			:aria-errormessage="errors.map(_ => _.message).join(', ')"
+			:aria-invalid="allErrors.length > 0"
+			:aria-errormessage="allErrors.map(_ => _.message).join(', ')"
 			ref="el"
 			@input="(inputFile as any)"
 			@click="($event.target! as any).value = null"
@@ -213,12 +213,12 @@
 		</div>
 	</div>
 	<div
-		v-if="!compact && errors.length > 0"
+		v-if="!compact && allErrors.length > 0"
 		class="file-input--errors flex flex-col gap-2 text-sm text-red-600 dark:text-red-400 items-center px-2"
 	>
 		<div
 			class="file-input--error text-center"
-			v-for="error of errors"
+			v-for="error of allErrors"
 			:key="error.message"
 		>
 			{{ error.message }}
@@ -228,6 +228,7 @@
 </template>
 
 <script setup lang="ts">
+import type { StandardSchemaV1 } from "@standard-schema/spec"
 import type { HTMLAttributes, InputHTMLAttributes } from "vue"
 import { computed, onBeforeUnmount, ref, shallowReactive, watch } from "vue"
 
@@ -258,7 +259,16 @@ const props = withDefaults(defineProps<
 		formats?: string[]
 		compact?: boolean
 		// autocomplete excluded because of https://github.com/vuejs/core/pull/14237 and https://github.com/vuejs/core/issues/10514
-
+		/**
+		 * Optional standard-schema validator for the selected files.
+		 *
+		 * Note that because schemas can be async, the emits will be async and input errors might show visually before @errors emits. This is so you only get one possible error emit per change, instead of possibly two, one sync and one async.
+		 *
+		 * Additionally, clearErrors cannot clear the validation errors. You must clear files so the component stops trying to validate them.
+		 *
+		 * @example z.array(z.instanceof(File).refine(f => f.size < 10_000_000))
+		 */
+		schema?: StandardSchemaV1<File[]>
 		inputAttrs?: Omit<InputHTMLAttributes, "class" | "autocomplete"> & TailwindClassProp
 		wrapperAttrs?: Omit<HTMLAttributes, "class"> & TailwindClassProp
 	}
@@ -271,15 +281,39 @@ const finalId = useFallbackId(props)
 
 const emits = defineEmits<{
 	(e: "input", val: File[], clearFiles: () => void): void
-	(e: "errors", val: FileInputError[], clearErrors: () => void): void
+	(e: "errors", val: FileInputError[], clearErrors: () => void, clearFiles: () => void): void
 }>()
 
 type Entry = { file: File } & ({ isImg: true, previewUrl: string } | { isImg: false, previewUrl: undefined })
 
 const files = shallowReactive<(Entry)[]>([])
-const errors = shallowReactive<(FileInputError)[]>([])
-const isErrored = ref(false)
 const isHovered = ref(false)
+
+const inputErrors = shallowReactive<(FileInputError)[]>([])
+const isErrored = ref(false)
+const isValidating = ref(false)
+
+const schemaErrors = ref<StandardSchemaV1.FailureResult["issues"]>([])
+watch(files, async () => {
+	isValidating.value = true
+	if (!props.schema || files.length === 0) {
+		schemaErrors.value = []
+		isValidating.value = false
+		return
+	}
+	const res = await props.schema["~standard"].validate(files.map(e => e.file))
+	if (res && "issues" in res && res.issues) {
+		isValidating.value = false
+		schemaErrors.value = res.issues.map((issue, i) => ({ message: issue.message, file: files[i] }))
+		return
+	}
+	schemaErrors.value = []
+	isValidating.value = false
+})
+
+
+const allErrors = computed(() => [...inputErrors, ...schemaErrors.value.map(e => new Error(e.message) as FileInputError)])
+
 
 function clearFiles() {
 	if (el.value) {
@@ -292,19 +326,22 @@ function clearFiles() {
 	files.splice(0, files.length)
 }
 
-watch(files, () => {
+watch([files, isValidating], () => {
+	if (isValidating.value) return
 	emits("input", files.map(entry => entry.file), clearFiles)
 })
-watch(errors, () => {
-	if (errors.length > 0) {
+
+watch([allErrors, isValidating], () => {
+	if (isValidating.value) return
+	if (allErrors.value.length > 0) {
 		isErrored.value = true
-		emits("errors", [...errors], clearErrors)
+		emits("errors", [...allErrors.value], clearErrors, clearFiles)
 	}
 })
 
 function clearErrors() {
 	isErrored.value = false
-	errors.splice(0, errors.length)
+	inputErrors.splice(0, inputErrors.length)
 }
 
 defineOptions({
@@ -378,9 +415,9 @@ function updateFiles(filesList: FileList): boolean | undefined {
 		}
 	}
 	if (errs.length > 0) {
-		errors.splice(0, errors.length, ...errs)
+		inputErrors.splice(0, inputErrors.length, ...errs)
 		return false
-	} else if (errors.length > 0) {
+	} else if (inputErrors.length > 0) {
 		clearErrors()
 	}
 	return undefined

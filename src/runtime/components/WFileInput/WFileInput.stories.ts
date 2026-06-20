@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { Meta, StoryObj } from "@storybook/vue3"
 import { ref } from "vue"
+import z from "zod"
 
 import * as components from "../index.js"
 
@@ -83,6 +84,42 @@ export const Compact: Story = {
 	}
 }
 
+const MIN_DIMENSIONS = { width: 1, height: 1 }
+const MAX_DIMENSIONS = { width: 10, height: 10 }
+
+export const SchemaValidation: Story = {
+	...SingleFile,
+	args: {
+		...SingleFile.args,
+		schema: z.array(z
+			.instanceof(File, {
+				message: "Please select an image file."
+			})
+			.refine(
+				file =>
+					new Promise(resolve => {
+						const reader = new FileReader()
+						reader.onload = e => {
+							const img = new Image()
+							img.onload = () => {
+								const meetsDimensions
+									= img.width >= MIN_DIMENSIONS.width
+										&& img.height >= MIN_DIMENSIONS.height
+										&& img.width <= MAX_DIMENSIONS.width
+										&& img.height <= MAX_DIMENSIONS.height
+								resolve(meetsDimensions)
+							}
+							img.src = e.target?.result as string
+						}
+						reader.readAsDataURL(file)
+					}),
+				{
+					message: `The image dimensions are invalid. Please upload an image between ${MIN_DIMENSIONS.width}x${MIN_DIMENSIONS.height} and ${MAX_DIMENSIONS.width}x${MAX_DIMENSIONS.height} pixels.`
+				}
+			))
+	}
+}
+
 export const ErrorHandling: Story = {
 	render: args => ({
 		components: components as any,
@@ -99,3 +136,4 @@ export const ErrorHandling: Story = {
 		`
 	})
 }
+
