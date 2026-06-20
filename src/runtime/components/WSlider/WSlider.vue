@@ -210,7 +210,7 @@ const props = withDefaults(defineProps<
 	highlightRange: true
 })
 
-const modelValue = defineModel<T>()
+const modelValue = defineModel<T>({ required: true })
 
 const modelValueWrapper = computed<number[]>({
 	get: () => typeof modelValue.value === "number" ? [modelValue.value] : modelValue.value as number[],
