@@ -1,0 +1,1 @@
+import{L as s,a3 as a}from"./CtFoL6Vg.js";function r(n){const o=a(!1);function t(){o.value=!0}function e(i){s(()=>{o.value=!1,n?.(i)})}return{isComposing:o,handleCompositionStart:t,handleCompositionEnd:e}}export{r as u};
