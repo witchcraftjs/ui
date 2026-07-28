@@ -6,6 +6,8 @@ import { ref, watch } from "vue"
  * Setting to true is not delayed.
  *
  * If the indicator is set to true while the timeout is still running, it's canceled.
+ *
+ * @deprecated use useDelayedLoadingIndicator from @witchcraft/nuxt-utils instead
  */
 
 export function useDelayedLoadingIndicator(
