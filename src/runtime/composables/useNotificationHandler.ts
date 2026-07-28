@@ -11,7 +11,13 @@ const configuration: {
 export const useNotificationHandler = (
 	handler?: NotificationHandler,
 	/** True by default, should be passed import.meta.client if using nuxt, or false when running server side. */
-	isClientSide?: boolean
+	isClientSide?: boolean,
+	{
+		_disableCanOnlyConfigurateOnceWarning
+	}: {
+		/* I don't recommend this, but if you really need to, you can disable the warning (e.g. for tests which all use the same handler) */
+		_disableCanOnlyConfigurateOnceWarning?: string
+	} = {}
 ): NotificationHandler => {
 	const clientSide = isClientSide ?? configuration.isClientSide
 
@@ -24,7 +30,7 @@ export const useNotificationHandler = (
 		} else {
 			throw new Error("You must set the notification handler to use at least once before using it.")
 		}
-	} else if (handler || isClientSide) {
+	} else if ((handler || isClientSide) && !_disableCanOnlyConfigurateOnceWarning) {
 		// eslint-disable-next-line no-console
 		console.warn("You can only configure useNotificationHandler once. (Note that there might be false positive during HMR).")
 	}

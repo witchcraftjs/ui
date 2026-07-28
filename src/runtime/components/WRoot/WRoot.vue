@@ -81,6 +81,7 @@ const props = withDefaults(defineProps<{
 	useBuiltinTranslations?: boolean
 	useNotifications?: boolean
 	notificationHandler?: NotificationHandler
+	setupNotificationHandler?: boolean
 	wrapperAttrs?: Omit<HTMLAttributes, "class"> & TailwindClassProp
 }>(), {
 	theme: undefined,
@@ -91,6 +92,7 @@ const props = withDefaults(defineProps<{
 	isClientSide: true,
 	useBuiltinTranslations: true,
 	useNotifications: true,
+	setupNotificationHandler: true,
 	notificationHandler: undefined
 })
 
@@ -104,7 +106,9 @@ function handleRef(_: Element | ComponentPublicInstance | null): void {
 
 if (props.useNotifications) {
 	const handler = props.notificationHandler ?? new NotificationHandler()
-	useNotificationHandler(handler, props.isClientSide)
+	if (props.setupNotificationHandler) {
+		useNotificationHandler(handler, props.isClientSide)
+	}
 }
 
 const autoOutline = useAccesibilityOutline(el).outline
