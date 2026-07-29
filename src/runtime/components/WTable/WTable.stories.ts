@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { faker } from "@faker-js/faker"
 import type { Meta, StoryObj } from "@storybook/vue3"
-import { reactive, ref } from "vue"
+import { reactive, ref, watch } from "vue"
 
+import { twMerge } from "../../utils/twMerge.js"
 // todo
 import * as components from "../index.js"
 
@@ -329,4 +330,87 @@ export const FourColSomeColsNotResizable: Story = {
 		colConfig2: { prop2: { name: "No Resize", resizable: false }, prop3: { name: "No Resize", resizable: false } },
 		colConfig3: { prop1: { name: "No Resize", resizable: false }, prop4: { name: "No Resize", resizable: false } }
 	} as any
+}
+
+export const ExperimentalVirtualizedComparison: Story = {
+	args: {},
+	render: () => ({
+		components: components as any,
+		setup: () => {
+			const isVirtualized = ref(true)
+			const rowCountInput = ref("1000")
+			const useContentVisibility = ref(false)
+			const values = ref(
+				Array.from({ length: 1000 }).fill(0).map((_, i) => ({
+					prop1: `Item${i + 1} Prop 1`,
+					prop2: `Item${i + 1} Prop 2`,
+					prop3: `Item${i + 1} Prop 3`
+				}))
+			)
+
+			let timer: ReturnType<typeof setTimeout> | null = null
+			watch(rowCountInput, () => {
+				if (timer) clearTimeout(timer)
+				timer = setTimeout(() => {
+					const count = Math.max(1, Number.parseInt(rowCountInput.value, 10) || 0)
+					values.value = Array.from({ length: count }).fill(0).map((_, i) => ({
+						prop1: `Item${i + 1} Prop 1`,
+						prop2: `Item${i + 1} Prop 2`,
+						prop3: `Item${i + 1} Prop 3`
+					}))
+				}, 300)
+			})
+
+			watch(isVirtualized, v => {
+				if (v) useContentVisibility.value = false
+			})
+
+			return { isVirtualized, rowCountInput, useContentVisibility, values, twMerge }
+		},
+		template: `
+			<div class="p-2 flex flex-col gap-2 border rounded-md mb-10">
+				Controls:
+				<div class="flex items-center gap-2">
+					<WCheckbox v-model="isVirtualized" label="Virtualized"/>
+				</div>
+				<div class="flex items-center gap-2">
+					<label>Row count:</label>
+					<input v-model="rowCountInput" type="number" min="1" class="border rounded px-2 py-1 w-24" />
+				</div>
+			</div>
+			<WTable
+				v-if="isVirtualized"
+				:cols="['prop1', 'prop2', 'prop3']"
+				:values="values"
+				:colConfig="{ prop1: { name: 'Header 1' }, prop2: { name: 'Header 2' }, prop3: { name: 'Header 3' } }"
+				:resizable="{ enabled: true }"
+				:virtualizerOptions="{ enabled: true }"
+				:stickyHeader="true"
+				:wrapperAttrs="{ class: 'max-h-[50dvh]' }"
+			></WTable>
+			<WTable
+				v-else
+				:cols="['prop1', 'prop2', 'prop3']"
+				:values="values"
+				:colConfig="{ prop1: { name: 'Header 1' }, prop2: { name: 'Header 2' }, prop3: { name: 'Header 3' } }"
+				:resizable="{ enabled: true }"
+				:stickyHeader="true"
+				:wrapperAttrs="{ class: 'max-h-[50dvh]' }"
+			>
+				<!-- :class=" '[&_.table--row]:animate-[rainbowBg_3s_linear_infinite]'" -->
+			</WTable>
+			<!-- <component is="style"> -->
+			<!-- @keyframes rainbowBg { -->
+			<!-- 	0% { color: hsl(0, 70%, 85%); } -->
+			<!-- 	14% { color: hsl(45, 70%, 85%); } -->
+			<!-- 	28% { color: hsl(90, 70%, 85%); } -->
+			<!-- 	42% { color: hsl(135, 70%, 85%); } -->
+			<!-- 	57% { color: hsl(180, 70%, 85%); } -->
+			<!-- 	71% { color: hsl(225, 70%, 85%); } -->
+			<!-- 	85% { color: hsl(270, 70%, 85%); } -->
+			<!-- 	100% { color: hsl(315, 70%, 85%); } -->
+			<!-- } -->
+			<!-- </component> -->
+		`
+	})
 }
