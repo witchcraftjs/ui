@@ -271,11 +271,19 @@ const props = withDefaults(defineProps<
 		schema?: StandardSchemaV1<File[]>
 		inputAttrs?: Omit<InputHTMLAttributes, "class" | "autocomplete"> & TailwindClassProp
 		wrapperAttrs?: Omit<HTMLAttributes, "class"> & TailwindClassProp
+		/**
+		 * The component uses createObjectURL internally to preview files. This can be dangerous for some mime types (e.g. SVG). The default setting for this prop only allows previewing:
+		 * ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp", "image/bmp", "image/x-icon", "image/vnd.microsoft.icon", "image/apng", "image/avif", "image/jxl"]
+		 *
+		 * But if you know what you're doing, you can pass a custom list or further limit the existing one.
+		 */
+		safeToPreviewMimeTypes?: string[]
 	}
 >(), {
 	multiple: false,
 	formats: () => ["image/*", ".jpeg", ".jpg", ".png"],
-	compact: false
+	compact: false,
+	safeToPreviewMimeTypes: () => ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp", "image/bmp", "image/x-icon", "image/vnd.microsoft.icon", "image/apng", "image/avif", "image/jxl"]
 })
 const finalId = useFallbackId(props)
 
@@ -284,7 +292,7 @@ const emits = defineEmits<{
 	(e: "errors", val: FileInputError[], clearErrors: () => void, clearFiles: () => void): void
 }>()
 
-type Entry = { file: File } & ({ isImg: true, previewUrl: string } | { isImg: false, previewUrl: undefined })
+type Entry = { file: File } & ({ isImg: true, previewUrl: string, isSafeToPreviewAsImg: boolean } | { isImg: false, previewUrl: undefined, isSafeToPreviewAsImg: boolean })
 
 const files = shallowReactive<(Entry)[]>([])
 const isHovered = ref(false)
@@ -387,7 +395,9 @@ async function inputFile(e: InputEvent): Promise<undefined | boolean> {
 function updateFiles(filesList: FileList): boolean | undefined {
 	const errs = []
 	for (const file of filesList) {
-		const isImg = file.type.startsWith("image")
+		const fileType = file.type.toLowerCase()
+		const isSafeToPreviewAsImg = props.safeToPreviewMimeTypes.includes(fileType)
+		const isImg = fileType.startsWith("image/")
 
 		const byPassValidation = props.formats.length === 0
 		const isValidMimeType = mimeTypes.value.find(_ => _.endsWith("/*") ? file.type.startsWith(_.slice(0, -2)) : _ === file.type) !== undefined
@@ -403,14 +413,14 @@ function updateFiles(filesList: FileList): boolean | undefined {
 			errs.push(err)
 			continue
 		}
-		const previewUrl = isImg ? URL.createObjectURL(file) : undefined
+		const previewUrl = isSafeToPreviewAsImg ? URL.createObjectURL(file) : undefined
 		if (errs.length > 0) continue
 		if (!files.find(_ => _.file === file)) {
 			if ((props.multiple || files.length < 1)
 			) {
-				files.push({ file, isImg, previewUrl: previewUrl as any })
+				files.push({ file, isImg, isSafeToPreviewAsImg, previewUrl: previewUrl as any })
 			} else {
-				files.splice(0, files.length, { file, isImg, previewUrl: previewUrl as any })
+				files.splice(0, files.length, { file, isImg, isSafeToPreviewAsImg, previewUrl: previewUrl as any })
 			}
 		}
 	}
