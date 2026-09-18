@@ -1,0 +1,47 @@
+# @witchcraft/ui
+
+> Vue component library built on Reka UI with Tailwind CSS, themable via Metamorphosis.
+
+## Documentation Sets
+
+- [Full Documentation](https://witchcraftjs.github.io/ui/llms-full.txt): Full documentation of the application
+
+## Landing
+
+- [@witchcraft/ui](https://witchcraftjs.github.io/ui): Opinionated, batteries-included Vue/Nuxt component library built on Reka UI with Tailwind CSS.
+
+## Docs
+
+- [Introduction](https://witchcraftjs.github.io/ui/getting-started): Opinionated, batteries-included Vue/Nuxt component library built on Reka UI with Tailwind CSS.
+- [Installation (Nuxt)](https://witchcraftjs.github.io/ui/getting-started/installation-nuxt): Install and configure @witchcraft/ui in your Nuxt project.
+- [Installation (Standalone)](https://witchcraftjs.github.io/ui/getting-started/installation-standalone): Use @witchcraft/ui without Nuxt.
+- [Usage](https://witchcraftjs.github.io/ui/getting-started/usage): Learn how to use and customize @witchcraft/ui components.
+- [WAsyncValidatedInput](https://witchcraftjs.github.io/ui/components/w-async-validated-input): This is for usage with @witchcraft/nuxt-utils's useAsyncValidation for handling
+complex validation scenarios (client+server) as in the case of a username.
+- [WAuth](https://witchcraftjs.github.io/ui/components/w-auth)
+- [WAuthLocalUser](https://witchcraftjs.github.io/ui/components/w-auth-local-users): See WAuth for storybook stories.
+- [WButton](https://witchcraftjs.github.io/ui/components/w-button)
+- [WCheckbox](https://witchcraftjs.github.io/ui/components/w-checkbox)
+- [WColorInput](https://witchcraftjs.github.io/ui/components/w-color-input)
+- [WColorPicker](https://witchcraftjs.github.io/ui/components/w-color-picker)
+- [WCombobox](https://witchcraftjs.github.io/ui/components/w-combobox)
+- [WDarkModeSwitcher](https://witchcraftjs.github.io/ui/components/w-dark-mode-switcher)
+- [WDatePicker](https://witchcraftjs.github.io/ui/components/w-date-picker)
+- [WFileInput](https://witchcraftjs.github.io/ui/components/w-file-input)
+- [WIcon](https://witchcraftjs.github.io/ui/components/w-icon)
+- [WMetamorphosisTheme](https://witchcraftjs.github.io/ui/components/w-metamorphosis-theme): This is a slightly experimental component. Not all types of themes are supported, but the
+most common will work. There is no save/load mechanism yet, though you can hook
+into metamorphosis's internal events to get notified of theme changes.
+- [WMultiValues](https://witchcraftjs.github.io/ui/components/w-multi-values)
+- [WNotification](https://witchcraftjs.github.io/ui/components/w-notification)
+- [WNotifications](https://witchcraftjs.github.io/ui/components/w-notifications)
+- [WNumberInput](https://witchcraftjs.github.io/ui/components/w-number-input)
+- [WPagination](https://witchcraftjs.github.io/ui/components/w-pagination)
+- [WPalette](https://witchcraftjs.github.io/ui/components/w-palette)
+- [WPopover](https://witchcraftjs.github.io/ui/components/w-popover)
+- [WPopup](https://witchcraftjs.github.io/ui/components/w-popup)
+- [WProgressBar](https://witchcraftjs.github.io/ui/components/w-progress-bar)
+- [WRecorder](https://witchcraftjs.github.io/ui/components/w-recorder)
+- [WSimpleInput](https://witchcraftjs.github.io/ui/components/w-simple-input)
+- [WTable](https://witchcraftjs.github.io/ui/components/w-table)
+- [WTooltip](https://witchcraftjs.github.io/ui/components/w-tooltip)

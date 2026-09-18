@@ -1,0 +1,1 @@
+{"version":3,"file":"useInjectedTheme.d.ts","sourceRoot":"","sources":["../../../src/runtime/composables/useInjectedTheme.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,KAAK,EAAE,MAAM,qBAAqB,CAAA;AAChD,OAAO,EAAU,KAAK,UAAU,EAAE,MAAM,KAAK,CAAA;AAI7C,wBAAgB,gBAAgB,IAAI,UAAU,CAAC,KAAK,CAAC,GAAG,CAAC,CAAC,CAIzD"}
