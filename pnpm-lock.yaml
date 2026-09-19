@@ -64,8 +64,8 @@ catalogs:
       specifier: ^4.4.2
       version: 4.4.6
     '@nuxt/module-builder':
-      specifier: ^1.0.2
-      version: 1.0.2
+      specifier: ^1.0.3
+      version: 1.0.3
     '@nuxt/schema':
       specifier: ^4.4.2
       version: 4.4.6
@@ -293,7 +293,7 @@ catalogs:
       version: 4.4.3
 
 patchedDependencies:
-  '@nuxt/module-builder': 9ef9ac78790b21edc4d5385765d13fa7efa59c7064aa38ffb4ec7a824d7d6ffb
+  '@nuxt/module-builder': fc85f61631aedf8dafd2a419a5945d9510a73c505464fd8e33b0f79e5cb3e39f
 
 importers:
 
@@ -395,7 +395,7 @@ importers:
         version: 1.15.2(@typescript-eslint/utils@8.60.1(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3))(@vue/compiler-sfc@3.5.35)(eslint-import-resolver-node@0.3.10)(eslint@9.39.4(jiti@2.7.0))(typescript@5.9.3)
       '@nuxt/module-builder':
         specifier: 'catalog:'
-        version: 1.0.2(patch_hash=9ef9ac78790b21edc4d5385765d13fa7efa59c7064aa38ffb4ec7a824d7d6ffb)(@nuxt/cli@3.35.2(@nuxt/schema@4.4.6)(cac@6.7.14)(magicast@0.5.3))(@vue/compiler-core@3.5.35)(esbuild@0.28.0)(typescript@5.9.3)(vue-tsc@3.2.4(typescript@5.9.3))(vue@3.5.35(typescript@5.9.3))
+        version: 1.0.3(patch_hash=fc85f61631aedf8dafd2a419a5945d9510a73c505464fd8e33b0f79e5cb3e39f)(@nuxt/cli@3.35.2(@nuxt/schema@4.4.6)(cac@6.7.14)(magicast@0.5.3))(@volar/typescript@2.4.28)(@vue/compiler-core@3.5.35)(@vue/language-core@3.3.3)(esbuild@0.28.0)(typescript@5.9.3)(vue-tsc@3.2.4(typescript@5.9.3))(vue@3.5.35(typescript@5.9.3))
       '@nuxtjs/i18n':
         specifier: 'catalog:'
         version: 9.5.6(@vue/compiler-dom@3.5.35)(eslint@9.39.4(jiti@2.7.0))(magicast@0.5.3)(rollup@4.60.4)(vue@3.5.35(typescript@5.9.3))
@@ -518,7 +518,7 @@ importers:
         version: 5.9.3
       unbuild:
         specifier: 'catalog:'
-        version: 3.6.1(typescript@5.9.3)(vue-sfc-transformer@0.1.17(@vue/compiler-core@3.5.35)(esbuild@0.28.0)(vue@3.5.35(typescript@5.9.3)))(vue-tsc@3.2.4(typescript@5.9.3))(vue@3.5.35(typescript@5.9.3))
+        version: 3.6.1(typescript@5.9.3)(vue-sfc-transformer@0.2.3(@volar/typescript@2.4.28)(@vue/compiler-core@3.5.35)(@vue/language-core@3.3.3)(esbuild@0.28.0)(typescript@5.9.3)(vue@3.5.35(typescript@5.9.3)))(vue-tsc@3.2.4(typescript@5.9.3))(vue@3.5.35(typescript@5.9.3))
       vite:
         specifier: 'catalog:'
         version: 7.3.3(@types/node@24.12.4)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.48.0)(yaml@2.9.0)
@@ -2236,13 +2236,13 @@ packages:
     resolution: {integrity: sha512-AzsqBJeG7b3whIciyzkz4nBossEotM314KzKAptc8kH07ORBIR8Qh3QYKepo2YZwtxiDP2Y9aqzAztwpSEDHtw==}
     engines: {node: '>=18.12.0'}
 
-  '@nuxt/module-builder@1.0.2':
-    resolution: {integrity: sha512-9M+0oZimbwom1J+HrfDuR5NDPED6C+DlM+2xfXju9wqB6VpVfYkS6WNEmS0URw8kpJcKBuogAc7ADO7vRS4s4A==}
+  '@nuxt/module-builder@1.0.3':
+    resolution: {integrity: sha512-3VApg9j6MUc6G2p5hwUZmYCBHnFPg+18ye1uXpywDQGzS12HM9d1ktsCovBEImeLOLw2PlPOms/gMFkaqxRcuw==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
-      '@nuxt/cli': ^3.26.4
-      typescript: ^5.8.3
+      '@nuxt/cli': ^3.37.0
+      typescript: ^5.9.3
 
   '@nuxt/nitro-server@4.4.6':
     resolution: {integrity: sha512-3OgAWW8cK+0BgEWiGYv9wP/vfQcIWTs+YNmZZAf1f89py8KnHgHp2aFQjZ/zTXWKTHlkGPl9NntQQkMoF3j1fA==}
@@ -7112,6 +7112,7 @@ packages:
   git-raw-commits@5.0.1:
     resolution: {integrity: sha512-Y+csSm2GD/PCSh6Isd/WiMjNAydu0VBiG9J7EdQsNA5P9uXvLayqjmTsNlK5Gs9IhblFZqOU0yid5Il5JPoLiQ==}
     engines: {node: '>=18'}
+    deprecated: Deprecated and no longer maintained. Use @conventional-changelog/git-client instead.
     hasBin: true
 
   git-up@8.1.1:
@@ -10945,6 +10946,7 @@ packages:
   tsconfck@3.1.6:
     resolution: {integrity: sha512-ks6Vjr/jEw0P1gmOVwutM3B7fWxoWBL2KRDb1JfqGVawBmO5UsvmWOQFGHBPl5yxYz4eERr19E6L7NMv+Fej4w==}
     engines: {node: ^18 || >=20}
+    deprecated: unmaintained
     hasBin: true
     peerDependencies:
       typescript: ^5.0.0
@@ -11591,6 +11593,9 @@ packages:
   vue-component-type-helpers@3.3.3:
     resolution: {integrity: sha512-x4nsFpy5Pe8fqPzp/5vkTPeTTDBpAx4WVtV47Ejt0+2FQrq4pRRsJs7JmYRqMFzTu/LW+pCWEjQ3YVCkPV7f9g==}
 
+  vue-component-type-helpers@3.3.8:
+    resolution: {integrity: sha512-troqCMmQodQDqUqn63NQaFi+CDSclSe7sc8VEBFqf5GFLqmGR2Ph3P2WEC7qwpRVyEWsTi/aAr4vyOe/B1hU3g==}
+
   vue-demi@0.14.10:
     resolution: {integrity: sha512-nMZBOwuzabUO0nLgIcc6rycZEebF6eeUfaiQx9+WSk8e29IbLvPU9feI6tqW4kTo3hvoYAJkMh8n8D0fuISphg==}
     engines: {node: '>=12'}
@@ -11651,13 +11656,26 @@ packages:
       vite:
         optional: true
 
-  vue-sfc-transformer@0.1.17:
-    resolution: {integrity: sha512-0mpkDTWm1ybtp/Mp3vhrXP4r8yxcGF+quxGyJfrHDl2tl5naQjK3xkIGaVR5BtR5KG1LWJbdCrqn7I6f460j9A==}
+  vue-sfc-transformer@0.2.3:
+    resolution: {integrity: sha512-aWgeZUXS1W5Q7UIgzBBURMS79/hGsVlNFRHvvQIed1Q0qm8Pt5b+DZvFdx30RkE1BWv6OWQH0+p0avyMnteTGw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
+      '@volar/typescript': ^2.4.0
       '@vue/compiler-core': ^3.5.13
+      '@vue/language-core': ^3.0.0
       esbuild: '*'
+      rolldown: '>=1.0.0-beta.0'
+      typescript: '>=5.0.0'
       vue: ^3.5.13
+    peerDependenciesMeta:
+      '@volar/typescript':
+        optional: true
+      '@vue/language-core':
+        optional: true
+      rolldown:
+        optional: true
+      typescript:
+        optional: true
 
   vue-tsc@3.2.4:
     resolution: {integrity: sha512-xj3YCvSLNDKt1iF9OcImWHhmYcihVu9p4b9s4PGR/qp6yhW+tZJaypGxHScRyOrdnHvaOeF+YkZOdKwbgGvp5g==}
@@ -13932,25 +13950,28 @@ snapshots:
     transitivePeerDependencies:
       - magicast
 
-  '@nuxt/module-builder@1.0.2(patch_hash=9ef9ac78790b21edc4d5385765d13fa7efa59c7064aa38ffb4ec7a824d7d6ffb)(@nuxt/cli@3.35.2(@nuxt/schema@4.4.6)(cac@6.7.14)(magicast@0.5.3))(@vue/compiler-core@3.5.35)(esbuild@0.28.0)(typescript@5.9.3)(vue-tsc@3.2.4(typescript@5.9.3))(vue@3.5.35(typescript@5.9.3))':
+  '@nuxt/module-builder@1.0.3(patch_hash=fc85f61631aedf8dafd2a419a5945d9510a73c505464fd8e33b0f79e5cb3e39f)(@nuxt/cli@3.35.2(@nuxt/schema@4.4.6)(cac@6.7.14)(magicast@0.5.3))(@volar/typescript@2.4.28)(@vue/compiler-core@3.5.35)(@vue/language-core@3.3.3)(esbuild@0.28.0)(typescript@5.9.3)(vue-tsc@3.2.4(typescript@5.9.3))(vue@3.5.35(typescript@5.9.3))':
     dependencies:
       '@nuxt/cli': 3.35.2(@nuxt/schema@4.4.6)(cac@6.7.14)(magicast@0.5.3)
-      citty: 0.1.6
+      citty: 0.2.2
       consola: 3.4.2
       defu: 6.1.7
       jiti: 2.7.0
-      magic-regexp: 0.10.0
-      mkdist: 2.4.1(typescript@5.9.3)(vue-sfc-transformer@0.1.17(@vue/compiler-core@3.5.35)(esbuild@0.28.0)(vue@3.5.35(typescript@5.9.3)))(vue-tsc@3.2.4(typescript@5.9.3))(vue@3.5.35(typescript@5.9.3))
+      magic-regexp: 0.11.0
+      mkdist: 2.4.1(typescript@5.9.3)(vue-sfc-transformer@0.2.3(@volar/typescript@2.4.28)(@vue/compiler-core@3.5.35)(@vue/language-core@3.3.3)(esbuild@0.28.0)(typescript@5.9.3)(vue@3.5.35(typescript@5.9.3)))(vue-tsc@3.2.4(typescript@5.9.3))(vue@3.5.35(typescript@5.9.3))
       mlly: 1.8.2
       pathe: 2.0.3
       pkg-types: 2.3.1
       tsconfck: 3.1.6(typescript@5.9.3)
       typescript: 5.9.3
-      unbuild: 3.6.1(typescript@5.9.3)(vue-sfc-transformer@0.1.17(@vue/compiler-core@3.5.35)(esbuild@0.28.0)(vue@3.5.35(typescript@5.9.3)))(vue-tsc@3.2.4(typescript@5.9.3))(vue@3.5.35(typescript@5.9.3))
-      vue-sfc-transformer: 0.1.17(@vue/compiler-core@3.5.35)(esbuild@0.28.0)(vue@3.5.35(typescript@5.9.3))
+      unbuild: 3.6.1(typescript@5.9.3)(vue-sfc-transformer@0.2.3(@volar/typescript@2.4.28)(@vue/compiler-core@3.5.35)(@vue/language-core@3.3.3)(esbuild@0.28.0)(typescript@5.9.3)(vue@3.5.35(typescript@5.9.3)))(vue-tsc@3.2.4(typescript@5.9.3))(vue@3.5.35(typescript@5.9.3))
+      vue-sfc-transformer: 0.2.3(@volar/typescript@2.4.28)(@vue/compiler-core@3.5.35)(@vue/language-core@3.3.3)(esbuild@0.28.0)(typescript@5.9.3)(vue@3.5.35(typescript@5.9.3))
     transitivePeerDependencies:
+      - '@volar/typescript'
       - '@vue/compiler-core'
+      - '@vue/language-core'
       - esbuild
+      - rolldown
       - sass
       - vue
       - vue-tsc
@@ -15665,7 +15686,7 @@ snapshots:
       ts-dedent: 2.2.0
       type-fest: 2.19.0
       vue: 3.5.35(typescript@5.9.3)
-      vue-component-type-helpers: 3.3.3
+      vue-component-type-helpers: 3.3.8
 
   '@stylistic/eslint-plugin@5.10.0(eslint@9.39.4(jiti@2.7.0))':
     dependencies:
@@ -21431,7 +21452,7 @@ snapshots:
 
   mkdirp@1.0.4: {}
 
-  mkdist@2.4.1(typescript@5.9.3)(vue-sfc-transformer@0.1.17(@vue/compiler-core@3.5.35)(esbuild@0.28.0)(vue@3.5.35(typescript@5.9.3)))(vue-tsc@3.2.4(typescript@5.9.3))(vue@3.5.35(typescript@5.9.3)):
+  mkdist@2.4.1(typescript@5.9.3)(vue-sfc-transformer@0.2.3(@volar/typescript@2.4.28)(@vue/compiler-core@3.5.35)(@vue/language-core@3.3.3)(esbuild@0.28.0)(typescript@5.9.3)(vue@3.5.35(typescript@5.9.3)))(vue-tsc@3.2.4(typescript@5.9.3))(vue@3.5.35(typescript@5.9.3)):
     dependencies:
       autoprefixer: 10.5.0(postcss@8.5.15)
       citty: 0.1.6
@@ -21449,7 +21470,7 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
       vue: 3.5.35(typescript@5.9.3)
-      vue-sfc-transformer: 0.1.17(@vue/compiler-core@3.5.35)(esbuild@0.28.0)(vue@3.5.35(typescript@5.9.3))
+      vue-sfc-transformer: 0.2.3(@volar/typescript@2.4.28)(@vue/compiler-core@3.5.35)(@vue/language-core@3.3.3)(esbuild@0.28.0)(typescript@5.9.3)(vue@3.5.35(typescript@5.9.3))
       vue-tsc: 3.2.4(typescript@5.9.3)
 
   mlly@1.8.2:
@@ -24641,7 +24662,7 @@ snapshots:
       has-symbols: 1.1.0
       which-boxed-primitive: 1.1.1
 
-  unbuild@3.6.1(typescript@5.9.3)(vue-sfc-transformer@0.1.17(@vue/compiler-core@3.5.35)(esbuild@0.28.0)(vue@3.5.35(typescript@5.9.3)))(vue-tsc@3.2.4(typescript@5.9.3))(vue@3.5.35(typescript@5.9.3)):
+  unbuild@3.6.1(typescript@5.9.3)(vue-sfc-transformer@0.2.3(@volar/typescript@2.4.28)(@vue/compiler-core@3.5.35)(@vue/language-core@3.3.3)(esbuild@0.28.0)(typescript@5.9.3)(vue@3.5.35(typescript@5.9.3)))(vue-tsc@3.2.4(typescript@5.9.3))(vue@3.5.35(typescript@5.9.3)):
     dependencies:
       '@rollup/plugin-alias': 5.1.1(rollup@4.60.4)
       '@rollup/plugin-commonjs': 28.0.9(rollup@4.60.4)
@@ -24657,7 +24678,7 @@ snapshots:
       hookable: 5.5.3
       jiti: 2.7.0
       magic-string: 0.30.21
-      mkdist: 2.4.1(typescript@5.9.3)(vue-sfc-transformer@0.1.17(@vue/compiler-core@3.5.35)(esbuild@0.28.0)(vue@3.5.35(typescript@5.9.3)))(vue-tsc@3.2.4(typescript@5.9.3))(vue@3.5.35(typescript@5.9.3))
+      mkdist: 2.4.1(typescript@5.9.3)(vue-sfc-transformer@0.2.3(@volar/typescript@2.4.28)(@vue/compiler-core@3.5.35)(@vue/language-core@3.3.3)(esbuild@0.28.0)(typescript@5.9.3)(vue@3.5.35(typescript@5.9.3)))(vue-tsc@3.2.4(typescript@5.9.3))(vue@3.5.35(typescript@5.9.3))
       mlly: 1.8.2
       pathe: 2.0.3
       pkg-types: 2.3.1
@@ -25328,6 +25349,8 @@ snapshots:
 
   vue-component-type-helpers@3.3.3: {}
 
+  vue-component-type-helpers@3.3.8: {}
+
   vue-demi@0.14.10(vue@3.5.35(typescript@5.9.3)):
     dependencies:
       vue: 3.5.35(typescript@5.9.3)
@@ -25426,12 +25449,18 @@ snapshots:
       '@vue/compiler-sfc': 3.5.35
       vite: 7.3.3(@types/node@25.9.1)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.48.0)(yaml@2.9.0)
 
-  vue-sfc-transformer@0.1.17(@vue/compiler-core@3.5.35)(esbuild@0.28.0)(vue@3.5.35(typescript@5.9.3)):
+  vue-sfc-transformer@0.2.3(@volar/typescript@2.4.28)(@vue/compiler-core@3.5.35)(@vue/language-core@3.3.3)(esbuild@0.28.0)(typescript@5.9.3)(vue@3.5.35(typescript@5.9.3)):
     dependencies:
       '@babel/parser': 7.29.7
       '@vue/compiler-core': 3.5.35
       esbuild: 0.28.0
+      pathe: 2.0.3
+      tinyglobby: 0.2.17
       vue: 3.5.35(typescript@5.9.3)
+    optionalDependencies:
+      '@volar/typescript': 2.4.28
+      '@vue/language-core': 3.3.3
+      typescript: 5.9.3
 
   vue-tsc@3.2.4(typescript@5.9.3):
     dependencies:
@@ -25779,7 +25808,7 @@ time:
   '@nuxt/eslint@1.15.2': '2026-02-24T09:41:57.204Z'
   '@nuxt/image@2.0.0': '2025-11-05T10:37:35.379Z'
   '@nuxt/kit@4.4.6': '2026-05-18T09:32:50.131Z'
-  '@nuxt/module-builder@1.0.2': '2025-07-25T09:58:07.051Z'
+  '@nuxt/module-builder@1.0.3': '2026-07-23T16:35:02.055Z'
   '@nuxt/schema@4.4.6': '2026-05-18T09:33:23.931Z'
   '@nuxt/types@2.18.1': '2024-06-28T11:34:40.085Z'
   '@nuxt/ui@4.8.1': '2026-05-28T15:34:14.649Z'
