@@ -64,7 +64,7 @@ export async function useSetupI18n({
 				messages.value = newMessages
 			}
 		}
-		if (import.meta.server) {
+		if (import.meta.env.SSR) {
 			await loadMessageSet(locale.value)
 		} else {
 			void loadMessageSet(locale.value)
