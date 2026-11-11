@@ -1,0 +1,486 @@
+# @witchcraft/ui
+
+::u-page-hero
+---
+class: dark:bg-gradient-to-b from-neutral-900 to-neutral-950
+orientation: horizontal
+---
+  :::prose-pre
+  ---
+  code: |
+    export default defineNuxtConfig({
+      modules: ['@witchcraft/ui']
+    })
+  filename: nuxt.config.ts
+  ---
+  ```ts [nuxt.config.ts]
+  export default defineNuxtConfig({
+    modules: ['@witchcraft/ui']
+  })
+  ```
+  :::
+
+#top
+:hero-background
+
+#title
+@witchcraft/ui 🪄
+
+#description
+Opinionated, batteries-included, [Vue](https://vuejs.org){.text-highlighted.hover:underline rel=""nofollow""}/[Nuxt](https://nuxt.com/){.text-highlighted.hover:underline rel=""nofollow""} component library built on [Reka UI](https://reka-ui.com/){.text-highlighted.hover:underline rel=""nofollow""} with [Tailwind CSS](https://tailwindcss.com/){.text-highlighted.hover:underline rel=""nofollow""}. Accessibility-first, themable via [metamorphosis](https://github.com/alanscodelog/metamorphosis){.text-highlighted.hover:underline rel=""nofollow""}.
+
+#links
+  :::u-button
+  ---
+  size: xl
+  to: https://witchcraftjs.github.io/ui/getting-started
+  trailing-icon: i-lucide-arrow-right
+  ---
+  Get started
+  :::
+
+  :::u-button
+  ---
+  color: neutral
+  icon: i-simple-icons-github
+  size: xl
+  target: _blank
+  to: https://github.com/witchcraftjs/ui
+  variant: outline
+  ---
+  GitHub
+  :::
+::
+
+::u-page-section
+---
+class: dark:bg-neutral-950
+---
+#title
+Features
+
+#features
+  :::u-page-feature
+  ---
+  icon: i-lucide-shield-check
+  ---
+  #title
+  Accessibility First
+
+  #description
+  Proper ARIA attributes, keyboard navigation, and screen reader support built in from the ground up.
+  :::
+
+  :::u-page-feature
+  ---
+  icon: i-lucide-palette
+  ---
+  #title
+  Themable via Metamorphosis
+
+  #description
+  Metamorphosis provides a way to customize the theme at runtime.
+  :::
+
+  :::u-page-feature
+  ---
+  icon: i-lucide-minimize
+  ---
+  #title
+  Unstyle Option
+
+  #description
+  Simple components have an unstyle option for minimal styling when you need it.
+  :::
+::
+
+
+# Introduction
+
+@witchcraft/ui is an opinionated, batteries-included [Vue](https://vuejs.org){rel="&#x22;nofollow&#x22;"}/[Nuxt](https://nuxt.com/){rel="&#x22;nofollow&#x22;"} component library built on [Reka UI](https://reka-ui.com/){rel="&#x22;nofollow&#x22;"} with [Tailwind CSS](https://tailwindcss.com/){rel="&#x22;nofollow&#x22;"}. Accessibility-first, themable via [metamorphosis](https://github.com/alanscodelog/metamorphosis){rel="&#x22;nofollow&#x22;"}.
+
+While the docs have storybook embeds, all full interactive examples and demos are available in [Storybook](https://witchcraftjs.github.io/ui/storybook){rel="&#x22;nofollow&#x22;"}.
+
+
+# Installation (Nuxt)
+
+## Install
+
+```bash
+npm install @witchcraft/ui
+```
+
+## Nuxt Setup
+
+Add the module to your `nuxt.config.ts`:
+
+```ts [nuxt.config.ts]
+export default defineNuxtConfig({
+    modules: ['@witchcraft/ui']
+})
+```
+
+The module automatically sets up:
+
+- Tailwind CSS v4 with a custom `witchcraft-ui.css` file
+- `unplugin-icons/nuxt` for icon support
+- Reka UI via `reka-ui/nuxt`
+
+## Tailwind CSS
+
+Import the generated stylesheet in your Tailwind CSS file:
+
+```css [~/assets/css/tailwind.css]
+@import "@tailwindcss" source("../../app");
+@import "../../.nuxt/witchcraft-ui.css";
+```
+
+## Icons
+
+The module installs `unplugin-icons/nuxt` and configures it with custom styles. You can disable this with the `includeUnpluginIconsPlugins` option.
+
+## Helpers
+
+Some helpers are not auto-imported. Import them from `#witchcraft-ui-helpers`:
+
+```ts
+import { someHelper } from "#witchcraft-ui-helpers"
+```
+
+Anything else can be imported from `#witchcraft-ui`.
+
+
+# Installation (Standalone)
+
+## Vite Setup
+
+```ts
+import { defineConfig } from "vite"
+
+import { WitchcraftUiResolver } from "@witchcraft/ui/build/WitchcraftUiResolver"
+import IconsResolver from "unplugin-icons/resolver"
+import Icons from "unplugin-icons/vite"
+import Components from "unplugin-vue-components/vite"
+import { unpluginIconViteOptions } from "@witchcraft/ui/build/unpluginIconViteOptions"
+
+export default defineConfig({
+    plugins: [
+        vue(),
+        Components({
+            resolvers: [
+                IconsResolver(),
+                WitchcraftUiResolver({
+                    prefix: "W",
+                    filter: (name) => name !== "..." // optionally filter components
+                })
+            ],
+            dts: "./types/components.d.ts"
+        }),
+        Icons(unpluginIconViteOptions)
+    ]
+})
+```
+
+See [@witchcraft/editor/vite.config.dev.ts](https://github.com/witchcraftjs/ui){rel="&#x22;nofollow&#x22;"} for a complete example.
+
+## Tailwind CSS
+
+Import the required styles:
+
+```css
+@import "@witchcraft/ui/utils.css";
+@import "@witchcraft/ui/base.css";
+@import "@witchcraft/ui/animations.css";
+@source "/path/to/node_modules/@witchcraft/ui/src/runtime/components";
+```
+
+Base contains animation keyframes, basic styles for Vue animations, and some basic global styles.
+
+## tailwind-merge
+
+The library provides a customized `twMerge` instance at `@witchcraft/ui/utils/twMerge.js`. You will need to use it or import the options it extends and customize your own `twMerge` instance.
+
+## Icons
+
+This library uses `unplugin-icons` to provide icons. It installs `@iconify/json` as a dependency.
+
+## Types
+
+While components should be correctly typed, the library internally extends Vue's interfaces to allow `data-*` attributes and some missing ARIA attributes (like `aria-description`).
+
+You may need to add the following in a global `.d.ts`:
+
+```ts
+import { GlobalComponentTypes } from "@witchcraft/ui"
+
+declare module "@vue/runtime-core" {
+    interface GlobalComponents extends GlobalComponentTypes {}
+}
+
+declare module "vue" {
+    interface HTMLAttributes {
+        // ...
+    }
+    interface AriaAttributes {
+        // ...
+    }
+    interface ComponentCustomProps {
+        // ...
+    }
+}
+
+export {}
+```
+
+Note that using the `strictTemplates` compiler option can cause weird issues with fallthrough props.
+
+
+# Usage
+
+## Components
+
+Components are auto-imported when using the Nuxt module. For standalone usage, they are auto-imported via `unplugin-vue-components` with the `WitchcraftUiResolver`.
+
+```vue
+<template>
+    <WButton>Click me</WButton>
+</template>
+```
+
+## Props
+
+Most components accept standard HTML attributes via fallthrough props which are sent to the element that most "embodies" the component, e.g. $attrs goes to the checkbox root not it's wrapper (this is documented per component). Some components also accept typed props for specific parts or to override reka's props (e.g. root-props):
+
+```vue
+<WCheckbox wrapper-attrs="{ class: 'my-wrapper-class' }" />
+```
+
+## Icons
+
+The module installs `unplugin-icons/nuxt` and configures it with custom styles. Use icons with the `WIcon` component:
+
+```vue
+<WIcon><i-lucide-check/></WIcon>
+```
+
+`WIcon` is a simple wrapper that applies `inline-block` display to the icon in its slot.
+
+## Helpers
+
+Some helpers are not auto-imported. Import them from `#witchcraft-ui-helpers`:
+
+```ts
+import { someHelper } from "#witchcraft-ui-helpers"
+```
+
+Anything else can be imported from `#witchcraft-ui`.
+
+
+# WAsyncValidatedInput
+
+This is for usage with @witchcraft/nuxt-utils's useAsyncValidation for handling
+complex validation scenarios (client+server) as in the case of a username.
+
+:storybook-embed
+
+:component-docs
+
+
+# WAuth
+
+:storybook-embed
+
+:component-docs
+
+
+# WAuthLocalUser
+
+See [WAuth](https://witchcraftjs.github.io/ui/components/w-auth) for storybook stories.
+
+:component-docs
+
+
+# WButton
+
+:storybook-embed
+
+:component-docs
+
+
+# WCheckbox
+
+:storybook-embed
+
+:component-docs
+
+
+# WColorInput
+
+:storybook-embed
+
+:component-docs
+
+
+# WColorPicker
+
+:storybook-embed
+
+::component-docs
+| Variable           | Description                               |
+| ------------------ | ----------------------------------------- |
+| `--slider-size`    | Size of the slider                        |
+| `--contrast-dark`  | Dark contrast value                       |
+| `--contrast-light` | Light contrast value                      |
+| `--fg`             | Overrides Reka UI slider foreground color |
+| `--bg`             | Overrides Reka UI slider background color |
+::
+
+
+# WCombobox
+
+:storybook-embed
+
+:component-docs
+
+
+# WDarkModeSwitcher
+
+:storybook-embed
+
+:component-docs
+
+
+# WDatePicker
+
+:storybook-embed
+
+:component-docs
+
+
+# WFileInput
+
+:storybook-embed
+
+:component-docs
+
+
+# WIcon
+
+:storybook-embed
+
+:component-docs
+
+
+# WMetamorphosisTheme
+
+This is a slightly experimental component. Not all types of themes are supported, but the
+most common will work. There is no save/load mechanism yet, though you can hook
+into metamorphosis's internal events to get notified of theme changes.
+
+:storybook-embed
+
+::component-docs
+| Variable        | Description                               |
+| --------------- | ----------------------------------------- |
+| `--slider-size` | Size of the slider handle and color strip |
+| `--chart-size`  | Size of the numerical chart               |
+::
+
+
+# WMultiValues
+
+:storybook-embed
+
+:component-docs
+
+
+# WNotification
+
+:storybook-embed
+
+:component-docs
+
+
+# WNotifications
+
+:storybook-embed
+
+::component-docs
+| Variable               | Description                    |
+| ---------------------- | ------------------------------ |
+| `--notification-width` | Width of notification elements |
+::
+
+
+# WNumberInput
+
+:storybook-embed
+
+:component-docs
+
+
+# WPagination
+
+:storybook-embed
+
+:component-docs
+
+
+# WPalette
+
+:storybook-embed
+
+:component-docs
+
+
+# WPopover
+
+:storybook-embed
+
+:component-docs
+
+
+# WPopup
+
+:storybook-embed
+
+:component-docs
+
+
+# WProgressBar
+
+:storybook-embed
+
+::component-docs
+| Variable     | Description                         |
+| ------------ | ----------------------------------- |
+| `--progress` | Progress value for the progress bar |
+::
+
+
+# WRecorder
+
+:storybook-embed
+
+:component-docs
+
+
+# WSimpleInput
+
+:storybook-embed
+
+:component-docs
+
+
+# WTable
+
+:storybook-embed
+
+:component-docs
+
+
+# WTooltip
+
+:storybook-embed
+
+:component-docs

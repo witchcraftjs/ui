@@ -1,0 +1,1 @@
+import{b5 as r,b8 as a}from"./CX6LG9S9.js";function l(t,n,u=e=>e){let e="";r(()=>{const o=document.getElementById(t);o&&(e=o.type==="checkbox"?o.checked:o.type==="radio"?o.checked?o.value:"":o.value)}),a(()=>{e&&(n.value=typeof e=="boolean"?e:u(e))})}export{l as u};

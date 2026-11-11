@@ -1,0 +1,19 @@
+import{C as y}from"./475SGCPX.js";import{ao as V,b9 as O,bm as _,cw as j,ac as g,cB as w,aU as M,bJ as C,a9 as f,bc as k,an as $,b3 as x,b1 as A}from"./CX6LG9S9.js";import{_ as B}from"./DsDNhY6s.js";import D from"./jls3NzXO.js";import{b as N}from"./7AvbrPGG.js";import W from"./BlVNiZEv.js";import q from"./BWJPGYyO.js";import"./CoTZLZSA.js";import"./DyCH_Usl.js";import"./DW0dok2K.js";import"./B9Vz3BzZ.js";import"./B8YfHvdD.js";import"./krPynjdP.js";import"./DUWGvL15.js";import"./PDgMlSbK.js";import"./B8cC-1O1.js";import"./CiPV8clP.js";import"./6DYtT0E1.js";import"./C6W-Qvxn.js";import"./jFYhBC76.js";import"./ZhzmIW_Q.js";import"./C8Ocg_N0.js";import"./GDOzVsky.js";import"./B9YS0MiY.js";import"./BMhMKKZr.js";function z(a){let d=()=>{};const l=V((m,b)=>(d=b,{get(){return m(),"_"in a.value?a.value._:a.value},set(u){a.set(u)}})),p=V(m=>({get(){return m(),a.css},set(){throw new Error("Cannot set CSS directly.")}})),c={notify:()=>{d()}};return a.addDep(c),O(()=>{a.removeDep(c)}),{instance:a,ref:l,css:p}}const mo=Object.assign({name:"WMetamorphosisControl"},{__name:"WMetamorphosisControl",props:{controlVar:{type:Object,required:!0},rootProps:{type:Object,required:!1}},setup(a){const d=a,{ref:l,css:p}=z(d.controlVar),c=f(()=>{const r=p.value.toLowerCase(),e=["rgb","hsl","hwb","lch","oklch","lab","oklab"];for(const o of e)if(r.startsWith(o))return o;return null}),m=f(()=>typeof l.value=="number"),b=f(()=>p.value.includes("/")),u=_(!1),v=f(()=>{const r=c.value;return(()=>{if(r===null)return{r:0,g:0,b:0,a:void 0};const o=l.value;if(r==="rgb")return{r:Math.round(o.r??0),g:Math.round(o.g??0),b:Math.round(o.b??0),a:o.a};let i,n;r==="hsl"?(i=[o.h??0,o.s??0,o.l??0],n=o.a):r==="hwb"?(i=[o.h??0,o.w??0,o.b??0],n=o.a):r==="lch"||r==="oklch"?(i=[o.l??0,o.c??0,o.h??0],n=o.a):r==="lab"||r==="oklab"?(i=[o.l??0,o.a??0,o.b??0],n=o.A):(i=[0,0,0],n=void 0);const s=new y(r,i,n??1),t=s.srgb;return{r:Math.round((t[0]??0)*255),g:Math.round((t[1]??0)*255),b:Math.round((t[2]??0)*255),a:s.alpha}})()}),h=_({...v.value});function R(r){P(r),u.value=!1}function S(){u.value=!1}function U(){u.value=!1}function P(r){const e=c.value;if(e==="rgb")l.value={r:r.r,g:r.g,b:r.b,a:r.a};else{const n=new y("srgb",[r.r/255,r.g/255,r.b/255],r.a??1).to(e).coords,s=[n[0]??0,n[1]??0,n[2]??0],t={};e==="hsl"?(t.h=s[0],t.s=s[1],t.l=s[2]):e==="hwb"?(t.h=s[0],t.w=s[1],t.b=s[2]):e==="lch"||e==="oklch"?(t.l=s[0],t.c=s[1],t.h=s[2]):(e==="lab"||e==="oklab")&&(t.l=s[0],t.a=s[1],t.b=s[2]),r.a!==void 0&&(t[e==="lab"||e==="oklab"?"A":"a"]=r.a),l.value=t}}return j(v,()=>{h.value={...v.value}}),(r,e)=>c.value!==null?(k(),g(W,{key:0,"root-props":{class:`
+				metamorphosis-control--popover-root
+			`,...a.rootProps},"content-props":{onInteractOutside:U,class:`
+					[&_.popover--content-inner]:p-0
+					[&_.popover--content-inner]:border-0
+					[&_.popover--content-inner]:overflow-none
+				`},modelValue:u.value,"onUpdate:modelValue":e[2]||(e[2]=o=>u.value=o)},{button:w(()=>[$(B,{border:!1,class:A(`
+					metamorphosis-control--button
+					border-transparent
+					border-2
+					outline-hidden
+					focus:border-accent-500
+					active:border-accent-500
+					hover:border-accent-500
+					w-4
+					h-4
+					rounded-sm
+					cursor-pointer
+				`),style:x(`background:${C(p)}`),onClick:e[0]||(e[0]=o=>u.value=!0)},null,8,["style"])]),popover:w(()=>[$(D,{"allow-alpha":b.value,border:!1,modelValue:h.value,"onUpdate:modelValue":e[1]||(e[1]=o=>h.value=o),onSave:R,onCancel:S},{buttons:w(()=>[...e[5]||(e[5]=[])]),_:1},8,["allow-alpha","modelValue"])]),_:1},8,["root-props","content-props","modelValue"])):m.value?(k(),g(N,{key:1,modelValue:C(l),"onUpdate:modelValue":e[3]||(e[3]=o=>M(l)?l.value=o:null)},null,8,["modelValue"])):(k(),g(q,{key:2,modelValue:C(l),"onUpdate:modelValue":e[4]||(e[4]=o=>M(l)?l.value=o:null)},null,8,["modelValue"]))}});export{mo as default};
