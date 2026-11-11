@@ -106,15 +106,12 @@ const props = withDefaults(defineProps<
 	& Pick<BaseInteractiveProps, "unstyle" | "border">
 	& {
 		id?: string
-		label?: string
 		valid?: boolean
 		type?: InputHTMLAttributes["type"]
 	}
 >(), {
 	id: "",
-	placeholder: "",
 	valid: true,
-	label: "",
 	type: undefined,
 	border: true
 })
